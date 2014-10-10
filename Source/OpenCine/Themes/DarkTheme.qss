@@ -1,0 +1,10 @@
+color: #b6b6b6;
+background-color: #2e2e2e;
+
+QDockWidget
+{
+	color: blue;
+        border: 3px solid red;
+        border: 1px solid white;
+        border-color: #b6b6b6;
+}
