@@ -13,8 +13,11 @@ int main(int argc, char *argv[])
     QFile mainStyleFile( "./Themes/DarkTheme.qss" );
     bool themeFound = mainStyleFile.open( QFile::ReadOnly );
 
-    QString mainStyle( mainStyleFile.readAll() );
-    w.setStyleSheet(mainStyle);
+    if(themeFound)
+    {
+        QString mainStyle( mainStyleFile.readAll() );
+        w.setStyleSheet(mainStyle);
+    }
 
     w.showMaximized();
 

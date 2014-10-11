@@ -156,6 +156,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->listView->setItemDelegate(new MyCustomListViewItemDelegate());
 
+
+    QPixmap p("./clouds.jpg");
+    // get label dimensions
+    int w = ui->previewArea->width() * 10;
+    int h = ui->previewArea->height() * 10;
+
+    // set a scaled pixmap to a w x h window keeping its aspect ratio
+    ui->previewArea->setPixmap(p.scaled(w,h,Qt::KeepAspectRatio));
+
     //model->insertRows(0, 0, QModelIndex());
     //QModelIndex index = model->index(0, 0, QModelIndex());
     //model->setData(index, widget);
