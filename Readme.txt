@@ -35,7 +35,8 @@ Preliminary notes:
 
    please refer to http://stackoverflow.com/questions/22215900/add-the-installation-prefix-of-qt5widgets-to-cmake-prefix-path
 
-   Short version (temporarily): Set CMAKE_PREFIX_PATH to the folder of Qt e.g. /home/<username>/Qt/5.3/gcc_64/
+   Short version (temporarily): Set CMAKE_PREFIX_PATH to the folder of Qt e.g. export CMAKE_PREFIX_PATH=/home/<username>/Qt/5.3/gcc_64/
+   Short version (permanently): Put e.g. export CMAKE_PREFIX_PATH=/home/<username>/Qt/5.3/gcc_64/ into .profile in home folder
 
  - Linux build commands (execute in the root of the OpenCine folder):
 
