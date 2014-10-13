@@ -32,4 +32,6 @@ CinemaDNGFile* CinemaDNGDecoder::DecodeData(CinemaDNGFile& file, vector<Byte> da
 {
   file.SetWidth(234);
   file.SetHeight(567);
+
+  return nullptr;
 }

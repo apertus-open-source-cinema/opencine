@@ -12,4 +12,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   TARGET_LINK_LIBRARIES(${PROJECT_NAME} CinemaDNGDecoder
                         /home/andi/Source/OpenCine/build/lib/libraw.so)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	TARGET_LINK_LIBRARIES(${PROJECT_NAME} CinemaDNGDecoder
+                        raw)
 endif()

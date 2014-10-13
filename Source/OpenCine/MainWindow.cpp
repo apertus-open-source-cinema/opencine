@@ -61,11 +61,13 @@ bool ClipInformationModel::insertRows(int row, int count, const QModelIndex &par
 {
     beginInsertRows(QModelIndex(), row, row + count - 1);
     endInsertRows();
+    return true;
 }
 
 bool ClipInformationModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     clipItemList.push_back((ClipInformationItem*)value.data());
+    return true;
 }
 
 /*
