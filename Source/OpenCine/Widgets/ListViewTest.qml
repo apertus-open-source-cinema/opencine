@@ -6,6 +6,9 @@ Rectangle {
     height: 300
     color: "#191919"
 
+    border.width: 1
+    border.color: "red"
+
     Component {
         id: listDelegate
 
@@ -47,11 +50,22 @@ Rectangle {
 
     ListView
     {
+        id: clipList
+
         anchors.fill: parent
+        anchors.margins: 1
+
+        clip: true
 
         boundsBehavior: Flickable.StopAtBounds
 
         model: listModel
         delegate: listDelegate
+    }
+
+    ScrollBar
+    {
+        flickable: clipList
+        //vertical: true
     }
 }
