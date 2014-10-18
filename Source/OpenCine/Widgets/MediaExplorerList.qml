@@ -1,18 +1,18 @@
 import QtQuick 2.0
+import QtGraphicalEffects 1.0
 
-import QtQuick 2.0
 Rectangle {
     width: 276
     height: 300
     color: "#191919"
 
     border.width: 1
-    border.color: "red"
+    border.color: "#555555"
 
     Component {
         id: listDelegate
 
-        ListViewItem
+        MediaExplorerItem
         {
             clipName: name
             clipFPS: fps
@@ -62,6 +62,29 @@ Rectangle {
         model: listModel
         delegate: listDelegate
     }
+
+     InnerShadow
+     {
+        id: topLeftShadow
+        anchors.fill: source
+        radius: 8.0
+        samples: 16
+        horizontalOffset: 3
+        verticalOffset: 3
+        color: "#b0000000"
+        source: clipList
+    }
+
+    InnerShadow
+    {
+       anchors.fill: source
+       radius: 8.0
+       samples: 16
+       horizontalOffset: -1
+       verticalOffset: -1
+       color: "#b0000000"
+       source: topLeftShadow
+   }
 
     ScrollBar
     {

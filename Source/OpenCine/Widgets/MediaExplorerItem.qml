@@ -111,7 +111,8 @@ Rectangle {
             border.width: 0
             clip: false
 
-            Image {
+            Image
+            {
                 id: image1
                 width: 182
                 clip: true
@@ -121,7 +122,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 fillMode: Image.PreserveAspectFit
-                source: "qrc:/qtquickplugin/images/template_image.png"
+                //source: "qrc:/qtquickplugin/images/template_image.png"
             }
         }
     }

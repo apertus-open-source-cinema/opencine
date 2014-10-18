@@ -50,45 +50,9 @@ Item {
         {
             id: mouseArea
             anchors.fill: parent;
-            //hoverEnabled: true
             onClicked: { }
         }
     }
-    /*MouseArea {
-        id: btnUp;
-        height: width;
-        anchors {
-            top: parent.top;
-            left: parent.left;
-            right: parent.right;
-            margins: (backScrollbar.border.width +1);
-        }
-        onClicked: { scrollUp (); }
-
-        Text {
-            text: "V";
-            color: (btnUp.pressed ? "blue" : "black");
-            rotation: -180;
-            anchors.centerIn: parent;
-        }
-    }
-    MouseArea {
-        id: btnDown;
-        height: width;
-        anchors {
-            left: parent.left;
-            right: parent.right;
-            bottom: parent.bottom;
-            margins: (backScrollbar.border.width +1);
-        }
-        onClicked: { scrollDown (); }
-
-        Text {
-            text: "V";
-            color: (btnDown.pressed ? "blue" : "black");
-            anchors.centerIn: parent;
-        }
-    }*/
     Item {
         id: groove;
         clip: true;
@@ -100,18 +64,20 @@ Item {
             bottomMargin: (backScrollbar.border.width +1);
         }
 
-        opacity:  clicker.containsMouse ? 1.0 : 0.3
-
         MouseArea {
             id: clicker;
-            drag {
+            hoverEnabled: true
+
+            drag
+            {
                 target: handle;
                 minimumY: 0;
                 maximumY: (groove.height - handle.height);
                 axis: Drag.YAxis;
             }
-            hoverEnabled: true
+
             anchors { fill: parent; }
+
             onClicked: { flickable.contentY = (mouse.y / groove.height * (flickable.contentHeight - flickable.height));}
         }
         Item {
@@ -125,18 +91,20 @@ Item {
             Rectangle
             {
                 id: backHandle;
-                //color: (clicker.pressed ? "blue" : "black");
-                //opacity: (flickable.moving ? 0.65 : 0.0);
-                opacity: (clicker.containsMouse | flickable.moving ? 1.0 : 0.0);
+                opacity: (clicker.containsMouse | flickable.moving ? 1.0 : 0.3);
                 anchors { fill: parent; }
                 radius: 10
 
-                Behavior on opacity { NumberAnimation { duration: 600; easing.type: Easing.OutExpo;} }
+                Behavior on opacity
+                {
+                  id: handleFade;
+                  NumberAnimation { duration: 150;}
+                }
 
                 Timer
                 {
                     id: reset
-                    interval: 1000;
+                    interval: 2000;
                     onTriggered: parent.opacity = 0.0
                 }
             }
