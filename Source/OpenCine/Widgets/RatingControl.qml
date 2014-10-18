@@ -34,7 +34,9 @@ Rectangle {
                 opacity: 0.5
 
                 scale:  mouseArea.containsMouse ? 1.0 : 0.6
-                MouseArea {
+
+                MouseArea
+                {
                     id: mouseArea
                     anchors.fill: parent
                     hoverEnabled: true         //this line will enable mouseArea.containsMouse
@@ -50,10 +52,11 @@ Rectangle {
                     {
                         name: "star"
                         when: ratingControl.rating >= index
-                        PropertyChanges {
+                        PropertyChanges
+                        {
                             target: image
                             opacity: 1
-                            scale: 1
+                            scale: mouseArea.containsMouse ? 1.0 : 0.8
                         }
                     }
                 ]
