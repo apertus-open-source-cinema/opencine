@@ -9,12 +9,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="273.51797"
-   height="260.14725"
+   width="298.52206"
+   height="285.14908"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
-   sodipodi:docname="Neues Dokument 1">
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="star.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -25,17 +25,17 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="114.89084"
-     inkscape:cy="28.221912"
+     inkscape:cx="-41.278329"
+     inkscape:cy="40.718228"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:window-width="1680"
-     inkscape:window-height="1028"
-     inkscape:window-x="1912"
-     inkscape:window-y="-8"
+     inkscape:window-width="1600"
+     inkscape:window-height="849"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -43,7 +43,7 @@
      fit-margin-bottom="0">
     <sodipodi:guide
        orientation="0,1"
-       position="157.74491,160.81226"
+       position="170.27122,173.30858"
        id="guide2995" />
   </sodipodi:namedview>
   <metadata
@@ -54,7 +54,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -62,10 +62,10 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-134.18918,-168.64375)">
+     transform="translate(-121.66287,-156.13824)">
     <path
        sodipodi:type="star"
-       style="fill:#000000;fill-opacity:1;stroke:none"
+       style="fill:none;stroke:#ffffff;stroke-width:25;stroke-linejoin:round;stroke-miterlimit:1;stroke-dasharray:none"
        id="path2993"
        sodipodi:sides="5"
        sodipodi:cx="220"
