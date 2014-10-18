@@ -31,8 +31,9 @@ Rectangle {
                 source: "star.svg"
                 mipmap: true
                 cache: true
+                opacity: 0.5
 
-                scale:  mouseArea.containsMouse ? 1.0 : 0.8
+                scale:  mouseArea.containsMouse ? 1.0 : 0.6
                 MouseArea {
                     id: mouseArea
                     anchors.fill: parent
