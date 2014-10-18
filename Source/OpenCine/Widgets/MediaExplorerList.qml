@@ -9,6 +9,8 @@ Rectangle {
     border.width: 1
     border.color: "#555555"
 
+    //property var listModel: null;
+
     Component {
         id: listDelegate
 
@@ -19,7 +21,7 @@ Rectangle {
         }
     }
 
-    ListModel
+    /*ListModel
     {
         id: listModel
 
@@ -46,7 +48,7 @@ Rectangle {
             name: "Test4"
             fps: 24
         }
-    }
+    }*/
 
     ListView
     {

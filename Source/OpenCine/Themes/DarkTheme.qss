@@ -2,6 +2,8 @@ QWidget
 {
 	color: #b6b6b6;
 	background-color: #2e2e2e;
+
+	font-weight: bold
 }
 
 QDockWidget

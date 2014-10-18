@@ -3,6 +3,8 @@
 #include <QDir>
 #include <QFile>
 
+#include "DataStorage/StaticAllocator.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

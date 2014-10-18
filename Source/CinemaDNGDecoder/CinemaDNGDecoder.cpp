@@ -2,17 +2,15 @@
 
 #include <fstream>
 
-using namespace std;
-
 CinemaDNGDecoder::CinemaDNGDecoder()
 {
 }
 
-CinemaDNGFile* CinemaDNGDecoder::LoadFile(string fileName)
+CinemaDNGFile* CinemaDNGDecoder::LoadFile(std::string fileName)
 {
   CinemaDNGFile* dngFile = new CinemaDNGFile();
 
-  ifstream dataFile(fileName, ios::binary);
+  std::ifstream dataFile(fileName, std::ios::binary);
 
   //Get file size:
   dataFile.seekg(0, std::ios::end);
@@ -28,7 +26,7 @@ CinemaDNGFile* CinemaDNGDecoder::LoadFile(string fileName)
   return dngFile;
 }
 
-CinemaDNGFile* CinemaDNGDecoder::DecodeData(CinemaDNGFile& file, vector<Byte> data)
+CinemaDNGFile* CinemaDNGDecoder::DecodeData(CinemaDNGFile& file, std::vector<Byte> data)
 {
   file.SetWidth(234);
   file.SetHeight(567);

@@ -46,7 +46,7 @@ Rectangle {
             Text {
                 id: text2
                 color: "#dedddd"
-                text: clipFPS + " FPS"
+                text: "JP46"
                 clip: true
                 anchors.right: parent.right
                 anchors.rightMargin: 0
@@ -60,7 +60,7 @@ Rectangle {
             Text {
                 id: text3
                 color: "#dedddd"
-                text: qsTr("24 FPS")
+                text: clipFPS + " FPS"
                 anchors.right: parent.right
                 anchors.rightMargin: 0
                 anchors.left: parent.left

@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QGraphicsPixmapItem>
+
+#include <libraw/libraw.h>
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +20,18 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    QGraphicsPixmapItem* it;
+
+    LibRaw* imageProcessor;
+
+protected:
+    void resizeEvent(QResizeEvent *);
+
+private slots:
+    void SelectImportFolder();
+
+public slots:
+    void PlayImages();
 };
 
 #endif // MAINWINDOW_H

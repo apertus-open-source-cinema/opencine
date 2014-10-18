@@ -5,17 +5,15 @@
 
 #include <libraw/libraw.h>
 
-using namespace std;
-
 int main()
 {
-	cout << "CinemaDNG information" << endl << "--------------------" << endl;
+    std::cout << "CinemaDNG information" << std::endl << "--------------------" << std::endl;
 
-	unique_ptr<CinemaDNGDecoder> cdDecoder(new CinemaDNGDecoder());
+    std::unique_ptr<CinemaDNGDecoder> cdDecoder(new CinemaDNGDecoder());
 	CinemaDNGFile* file = cdDecoder->LoadFile("000100.dng");
 
-	cout << "Width: " << file->GetWidth() << endl;
-	cout << "Height: " << file->GetHeight() << endl;
+    std::cout << "Width: " << file->GetWidth() << std::endl;
+    std::cout << "Height: " << file->GetHeight() << std::endl;
 
   LibRaw iProcessor;
   iProcessor.open_file("000100.dng");
@@ -24,7 +22,7 @@ int main()
         printf("Image size: %d x %d\n",iProcessor.imgdata.sizes.width,iProcessor.imgdata.sizes.height);
         //printf("Image size (raw): %d x %d\n",iProcessor.imgdata.sizes.raw_width,iProcessor.imgdata.sizes.raw_height);
         printf("Colors: %d\n",iProcessor.imgdata.idata.colors);
-        cout << "Filters: " << iProcessor.imgdata.idata.filters << endl;
+        std::cout << "Filters: " << iProcessor.imgdata.idata.filters << std::endl;
 
         // Let us unpack the image
         iProcessor.unpack();
