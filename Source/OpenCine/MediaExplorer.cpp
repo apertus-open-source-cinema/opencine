@@ -71,6 +71,10 @@ MediaExplorer::MediaExplorer(QWidget *parent) :
 
     QQmlContext *ctxt = ui->quickWidget->rootContext();
     ctxt->setContextProperty("listModel", QVariant::fromValue(dataList));
+
+    QObject* item = (QObject*)ui->quickWidget->rootObject();
+    MyClass* myClass = new MyClass();
+    QObject::connect(item, SIGNAL(loadClip(int)), myClass, SLOT(cppSlot(int)));
 }
 
 MediaExplorer::~MediaExplorer()

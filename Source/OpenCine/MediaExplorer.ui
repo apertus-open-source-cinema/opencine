@@ -27,7 +27,7 @@
      </property>
      <property name="source">
       <url>
-       <string>qrc:/Widgets/Widgets/ListViewTest.qml</string>
+       <string/>
       </url>
      </property>
     </widget>

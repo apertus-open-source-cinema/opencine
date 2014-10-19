@@ -20,6 +20,7 @@ private:
 };
 
 #include <QObject>
+#include <QDebug>
 
 class DataObject : public QObject
 {
@@ -45,6 +46,15 @@ signals:
 private:
     QString _name;
     QString _FPS;
+};
+
+class MyClass : public QObject
+{
+    Q_OBJECT
+public slots:
+    void cppSlot(const int &clipIndex) {
+        qDebug() << "Called the C++ slot with message:" << clipIndex;
+    }
 };
 
 
