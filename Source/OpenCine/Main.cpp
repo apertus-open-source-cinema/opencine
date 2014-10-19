@@ -3,14 +3,12 @@
 #include <QDir>
 #include <QFile>
 
+#include <memory>
+
 #include "DataStorage/StaticAllocator.h"
 
-int main(int argc, char *argv[])
+void SetStyle(MainWindow* w)
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-
-    // Load an application style
     QString currentWD = QDir::currentPath();
     QFile mainStyleFile( "./Themes/DarkTheme.qss" );
     bool themeFound = mainStyleFile.open( QFile::ReadOnly );
@@ -18,10 +16,25 @@ int main(int argc, char *argv[])
     if(themeFound)
     {
         QString mainStyle( mainStyleFile.readAll() );
-        w.setStyleSheet(mainStyle);
+        w->setStyleSheet(mainStyle);
     }
+}
 
-    w.showMaximized();
+int main(int argc, char *argv[])
+{
+    //Idea: IDataProvider -> IDataStorage
+    //      LibRawDataProvider -> StaticMemoryAllocator
+    //
+    //      IDataStorage -> MediaExplorer
+    //      IDataStorage -> ClipPreview
+
+    QApplication a(argc, argv);
+    std::unique_ptr<MainWindow> w = std::unique_ptr<MainWindow>(new MainWindow());
+
+    // Load an application style
+    SetStyle(w.get());
+
+    w->showMaximized();
 
     return a.exec();
 }

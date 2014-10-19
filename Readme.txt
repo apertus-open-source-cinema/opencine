@@ -62,3 +62,7 @@ MXF - http://en.wikipedia.org/wiki/Material_Exchange_Format (specification can b
 MXF SDK - https://github.com/Limecraft/ebu-mxfsdk
 
 Bayer demosaic on GPU - http://graphics.cs.williams.edu/papers/BayerJGT09/
+
+Icon pack(preliminary): http://www.flaticon.com/packs/basic-application
+
+QtRaw - https://github.com/mardy/qtraw (used for references)
