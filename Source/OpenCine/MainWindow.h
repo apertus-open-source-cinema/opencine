@@ -4,8 +4,6 @@
 #include <QMainWindow>
 #include <QGraphicsPixmapItem>
 
-#include <libraw/libraw.h>
-
 namespace Ui {
 class MainWindow;
 }
@@ -22,7 +20,7 @@ private:
     Ui::MainWindow *ui;
     QGraphicsPixmapItem* it;
 
-    LibRaw* imageProcessor;
+    //LibRaw* imageProcessor;
 
 protected:
     void resizeEvent(QResizeEvent *);

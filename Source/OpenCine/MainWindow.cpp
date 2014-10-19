@@ -180,15 +180,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //ui->listView->setItemDelegate(new MyCustomListViewItemDelegate());
 
-    imageProcessor = new LibRaw();
+//    imageProcessor = new LibRaw();
 
-    std::string dir = "./Images1";
-    DIR *dp;
-    struct dirent *dirp;
-    if((dp  = opendir(dir.c_str())) == NULL) {
-        //std::cout << "Error(" << errno << ") opening " << dir << std::endl;
-        int i = 0;
-    }
+//    std::string dir = "./Images1";
+//    DIR *dp;
+//    struct dirent *dirp;
+//    if((dp  = opendir(dir.c_str())) == NULL) {
+//        //std::cout << "Error(" << errno << ") opening " << dir << std::endl;
+//        int i = 0;
+//    }
 
 //    while ((dirp = readdir(dp)) != NULL)
 //    {
@@ -277,7 +277,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //            model->setData(index, QString::number(row+1));
     //        }
 
-    TestPluginA* testPlugin = new TestPluginA();
+    //TestPluginA* testPlugin = new TestPluginA();
 
     QMenu* importMenu = new QMenu();
     QAction* testAction = new QAction("test menu item", this);
@@ -336,7 +336,7 @@ void MainWindow::PlayImages()
 
 MainWindow::~MainWindow()
 {
-    imageProcessor->recycle();
+    //imageProcessor->recycle();
     delete ui;
 }
 

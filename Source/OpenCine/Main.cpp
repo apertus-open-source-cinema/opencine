@@ -5,7 +5,10 @@
 
 #include <memory>
 
-#include "DataStorage/StaticAllocator.h"
+#include "DataStorage/StaticMemoryAllocator.h"
+#include "DataProvider/LibRawDataProvider.h"
+
+using namespace OpenCineAPI;
 
 void SetStyle(MainWindow* w)
 {
@@ -24,9 +27,15 @@ int main(int argc, char *argv[])
 {
     //Idea: IDataProvider -> IDataStorage
     //      LibRawDataProvider -> StaticMemoryAllocator
+    //      Example:
+    //      IDataStorage* dataStorage = new StaticMemoryAllocator();
+    //      IDataProvider* dataProvider = new LibRawDataProvider(dataStorage);
     //
     //      IDataStorage -> MediaExplorer
     //      IDataStorage -> ClipPreview
+    std::shared_ptr<IDataStorage> dataStorage = std::shared_ptr<StaticMemoryAllocator>(new StaticMemoryAllocator());
+    std::shared_ptr<IDataProvider> dataProvider = std::shared_ptr<LibRawDataProvider>(new LibRawDataProvider(dataStorage.get()));
+
 
     QApplication a(argc, argv);
     std::unique_ptr<MainWindow> w = std::unique_ptr<MainWindow>(new MainWindow());

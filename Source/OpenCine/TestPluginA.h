@@ -12,6 +12,18 @@ public:
     {
         return "Test plugin A";
     }
+
+    // IDataProvider interface
+public:
+    ImageData *LoadFile(std::string)
+    {
+
+    }
+
+    ImageData *LoadFolder(std::string)
+    {
+
+    }
 };
 
 #endif //TESTPLUGINA_H
