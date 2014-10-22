@@ -11,6 +11,7 @@
 
 #include "API/IDataProvider.h"
 
+#include "PreviewPane.h"
 #include "TestPluginA.h"
 
 #include <dirent.h>
@@ -178,6 +179,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ClipInformationItem* widget = new ClipInformationItem();
     ClipInformationItem* widget2 = new ClipInformationItem();
 
+    //QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
+
+
     //ui->listView->setItemDelegate(new MyCustomListViewItemDelegate());
 
 //    imageProcessor = new LibRaw();
@@ -284,6 +288,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(testAction,SIGNAL(triggered()),this, SLOT(SelectImportFolder()));
     importMenu->addAction(testAction);
 
+    PreviewPane* pp = new PreviewPane();
+    QGridLayout* gridLayout = new QGridLayout();
+    gridLayout->addWidget(pp);
+
+    ui->page_2->setLayout(gridLayout);
     //ui->toolButton->setMenu(importMenu);
 
     //ui->listView->setModel(model);

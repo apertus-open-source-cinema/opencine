@@ -33,9 +33,16 @@ int main(int argc, char *argv[])
     //
     //      IDataStorage -> MediaExplorer
     //      IDataStorage -> ClipPreview
+
+    //Step 1: Get some data -> "Model"
     std::shared_ptr<IDataStorage> dataStorage = std::shared_ptr<StaticMemoryAllocator>(new StaticMemoryAllocator());
     std::shared_ptr<IDataProvider> dataProvider = std::shared_ptr<LibRawDataProvider>(new LibRawDataProvider(dataStorage.get()));
 
+    //Step 2: Pass data storage to "Presenter"
+    //???
+
+    //Step 3: Show data in "View"
+    //???
 
     QApplication a(argc, argv);
     std::unique_ptr<MainWindow> w = std::unique_ptr<MainWindow>(new MainWindow());

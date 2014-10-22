@@ -23,8 +23,8 @@ public:
     ~LibRawDataProvider();
 
     // IDataProvider interface
-    ImageData* LoadFile(std::string);
-    ImageData* LoadFolder(std::string);
+    OCImage* LoadFile(std::string);
+    OCImage* LoadFolder(std::string);
 
     // IPlugin interface
     std::string GetName();

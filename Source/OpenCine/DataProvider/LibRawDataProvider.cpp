@@ -13,12 +13,12 @@ LibRawDataProvider::~LibRawDataProvider()
   }
 }
 
-ImageData* LibRawDataProvider::LoadFile(std::string)
+OCImage* LibRawDataProvider::LoadFile(std::string)
 {
 
 }
 
-ImageData* LibRawDataProvider::LoadFolder(std::string)
+OCImage* LibRawDataProvider::LoadFolder(std::string)
 {
 
 }
