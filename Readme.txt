@@ -7,7 +7,7 @@ TODO:
 
 Used frameworks/libs/tools:
 
- - Qt 5.3 (only x64 at the moment)
+ - Qt 5.4 (switched because of several bugs in 5.3)
  - CMake 2.8.12 (at least 2.8 is required)
 
 
@@ -16,7 +16,7 @@ Preliminary notes:
  - All source code should be placed into "Source" folder. Preliminary content (subject to change):
 
 	"OpenCine" - project which will contain Qt code for GUI and processing logic
-	"CinemaDNGDecoder" - dummy project at the moment, plugin, will be implemented if no already available solution is found to decode CinemaDNG (e.g. FFmpeg or similar)
+	(obsolete atm!)"CinemaDNGDecoder" - dummy project at the moment, plugin, will be implemented if no already available solution is found to decode CinemaDNG (e.g. FFmpeg or similar)
 
  - CMake will be used for most projects to simplify building on different platforms
 
