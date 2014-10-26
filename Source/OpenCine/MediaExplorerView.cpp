@@ -1,5 +1,5 @@
 #include "MediaExplorerView.h"
-#include "ui_MediaExplorer.h"
+#include "ui_MediaExplorerView.h"
 
 #include <QQmlContext>
 
@@ -45,7 +45,7 @@ void DataObject::setFPS(const QString &fps)
 
 MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::MediaExplorer)
+    ui(new Ui::MediaExplorerView)
 {
     ui->setupUi(this);
 

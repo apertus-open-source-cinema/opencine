@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MediaExplorer</class>
- <widget class="QWidget" name="MediaExplorer">
+ <class>MediaExplorerView</class>
+ <widget class="QWidget" name="MediaExplorerView">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -89,11 +89,7 @@
             </size>
            </property>
            <property name="styleSheet">
-            <string notr="true">QPushButton
-{
-	border: 1px solid gray;
-	border-radius: 3px;
-}</string>
+            <string notr="true"/>
            </property>
            <property name="text">
             <string/>

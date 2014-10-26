@@ -6,7 +6,7 @@
 #include <QWidget>
 
 namespace Ui {
-class MediaExplorer;
+class MediaExplorerView;
 }
 
 class MediaExplorerView : public QWidget
@@ -18,7 +18,7 @@ public:
     ~MediaExplorerView();
 
 private:
-    Ui::MediaExplorer *ui;
+    Ui::MediaExplorerView *ui;
     MediaExplorerPresenter* _presenter;
 };
 

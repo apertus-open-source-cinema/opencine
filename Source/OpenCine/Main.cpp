@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
     //      IDataStorage* dataStorage = new StaticMemoryAllocator();
     //      IDataProvider* dataProvider = new LibRawDataProvider(dataStorage);
     //
-    //      IDataStorage -> MediaExplorer
+    //      IDataStorage -> MediaExplorerPresenter
     //      IDataStorage -> ClipPreview
 
     //Step 1: Get some data -> "Model"
