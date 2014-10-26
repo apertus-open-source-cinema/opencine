@@ -3,7 +3,7 @@
 
 #include <QGLFormat>
 
-PreviewPane::PreviewPane(QWidget *parent) :
+PreviewPane::PreviewPane(IPlaybackPresenter* presenter, QWidget *parent) :
     QOpenGLWidget(parent),
     ui(new Ui::PreviewPane)
 {    
@@ -31,16 +31,12 @@ void PreviewPane::paintGL()
 
 void PreviewPane::initializeGL()
 {
-    QGLFormat glFormat;
-    glFormat.setVersion( 3, 3 );
-    glFormat.setProfile( QGLFormat::CoreProfile ); // Requires >=Qt-4.8.0
-    glFormat.setDoubleBuffer(true);
-    glFormat.setSampleBuffers(true);
-
-    if ( !glFormat.sampleBuffers() )
-    {
-        int i = 0;
-    }
+    QSurfaceFormat format;
+    format.setDepthBufferSize(24);
+    format.setStencilBufferSize(8);
+    format.setVersion(3, 3);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    this->setFormat(format);
 
     // Set the clear color to black
     glClearColor( 1.0f / 255.0f * 18.0f, 1.0f / 255.0f * 115.0f, 1.0f / 255.0f * 166.0f, 1.0f );

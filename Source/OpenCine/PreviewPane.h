@@ -3,6 +3,16 @@
 
 #include <QOpenGLWidget>
 
+class IPresenter
+{
+
+};
+
+class IPlaybackPresenter
+{
+
+};
+
 namespace Ui {
 class PreviewPane;
 }
@@ -12,7 +22,7 @@ class PreviewPane : public QOpenGLWidget//, protected QOpenGLFunctions
     Q_OBJECT
 
 public:
-    explicit PreviewPane(QWidget *parent = 0);
+    explicit PreviewPane(IPlaybackPresenter* presenter, QWidget *parent = 0);
     ~PreviewPane();
 
 private:

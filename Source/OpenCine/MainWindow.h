@@ -26,10 +26,8 @@ protected:
     void resizeEvent(QResizeEvent *);
 
 private slots:
-    void SelectImportFolder();
-
-public slots:
-    void PlayImages();
+    //void SelectImportFolder();
+    //void PlayImages();
 };
 
 #endif // MAINWINDOW_H

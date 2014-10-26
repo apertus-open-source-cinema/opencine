@@ -1,7 +1,9 @@
-#include "MediaExplorer.h"
+#include "MediaExplorerView.h"
 #include "ui_MediaExplorer.h"
 
 #include <QQmlContext>
+
+#include "MediaExplorerPresenter.h"
 
 DataObject::DataObject(QObject *parent)
     : QObject(parent)
@@ -41,11 +43,13 @@ void DataObject::setFPS(const QString &fps)
     }
 }
 
-MediaExplorer::MediaExplorer(QWidget *parent) :
+MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MediaExplorer)
 {
     ui->setupUi(this);
+
+    _presenter = presenter;
 
     ui->quickWidget->setSource(QUrl("./Widgets/MediaExplorerList.qml"));
 
@@ -75,9 +79,11 @@ MediaExplorer::MediaExplorer(QWidget *parent) :
     QObject* item = (QObject*)ui->quickWidget->rootObject();
     MyClass* myClass = new MyClass();
     QObject::connect(item, SIGNAL(loadClip(int)), myClass, SLOT(cppSlot(int)));
+
+    QObject::connect(ui->pushButton_4, SIGNAL(clicked()), _presenter, SLOT(TestMessage()));
 }
 
-MediaExplorer::~MediaExplorer()
+MediaExplorerView::~MediaExplorerView()
 {
     delete ui;
 }

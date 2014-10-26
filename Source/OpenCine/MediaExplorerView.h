@@ -1,22 +1,25 @@
 #ifndef MEDIAEXPLORER_H
 #define MEDIAEXPLORER_H
 
+#include "MediaExplorerPresenter.h"
+
 #include <QWidget>
 
 namespace Ui {
 class MediaExplorer;
 }
 
-class MediaExplorer : public QWidget
+class MediaExplorerView : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MediaExplorer(QWidget *parent = 0);
-    ~MediaExplorer();
+    explicit MediaExplorerView(MediaExplorerPresenter* presenter, QWidget *parent = 0);
+    ~MediaExplorerView();
 
 private:
     Ui::MediaExplorer *ui;
+    MediaExplorerPresenter* _presenter;
 };
 
 #include <QObject>
