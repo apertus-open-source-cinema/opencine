@@ -10,7 +10,7 @@
 
 using namespace OpenCineAPI;
 
-void SetStyle(MainWindow* w)
+void SetStyle(QApplication* app)
 {
     QString currentWD = QDir::currentPath();
     QFile mainStyleFile( "./Themes/DarkTheme.qss" );
@@ -19,7 +19,7 @@ void SetStyle(MainWindow* w)
     if(themeFound)
     {
         QString mainStyle( mainStyleFile.readAll() );
-        w->setStyleSheet(mainStyle);
+        app->setStyleSheet(mainStyle);
     }
 }
 
@@ -44,13 +44,13 @@ int main(int argc, char *argv[])
     //Step 3: Show data in "View"
     //???
 
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
     std::unique_ptr<MainWindow> w = std::unique_ptr<MainWindow>(new MainWindow());
 
     // Load an application style
-    SetStyle(w.get());
+    SetStyle(&app);
 
     w->showMaximized();
 
-    return a.exec();
+    return app.exec();
 }

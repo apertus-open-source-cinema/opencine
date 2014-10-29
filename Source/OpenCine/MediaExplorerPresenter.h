@@ -12,6 +12,8 @@ public:
     MediaExplorerPresenter();
     ~MediaExplorerPresenter();
 
+    std::vector<std::string> GetData();
+
 private slots:
     void TestMessage();
 };

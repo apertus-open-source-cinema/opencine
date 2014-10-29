@@ -2,6 +2,7 @@
 #include "ui_MediaExplorerView.h"
 
 #include <QQmlContext>
+#include <QMenu>
 
 #include "MediaExplorerPresenter.h"
 
@@ -68,10 +69,17 @@ MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget 
     dataList.append("Item 4");*/
 
     QList<QObject*> dataList;
-    dataList.append(new DataObject("Clip 1", "24"));
-    dataList.append(new DataObject("Clip 2", "48"));
-    dataList.append(new DataObject("Clip 3", "30"));
-    dataList.append(new DataObject("Clip 4", "29"));
+    std::vector<std::string> data = _presenter->GetData();
+
+    for(std::string s : data)
+    {
+        dataList.append(new DataObject(s.c_str(), "99"));
+    }
+
+    //dataList.append(new DataObject("Clip 1", "24"));
+    //dataList.append(new DataObject("Clip 2", "48"));
+    //dataList.append(new DataObject("Clip 3", "30"));
+    //dataList.append(new DataObject("Clip 4", "29"));
 
     QQmlContext *ctxt = ui->quickWidget->rootContext();
     ctxt->setContextProperty("listModel", QVariant::fromValue(dataList));
@@ -80,7 +88,13 @@ MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget 
     MyClass* myClass = new MyClass();
     QObject::connect(item, SIGNAL(loadClip(int)), myClass, SLOT(cppSlot(int)));
 
-    QObject::connect(ui->pushButton_4, SIGNAL(clicked()), _presenter, SLOT(TestMessage()));
+    QMenu* importMenu = new QMenu();
+    QAction* testAction = new QAction("Import from folder...", this);
+    connect(testAction,SIGNAL(triggered()), _presenter, SLOT(TestMessage()));
+    importMenu->addAction(testAction);
+    ui->pushButton_4->setMenu(importMenu);
+
+    //QObject::connect(ui->pushButton_4, SIGNAL(clicked()), _presenter, SLOT(TestMessage()));
 }
 
 MediaExplorerView::~MediaExplorerView()

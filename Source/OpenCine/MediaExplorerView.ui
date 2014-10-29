@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
+   <item row="2" column="0">
     <widget class="QQuickWidget" name="quickWidget">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -32,9 +32,15 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QFrame" name="verticalFrame">
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>30</height>
+      </size>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -58,7 +64,7 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,0,0,0,0">
+        <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,0">
          <property name="spacing">
           <number>3</number>
          </property>
@@ -82,12 +88,6 @@
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
-           <property name="maximumSize">
-            <size>
-             <width>40</width>
-             <height>40</height>
-            </size>
-           </property>
            <property name="styleSheet">
             <string notr="true"/>
            </property>
@@ -106,64 +106,6 @@
            </property>
            <property name="flat">
             <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton_3">
-           <property name="maximumSize">
-            <size>
-             <width>30</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>PushButton</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>40</width>
-             <height>40</height>
-            </size>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="Resources.qrc">
-             <normaloff>:/Icons/Icons/open134.png</normaloff>:/Icons/Icons/open134.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>24</width>
-             <height>24</height>
-            </size>
-           </property>
-           <property name="flat">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="toolButton">
-           <property name="text">
-            <string>...</string>
-           </property>
-           <property name="popupMode">
-            <enum>QToolButton::InstantPopup</enum>
-           </property>
-           <property name="arrowType">
-            <enum>Qt::NoArrow</enum>
            </property>
           </widget>
          </item>
@@ -210,9 +152,6 @@
  </customwidgets>
  <tabstops>
   <tabstop>pushButton_4</tabstop>
-  <tabstop>pushButton_3</tabstop>
-  <tabstop>pushButton</tabstop>
-  <tabstop>toolButton</tabstop>
   <tabstop>pushButton_5</tabstop>
   <tabstop>quickWidget</tabstop>
  </tabstops>
