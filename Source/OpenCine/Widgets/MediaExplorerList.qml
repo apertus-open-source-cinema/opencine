@@ -31,7 +31,7 @@ Rectangle {
 
         //color: "transparent"
 
-        MouseArea
+        /*MouseArea
         {
           id: mouseArea
           anchors.fill: parent
@@ -66,7 +66,7 @@ Rectangle {
           //    clipList.currentIndex.loaded = false;
           //  }
           //}
-          }
+          }*/
         }
       }
 

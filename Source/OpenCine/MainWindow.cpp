@@ -35,10 +35,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QGridLayout* gridLayout = new QGridLayout();
-    gridLayout->addWidget(new PreviewPane(nullptr));
-    ui->tab_4->setLayout(gridLayout);
+    //Add preview pane
+    ui->gridLayout_3->addWidget(new PreviewPane(nullptr));
 
+    //Set Media Explorer widget
     ui->dockWidget_3->setWidget(new MediaExplorerView(new MediaExplorerPresenter()));
 
     /*QMenu* importMenu = new QMenu();

@@ -302,5 +302,65 @@
         <file>Icons/yield.png</file>
         <file>Icons/zip8.png</file>
         <file>Icons/zoom29.png</file>
+        <file>Icons/approve3.png</file>
+        <file>Icons/arrow123.png</file>
+        <file>Icons/arrow128.png</file>
+        <file>Icons/arrow132.png</file>
+        <file>Icons/arrow133.png</file>
+        <file>Icons/arrow137.png</file>
+        <file>Icons/arrow138.png</file>
+        <file>Icons/black87.png</file>
+        <file>Icons/cart4.png</file>
+        <file>Icons/chains.png</file>
+        <file>Icons/checked10.png</file>
+        <file>Icons/chevron12.png</file>
+        <file>Icons/close15.png</file>
+        <file>Icons/close16.png</file>
+        <file>Icons/cloud43.png</file>
+        <file>Icons/comment21.png</file>
+        <file>Icons/contacts3.png</file>
+        <file>Icons/eye24.png</file>
+        <file>Icons/flat1.png</file>
+        <file>Icons/flat2.png</file>
+        <file>Icons/folder39.png</file>
+        <file>Icons/folder40.png</file>
+        <file>Icons/heart33.png</file>
+        <file>Icons/heart34.png</file>
+        <file>Icons/image33.png</file>
+        <file>Icons/internet8.png</file>
+        <file>Icons/key22.png</file>
+        <file>Icons/links3.png</file>
+        <file>Icons/list20.png</file>
+        <file>Icons/magnification2.png</file>
+        <file>Icons/magnifier.png</file>
+        <file>Icons/mail18.png</file>
+        <file>Icons/map3.png</file>
+        <file>Icons/mechanic2.png</file>
+        <file>Icons/menu6.png</file>
+        <file>Icons/microsoft4.png</file>
+        <file>Icons/nine1.png</file>
+        <file>Icons/phone23.png</file>
+        <file>Icons/picture3.png</file>
+        <file>Icons/planet5.png</file>
+        <file>Icons/pointer8.png</file>
+        <file>Icons/refresh20.png</file>
+        <file>Icons/refresh22.png</file>
+        <file>Icons/refresh27.png</file>
+        <file>Icons/right20.png</file>
+        <file>Icons/shopping22.png</file>
+        <file>Icons/smartphone6.png</file>
+        <file>Icons/speech9.png</file>
+        <file>Icons/tablet11.png</file>
+        <file>Icons/tablet25.png</file>
+        <file>Icons/thumb3.png</file>
+        <file>Icons/thumbs15.png</file>
+        <file>Icons/tiles.png</file>
+        <file>Icons/user21.png</file>
+        <file>Icons/view6.png</file>
+        <file>Icons/walk1.png</file>
+        <file>Icons/walk7.png</file>
+        <file>Icons/wheel4.png</file>
+        <file>Icons/window16.png</file>
+        <file>Icons/world8.png</file>
     </qresource>
 </RCC>

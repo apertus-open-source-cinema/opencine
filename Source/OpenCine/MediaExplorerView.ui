@@ -83,13 +83,10 @@
          <item>
           <widget class="QPushButton" name="pushButton_4">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
-           </property>
-           <property name="styleSheet">
-            <string notr="true"/>
            </property>
            <property name="text">
             <string/>
@@ -103,9 +100,6 @@
              <width>24</width>
              <height>24</height>
             </size>
-           </property>
-           <property name="flat">
-            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -124,14 +118,24 @@
          </item>
          <item>
           <widget class="QPushButton" name="pushButton_5">
-           <property name="maximumSize">
-            <size>
-             <width>30</width>
-             <height>30</height>
-            </size>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="text">
-            <string>PushButton</string>
+            <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/Icons/Icons/menu6.png</normaloff>:/Icons/Icons/menu6.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>24</width>
+             <height>16</height>
+            </size>
            </property>
           </widget>
          </item>

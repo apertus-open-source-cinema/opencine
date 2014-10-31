@@ -45,12 +45,13 @@ int main(int argc, char *argv[])
     //???
 
     QApplication app(argc, argv);
-    std::unique_ptr<MainWindow> w = std::unique_ptr<MainWindow>(new MainWindow());
+    std::unique_ptr<MainWindow> mainWindow = std::unique_ptr<MainWindow>(new MainWindow());
+    mainWindow->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
     // Load an application style
     SetStyle(&app);
 
-    w->showMaximized();
+    mainWindow->showMaximized();
 
     return app.exec();
 }

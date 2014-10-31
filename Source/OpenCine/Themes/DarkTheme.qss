@@ -78,3 +78,8 @@ QToolButton:pressed
 	/*position: relative;
 	top: 5px; left: 5px;*/
 }
+
+QMenu
+{
+	border: 1px solid #191919;
+}
