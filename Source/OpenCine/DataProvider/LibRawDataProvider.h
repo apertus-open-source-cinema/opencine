@@ -19,7 +19,7 @@ class LibRawDataProvider : public IDataProvider
     LibRaw* imageProcessor;
 
 public:
-    LibRawDataProvider(IDataStorage* dataStorage);
+    LibRawDataProvider();
     ~LibRawDataProvider();
 
     // IDataProvider interface

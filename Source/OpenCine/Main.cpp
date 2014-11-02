@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QFile>
 
+#include <QSurfaceFormat>
 #include <memory>
 
 #include "DataStorage/StaticMemoryAllocator.h"
@@ -25,6 +26,13 @@ void SetStyle(QApplication* app)
 
 int main(int argc, char *argv[])
 {
+//    QSurfaceFormat format;
+//    format.setVersion(3, 3);
+//    format.setProfile(QSurfaceFormat::CoreProfile);
+//    format.setDepthBufferSize(24);
+//    format.setStencilBufferSize(8);
+//    QSurfaceFormat::setDefaultFormat(format);
+
     //Idea: IDataProvider -> IDataStorage
     //      LibRawDataProvider -> StaticMemoryAllocator
     //      Example:
@@ -35,8 +43,8 @@ int main(int argc, char *argv[])
     //      IDataStorage -> ClipPreview
 
     //Step 1: Get some data -> "Model"
-    std::shared_ptr<IDataStorage> dataStorage = std::shared_ptr<StaticMemoryAllocator>(new StaticMemoryAllocator());
-    std::shared_ptr<IDataProvider> dataProvider = std::shared_ptr<LibRawDataProvider>(new LibRawDataProvider(dataStorage.get()));
+    //std::shared_ptr<IDataStorage> dataStorage = std::shared_ptr<StaticMemoryAllocator>(new StaticMemoryAllocator());
+    //std::shared_ptr<IDataProvider> dataProvider = std::shared_ptr<LibRawDataProvider>(new LibRawDataProvider(dataStorage.get()));
 
     //Step 2: Pass data storage to "Presenter"
     //???

@@ -35,11 +35,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    MediaExplorerPresenter* presenter = new MediaExplorerPresenter();
+
     //Add preview pane
-    ui->gridLayout_3->addWidget(new PreviewPane(nullptr));
+    ui->gridLayout_3->addWidget(new PreviewPane(presenter));
 
     //Set Media Explorer widget
-    ui->dockWidget_3->setWidget(new MediaExplorerView(new MediaExplorerPresenter()));
+    ui->dockWidget_3->setWidget(new MediaExplorerView(presenter));
 
     /*QMenu* importMenu = new QMenu();
     QAction* testAction = new QAction("test menu item", this);

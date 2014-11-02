@@ -20,6 +20,11 @@ public:
 private:
     Ui::MediaExplorerView *ui;
     MediaExplorerPresenter* _presenter;
+
+     QList<QObject*> dataList;
+
+private slots:
+    void NewClipImported(std::string importedClip);
 };
 
 #include <QObject>

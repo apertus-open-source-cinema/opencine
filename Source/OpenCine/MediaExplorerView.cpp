@@ -52,6 +52,8 @@ MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget 
 
     _presenter = presenter;
 
+    //connect(_presenter, SIGNAL(NewDataAvailable()), this, SLOT(UpdateFrame()));
+
     ui->quickWidget->setSource(QUrl("./Widgets/MediaExplorerList.qml"));
 
     /*QStringList dataList;
@@ -68,13 +70,12 @@ MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget 
     dataList.append("Item 3");
     dataList.append("Item 4");*/
 
-    QList<QObject*> dataList;
-    std::vector<std::string> data = _presenter->GetData();
+//    std::vector<std::string> data = _presenter->GetData();
 
-    for(std::string s : data)
-    {
-        dataList.append(new DataObject(s.c_str(), "99"));
-    }
+//    for(std::string s : data)
+//    {
+//        dataList.append(new DataObject(s.c_str(), "99"));
+//    }
 
     //dataList.append(new DataObject("Clip 1", "24"));
     //dataList.append(new DataObject("Clip 2", "48"));
@@ -90,9 +91,11 @@ MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget 
 
     QMenu* importMenu = new QMenu();
     QAction* testAction = new QAction("Import from folder...", this);
-    connect(testAction,SIGNAL(triggered()), _presenter, SLOT(TestMessage()));
+    connect(testAction,SIGNAL(triggered()), _presenter, SLOT(OpenFolderSelection()));
     importMenu->addAction(testAction);
     ui->pushButton_4->setMenu(importMenu);
+
+    connect(_presenter,SIGNAL(NewClipImported(std::string)), this, SLOT(NewClipImported(std::string)));
 
     //QObject::connect(ui->pushButton_4, SIGNAL(clicked()), _presenter, SLOT(TestMessage()));
 }
@@ -100,4 +103,12 @@ MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget 
 MediaExplorerView::~MediaExplorerView()
 {
     delete ui;
+}
+
+void MediaExplorerView::NewClipImported(std::string importedClip)
+{
+     dataList.append(new DataObject(importedClip.c_str(), "99"));
+
+     QQmlContext *ctxt = ui->quickWidget->rootContext();
+     ctxt->setContextProperty("listModel", QVariant::fromValue(dataList));
 }
