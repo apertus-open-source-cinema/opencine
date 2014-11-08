@@ -26,7 +26,7 @@ void MediaExplorerPresenter::OpenFolderSelection()
     // Start playBack
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(UpdateViews()));
-    timer->start(1000/24);
+    timer->start(1000.0 / 24.0);
 }
 
 int currentFrame = 0;

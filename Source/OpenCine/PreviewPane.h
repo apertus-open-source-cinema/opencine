@@ -36,6 +36,7 @@ private:
 
     //QOpenGLVertexArrayObject* vao;
     GLuint tex;
+    GLuint tex2;
 
     GLuint shaderProgram;
 

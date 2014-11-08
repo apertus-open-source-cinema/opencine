@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 PROJECT(OpenCine)
 
+set( CMAKE_VERBOSE_MAKEFILE on )
+
 set(CMAKE_AUTOMOC TRUE)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -9,6 +11,34 @@ FIND_PACKAGE(Qt5Core REQUIRED)
 FIND_PACKAGE(Qt5Widgets REQUIRED)
 FIND_PACKAGE(Qt5QuickWidgets REQUIRED)
 FIND_PACKAGE(Qt5OpenGL REQUIRED)
+
+find_library(AVUTIL_LIB "avutil-ffmpeg")
+if(AVUTIL_LIB)
+  message(STATUS "Found: avutil -> " ${AVUTIL_LIB})
+else()
+  message(STATUS "Not found: avutil")
+endif()
+
+find_library(AVFORMAT_LIB "avformat-ffmpeg")
+if(AVFORMAT_LIB)
+  message(STATUS "Found: avformat -> " ${AVFORMAT_LIB})
+else()
+  message(STATUS "Not found: avformat")
+endif()
+
+find_library(AVCODEC_LIB "avcodec-ffmpeg")
+if(AVCODEC_LIB)
+  message(STATUS "Found: avcodec -> " ${AVCODEC_LIB})
+else()
+  message(STATUS "Not found: avcodec")
+endif()
+
+find_library(OPENCL_LIB "libOpenCL.so.1")
+if(OPENCL_LIB)
+  message(STATUS "Found: OpenCL -> " ${OPENCL_LIB})
+else()
+  message(STATUS "Not found: OpenCL")
+endif()
 
 INCLUDE_DIRECTORIES(${Qt5Widgets_INCLUDES})
 INCLUDE_DIRECTORIES(${Qt5QuickWidgets_INCLUDE_DIRS})
@@ -46,7 +76,17 @@ QT5_ADD_RESOURCES(UI_RESOURCES ${RESOURCE_FILES})
 ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES} ${UI_FILES_MOC} ${SOURCE_MOC} ${UI_RESOURCES})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-	TARGET_LINK_LIBRARIES(${PROJECT_NAME} ${QT_QTMAIN_LIBRARY} ${QT_LIBRARIES} ${OPENGL_LIBRARIES} CinemaDNGDecoder /home/andi/Source/OpenCine/build/lib/libraw.so)
+	TARGET_LINK_LIBRARIES(
+    ${PROJECT_NAME}
+    ${QT_QTMAIN_LIBRARY}
+    ${QT_LIBRARIES}
+    ${OPENGL_LIBRARIES}
+    "${CMAKE_BINARY_DIR}/lib/libraw.so"
+    "${AVUTIL_LIB}"
+    "${AVFORMAT_LIB}"
+    "${AVCODEC_LIB}"
+    "${OPENCL_LIB}"
+  )
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	#ADD_EXECUTABLE(${PROJECT_NAME} WIN32 ${SOURCE_FILES} ${HEADER_FILES} ${UI_FILES_MOC} ${HEADERS_MOC} ${RESOURCE_FILES} )

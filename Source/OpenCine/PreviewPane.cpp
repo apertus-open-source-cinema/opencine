@@ -36,7 +36,17 @@ void PreviewPane::paintGL()
     // Clear the buffer with the current clearing color
     glClear( GL_COLOR_BUFFER_BIT );
 
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex);
+    int texture_location = glGetUniformLocation(shaderProgram, "texture1");
+    glUniform1i(texture_location, 0);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, tex2);
+    int texture_location2 = glGetUniformLocation(shaderProgram, "texture2");
+    glUniform1i(texture_location2, 1);
+
+
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
@@ -69,10 +79,10 @@ void PreviewPane::CreateRectangle()
     float rectangleData[] =
     {
     //  Position      Texcoords
-        -1.0f, -1.0f, 0.0f, 1.0f, // Top-left
-         1.0f, -1.0f, 1.0f, 1.0f, // Top-right
-        -1.0f,  1.0f, 0.0f, 0.0f, // Bottom-right
-         1.0f,  1.0f, 1.0f, 0.0f  // Bottom-left
+        -1.0f, -1.0f, 0.0f, 1.0f,    0.0,       1920.0 /4.0, // Top-left
+         1.0f, -1.0f, 1.0f, 1.0f, 1920.0 / 4.0, 1920.0 / 4.0, // Top-right
+        -1.0f,  1.0f, 0.0f, 0.0f,    0.0,    0.0, // Bottom-right
+         1.0f,  1.0f, 1.0f, 0.0f, 1920.0 / 4.0,    0.0  // Bottom-left
     };
 
     glBindBuffer(GL_ARRAY_BUFFER, rectangleVBO);
@@ -84,11 +94,16 @@ void PreviewPane::CreateRectangle()
 
     GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
     glEnableVertexAttribArray(posAttrib);
-    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 
     GLint texAttrib = glGetAttribLocation(shaderProgram, "vertTexCoord");
     glEnableVertexAttribArray(texAttrib);
-    glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(2 * sizeof(float)));
+
+    GLint texAttrib2 = glGetAttribLocation(shaderProgram, "vertTexCoord2");
+    glEnableVertexAttribArray(texAttrib2);
+    glVertexAttribPointer(texAttrib2, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(4 * sizeof(float)));
+
 
     //glEnable(GL_TEXTURE_2D);
     //Setup texture
@@ -100,13 +115,13 @@ void PreviewPane::CreateRectangle()
     LibRaw imageProcessor;
     imageProcessor.open_file("000100.dng");
     imageProcessor.unpack();
-    imageProcessor.dcraw_process();
-    libraw_processed_image_t* image = imageProcessor.dcraw_make_mem_image();
+    //imageProcessor.dcraw_process();
+    //libraw_processed_image_t* image = imageProcessor.dcraw_make_mem_image();
 
     //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_LUMINANCE, GL_UNSIGNED_SHORT, &imageProcessor.imgdata.rawdata.raw_image /*image->data*/);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr/* &image->data*/);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE16, 1920 /*image->width*/, 1080 /*image->height*/, 0, GL_LUMINANCE, GL_UNSIGNED_SHORT, nullptr/* &image->data*/);
 
-    imageProcessor.dcraw_clear_mem(image);
+    //imageProcessor.dcraw_clear_mem(image);
     imageProcessor.recycle();
 
     // Black/white checkerboard
@@ -118,9 +133,32 @@ void PreviewPane::CreateRectangle()
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 2);
+    //glGenerateMipmap(GL_TEXTURE_2D);
+
+    //glBindTexture(GL_TEXTURE_2D, 0);
+
+    glGenTextures(1, &tex2);
+    glActiveTexture( GL_TEXTURE1 );
+    glBindTexture(GL_TEXTURE_2D, tex2);
+
+    float pixels[] = {
+        1.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,
+    };
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 4, 0, GL_RGB, GL_FLOAT, pixels);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 2);
+    //glGenerateMipmap(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -134,10 +172,13 @@ void PreviewPane::CreateShaders()
             "#version 130 \n\
             in vec2 position; \n\
             in vec2 vertTexCoord;\n\
+            in vec2 vertTexCoord2;\n\
             out vec2 fragTexCoord;\n\
+            out vec2 fragTexCoord2;\n\
             void main() \n\
             { \n\
                 fragTexCoord = vertTexCoord; \n\
+                fragTexCoord2 = vertTexCoord2; \n\
                 gl_Position = vec4(position, 0.0, 1.0); \n\
             } \n\
             ");
@@ -145,11 +186,13 @@ void PreviewPane::CreateShaders()
     std::string fragmentShaderSource(
         "#version 130 \n\
         uniform sampler2D texture1; \n\
+        uniform sampler2D texture2; \n\
         in vec2 fragTexCoord; \n\
+        in vec2 fragTexCoord2; \n\
         out vec3 outColor; \n\
         void main() \n\
         { \n\
-            outColor = texture( texture1, fragTexCoord ).rgb;// * vec3(0.0, 2.4, 0.0); \n\
+            outColor = texture( texture1, fragTexCoord ).rgb * texture(texture2, fragTexCoord2).rgb * 5.0; \n\
         } \n\
         ");
 
@@ -182,17 +225,29 @@ void PreviewPane::CreateShaders()
 
 void PreviewPane::UpdateFrame(OCImage *image)
 {
-    glActiveTexture( GL_TEXTURE0 );
     glBindTexture(GL_TEXTURE_2D, tex);
+
+    //glActiveTexture( GL_TEXTURE0 );
+    //glBindTexture(GL_TEXTURE_2D, tex);
+
+    //glActiveTexture( GL_TEXTURE1 );
+    //glBindTexture(GL_TEXTURE_2D, tex2);
 
     int width = image->GetWidth();
     int height = image->GetHeight();
 
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, image->GetData());
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_LUMINANCE, GL_UNSIGNED_SHORT, image->GetData());
 
-    GLenum error = glGetError();
+    //GLenum error = glGetError();
 
-    glBindTexture(GL_TEXTURE_2D, 0);
+    //glActiveTexture(GL_TEXTURE1);
+    //texture_location = glGetUniformLocation(shaderProgram, "texture2");
+    //glUniform1i(texture_location, 1);
+    //glBindTexture(GL_TEXTURE_2D, tex2);
+
+    //error = glGetError();
+
+    //glBindTexture(GL_TEXTURE_2D, 0);
 
     this->update();
 }

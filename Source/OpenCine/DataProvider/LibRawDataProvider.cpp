@@ -18,16 +18,18 @@ OCImage* LibRawDataProvider::LoadFile(std::string filePath)
     OCImage* image = new OCImage();
 
     // Creation of image processing object
-    LibRaw imageProcessor;
-    imageProcessor.open_file(filePath.c_str());
-    imageProcessor.unpack();
-    imageProcessor.dcraw_process();
-    libraw_processed_image_t* rawImage = imageProcessor.dcraw_make_mem_image();
+    imageProcessor->open_file(filePath.c_str());
+    imageProcessor->unpack();
+    //imageProcessor.dcraw_process();
+    //libraw_processed_image_t* rawImage = imageProcessor.dcraw_make_mem_image();
 
-    image->SetSize(rawImage->width, rawImage->height);
-    image->SetData(rawImage->data, rawImage->data_size);
+    //image->SetSize(rawImage->width, rawImage->height);
+    //image->SetData(rawImage->data, rawImage->data_size);
 
-    imageProcessor.dcraw_clear_mem(rawImage);
+    image->SetSize(imageProcessor->imgdata.rawdata.sizes.width, imageProcessor->imgdata.rawdata.sizes.height);
+    image->SetData(imageProcessor->imgdata.rawdata.raw_image, imageProcessor->imgdata.rawdata.sizes.raw_pitch * imageProcessor->imgdata.rawdata.sizes.height);
+
+    //imageProcessor.dcraw_clear_mem(rawImage);
 
     return image;
 }

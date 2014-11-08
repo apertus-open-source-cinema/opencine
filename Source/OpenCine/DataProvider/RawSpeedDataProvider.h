@@ -1,5 +1,5 @@
-#ifndef LIBRAWDATAPROVIDER_H
-#define LIBRAWDATAPROVIDER_H
+#ifndef RAWSPEEDDATAPROVIDER_H
+#define RAWSPEEDDATAPROVIDER_H
 
 //General includes
 #include <memory>
@@ -8,17 +8,17 @@
 #include "../API/IDataProvider.h"
 
 //LibRaw includes
-#include <libraw/libraw.h>
+//#include "RawSpeed/RawSpeed/RawSpeed-API.h>
 
 using namespace OpenCineAPI;
 
-class LibRawDataProvider : public IDataProvider
+class RawSpeedDataProvider : public IDataProvider
 {
-    LibRaw* imageProcessor;
+    //LibRaw* imageProcessor;
 
 public:
-    LibRawDataProvider();
-    ~LibRawDataProvider();
+    RawSpeedDataProvider();
+    ~RawSpeedDataProvider();
 
     // IDataProvider interface
     OCImage* LoadFile(std::string filePath);
@@ -28,4 +28,4 @@ public:
     std::string GetName();
 };
 
-#endif //LIBRAWDATAPROVIDER_H
+#endif //RAWSPEEDDATAPROVIDER_H

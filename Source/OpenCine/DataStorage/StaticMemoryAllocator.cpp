@@ -1,12 +1,14 @@
 #include "StaticMemoryAllocator.h"
 
-#include <LibRawDataProvider.h>
+#include "LibRawDataProvider.h"
+#include "RawSpeedDataProvider.h"
 
 #include <QDirIterator>
 
 StaticMemoryAllocator::StaticMemoryAllocator()
 {
     _dataProvider = new LibRawDataProvider();
+    //_dataProvider = new RawSpeedDataProvider();
 }
 
 bool StaticMemoryAllocator::ImportFolder(std::string folderPath)

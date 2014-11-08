@@ -19,10 +19,10 @@ public:
       _height = height;
   }
 
-  void SetData(unsigned char* data, unsigned int dataSize)
+  void SetData(unsigned short* data, unsigned int dataSize)
   {
       _dataSize = dataSize;
-      _imageData = new unsigned char[_dataSize];
+      _imageData = new unsigned short[_dataSize];
       memcpy(_imageData, data, _dataSize);
   }
 
