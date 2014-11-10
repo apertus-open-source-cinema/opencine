@@ -3,6 +3,7 @@ project(ApertusOpenCine)
 
 #TODO: Enable C++11 support for all projects. Adjust when porting to windows (e.g. for Visual Studio compatibility)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -16,10 +17,13 @@ SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 
 #Includes
 include_directories("${PROJECT_SOURCE_DIR}/3rdParty/LibRaw")
+include_directories("${PROJECT_SOURCE_DIR}/3rdParty/Catch")
+#include_directories("${PROJECT_SOURCE_DIR}/3rdParty/RawSpeed/include")
 
 #Dependencies
-SET(ENABLE_EXAMPLES OFF CACHE BOOL "Build LibRaw shared library")
+SET(ENABLE_EXAMPLES OFF CACHE BOOL "Build LibRaw shared library (without examples)")
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/LibRaw)
+#add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/oiio)
 
 #Projects
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OpenCine/)
