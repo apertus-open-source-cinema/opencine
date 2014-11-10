@@ -40,6 +40,13 @@ else()
   message(STATUS "Not found: OpenCL")
 endif()
 
+find_library(LIBJPEG_LIB "libjpeg.so")
+if(LIBJPEG_LIB)
+  message(STATUS "Found: libjpeg8 -> " ${LIBJPEG_LIB})
+else()
+  message(STATUS "Not found: libjpeg8")
+endif()
+
 INCLUDE_DIRECTORIES(${Qt5Widgets_INCLUDES})
 INCLUDE_DIRECTORIES(${Qt5QuickWidgets_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${Qt5OpenGL_INCLUDE_DIRS})
@@ -86,6 +93,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     "${AVFORMAT_LIB}"
     "${AVCODEC_LIB}"
     "${OPENCL_LIB}"
+    "${LIBJPEG_LIB}"
+    pthread
   )
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")

@@ -79,10 +79,10 @@ void PreviewPane::CreateRectangle()
     float rectangleData[] =
     {
     //  Position      Texcoords
-        -1.0f, -1.0f, 0.0f, 1.0f,    0.0,       1920.0 /4.0, // Top-left
-         1.0f, -1.0f, 1.0f, 1.0f, 1920.0 / 4.0, 1920.0 / 4.0, // Top-right
+        -1.0f, -1.0f, 0.0f, 1.0f,    0.0,       1920.0 / 2.0, // Top-left
+         1.0f, -1.0f, 1.0f, 1.0f, 1920.0 / 2.0, 1920.0 / 2.0, // Top-right
         -1.0f,  1.0f, 0.0f, 0.0f,    0.0,    0.0, // Bottom-right
-         1.0f,  1.0f, 1.0f, 0.0f, 1920.0 / 4.0,    0.0  // Bottom-left
+         1.0f,  1.0f, 1.0f, 0.0f, 1920.0 / 2.0,    0.0  // Bottom-left
     };
 
     glBindBuffer(GL_ARRAY_BUFFER, rectangleVBO);
@@ -145,13 +145,11 @@ void PreviewPane::CreateRectangle()
     glBindTexture(GL_TEXTURE_2D, tex2);
 
     float pixels[] = {
-        1.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,
+        1.0f, 0.0f, 0.0f,   0.0f, 1.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f
     };
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 4, 4, 0, GL_RGB, GL_FLOAT, pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_FLOAT, pixels);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

@@ -28,8 +28,8 @@ void SetStyle(QApplication* app)
 int main(int argc, char *argv[])
 {
   //TestFFMPEG();
-  TestOpenCL();
-  TestCatch();
+  //TestOpenCL();
+  //TestCatch();
   //    QSurfaceFormat format;
   //    format.setVersion(3, 3);
   //    format.setProfile(QSurfaceFormat::CoreProfile);

@@ -20,17 +20,27 @@ static void TestFFMPEG()
   AVFormatContext* formatContext = nullptr;
   AVCodecContext* codecContext = nullptr;
 
+  AVInputFormat* format = new AVInputFormat();
+  format->name           = "mlv";
+  format->long_name      = "Magic Lantern Video (MLV)";
+
   av_register_all();
 
   std::cout << LIBAVFORMAT_IDENT << std::endl;
   std::cout << LIBAVCODEC_IDENT << std::endl;
   std::cout << LIBAVUTIL_IDENT << std::endl;
 
-  int result = avformat_open_input(&formatContext, "test.mlv", NULL, NULL);
+  std::string videoFile = "test.mlv";
+
+  int result = avformat_open_input(&formatContext, videoFile.c_str(), nullptr, nullptr);
 
   char* errorText = new char[256];
   av_strerror(result, errorText, 1024);
+
   result = avformat_find_stream_info(formatContext, NULL);
+
+  // Dump information about file onto standard error
+  av_dump_format(formatContext, 0, videoFile.c_str(), 0);
 
   //AVPacket* videoPacket = new AVPacket();
 
@@ -39,6 +49,8 @@ static void TestFFMPEG()
   //{
   //    avcodec_decode_video2(codecContext, _std_frame, &frameFinished, videoPacket);
   //}
+
+  int i = 0;
 }
 
 static std::string trim(const std::string& str, const std::string& whitespace = " \t")
@@ -99,7 +111,7 @@ static void TestOpenCL()
     exit(1);
   }
 
-  unsigned int SIZE = 100001;
+  unsigned int SIZE = 1001;
 
   // create buffers on the device
   cl::Buffer buffer_A(context, CL_MEM_READ_WRITE, sizeof(int) * SIZE);

@@ -4,6 +4,7 @@
 #include "RawSpeedDataProvider.h"
 
 #include <QDirIterator>
+#include <QProgressDialog>
 
 StaticMemoryAllocator::StaticMemoryAllocator()
 {
@@ -23,11 +24,32 @@ bool StaticMemoryAllocator::ImportFolder(std::string folderPath)
 
     dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
 
-    for(QString file : dir.entryList())
-    {
-        OCImage* image = _dataProvider->LoadFile(folderPath + "/" + file.toStdString());
-        _frameList.push_back(image);
-    }
+
+
+    QProgressDialog progress("Decoding files...", "Abort", 0, dir.entryList().size(), nullptr);
+
+        progress.setWindowModality(Qt::WindowModal);
+
+        for(unsigned int fileIndex = 0; fileIndex < dir.entryList().size(); fileIndex++)
+        {
+          OCImage* image = _dataProvider->LoadFile(folderPath + "/" + dir.entryList().at(fileIndex).toStdString());
+          _frameList.push_back(image);
+
+          progress.setValue(fileIndex);
+        }
+
+        /*for(QString file : dir.entryList())
+        {
+
+        }*/
+        /* for (int i = 0; i < numFiles; i++) {
+            progress.setValue(i);
+
+            if (progress.wasCanceled())
+                break;
+            //... copy one file
+        }*/
+        progress.setValue(dir.entryList().size());
 
 //    QDirIterator it(QString::fromStdString(folderPath), QDirIterator::NoIteratorFlags);
 //    while (it.hasNext())

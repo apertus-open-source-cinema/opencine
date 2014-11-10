@@ -7,9 +7,6 @@
 //OpenCineAPI includes
 #include "../API/IDataProvider.h"
 
-//LibRaw includes
-//#include "RawSpeed/RawSpeed/RawSpeed-API.h>
-
 using namespace OpenCineAPI;
 
 class RawSpeedDataProvider : public IDataProvider
