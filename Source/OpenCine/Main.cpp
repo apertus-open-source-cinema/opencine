@@ -10,6 +10,8 @@
 #include "DataProvider/LibRawDataProvider.h"
 #include "DataProvider/FFmpegDataProvider.h"
 
+#include "Core/Context.h"
+
 using namespace OpenCineAPI;
 
 void SetStyle(QApplication* app)
@@ -19,16 +21,16 @@ void SetStyle(QApplication* app)
   bool themeFound = mainStyleFile.open( QFile::ReadOnly );
 
   if(themeFound)
-    {
-      QString mainStyle( mainStyleFile.readAll() );
-      app->setStyleSheet(mainStyle);
-    }
+  {
+    QString mainStyle( mainStyleFile.readAll() );
+    app->setStyleSheet(mainStyle);
+  }
 }
 
 int main(int argc, char *argv[])
 {
   //TestFFMPEG();
-  //TestOpenCL();
+  TestOpenCL();
   //TestCatch();
   //    QSurfaceFormat format;
   //    format.setVersion(3, 3);
@@ -56,8 +58,11 @@ int main(int argc, char *argv[])
   //Step 3: Show data in "View"
   //???
 
+  OCContext* context =  new OCContext();
+
+
   QApplication app(argc, argv);
-  std::unique_ptr<MainWindow> mainWindow = std::unique_ptr<MainWindow>(new MainWindow());
+  MainWindow* mainWindow = new MainWindow(context);
   mainWindow->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
   // Load an application style

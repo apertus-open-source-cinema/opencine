@@ -1,6 +1,8 @@
 #ifndef PREVIEWPANE_H
 #define PREVIEWPANE_H
 
+#include "Presenter/PlaybackPresenter.h"
+
 #include <ImageData.h>
 #include <QOpenGLFunctions>
 #include <QOpenGLVertexArrayObject>
@@ -25,7 +27,7 @@ class PreviewPane : public QOpenGLWidget, protected QOpenGLFunctions
     Q_OBJECT
 
 public:
-    explicit PreviewPane(MediaExplorerPresenter* presenter, QWidget *parent = 0);
+    explicit PreviewPane(PlaybackPresenter* presenter, QWidget *parent = 0);
     ~PreviewPane();
 
 private:
@@ -40,7 +42,7 @@ private:
 
     GLuint shaderProgram;
 
-    MediaExplorerPresenter* _presenter;
+    PlaybackPresenter* _presenter;
 
     void CreateRectangle();
     void CreateShaders();

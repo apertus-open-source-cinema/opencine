@@ -76,9 +76,8 @@ static void TestOpenCL()
     exit(1);
   }
 
-  cl::Platform default_platform = all_platforms[0];
+  cl::Platform default_platform = all_platforms[1];
   std::cout << "Using platform: " << trim(default_platform.getInfo<CL_PLATFORM_NAME>()) << "\n";
-  std::flush(std::cout);
 
   //get default device of the default platform
   std::vector<cl::Device> all_devices;
@@ -90,6 +89,8 @@ static void TestOpenCL()
   }
   cl::Device default_device = all_devices[0];
   std::cout << "Using device: " << trim(default_device.getInfo<CL_DEVICE_NAME>()) << "\n";
+
+  std::flush(std::cout);
 
   cl::Context context= { default_device };
 

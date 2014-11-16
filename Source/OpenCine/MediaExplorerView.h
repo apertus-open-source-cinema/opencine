@@ -24,7 +24,7 @@ private:
      QList<QObject*> dataList;
 
 private slots:
-    void NewClipImported(std::string importedClip);
+    void NewClipImported(ClipData*);
 };
 
 #include <QObject>

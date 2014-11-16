@@ -7,7 +7,7 @@
 #include <libraw/libraw.h>
 #include <iostream>
 
-PreviewPane::PreviewPane(MediaExplorerPresenter* presenter, QWidget *parent) :
+PreviewPane::PreviewPane(PlaybackPresenter* presenter, QWidget *parent) :
     QOpenGLWidget(parent),
     ui(new Ui::PreviewPane)
 {    
@@ -79,8 +79,8 @@ void PreviewPane::CreateRectangle()
     float rectangleData[] =
     {
     //  Position      Texcoords
-        -1.0f, -1.0f, 0.0f, 1.0f,    0.0,       1920.0 / 2.0, // Top-left
-         1.0f, -1.0f, 1.0f, 1.0f, 1920.0 / 2.0, 1920.0 / 2.0, // Top-right
+        -1.0f, -1.0f, 0.0f, 1.0f,    0.0,       1080.0 / 2.0, // Top-left
+         1.0f, -1.0f, 1.0f, 1.0f, 1920.0 / 2.0, 1080.0 / 2.0, // Top-right
         -1.0f,  1.0f, 0.0f, 0.0f,    0.0,    0.0, // Bottom-right
          1.0f,  1.0f, 1.0f, 0.0f, 1920.0 / 2.0,    0.0  // Bottom-left
     };
@@ -190,7 +190,7 @@ void PreviewPane::CreateShaders()
         out vec3 outColor; \n\
         void main() \n\
         { \n\
-            outColor = texture( texture1, fragTexCoord ).rgb * texture(texture2, fragTexCoord2).rgb * 5.0; \n\
+            outColor = texture( texture1, fragTexCoord ).rgb * 10;// * texture(texture2, fragTexCoord2).rgb; \n\
         } \n\
         ");
 

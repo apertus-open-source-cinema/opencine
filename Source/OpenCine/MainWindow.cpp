@@ -29,19 +29,22 @@ std::vector<PreviewImageStruct*> memoryImages;
 
 QGraphicsScene* scene;
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(OCContext* context, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    MediaExplorerPresenter* presenter = new MediaExplorerPresenter();
+    _context = context;
+
+    MediaExplorerPresenter* mediaExplorerPresenter = new MediaExplorerPresenter();
+    PlaybackPresenter* playbackPresenter = new PlaybackPresenter();
 
     //Add preview pane
-    ui->gridLayout_3->addWidget(new PreviewPane(presenter));
+    ui->gridLayout_3->addWidget(new PreviewPane(playbackPresenter));
 
     //Set Media Explorer widget
-    ui->dockWidget_3->setWidget(new MediaExplorerView(presenter));
+    ui->dockWidget_3->setWidget(new MediaExplorerView(mediaExplorerPresenter));
 
     /*QMenu* importMenu = new QMenu();
     QAction* testAction = new QAction("test menu item", this);

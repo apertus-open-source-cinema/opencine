@@ -4,7 +4,7 @@
 #include <QQmlContext>
 #include <QMenu>
 
-#include "MediaExplorerPresenter.h"
+#include "Presenter/MediaExplorerPresenter.h"
 
 DataObject::DataObject(QObject *parent)
     : QObject(parent)
@@ -91,11 +91,11 @@ MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget 
 
     QMenu* importMenu = new QMenu();
     QAction* testAction = new QAction("Import from folder...", this);
-    connect(testAction,SIGNAL(triggered()), _presenter, SLOT(OpenFolderSelection()));
+    connect(testAction,SIGNAL(triggered()), _presenter, SLOT(ImportFolder()));
     importMenu->addAction(testAction);
     ui->pushButton_4->setMenu(importMenu);
 
-    connect(_presenter,SIGNAL(NewClipImported(std::string)), this, SLOT(NewClipImported(std::string)));
+    connect(_presenter,SIGNAL(NewDataFound(ClipData*)), this, SLOT(NewClipImported(ClipData*)));
 
     //QObject::connect(ui->pushButton_4, SIGNAL(clicked()), _presenter, SLOT(TestMessage()));
 }
@@ -105,9 +105,9 @@ MediaExplorerView::~MediaExplorerView()
     delete ui;
 }
 
-void MediaExplorerView::NewClipImported(std::string importedClip)
+void MediaExplorerView::NewClipImported(ClipData* clipData)
 {
-     dataList.append(new DataObject(importedClip.c_str(), "99"));
+     dataList.append(new DataObject("TEST123", "99"));
 
      QQmlContext *ctxt = ui->quickWidget->rootContext();
      ctxt->setContextProperty("listModel", QVariant::fromValue(dataList));

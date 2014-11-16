@@ -18,6 +18,8 @@ QProgressBar
 	height: 4px;
 	border: 1px solid #1e1e1e;
 	border-radius: 2px;
+	text-align: right;
+	margin-right: 5ex;
 }
 
 QProgressBar::chunk
@@ -82,4 +84,20 @@ QToolButton:pressed
 QMenu
 {
 	border: 1px solid #191919;
+}
+
+QRadioButton::indicator
+{
+     width: 12px;
+     height: 12px;
+}
+
+QRadioButton::indicator::checked
+{
+ color: red;
+}
+
+QRadioButton::indicator::unchecked
+{
+color: green;
 }

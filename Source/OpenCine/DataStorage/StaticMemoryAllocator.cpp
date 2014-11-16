@@ -8,80 +8,78 @@
 
 StaticMemoryAllocator::StaticMemoryAllocator()
 {
-    _dataProvider = new LibRawDataProvider();
-    //_dataProvider = new RawSpeedDataProvider();
+  _dataProvider = new LibRawDataProvider();
+  //_dataProvider = new RawSpeedDataProvider();
 }
 
 bool StaticMemoryAllocator::ImportFolder(std::string folderPath)
 {
-    _frameList.clear();
+  _frameList.clear();
 
-    QDir dir(QString::fromStdString(folderPath));
+  QDir dir(QString::fromStdString(folderPath));
 
-    QStringList filters;
-    filters << "*.dng";
-    dir.setNameFilters(filters);
+  QStringList filters;
+  filters << "*.dng";
+  dir.setNameFilters(filters);
 
-    dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
+  dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
 
+  QProgressDialog progress("Decoding files...", "Abort", 0, dir.entryList().size(), nullptr);
+  progress.setWindowModality(Qt::WindowModal);
 
+  for(unsigned int fileIndex = 0; fileIndex < dir.entryList().size(); fileIndex++)
+  {
+    OCImage* image = _dataProvider->LoadFile(folderPath + "/" + dir.entryList().at(fileIndex).toStdString());
+    _frameList.push_back(image);
 
-    QProgressDialog progress("Decoding files...", "Abort", 0, dir.entryList().size(), nullptr);
+    progress.setLabelText("File " + QString::number(fileIndex) + " of " + QString::number(dir.entryList().size()));
+    progress.setValue(fileIndex);
+  }
 
-        progress.setWindowModality(Qt::WindowModal);
-
-        for(unsigned int fileIndex = 0; fileIndex < dir.entryList().size(); fileIndex++)
-        {
-          OCImage* image = _dataProvider->LoadFile(folderPath + "/" + dir.entryList().at(fileIndex).toStdString());
-          _frameList.push_back(image);
-
-          progress.setValue(fileIndex);
-        }
-
-        /*for(QString file : dir.entryList())
+  /*for(QString file : dir.entryList())
         {
 
         }*/
-        /* for (int i = 0; i < numFiles; i++) {
+  /* for (int i = 0; i < numFiles; i++) {
             progress.setValue(i);
 
             if (progress.wasCanceled())
                 break;
             //... copy one file
         }*/
-        progress.setValue(dir.entryList().size());
+  progress.setValue(dir.entryList().size());
 
-//    QDirIterator it(QString::fromStdString(folderPath), QDirIterator::NoIteratorFlags);
-//    while (it.hasNext())
-//    {
-//        std::string name = it.fileName().toStdString();
-//        QFileInfo fileInfo = it.fileInfo();
-//        int i = 0;
+  //    QDirIterator it(QString::fromStdString(folderPath), QDirIterator::NoIteratorFlags);
+  //    while (it.hasNext())
+  //    {
+  //        std::string name = it.fileName().toStdString();
+  //        QFileInfo fileInfo = it.fileInfo();
+  //        int i = 0;
 
-//        it.next();
-//        //qDebug() << it.next();
+  //        it.next();
+  //        //qDebug() << it.next();
 
-//        // /etc/.
-//        // /etc/..
-//        // /etc/X11
-//        // /etc/X11/fs
-//        // ...
-//    }
+  //        // /etc/.
+  //        // /etc/..
+  //        // /etc/X11
+  //        // /etc/X11/fs
+  //        // ...
+  //    }
 
-    if(!_frameList.empty())
-    {
-        return true;
-    }
+  if(!_frameList.empty())
+  {
+    return true;
+  }
 
-    return false;
+  return false;
 }
 
 unsigned int StaticMemoryAllocator::GetFrameCount()
 {
-    return _frameList.size();
+  return _frameList.size();
 }
 
 OCImage *StaticMemoryAllocator::GetFrame(unsigned int frameNumber)
 {
-    return _frameList.at(frameNumber);
+  return _frameList.at(frameNumber);
 }
