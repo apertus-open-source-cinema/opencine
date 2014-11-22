@@ -5,10 +5,13 @@
 
 //#include "../DataStorage/StaticMemoryAllocator.h"
 
-MediaExplorerPresenter::MediaExplorerPresenter()
+MediaExplorerPresenter::MediaExplorerPresenter(OCContext* context)
 {
-  _model = new MediaExplorerModel();
+  _context = context;
+  _model = new MediaExplorerModel(_context->GetDefaultDataProvider());
   //_dataStorage = new StaticMemoryAllocator();
+
+  //connect(this, NewDataAvailable())
 }
 
 MediaExplorerPresenter::~MediaExplorerPresenter()

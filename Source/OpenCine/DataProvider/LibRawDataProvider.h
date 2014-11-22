@@ -5,7 +5,8 @@
 #include <memory>
 
 //OpenCineAPI includes
-#include "../API/IDataProvider.h"
+#include "API/IDataProvider.h"
+#include "Core/ImageData.h"
 
 //LibRaw includes
 #include <libraw/libraw.h>
@@ -26,6 +27,8 @@ public:
 
     // IPlugin interface
     std::string GetName();
+
+    OCImage* GetMetadataFromFile(std::string filePath);
 };
 
 #endif //LIBRAWDATAPROVIDER_H

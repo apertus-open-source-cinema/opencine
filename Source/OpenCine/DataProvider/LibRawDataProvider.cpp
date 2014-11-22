@@ -41,5 +41,20 @@ OCImage* LibRawDataProvider::LoadFolder(std::string folderPath)
 
 std::string LibRawDataProvider::GetName()
 {
-    return "LibRaw data provider";
+  return "LibRaw data provider";
+}
+
+OCImage* LibRawDataProvider::GetMetadataFromFile(std::string filePath)
+{
+  OCImage* metaData = nullptr;
+
+  imageProcessor->open_file(filePath.c_str());
+
+  if(imageProcessor->imgdata.rawdata.sizes.width > 0)
+  {
+    metaData = new OCImage();
+    metaData->SetSize(imageProcessor->imgdata.rawdata.sizes.width, imageProcessor->imgdata.rawdata.sizes.height);
+  }
+
+  return metaData;
 }

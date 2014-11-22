@@ -107,7 +107,7 @@ MediaExplorerView::~MediaExplorerView()
 
 void MediaExplorerView::NewClipImported(ClipData* clipData)
 {
-     dataList.append(new DataObject("TEST123", "99"));
+     dataList.append(new DataObject("TEST123", QString::number(clipData->GetWidth())));
 
      QQmlContext *ctxt = ui->quickWidget->rootContext();
      ctxt->setContextProperty("listModel", QVariant::fromValue(dataList));

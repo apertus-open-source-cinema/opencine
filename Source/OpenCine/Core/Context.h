@@ -6,6 +6,10 @@
 #include <vector>
 #include <string>
 
+#include "API/IDataProvider.h"
+
+using namespace OpenCineAPI;
+
 class OCSession
 {
 
@@ -16,6 +20,8 @@ class OCContext : public QObject
   Q_OBJECT
 
   OCSession* _session;
+
+  IDataProvider* _dataProvider;
 
   std::vector<std::string> _availableData;
 
@@ -30,6 +36,11 @@ public:
   void CreateSession()
   {
     emit SessionChanged();
+  }
+
+  IDataProvider* GetDefaultDataProvider()
+  {
+    return _dataProvider;
   }
 
 signals:

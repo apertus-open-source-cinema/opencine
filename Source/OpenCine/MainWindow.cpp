@@ -37,7 +37,7 @@ MainWindow::MainWindow(OCContext* context, QWidget *parent) :
 
     _context = context;
 
-    MediaExplorerPresenter* mediaExplorerPresenter = new MediaExplorerPresenter();
+    MediaExplorerPresenter* mediaExplorerPresenter = new MediaExplorerPresenter(_context);
     PlaybackPresenter* playbackPresenter = new PlaybackPresenter();
 
     //Add preview pane

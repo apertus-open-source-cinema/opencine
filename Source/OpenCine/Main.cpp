@@ -58,7 +58,9 @@ int main(int argc, char *argv[])
   //Step 3: Show data in "View"
   //???
 
+
   OCContext* context =  new OCContext();
+
 
 
   QApplication app(argc, argv);

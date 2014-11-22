@@ -19,6 +19,8 @@ namespace OpenCineAPI
 
     virtual OCImage* LoadFile(std::string) = 0;
     virtual OCImage* LoadFolder(std::string) = 0;
+
+    virtual OCImage* GetMetadataFromFile(std::string) = 0;
   };
 }
 

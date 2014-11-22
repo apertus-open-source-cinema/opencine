@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QMessageBox>
 
+#include "Core/Context.h"
+
 //#include <IDataStorage.h>
 
 #include "../Model/MediaExplorerModel.h"
@@ -21,13 +23,15 @@ class MediaExplorerPresenter : public QObject, public IMediaExplorerPresenter
     Q_OBJECT
 
 public:
-    MediaExplorerPresenter();
+    MediaExplorerPresenter(OCContext* context);
     ~MediaExplorerPresenter();
 
     //std::vector<std::string> GetData();
 
 private:
     MediaExplorerModel* _model;
+
+    OCContext* _context;
 
 signals:
     //void NewDataAvailable(OCImage* image);
