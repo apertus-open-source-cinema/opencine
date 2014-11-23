@@ -43,6 +43,8 @@ public:
     return _dataProvider;
   }
 
+  void LoadClip();
+
 signals:
   void SessionChanged();
 };

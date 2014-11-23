@@ -14,11 +14,18 @@ class ClipData
   std::string _name;
   unsigned int _width;
   unsigned int _height;
+  std::string _path;
 
 public:
   unsigned int GetWidth()
   {
     return _width;
+  }
+
+  unsigned int SetSize(unsigned int width, unsigned int height)
+  {
+    _width = width;
+    _height = height;
   }
 };
 
@@ -38,7 +45,7 @@ public:
   }
 
   //Currently single folder only, subfolders will be implemented later
-  bool EnumerateAvailableData(std::string folderPath);
+  bool EnumerateAvailableData(std::string folderPath, ClipData& clipData);
 
 signals:
   void NewDataAdded(OCImage* metaData);

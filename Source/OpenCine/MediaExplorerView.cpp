@@ -111,4 +111,7 @@ void MediaExplorerView::NewClipImported(ClipData* clipData)
 
      QQmlContext *ctxt = ui->quickWidget->rootContext();
      ctxt->setContextProperty("listModel", QVariant::fromValue(dataList));
+
+     //HACK: For testing purpose only, loads last added clip, should be moved when double-clicking on a clip in MediaExplorer works again
+     _presenter->LoadClip(dataList.count());
 }

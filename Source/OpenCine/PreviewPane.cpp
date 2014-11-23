@@ -15,7 +15,7 @@ PreviewPane::PreviewPane(PlaybackPresenter* presenter, QWidget *parent) :
 
     _presenter = presenter;
 
-    connect(_presenter, SIGNAL(NewDataAvailable(OCImage*)), this, SLOT(UpdateFrame(OCImage*)));
+    //connect(_presenter, SIGNAL(NewDataAvailable(OCImage*)), this, SLOT(UpdateFrame(OCImage*)));
 
     //this->setAttribute(Qt::WA_DontCreateNativeAncestors);
 }

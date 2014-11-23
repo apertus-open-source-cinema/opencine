@@ -7,3 +7,8 @@ _session(nullptr)
 {
   _dataProvider = new LibRawDataProvider();
 }
+
+void OCContext::LoadClip()
+{
+  emit SessionChanged();
+}

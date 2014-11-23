@@ -26,7 +26,7 @@ public:
     MediaExplorerPresenter(OCContext* context);
     ~MediaExplorerPresenter();
 
-    //std::vector<std::string> GetData();
+    void LoadClip(int clipNumber);
 
 private:
     MediaExplorerModel* _model;

@@ -18,13 +18,21 @@ MediaExplorerPresenter::~MediaExplorerPresenter()
 {
 }
 
+void MediaExplorerPresenter::LoadClip(int clipNumber)
+{
+  //_model->GetClipByID();
+  //_context->LoadSession()
+}
+
 void MediaExplorerPresenter::ImportFolder()
 {
+  _context->LoadClip();
+
   QString dir = QFileDialog::getExistingDirectory(0, tr("_Choose directory to import from ..."), "/home", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
-  ClipData* clipData = nullptr;
+  ClipData* clipData = new ClipData();
 
-  if(_model->EnumerateAvailableData(dir.toStdString()))
+  if(_model->EnumerateAvailableData(dir.toStdString(), *clipData))
   {
     emit NewDataFound(clipData);
   }

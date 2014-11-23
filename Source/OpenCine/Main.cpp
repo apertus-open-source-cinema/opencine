@@ -30,7 +30,7 @@ void SetStyle(QApplication* app)
 int main(int argc, char *argv[])
 {
   //TestFFMPEG();
-  TestOpenCL();
+  //TestOpenCL();
   //TestCatch();
   //    QSurfaceFormat format;
   //    format.setVersion(3, 3);
@@ -60,8 +60,6 @@ int main(int argc, char *argv[])
 
 
   OCContext* context =  new OCContext();
-
-
 
   QApplication app(argc, argv);
   MainWindow* mainWindow = new MainWindow(context);

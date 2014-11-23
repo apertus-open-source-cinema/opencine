@@ -2,7 +2,7 @@
 
 #include <QDir>
 
-bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath)
+bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipData& clipData)
 {
   QDir dir(QString::fromStdString(folderPath));
 
@@ -16,11 +16,17 @@ bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath)
   std::string fileName = dir.entryList().at(0).toStdString();
   OCImage* imageData = _dataProvider->GetMetadataFromFile(folderPath + "/" + fileName);
 
-  if(imageData != nullptr)
+  if(imageData)
   {
-    emit NewDataAdded(imageData);
+    clipData.SetSize(imageData->GetWidth(), imageData->GetHeight());
     return true;
   }
+
+  //if(imageData != nullptr)
+  //{
+  //  emit NewDataAdded(imageData);
+  //  return true;
+ // }
 
   return false;
 }

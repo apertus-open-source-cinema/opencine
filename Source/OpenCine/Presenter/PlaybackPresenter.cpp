@@ -1,7 +1,10 @@
 #include "PlaybackPresenter.h"
 
-PlaybackPresenter::PlaybackPresenter()
+PlaybackPresenter::PlaybackPresenter(OCContext* context)
 {
+  _context = context;
+
+  connect(_context, SIGNAL(SessionChanged()), this, SLOT(OnSessionChanged()));
 }
 
 PlaybackPresenter::~PlaybackPresenter()
@@ -19,6 +22,11 @@ void PlaybackPresenter::UpdateViews()
     emit NewDataAvailable(image);
 
     currentFrame++;*/
+}
+
+void PlaybackPresenter::OnSessionChanged()
+{
+  int i = 0;
 }
 
 
