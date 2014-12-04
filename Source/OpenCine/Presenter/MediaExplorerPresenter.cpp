@@ -20,7 +20,8 @@ MediaExplorerPresenter::~MediaExplorerPresenter()
 
 void MediaExplorerPresenter::LoadClip(int clipNumber)
 {
-  //_model->GetClipByID();
+  //_model->GetClipByID(clipNumber);
+  
   //_context->LoadSession()
 }
 
