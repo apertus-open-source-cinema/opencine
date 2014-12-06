@@ -9,7 +9,7 @@
 
 using namespace OpenCineAPI;
 
-class ClipData
+class ClipInfo
 {
   std::string _name;
   unsigned int _width;
@@ -20,6 +20,16 @@ public:
   unsigned int GetWidth()
   {
     return _width;
+  }
+
+  unsigned int GetHeight()
+  {
+    return _height;
+  }
+
+  std::string GetPath()
+  {
+    return _path;
   }
 
   unsigned int SetSize(unsigned int width, unsigned int height)
@@ -33,7 +43,7 @@ class MediaExplorerModel : public QObject
 {
   Q_OBJECT
 
-  std::vector<ClipData> _availableData;
+  std::vector<ClipInfo*> _availableData;
 
   IDataProvider* _dataProvider;
 
@@ -45,7 +55,9 @@ public:
   }
 
   //Currently single folder only, subfolders will be implemented later
-  bool EnumerateAvailableData(std::string folderPath, ClipData& clipData);
+  bool EnumerateAvailableData(std::string folderPath, ClipInfo& clipData);
+
+  ClipInfo* GetClipByID(unsigned int clipID);
 
 signals:
   void NewDataAdded(OCImage* metaData);

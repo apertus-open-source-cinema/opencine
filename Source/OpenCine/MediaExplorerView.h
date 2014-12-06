@@ -4,6 +4,7 @@
 #include "MediaExplorerPresenter.h"
 
 #include <QWidget>
+#include <QQmlContext>
 
 namespace Ui {
 class MediaExplorerView;
@@ -21,10 +22,11 @@ private:
     Ui::MediaExplorerView *ui;
     MediaExplorerPresenter* _presenter;
 
-     QList<QObject*> dataList;
+    QQmlContext *qmlContext;
+    QList<QObject*> dataList;
 
 private slots:
-    void NewClipImported(ClipData*);
+    void NewClipsFound(ClipInfo*);
 };
 
 #include <QObject>
@@ -35,25 +37,37 @@ class DataObject : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(QString fps READ fps WRITE setFPS NOTIFY fpsChanged)
+    Q_PROPERTY(QString width READ width WRITE setWidth NOTIFY widthChanged)
+    Q_PROPERTY(QString height READ height WRITE setHeight NOTIFY heightChanged)
 
 public:
     DataObject(QObject *parent=0);
-    DataObject(const QString &name, const QString &fps, QObject *parent=0);
+    DataObject(const QString &name, const unsigned int& width, const unsigned int& height, QObject* parent=0);
 
     QString name() const;
     void setName(const QString &name);
 
-    QString fps() const;
-    void setFPS(const QString &fps);
+    unsigned int width() const;
+    void setWidth(const unsigned int &width);
+
+    unsigned int height() const;
+    void setHeight(const unsigned int &height);
+
+
+    //QString fps() const;
+    //void setFPS(const QString &fps);
 
 signals:
     void nameChanged();
-    void fpsChanged();
+    void widthChanged();
+    void heightChanged();
+
+    //void fpsChanged();
 
 private:
     QString _name;
-    QString _FPS;
+    unsigned int _width;
+    unsigned int _height;
 };
 
 class MyClass : public QObject

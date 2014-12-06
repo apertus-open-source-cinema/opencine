@@ -2,7 +2,7 @@
 
 #include <QDir>
 
-bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipData& clipData)
+bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipInfo& clipData)
 {
   QDir dir(QString::fromStdString(folderPath));
 
@@ -29,4 +29,14 @@ bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipData
  // }
 
   return false;
+}
+
+ClipInfo* MediaExplorerModel::GetClipByID(unsigned int clipID)
+{
+  if(clipID < _availableData.size())
+  {
+    return _availableData.at(clipID);
+  }
+
+  return nullptr;
 }

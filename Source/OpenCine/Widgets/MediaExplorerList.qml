@@ -1,7 +1,8 @@
 import QtQuick 2.3
 import QtGraphicalEffects 1.0
 
-Rectangle {
+Rectangle
+{
     id: mediaExplorerList
     width: 276
     height: 300
@@ -28,76 +29,8 @@ Rectangle {
         clipFPS: fps
 
         loaded: false
-
-        //color: "transparent"
-
-        /*MouseArea
-        {
-          id: mouseArea
-          anchors.fill: parent
-          hoverEnabled: true
-
-          onDoubleClicked:
-          {
-            currItem = index;
-
-            clipList.currentIndex = prevItem;
-            clipList.currentItem.loaded = false;
-
-            clipList.currentIndex = currItem;
-            clipList.currentItem.loaded = true;
-
-            //if(currItem != prevItem)
-            //{
-            prevItem = currItem;
-            //}
-
-            mediaExplorerList.loadClip(index);
-          }
-
-          //onFocusChanged :
-          //{
-          //  if(clipList.currentIndex == index)
-          //  {
-          //    clipList.currentIndex.loaded = true;
-          //  }
-          //  else
-          //  {
-          //    clipList.currentIndex.loaded = false;
-          //  }
-          //}
-          }*/
-        }
       }
-
-    /*ListModel
-    {
-        id: listModel
-
-        ListElement
-        {
-            name: "Test1"
-            fps: 30
-        }
-
-        ListElement
-        {
-            name: "Test2"
-            fps: 24
-        }
-
-        ListElement
-        {
-            name: "Test3"
-            fps: 30
-        }
-
-        ListElement
-        {
-            name: "Test4"
-            fps: 24
-        }
-    }*/
+    }
 
     Component
     {
@@ -150,8 +83,6 @@ Rectangle {
         delegate: listDelegate
 
         focus: true
-        //highlight: highlightBox
-        //highlightFollowsCurrentItem: false
     }
 
      InnerShadow
@@ -180,6 +111,5 @@ Rectangle {
     ScrollBar
     {
         flickable: clipList
-        //vertical: true
     }
 }

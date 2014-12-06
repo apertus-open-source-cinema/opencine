@@ -35,7 +35,7 @@ private:
 
 signals:
     //void NewDataAvailable(OCImage* image);
-    void NewDataFound(ClipData*);
+    void NewDataFound(ClipInfo*);
 
 private slots:
     void ImportFolder();
