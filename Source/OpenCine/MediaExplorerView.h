@@ -36,13 +36,13 @@ class DataObject : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
-    Q_PROPERTY(QString width READ width WRITE setWidth NOTIFY widthChanged)
-    Q_PROPERTY(QString height READ height WRITE setHeight NOTIFY heightChanged)
+    Q_PROPERTY(QString clipName READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(unsigned int clipWidth READ width WRITE setWidth NOTIFY widthChanged)
+    Q_PROPERTY(unsigned int clipHeight READ height WRITE setHeight NOTIFY heightChanged)
 
 public:
     DataObject(QObject *parent=0);
-    DataObject(const QString &name, const unsigned int& width, const unsigned int& height, QObject* parent=0);
+    DataObject(const QString &name, const unsigned int& width, const unsigned int& height, QObject* parent = 0);
 
     QString name() const;
     void setName(const QString &name);

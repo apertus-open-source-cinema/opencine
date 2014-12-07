@@ -11,8 +11,11 @@ Rectangle {
     anchors.left: parent.left
     anchors.right: parent.right
 
+    //Clip properties
     property string clipName: ""
-    property int clipFPS: 0
+    property int clipFPS: -1
+    property int clipWidth: -1
+    property int clipHeight: -1
 
     property bool loaded: false
 
@@ -90,7 +93,7 @@ Rectangle {
             Text {
                 id: text1
                 color: "#dedddd"
-                text: name
+                text: clipName
                 smooth: true
                 clip: true
                 anchors.right: parent.right
@@ -134,7 +137,7 @@ Rectangle {
             Text {
                 id: text4
                 color: "#dedddd"
-                text: qsTr("1920 x 1080")
+                text: clipWidth + " x " + clipHeight
                 anchors.right: parent.right
                 anchors.rightMargin: 0
                 anchors.left: parent.left

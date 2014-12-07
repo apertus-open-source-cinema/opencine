@@ -25,8 +25,10 @@ Rectangle
 
       MediaExplorerItem
       {
-        clipName: name
-        clipFPS: fps
+        clipName: model.clipName
+        clipFPS: model.clipFPS
+        clipWidth: model.clipWidth
+        clipHeight: model.clipHeight
 
         loaded: false
       }

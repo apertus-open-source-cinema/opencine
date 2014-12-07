@@ -10,7 +10,7 @@ DataObject::DataObject(QObject *parent)
 {
 }
 
-DataObject::DataObject(const QString &name, const unsigned int& width, const unsigned int& height, QObject *parent=0)
+DataObject::DataObject(const QString &name, const unsigned int& width, const unsigned int& height, QObject *parent)
     : QObject(parent), _name(name), _width(width), _height(height)
 {
 }
