@@ -12,12 +12,18 @@ bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipInfo
 
   dir.setFilter(QDir::NoDotAndDotDot | QDir::Files);
 
+  if(dir.count() == 0)
+  {
+    return false;
+  }
+
   //Get metadata for the first file, no error checks available atm
   std::string fileName = dir.entryList().at(0).toStdString();
-  OCImage* imageData = _dataProvider->GetMetadataFromFile(folderPath + "/" + fileName);
+  OCFrame* imageData = _dataProvider->GetMetadataFromFile(folderPath + "/" + fileName);
 
   if(imageData)
   {
+    clipData.SetName("TestABC");
     clipData.SetSize(imageData->GetWidth(), imageData->GetHeight());
     return true;
   }
@@ -26,7 +32,7 @@ bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipInfo
   //{
   //  emit NewDataAdded(imageData);
   //  return true;
- // }
+  // }
 
   return false;
 }

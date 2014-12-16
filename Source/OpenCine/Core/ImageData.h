@@ -3,7 +3,7 @@
 
 #include <string.h>
 
-class OCImage
+class OCFrame
 {
   unsigned int _width;
   unsigned int _height;

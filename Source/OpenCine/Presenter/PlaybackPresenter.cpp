@@ -11,25 +11,29 @@ PlaybackPresenter::~PlaybackPresenter()
 {
 }
 
-void PlaybackPresenter::UpdateViews()
+void PlaybackPresenter::SetFrame(unsigned int frame)
 {
-    /*if(currentFrame > _dataStorage->GetFrameCount() - 1)
-    {
-        currentFrame = 0;
-    }
 
-    OCImage* image = _dataStorage->GetFrame(currentFrame);
-    emit NewDataAvailable(image);
-
-    currentFrame++;*/
 }
+
+/*void PlaybackPresenter::UpdateViews()
+{
+  emit FrameChanged();
+  if(currentFrame > _dataStorage->GetFrameCount() - 1)
+  {
+    currentFrame = 0;
+  }
+
+  OCImage* image = _dataStorage->GetFrame(currentFrame);
+  emit NewDataAvailable(image);
+
+  currentFrame++;
+}*/
 
 void PlaybackPresenter::OnSessionChanged()
 {
   int i = 0;
 }
-
-
 
 /*std::vector<std::string> PlaybackPresenter::GetData()
 {
@@ -43,3 +47,30 @@ void PlaybackPresenter::OnSessionChanged()
 
     return data;
 }*/
+
+
+void PlaybackPresenter::Play()
+{
+  //_timer.start();
+}
+
+void PlaybackPresenter::Pause()
+{
+  //_timer.stop();
+}
+
+void PlaybackPresenter::Stop()
+{
+  //_timer.stop();
+  _currentFrame = 0;
+}
+
+void PlaybackPresenter::NextFrame()
+{
+  _currentFrame++;
+}
+
+void PlaybackPresenter::PrevFrame()
+{
+  _currentFrame--;
+}

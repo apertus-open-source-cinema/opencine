@@ -41,9 +41,9 @@ RawSpeedDataProvider::~RawSpeedDataProvider()
 
 //std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
-OCImage* RawSpeedDataProvider::LoadFile(std::string filePath)
+OCFrame* RawSpeedDataProvider::LoadFile(std::string filePath)
 {
-    OCImage* image = new OCImage();
+    OCFrame* image = new OCFrame();
 
     //std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
     //converter.from_bytes(filePath)
@@ -76,7 +76,7 @@ OCImage* RawSpeedDataProvider::LoadFile(std::string filePath)
     return image;
 }
 
-OCImage *RawSpeedDataProvider::LoadFolder(std::string folderPath)
+OCFrame* RawSpeedDataProvider::LoadFolder(std::string folderPath)
 {
 
 }

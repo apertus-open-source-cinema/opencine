@@ -18,8 +18,8 @@ public:
     ~RawSpeedDataProvider();
 
     // IDataProvider interface
-    OCImage* LoadFile(std::string filePath);
-    OCImage* LoadFolder(std::string folderPath);
+    OCFrame* LoadFile(std::string filePath);
+    OCFrame* LoadFolder(std::string folderPath);
 
     // IPlugin interface
     std::string GetName();

@@ -11,7 +11,7 @@ using namespace OpenCineAPI;
 
 class StaticMemoryAllocator : public IDataStorage
 {
-    std::vector<OCImage*> _frameList;
+    std::vector<OCFrame*> _frameList;
     IDataProvider* _dataProvider;
 
     // IDataStorage interface
@@ -21,7 +21,7 @@ public:
     bool ImportFolder(std::string folderPath);
 
     unsigned int GetFrameCount();
-    OCImage* GetFrame(unsigned int frameNumber);
+    OCFrame* GetFrame(unsigned int frameNumber);
 };
 
 #endif //STATICMEMORYALLOCATOR_H

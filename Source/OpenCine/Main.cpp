@@ -12,6 +12,9 @@
 
 #include "Core/Context.h"
 
+#include <OpenImageIO/imageio.h>
+OIIO_NAMESPACE_USING
+
 using namespace OpenCineAPI;
 
 void SetStyle(QApplication* app)
@@ -29,6 +32,8 @@ void SetStyle(QApplication* app)
 
 int main(int argc, char *argv[])
 {
+  //ImageOutput *out = ImageOutput::create ("Test.img");
+
   //TestFFMPEG();
   //TestOpenCL();
   //TestCatch();

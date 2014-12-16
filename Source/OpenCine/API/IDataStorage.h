@@ -12,7 +12,7 @@ namespace OpenCineAPI
         virtual bool ImportFolder(std::string folderPath) = 0;
 
         virtual unsigned int GetFrameCount() = 0;
-        virtual OCImage* GetFrame(unsigned int frameNumber) = 0;
+        virtual OCFrame* GetFrame(unsigned int frameNumber) = 0;
     };
 }
 

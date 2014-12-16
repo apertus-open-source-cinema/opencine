@@ -13,9 +13,9 @@ LibRawDataProvider::~LibRawDataProvider()
   }
 }
 
-OCImage* LibRawDataProvider::LoadFile(std::string filePath)
+OCFrame* LibRawDataProvider::LoadFile(std::string filePath)
 {
-    OCImage* image = new OCImage();
+    OCFrame* image = new OCFrame();
 
     // Creation of image processing object
     imageProcessor->open_file(filePath.c_str());
@@ -34,7 +34,7 @@ OCImage* LibRawDataProvider::LoadFile(std::string filePath)
     return image;
 }
 
-OCImage* LibRawDataProvider::LoadFolder(std::string folderPath)
+OCFrame* LibRawDataProvider::LoadFolder(std::string folderPath)
 {
     int i = 0;
 }
@@ -44,15 +44,15 @@ std::string LibRawDataProvider::GetName()
   return "LibRaw data provider";
 }
 
-OCImage* LibRawDataProvider::GetMetadataFromFile(std::string filePath)
+OCFrame* LibRawDataProvider::GetMetadataFromFile(std::string filePath)
 {
-  OCImage* metaData = nullptr;
+  OCFrame* metaData = nullptr;
 
   imageProcessor->open_file(filePath.c_str());
 
   if(imageProcessor->imgdata.rawdata.sizes.width > 0)
   {
-    metaData = new OCImage();
+    metaData = new OCFrame();
     metaData->SetSize(imageProcessor->imgdata.rawdata.sizes.width, imageProcessor->imgdata.rawdata.sizes.height);
   }
 

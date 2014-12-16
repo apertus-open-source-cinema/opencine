@@ -105,7 +105,7 @@ MediaExplorerView::~MediaExplorerView()
 
 void MediaExplorerView::NewClipsFound(ClipInfo* clipInfo)
 {
-     dataList.append(new DataObject(QString::fromStdString(clipInfo->GetPath()), clipInfo->GetWidth(), clipInfo->GetHeight()));
+     dataList.append(new DataObject(QString::fromStdString(clipInfo->GetName()), clipInfo->GetWidth(), clipInfo->GetHeight()));
 
      qmlContext->setContextProperty("listModel", QVariant::fromValue(dataList));
 

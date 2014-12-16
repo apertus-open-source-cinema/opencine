@@ -29,7 +29,7 @@ bool StaticMemoryAllocator::ImportFolder(std::string folderPath)
 
   for(unsigned int fileIndex = 0; fileIndex < dir.entryList().size(); fileIndex++)
   {
-    OCImage* image = _dataProvider->LoadFile(folderPath + "/" + dir.entryList().at(fileIndex).toStdString());
+    OCFrame* image = _dataProvider->LoadFile(folderPath + "/" + dir.entryList().at(fileIndex).toStdString());
     _frameList.push_back(image);
 
     progress.setLabelText("File " + QString::number(fileIndex) + " of " + QString::number(dir.entryList().size()));
@@ -79,7 +79,7 @@ unsigned int StaticMemoryAllocator::GetFrameCount()
   return _frameList.size();
 }
 
-OCImage *StaticMemoryAllocator::GetFrame(unsigned int frameNumber)
+OCFrame *StaticMemoryAllocator::GetFrame(unsigned int frameNumber)
 {
   return _frameList.at(frameNumber);
 }

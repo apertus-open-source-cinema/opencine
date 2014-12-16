@@ -221,7 +221,7 @@ void PreviewPane::CreateShaders()
     glUseProgram(shaderProgram);
 }
 
-void PreviewPane::UpdateFrame(OCImage *image)
+void PreviewPane::UpdateFrame(OCFrame* image)
 {
     glBindTexture(GL_TEXTURE_2D, tex);
 

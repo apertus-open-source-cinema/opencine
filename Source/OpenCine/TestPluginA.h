@@ -15,12 +15,12 @@ public:
 
     // IDataProvider interface
 public:
-    OCImage* LoadFile(std::string)
+    OCFrame* LoadFile(std::string)
     {
 
     }
 
-    OCImage* LoadFolder(std::string)
+    OCFrame* LoadFolder(std::string)
     {
 
     }

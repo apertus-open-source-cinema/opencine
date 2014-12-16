@@ -27,9 +27,19 @@ public:
     return _height;
   }
 
+  void SetName(std::string name)
+  {
+    _name = name;
+  }
+
   std::string GetPath()
   {
     return _path;
+  }
+
+  std::string GetName()
+  {
+    return _name;
   }
 
   unsigned int SetSize(unsigned int width, unsigned int height)
@@ -60,7 +70,7 @@ public:
   ClipInfo* GetClipByID(unsigned int clipID);
 
 signals:
-  void NewDataAdded(OCImage* metaData);
+  void NewDataAdded(OCFrame* metaData);
 };
 
 #endif //MEDIAEXPLORERMODEL_H
