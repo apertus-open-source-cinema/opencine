@@ -1,6 +1,8 @@
 #ifndef PLAYBACKPRESENTER_H
 #define PLAYBACKPRESENTER_H
 
+#include "Core/Context.h"
+
 #include <Context.h>
 #include <QObject>
 #include <QTimer>
@@ -30,11 +32,12 @@ private:
     QTimer _timer;
 
 signals:
+    void SessionChanged(OCSession* session);
     void FrameChanged(unsigned int frameNumber/*, ImageData*/);
 
 private slots:
     //void UpdateViews();
-    void OnSessionChanged();
+    void OnSessionChanged(OCSession* session);
 };
 
 

@@ -2,7 +2,42 @@
 
 #include <QDir>
 
-bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipInfo& clipData)
+/*ClipInfo::ClipInfo(QObject *parent)
+    : QObject(parent)
+{
+}*/
+
+ClipInfo::ClipInfo(const QString &path, const unsigned int& width, const unsigned int& height, const unsigned int& fps, QObject *parent):
+QObject(parent),
+_path(path),
+_width(width),
+_height(height),
+_fps(fps)
+{
+    _name = path;
+}
+
+QString ClipInfo::Name() const
+{
+    return _name;
+}
+
+unsigned int ClipInfo::Width() const
+{
+    return _width;
+}
+
+unsigned int ClipInfo::Height() const
+{
+    return _height;
+}
+
+unsigned int ClipInfo::FPS() const
+{
+    return _fps;
+}
+
+bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipInfo** clipData)
 {
   QDir dir(QString::fromStdString(folderPath));
 
@@ -22,9 +57,10 @@ bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipInfo
   OCFrame* imageData = _dataProvider->GetMetadataFromFile(folderPath + "/" + fileName);
 
   if(imageData)
-  {
-    clipData.SetName("TestABC");
-    clipData.SetSize(imageData->GetWidth(), imageData->GetHeight());
+  {    
+    *clipData = new ClipInfo(dir.dirName(), imageData->GetWidth(), imageData->GetHeight(), 0);
+
+    delete imageData;
     return true;
   }
 

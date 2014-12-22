@@ -5,73 +5,6 @@
 
 #include "Presenter/MediaExplorerPresenter.h"
 
-DataObject::DataObject(QObject *parent)
-    : QObject(parent)
-{
-}
-
-DataObject::DataObject(const QString &name, const unsigned int& width, const unsigned int& height, QObject *parent)
-    : QObject(parent), _name(name), _width(width), _height(height)
-{
-}
-
-QString DataObject::name() const
-{
-    return _name;
-}
-
-void DataObject::setName(const QString &name)
-{
-    if (name != _name)
-    {
-        _name = name;
-        emit nameChanged();
-    }
-}
-
-unsigned int DataObject::width() const
-{
-    return _width;
-}
-
-void DataObject::setWidth(const unsigned int& width)
-{
-    if (width != _width)
-    {
-        _width = width;
-        emit widthChanged();
-    }
-}
-
-
-unsigned int DataObject::height() const
-{
-    return _height;
-}
-
-void DataObject::setHeight(const unsigned int& height)
-{
-    if (height != _height)
-    {
-        _height = height;
-        emit heightChanged();
-    }
-}
-
-/*QString DataObject::fps() const
-{
-    return _FPS;
-}
-
-void DataObject::setFPS(const QString &fps)
-{
-    if (fps != _FPS)
-    {
-        _FPS = fps;
-        emit fpsChanged();
-    }
-}*/
-
 MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::MediaExplorerView)
@@ -105,7 +38,7 @@ MediaExplorerView::~MediaExplorerView()
 
 void MediaExplorerView::NewClipsFound(ClipInfo* clipInfo)
 {
-     dataList.append(new DataObject(QString::fromStdString(clipInfo->GetName()), clipInfo->GetWidth(), clipInfo->GetHeight()));
+     dataList.append(clipInfo);
 
      qmlContext->setContextProperty("listModel", QVariant::fromValue(dataList));
 

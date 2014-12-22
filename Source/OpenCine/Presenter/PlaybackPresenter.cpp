@@ -30,9 +30,9 @@ void PlaybackPresenter::SetFrame(unsigned int frame)
   currentFrame++;
 }*/
 
-void PlaybackPresenter::OnSessionChanged()
+void PlaybackPresenter::OnSessionChanged(OCSession* session)
 {
-  int i = 0;
+    emit SessionChanged(session);
 }
 
 /*std::vector<std::string> PlaybackPresenter::GetData()

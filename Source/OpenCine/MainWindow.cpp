@@ -6,16 +6,18 @@
 #include <QPainter>
 #include <QFileDialog>
 #include <QTimer>
+#include <QGridLayout>
 
 #include "API/IDataProvider.h"
 
 #include "MediaExplorerView.h"
+#include "PlaybackSlider.h"
 #include "PreviewPane.h"
 #include "TestPluginA.h"
 
-#include <dirent.h>
+//#include <dirent.h>
 
-struct PreviewImageStruct
+/*struct PreviewImageStruct
 {
     int width;
     int height;
@@ -25,9 +27,9 @@ struct PreviewImageStruct
 };
 
 std::vector<std::string> files;
-std::vector<PreviewImageStruct*> memoryImages;
+std::vector<PreviewImageStruct*> memoryImages;*/
 
-QGraphicsScene* scene;
+//QGraphicsScene* scene;
 
 MainWindow::MainWindow(OCContext* context, QWidget *parent) :
     QMainWindow(parent),
@@ -45,6 +47,10 @@ MainWindow::MainWindow(OCContext* context, QWidget *parent) :
 
     //Set Media Explorer widget
     ui->dockWidget_3->setWidget(new MediaExplorerView(mediaExplorerPresenter));
+
+    QGridLayout* layout = new QGridLayout();
+    layout->addWidget(new PlaybackSlider(playbackPresenter)),
+    ui->widget->setLayout(layout);
 
     /*QMenu* importMenu = new QMenu();
     QAction* testAction = new QAction("test menu item", this);
@@ -97,10 +103,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::resizeEvent(QResizeEvent *)
-{
+//void MainWindow::resizeEvent(QResizeEvent *)
+//{
     //ui->previewArea->fitInView(it, Qt::KeepAspectRatio);
-}
+//}
 
 /*void MainWindow::SelectImportFolder()
 {

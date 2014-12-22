@@ -15,7 +15,7 @@ extern "C"
 }
 #endif
 
-static void TestFFMPEG()
+/*static void TestFFMPEG()
 {
   AVFormatContext* formatContext = nullptr;
   AVCodecContext* codecContext = nullptr;
@@ -51,7 +51,7 @@ static void TestFFMPEG()
   //}
 
   int i = 0;
-}
+}*/
 
 static std::string trim(const std::string& str, const std::string& whitespace = " \t")
 {

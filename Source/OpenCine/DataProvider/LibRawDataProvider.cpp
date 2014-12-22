@@ -37,6 +37,8 @@ OCFrame* LibRawDataProvider::LoadFile(std::string filePath)
 OCFrame* LibRawDataProvider::LoadFolder(std::string folderPath)
 {
     int i = 0;
+
+    return nullptr;
 }
 
 std::string LibRawDataProvider::GetName()

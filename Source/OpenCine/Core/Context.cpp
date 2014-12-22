@@ -32,7 +32,7 @@ _session(nullptr)
 
 void OCContext::LoadClip()
 {
-  emit SessionChanged();
+  emit SessionChanged(nullptr);
 }
 
 //TODO: void CreateNewSession(std::string dataPath, IDataProvider& dataProvider)

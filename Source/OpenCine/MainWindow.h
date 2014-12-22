@@ -25,8 +25,8 @@ private:
     OCContext* _context;
     //LibRaw* imageProcessor;
 
-protected:
-    void resizeEvent(QResizeEvent *);
+//protected:
+    //void resizeEvent(QResizeEvent *);
 
 private slots:
     //void SelectImportFolder();

@@ -12,26 +12,26 @@ FIND_PACKAGE(Qt5Widgets REQUIRED)
 FIND_PACKAGE(Qt5QuickWidgets REQUIRED)
 FIND_PACKAGE(Qt5OpenGL REQUIRED)
 
-find_library(AVUTIL_LIB "avutil-ffmpeg")
-if(AVUTIL_LIB)
-  message(STATUS "Found: avutil -> " ${AVUTIL_LIB})
-else()
-  message(STATUS "Not found: avutil")
-endif()
+#find_library(AVUTIL_LIB "avutil-ffmpeg")
+#if(AVUTIL_LIB)
+#  message(STATUS "Found: avutil -> " ${AVUTIL_LIB})
+#else()
+#  message(STATUS "Not found: avutil")
+#endif()
 
-find_library(AVFORMAT_LIB "avformat-ffmpeg")
-if(AVFORMAT_LIB)
-  message(STATUS "Found: avformat -> " ${AVFORMAT_LIB})
-else()
-  message(STATUS "Not found: avformat")
-endif()
+#find_library(AVFORMAT_LIB "avformat-ffmpeg")
+#if(AVFORMAT_LIB)
+#  message(STATUS "Found: avformat -> " ${AVFORMAT_LIB})
+#else()
+#  message(STATUS "Not found: avformat")
+#endif()
 
-find_library(AVCODEC_LIB "avcodec-ffmpeg")
-if(AVCODEC_LIB)
-  message(STATUS "Found: avcodec -> " ${AVCODEC_LIB})
-else()
-  message(STATUS "Not found: avcodec")
-endif()
+#find_library(AVCODEC_LIB "avcodec-ffmpeg")
+#if(AVCODEC_LIB)
+#  message(STATUS "Found: avcodec -> " ${AVCODEC_LIB})
+#else()
+#  message(STATUS "Not found: avcodec")
+#endif()
 
 find_library(OPENCL_LIB "libOpenCL.so.1")
 if(OPENCL_LIB)
@@ -40,12 +40,12 @@ else()
   message(STATUS "Not found: OpenCL")
 endif()
 
-find_library(LIBJPEG_LIB "libjpeg.so")
-if(LIBJPEG_LIB)
-  message(STATUS "Found: libjpeg8 -> " ${LIBJPEG_LIB})
-else()
-  message(STATUS "Not found: libjpeg8")
-endif()
+#find_library(LIBJPEG_LIB "libjpeg.so")
+#if(LIBJPEG_LIB)
+#  message(STATUS "Found: libjpeg8 -> " ${LIBJPEG_LIB})
+#else()
+#  message(STATUS "Not found: libjpeg8")
+#endif()
 
 INCLUDE_DIRECTORIES(${Qt5Widgets_INCLUDES})
 INCLUDE_DIRECTORIES(${Qt5QuickWidgets_INCLUDE_DIRS})
@@ -89,11 +89,11 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     ${QT_LIBRARIES}
     ${OPENGL_LIBRARIES}
     "${CMAKE_BINARY_DIR}/lib/libraw.so"
-    "${AVUTIL_LIB}"
-    "${AVFORMAT_LIB}"
-    "${AVCODEC_LIB}"
+    #"${AVUTIL_LIB}"
+    #"${AVFORMAT_LIB}"
+    #"${AVCODEC_LIB}"
     "${OPENCL_LIB}"
-    "${LIBJPEG_LIB}"
+    #"${LIBJPEG_LIB}"
     pthread
   )
 

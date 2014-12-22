@@ -48,7 +48,7 @@ public:
   void CreateSession()
   {
     _session = std::unique_ptr<OCSession>(new OCSession());
-    emit SessionChanged();
+    emit SessionChanged(_session.get());
   }
 
   IDataProvider* GetDefaultDataProvider()
@@ -59,7 +59,7 @@ public:
   void LoadClip();
 
 signals:
-  void SessionChanged();
+  void SessionChanged(OCSession* session);
 };
 
 #endif //CONTEXT_H

@@ -78,7 +78,7 @@ OCFrame* RawSpeedDataProvider::LoadFile(std::string filePath)
 
 OCFrame* RawSpeedDataProvider::LoadFolder(std::string folderPath)
 {
-
+    return nullptr;
 }
 
 std::string RawSpeedDataProvider::GetName()

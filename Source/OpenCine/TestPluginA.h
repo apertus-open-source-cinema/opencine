@@ -17,12 +17,12 @@ public:
 public:
     OCFrame* LoadFile(std::string)
     {
-
+        return nullptr;
     }
 
     OCFrame* LoadFolder(std::string)
     {
-
+        return nullptr;
     }
 };
 
