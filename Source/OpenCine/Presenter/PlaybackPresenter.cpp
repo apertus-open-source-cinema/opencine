@@ -4,7 +4,7 @@ PlaybackPresenter::PlaybackPresenter(OCContext* context)
 {
   _context = context;
 
-  connect(_context, SIGNAL(SessionChanged()), this, SLOT(OnSessionChanged()));
+  connect(_context, SIGNAL(SessionChanged(OCSession*)), this, SLOT(OnSessionChanged(OCSession*)));
 }
 
 PlaybackPresenter::~PlaybackPresenter()

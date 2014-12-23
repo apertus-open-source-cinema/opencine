@@ -27,20 +27,7 @@ private:
 
 private slots:
     void NewClipsFound(ClipInfo*);
+    void LoadClip(int clipNumber);
 };
-
-#include <QObject>
-#include <QDebug>
-
-
-class MyClass : public QObject
-{
-    Q_OBJECT
-public slots:
-    void cppSlot(const int &clipIndex) {
-        qDebug() << "Called the C++ slot with message:" << clipIndex;
-    }
-};
-
 
 #endif // MEDIAEXPLORER_H

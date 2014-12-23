@@ -18,9 +18,8 @@ MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget 
     qmlContext = ui->quickWidget->rootContext();
 
     //TODO: Item (double) click processing
-    //QObject* item = (QObject*)ui->quickWidget->rootObject();
-    //MyClass* myClass = new MyClass();
-    //QObject::connect(item, SIGNAL(loadClip(int)), myClass, SLOT(cppSlot(int)));
+    QObject* item = (QObject*)ui->quickWidget->rootObject();
+    QObject::connect(item, SIGNAL(loadClip(int)), this, SLOT(LoadClip(int)));
 
     QMenu* importMenu = new QMenu();
     QAction* testAction = new QAction("Import from folder...", this);
@@ -44,4 +43,9 @@ void MediaExplorerView::NewClipsFound(ClipInfo* clipInfo)
 
      //HACK: For testing purpose only, loads last added clip, should be moved when double-clicking on a clip in MediaExplorer works again
      _presenter->LoadClip(dataList.count());
+}
+
+void MediaExplorerView::LoadClip(int clipNumber)
+{
+    int i = 0;
 }
