@@ -1,6 +1,6 @@
 #include "LibRawDataProvider.h"
 
-LibRawDataProvider::LibRawDataProvider() : IDataProvider(nullptr)
+LibRawDataProvider::LibRawDataProvider()
 {
   imageProcessor = new LibRaw();
 }
@@ -13,32 +13,35 @@ LibRawDataProvider::~LibRawDataProvider()
   }
 }
 
-OCFrame* LibRawDataProvider::LoadFile(std::string filePath)
+bool LibRawDataProvider::LoadFile(IDataStorage* dataStorage, std::string filePath)
 {
-    OCFrame* image = new OCFrame();
+  OCFrame* frame = new OCFrame();
 
-    // Creation of image processing object
-    imageProcessor->open_file(filePath.c_str());
-    imageProcessor->unpack();
-    //imageProcessor.dcraw_process();
-    //libraw_processed_image_t* rawImage = imageProcessor.dcraw_make_mem_image();
+  // Creation of image processing object
+  imageProcessor->open_file(filePath.c_str());
+  imageProcessor->unpack();
 
-    //image->SetSize(rawImage->width, rawImage->height);
-    //image->SetData(rawImage->data, rawImage->data_size);
+  //imageProcessor.dcraw_process();
+  //libraw_processed_image_t* rawImage = imageProcessor.dcraw_make_mem_image();
 
-    image->SetSize(imageProcessor->imgdata.rawdata.sizes.width, imageProcessor->imgdata.rawdata.sizes.height);
-    image->SetData(imageProcessor->imgdata.rawdata.raw_image, imageProcessor->imgdata.rawdata.sizes.raw_pitch * imageProcessor->imgdata.rawdata.sizes.height);
+  //image->SetSize(rawImage->width, rawImage->height);
+  //image->SetData(rawImage->data, rawImage->data_size);
 
-    //imageProcessor.dcraw_clear_mem(rawImage);
+  frame->SetSize(imageProcessor->imgdata.rawdata.sizes.width, imageProcessor->imgdata.rawdata.sizes.height);
+  frame->SetData(imageProcessor->imgdata.rawdata.raw_image, imageProcessor->imgdata.rawdata.sizes.raw_pitch * imageProcessor->imgdata.rawdata.sizes.height);
 
-    return image;
+  //imageProcessor.dcraw_clear_mem(rawImage);
+
+  dataStorage->AddFrame(frame);
+
+  return true;
 }
 
 OCFrame* LibRawDataProvider::LoadFolder(std::string folderPath)
 {
-    int i = 0;
+  int i = 0;
 
-    return nullptr;
+  return nullptr;
 }
 
 std::string LibRawDataProvider::GetName()

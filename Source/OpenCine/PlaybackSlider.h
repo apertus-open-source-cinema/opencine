@@ -23,7 +23,7 @@ private:
   PlaybackPresenter* _presenter;
 
 private slots:
-  void OnSessionChanged(OCSession*);
+  void OnSessionChanged(OCSession* session);
   void OnFrameChanged(unsigned int frameNumber);
 };
 

@@ -22,7 +22,7 @@ void MediaExplorerPresenter::LoadClip(int clipNumber)
 {
   ClipInfo* clipData = _model->GetClipByID(clipNumber);
   
-  _context->CreateSession();
+  _context->CreateSession(clipData->Path());
 }
 
 void MediaExplorerPresenter::ImportFolder()

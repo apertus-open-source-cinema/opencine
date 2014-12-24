@@ -6,18 +6,16 @@
 OCContext::OCContext() :
 _session(nullptr)
 {
-  DataProviderFactory* factory = new DataProviderFactory();
+  _factory = new DataProviderFactory();
 
-  factory->Register<LibRawDataProvider>(ClipType::DNG);
+  _factory->Register<LibRawDataProvider>(ClipType::DNG);
   //factory->Register<FFmpegDataProvider>(ClipType::MLV);
   //factory->Register<RawSpeedDataProvider>(ClipType::DNG);
 
-  delete factory;
-
   _dataProvider = new LibRawDataProvider();
 
-  std::map<ClipType, IDataProvider*> dataProviders;
-  dataProviders.emplace(std::make_pair(ClipType::DNG, new LibRawDataProvider()));
+  /*std::map<ClipType, IDataProvider*> dataProviders;
+  dataProviders.emplace(std::make_pair(ClipType::DNG, new LibRawDataProvider(nullptr)));
 
   IDataProvider* provider = nullptr;
 
@@ -25,9 +23,14 @@ _session(nullptr)
   if(it != dataProviders.end())
   {
     provider = it->second;
-  }
+  }*/
 
   int i = 0;
+}
+
+OCContext::~OCContext()
+{
+  delete _factory;
 }
 
 void OCContext::LoadClip()

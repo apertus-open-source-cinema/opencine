@@ -8,11 +8,11 @@
 
 StaticMemoryAllocator::StaticMemoryAllocator()
 {
-  _dataProvider = new LibRawDataProvider();
+  //_dataProvider = new LibRawDataProvider();
   //_dataProvider = new RawSpeedDataProvider();
 }
 
-bool StaticMemoryAllocator::ImportFolder(std::string folderPath)
+/*bool StaticMemoryAllocator::ImportFolder(std::string folderPath)
 {
   _frameList.clear();
 
@@ -47,8 +47,7 @@ bool StaticMemoryAllocator::ImportFolder(std::string folderPath)
                 break;
             //... copy one file
         }*/
-  progress.setValue(dir.entryList().size());
-
+  //progress.setValue(dir.entryList().size());
   //    QDirIterator it(QString::fromStdString(folderPath), QDirIterator::NoIteratorFlags);
   //    while (it.hasNext())
   //    {
@@ -66,17 +65,22 @@ bool StaticMemoryAllocator::ImportFolder(std::string folderPath)
   //        // ...
   //    }
 
-  if(!_frameList.empty())
+  /*if(!_frameList.empty())
   {
     return true;
   }
 
   return false;
-}
+}*/
 
 unsigned int StaticMemoryAllocator::GetFrameCount()
 {
   return _frameList.size();
+}
+
+void StaticMemoryAllocator::AddFrame(OCFrame* frame)
+{
+  _frameList.push_back(frame);
 }
 
 OCFrame *StaticMemoryAllocator::GetFrame(unsigned int frameNumber)

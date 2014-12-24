@@ -18,11 +18,11 @@ PlaybackSlider::~PlaybackSlider()
     delete ui;
 }
 
-void PlaybackSlider::OnSessionChanged(OCSession*)
+void PlaybackSlider::OnSessionChanged(OCSession* session)
 {
     int i = 0;
 
-    ui->horizontalSlider->setMaximum(1000);
+    ui->horizontalSlider->setMaximum(session->GetFrameCount());
 }
 
 void PlaybackSlider::OnFrameChanged(unsigned int frameNumber)

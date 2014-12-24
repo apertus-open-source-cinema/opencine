@@ -20,8 +20,9 @@ class ClipInfo : public QObject
 
 public:
     //ClipInfo(QObject *parent=0);
-    ClipInfo(const QString &path, const unsigned int& width, const unsigned int& height, const unsigned int& fps, QObject* parent = 0);
+    ClipInfo(const QString &path, const QString &name, const unsigned int& width, const unsigned int& height, const unsigned int& fps, QObject* parent = 0);
 
+    QString Path() const;
     QString Name() const;
     unsigned int Width() const;
     unsigned int Height() const;

@@ -7,14 +7,20 @@
 {
 }*/
 
-ClipInfo::ClipInfo(const QString &path, const unsigned int& width, const unsigned int& height, const unsigned int& fps, QObject *parent):
+ClipInfo::ClipInfo(const QString &path, const QString &name, const unsigned int& width, const unsigned int& height, const unsigned int& fps, QObject *parent):
 QObject(parent),
 _path(path),
+_name(name),
 _width(width),
 _height(height),
 _fps(fps)
 {
     _name = path;
+}
+
+QString ClipInfo::Path() const
+{
+    return _path;
 }
 
 QString ClipInfo::Name() const
@@ -58,7 +64,8 @@ bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipInfo
 
   if(imageData)
   {    
-    *clipData = new ClipInfo(dir.dirName(), imageData->GetWidth(), imageData->GetHeight(), 0);
+    *clipData = new ClipInfo(QString::fromStdString(folderPath), dir.dirName(), imageData->GetWidth(), imageData->GetHeight(), 0);
+      _availableData.push_back(*clipData);
 
     delete imageData;
     return true;

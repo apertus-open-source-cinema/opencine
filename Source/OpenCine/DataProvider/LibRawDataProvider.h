@@ -6,6 +6,7 @@
 
 //OpenCineAPI includes
 #include "API/IDataProvider.h"
+#include "API/IDataStorage.h"
 #include "Core/ImageData.h"
 
 //LibRaw includes
@@ -22,7 +23,7 @@ public:
     ~LibRawDataProvider();
 
     // IDataProvider interface
-    OCFrame* LoadFile(std::string filePath);
+    bool LoadFile(IDataStorage* dataStorage, std::string filePath);
     OCFrame* LoadFolder(std::string folderPath);
 
     // IPlugin interface

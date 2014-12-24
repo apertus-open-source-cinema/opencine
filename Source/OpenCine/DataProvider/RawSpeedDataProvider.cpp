@@ -15,7 +15,7 @@ int rawspeed_get_number_of_processor_cores()
 
 //static CameraMetaData *metadata = NULL;
 
-RawSpeedDataProvider::RawSpeedDataProvider() : IDataProvider(nullptr)
+RawSpeedDataProvider::RawSpeedDataProvider()
 {    
 //    if (NULL == metadata)
 //    {

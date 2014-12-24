@@ -42,7 +42,7 @@ void MediaExplorerView::NewClipsFound(ClipInfo* clipInfo)
      qmlContext->setContextProperty("listModel", QVariant::fromValue(dataList));
 
      //HACK: For testing purpose only, loads last added clip, should be moved when double-clicking on a clip in MediaExplorer works again
-     _presenter->LoadClip(dataList.count());
+     _presenter->LoadClip(dataList.count() - 1);
 }
 
 void MediaExplorerView::LoadClip(int clipNumber)

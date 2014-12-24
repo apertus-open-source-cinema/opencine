@@ -26,10 +26,10 @@ namespace OpenCineAPI
     IDataStorage* _dataStorage;
 
   public:
-    IDataProvider(IDataStorage* dataStorage) : _dataStorage(dataStorage) {}
+    IDataProvider() {}
 
-    virtual OCFrame* LoadFile(std::string) = 0;
-    virtual OCFrame* LoadFolder(std::string) = 0;
+    virtual bool LoadFile(IDataStorage*, std::string) = 0;
+    //virtual OCFrame* LoadFolder(std::string) = 0;
 
     virtual OCFrame* GetMetadataFromFile(std::string) = 0;
   };
