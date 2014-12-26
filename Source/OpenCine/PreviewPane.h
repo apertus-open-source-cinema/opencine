@@ -48,7 +48,8 @@ private:
     void CreateShaders();
 
 private slots:
-    void UpdateFrame(OCFrame* image);
+    //void UpdateFrame(OCFrame* image);
+   void OnFrameChange(unsigned int frameNumber, OCFrame* frame);
 
 protected:
     void resizeGL(int w, int h);

@@ -24,7 +24,7 @@ private:
 
 private slots:
   void OnSessionChanged(OCSession* session);
-  void OnFrameChanged(unsigned int frameNumber);
+  void OnFrameChanged(unsigned int frameNumber, OCFrame* frame);
 };
 
 #endif // PLAYBACKSLIDER_H

@@ -9,35 +9,40 @@
 
 class PlaybackPresenter : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    PlaybackPresenter(OCContext* context);
-    ~PlaybackPresenter();
+  PlaybackPresenter(OCContext* context);
+  ~PlaybackPresenter();
 
-    void Play();
-    void Pause();
-    void Stop();
+public slots:
+  void Play();
+  void Pause();
+  void Stop();
 
-    void NextFrame();
-    void PrevFrame();
+  void NextFrame();
+  void PrevFrame();
 
-    void SetFrame(unsigned int frame);
+  void SetFrame(unsigned int frame);
 
 private:
-    OCContext* _context;
+  OCContext* _context;
+  OCSession *_session;
 
-    unsigned int _currentFrame;
+  QTimer* _timer;
 
-    QTimer _timer;
+  unsigned int _currentFrame;
+
+  float _frameRate;
 
 signals:
-    void SessionChanged(OCSession* session);
-    void FrameChanged(unsigned int frameNumber/*, ImageData*/);
+  void SessionChanged(OCSession* session);
+  void FrameChanged(unsigned int frameNumber, OCFrame* frame);
 
 private slots:
-    //void UpdateViews();
-    void OnSessionChanged(OCSession* session);
+  //void UpdateViews();
+  void OnSessionChanged(OCSession* session);
+  void Update();
 };
 
 

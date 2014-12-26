@@ -1,15 +1,20 @@
 #include "PlaybackPresenter.h"
 
-PlaybackPresenter::PlaybackPresenter(OCContext* context)
+PlaybackPresenter::PlaybackPresenter(OCContext* context) :
+_currentFrame(0)
 {
   _context = context;
 
   connect(_context, SIGNAL(SessionChanged(OCSession*)), this, SLOT(OnSessionChanged(OCSession*)));
+
+  _timer = new QTimer(this);
+  connect(_timer, SIGNAL(timeout()), this, SLOT(Update()));
 }
 
 PlaybackPresenter::~PlaybackPresenter()
 {
 }
+
 
 void PlaybackPresenter::SetFrame(unsigned int frame)
 {
@@ -32,7 +37,24 @@ void PlaybackPresenter::SetFrame(unsigned int frame)
 
 void PlaybackPresenter::OnSessionChanged(OCSession* session)
 {
-    emit SessionChanged(session);
+  _frameRate = 24;
+
+  _session = session;
+
+  emit SessionChanged(session);
+}
+
+void PlaybackPresenter::Update()
+{
+  OCFrame* frame = _session->GetDataStorage()->GetFrame(_currentFrame);
+  emit FrameChanged(_currentFrame, frame);
+
+  _currentFrame++;
+
+  if(_currentFrame > _session->GetFrameCount())
+  {
+    _currentFrame = 0;
+  }
 }
 
 /*std::vector<std::string> PlaybackPresenter::GetData()
@@ -51,17 +73,20 @@ void PlaybackPresenter::OnSessionChanged(OCSession* session)
 
 void PlaybackPresenter::Play()
 {
+  int i = 0;
+
+  _timer->start(1000.0 / _frameRate);
+
   //_timer.start();
 }
 
 void PlaybackPresenter::Pause()
 {
-  //_timer.stop();
 }
 
 void PlaybackPresenter::Stop()
 {
-  //_timer.stop();
+  _timer->stop();
   _currentFrame = 0;
 }
 

@@ -75,7 +75,7 @@ StaticMemoryAllocator::StaticMemoryAllocator()
 
 unsigned int StaticMemoryAllocator::GetFrameCount()
 {
-  return _frameList.size();
+  return _frameList.size() - 1;
 }
 
 void StaticMemoryAllocator::AddFrame(OCFrame* frame)

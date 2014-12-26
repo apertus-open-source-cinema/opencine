@@ -10,7 +10,10 @@ PlaybackSlider::PlaybackSlider(PlaybackPresenter* presenter, QWidget *parent) :
   _presenter = presenter;
 
   connect(_presenter, SIGNAL(SessionChanged(OCSession*)), this, SLOT(OnSessionChanged(OCSession*)));
-  connect(_presenter, SIGNAL(FrameChanged(unsigned int)), this, SLOT(OnFrameChanged(unsigned int)));
+  connect(_presenter, SIGNAL(FrameChanged(unsigned int, OCFrame*)), this, SLOT(OnFrameChanged(unsigned int, OCFrame*)));
+
+  connect(ui->pushButton_2, SIGNAL(clicked()), _presenter, SLOT(Play()));
+  connect(ui->pushButton, SIGNAL(clicked()), _presenter, SLOT(Stop()));
 }
 
 PlaybackSlider::~PlaybackSlider()
@@ -25,7 +28,7 @@ void PlaybackSlider::OnSessionChanged(OCSession* session)
     ui->horizontalSlider->setMaximum(session->GetFrameCount());
 }
 
-void PlaybackSlider::OnFrameChanged(unsigned int frameNumber)
+void PlaybackSlider::OnFrameChanged(unsigned int frameNumber, OCFrame* frame)
 {
-
+  ui->horizontalSlider->setSliderPosition(frameNumber);
 }

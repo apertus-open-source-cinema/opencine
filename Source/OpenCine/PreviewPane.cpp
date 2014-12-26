@@ -15,6 +15,7 @@ PreviewPane::PreviewPane(PlaybackPresenter* presenter, QWidget *parent) :
 
     _presenter = presenter;
 
+    connect(_presenter, SIGNAL(FrameChanged(uint,OCFrame*)), this, SLOT(OnFrameChange(uint,OCFrame*)));
     //connect(_presenter, SIGNAL(NewDataAvailable(OCImage*)), this, SLOT(UpdateFrame(OCImage*)));
 
     //this->setAttribute(Qt::WA_DontCreateNativeAncestors);
@@ -221,6 +222,36 @@ void PreviewPane::CreateShaders()
     glUseProgram(shaderProgram);
 }
 
+void PreviewPane::OnFrameChange(unsigned int frameNumber, OCFrame *frame)
+{
+  glBindTexture(GL_TEXTURE_2D, tex);
+
+  //glActiveTexture( GL_TEXTURE0 );
+  //glBindTexture(GL_TEXTURE_2D, tex);
+
+  //glActiveTexture( GL_TEXTURE1 );
+  //glBindTexture(GL_TEXTURE_2D, tex2);
+
+  int width = frame->GetWidth();
+  int height = frame->GetHeight();
+
+  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_LUMINANCE, GL_UNSIGNED_SHORT, frame->GetData());
+
+  //GLenum error = glGetError();
+
+  //glActiveTexture(GL_TEXTURE1);
+  //texture_location = glGetUniformLocation(shaderProgram, "texture2");
+  //glUniform1i(texture_location, 1);
+  //glBindTexture(GL_TEXTURE_2D, tex2);
+
+  //error = glGetError();
+
+  //glBindTexture(GL_TEXTURE_2D, 0);
+
+  this->update();
+}
+
+/*
 void PreviewPane::UpdateFrame(OCFrame* image)
 {
     glBindTexture(GL_TEXTURE_2D, tex);
@@ -248,4 +279,4 @@ void PreviewPane::UpdateFrame(OCFrame* image)
     //glBindTexture(GL_TEXTURE_2D, 0);
 
     this->update();
-}
+}*/
