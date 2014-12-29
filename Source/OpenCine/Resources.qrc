@@ -10,4 +10,7 @@
         <file>Icons/play_rev.png</file>
         <file>Icons/stop.png</file>
     </qresource>
+    <qresource prefix="/Images">
+        <file>Icons/logo.png</file>
+    </qresource>
 </RCC>

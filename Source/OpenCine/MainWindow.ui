@@ -73,8 +73,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset>
-           <normaloff>../../../../Downloads/logo.png</normaloff>../../../../Downloads/logo.png</iconset>
+          <iconset resource="Resources.qrc">
+           <normaloff>:/Images/Icons/logo.png</normaloff>:/Images/Icons/logo.png</iconset>
          </property>
          <property name="iconSize">
           <size>
@@ -255,7 +255,7 @@ QPushButton::checked
           <string/>
          </property>
          <property name="icon">
-          <iconset resource="Resources.qrc">
+          <iconset>
            <normaloff>:/Icons/Icons/mechanic2.png</normaloff>:/Icons/Icons/mechanic2.png</iconset>
          </property>
          <property name="iconSize">
