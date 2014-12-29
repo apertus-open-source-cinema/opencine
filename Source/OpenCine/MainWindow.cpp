@@ -120,3 +120,9 @@ MainWindow::~MainWindow()
 
     int i = 0;
 }*/
+void MainWindow::on_aboutButton_clicked()
+{
+  QMessageBox msgBox;
+  msgBox.setText("About");
+  msgBox.exec();
+}

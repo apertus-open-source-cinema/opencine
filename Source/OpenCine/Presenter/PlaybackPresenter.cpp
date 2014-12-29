@@ -16,9 +16,10 @@ PlaybackPresenter::~PlaybackPresenter()
 }
 
 
-void PlaybackPresenter::SetFrame(unsigned int frame)
+void PlaybackPresenter::SetFrame(unsigned int frameNumber)
 {
-
+  OCFrame* frame = _session->GetDataStorage()->GetFrame(_currentFrame);
+  emit FrameChanged(_currentFrame, frame);
 }
 
 /*void PlaybackPresenter::UpdateViews()
@@ -82,20 +83,40 @@ void PlaybackPresenter::Play()
 
 void PlaybackPresenter::Pause()
 {
+  _timer->stop();
 }
 
 void PlaybackPresenter::Stop()
 {
   _timer->stop();
   _currentFrame = 0;
+
+  OCFrame* frame = _session->GetDataStorage()->GetFrame(_currentFrame);
+  emit FrameChanged(_currentFrame, frame);
 }
 
 void PlaybackPresenter::NextFrame()
 {
   _currentFrame++;
+
+  if(_currentFrame > _session->GetFrameCount())
+  {
+    _currentFrame = _session->GetFrameCount();
+  }
+
+  OCFrame* frame = _session->GetDataStorage()->GetFrame(_currentFrame);
+  emit FrameChanged(_currentFrame, frame);
 }
 
 void PlaybackPresenter::PrevFrame()
 {
   _currentFrame--;
+
+ if(_currentFrame < 0)
+ {
+   _currentFrame = 0;
+ }
+
+ OCFrame* frame = _session->GetDataStorage()->GetFrame(_currentFrame);
+ emit FrameChanged(_currentFrame, frame);
 }

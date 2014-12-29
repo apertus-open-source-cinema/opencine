@@ -35,7 +35,7 @@
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>30</height>
+        <height>50</height>
        </size>
       </property>
       <property name="styleSheet">
@@ -60,6 +60,33 @@
        <property name="bottomMargin">
         <number>2</number>
        </property>
+       <item>
+        <widget class="QPushButton" name="aboutButton">
+         <property name="styleSheet">
+          <string notr="true">QPushButton
+{
+	border: 0px;
+	background: transparent;
+}</string>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../../../Downloads/logo.png</normaloff>../../../../Downloads/logo.png</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>128</width>
+           <height>30</height>
+          </size>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
        <item>
         <spacer name="horizontalSpacer_2">
          <property name="orientation">

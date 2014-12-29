@@ -23,7 +23,7 @@ public slots:
   void NextFrame();
   void PrevFrame();
 
-  void SetFrame(unsigned int frame);
+  void SetFrame(unsigned int frameNumber);
 
 private:
   OCContext* _context;
@@ -31,7 +31,7 @@ private:
 
   QTimer* _timer;
 
-  unsigned int _currentFrame;
+  int _currentFrame;
 
   float _frameRate;
 

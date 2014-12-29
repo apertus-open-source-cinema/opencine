@@ -7,6 +7,7 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLWidget>
+#include <QOpenGLPaintDevice>
 
 class IPresenter
 {
@@ -46,6 +47,8 @@ private:
 
     void CreateRectangle();
     void CreateShaders();
+
+    //QOpenGLPaintDevice* m_paintDevice;
 
 private slots:
     //void UpdateFrame(OCFrame* image);
