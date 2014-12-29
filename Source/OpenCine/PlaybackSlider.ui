@@ -66,8 +66,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../../Documents/marker_start.png</normaloff>../../../../Documents/marker_start.png</iconset>
+        <iconset resource="Resources.qrc">
+         <normaloff>:/Icons/Icons/marker_start.png</normaloff>:/Icons/Icons/marker_start.png</iconset>
        </property>
       </widget>
      </item>
@@ -99,8 +99,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../../Documents/jump_rev.png</normaloff>../../../../Documents/jump_rev.png</iconset>
+        <iconset resource="Resources.qrc">
+         <normaloff>:/Icons/Icons/jump_rev.png</normaloff>:/Icons/Icons/jump_rev.png</iconset>
        </property>
       </widget>
      </item>
@@ -116,8 +116,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../../Documents/frame_rev.png</normaloff>../../../../Documents/frame_rev.png</iconset>
+        <iconset resource="Resources.qrc">
+         <normaloff>:/Icons/Icons/frame_rev.png</normaloff>:/Icons/Icons/frame_rev.png</iconset>
        </property>
       </widget>
      </item>
@@ -133,8 +133,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../../Documents/play_rev.png</normaloff>../../../../Documents/play_rev.png</iconset>
+        <iconset resource="Resources.qrc">
+         <normaloff>:/Icons/Icons/play_rev.png</normaloff>:/Icons/Icons/play_rev.png</iconset>
        </property>
       </widget>
      </item>
@@ -150,8 +150,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../../Documents/stop.png</normaloff>../../../../Documents/stop.png</iconset>
+        <iconset resource="Resources.qrc">
+         <normaloff>:/Icons/Icons/stop.png</normaloff>:/Icons/Icons/stop.png</iconset>
        </property>
       </widget>
      </item>
@@ -167,8 +167,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../../Documents/play_fwd.png</normaloff>../../../../Documents/play_fwd.png</iconset>
+        <iconset resource="Resources.qrc">
+         <normaloff>:/Icons/Icons/play_fwd.png</normaloff>:/Icons/Icons/play_fwd.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -187,8 +187,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../../Documents/frame_fwd.png</normaloff>../../../../Documents/frame_fwd.png</iconset>
+        <iconset resource="Resources.qrc">
+         <normaloff>:/Icons/Icons/frame_fwd.png</normaloff>:/Icons/Icons/frame_fwd.png</iconset>
        </property>
       </widget>
      </item>
@@ -204,8 +204,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../../Documents/jump_fwd.png</normaloff>../../../../Documents/jump_fwd.png</iconset>
+        <iconset resource="Resources.qrc">
+         <normaloff>:/Icons/Icons/jump_fwd.png</normaloff>:/Icons/Icons/jump_fwd.png</iconset>
        </property>
       </widget>
      </item>
@@ -237,8 +237,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>../../../../Documents/marker_end.png</normaloff>../../../../Documents/marker_end.png</iconset>
+        <iconset resource="Resources.qrc">
+         <normaloff>:/Icons/Icons/marker_end.png</normaloff>:/Icons/Icons/marker_end.png</iconset>
        </property>
       </widget>
      </item>
@@ -259,6 +259,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
