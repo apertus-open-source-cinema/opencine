@@ -4,7 +4,7 @@
 #include <string>
 #include <iostream>
 
-#include <CL/cl.hpp>
+//#include <CL/cl.hpp>
 
 #ifdef __cplusplus
 extern "C"
@@ -65,7 +65,7 @@ static std::string trim(const std::string& str, const std::string& whitespace = 
   return str.substr(strBegin, strRange);
 }
 
-static void TestOpenCL()
+/*static void TestOpenCL()
 {
   //get all platforms (drivers)
   std::vector<cl::Platform> all_platforms;
@@ -161,7 +161,7 @@ static void TestOpenCL()
   {
     std::cout << C[i] << " ";
   }
-}
+}*/
 
 void TestCatch();
 /*

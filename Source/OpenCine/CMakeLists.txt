@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.11)
 PROJECT(OpenCine)
 
 set( CMAKE_VERBOSE_MAKEFILE on )
@@ -33,12 +33,12 @@ FIND_PACKAGE(Qt5OpenGL REQUIRED)
 #  message(STATUS "Not found: avcodec")
 #endif()
 
-find_library(OPENCL_LIB "libOpenCL.so.1")
-if(OPENCL_LIB)
-  message(STATUS "Found: OpenCL -> " ${OPENCL_LIB})
-else()
-  message(STATUS "Not found: OpenCL")
-endif()
+#find_library(OPENCL_LIB "libOpenCL.so.1")
+#if(OPENCL_LIB)
+#  message(STATUS "Found: OpenCL -> " ${OPENCL_LIB})
+#else()
+#  message(STATUS "Not found: OpenCL")
+#endif()
 
 #find_library(LIBJPEG_LIB "libjpeg.so")
 #if(LIBJPEG_LIB)
@@ -80,9 +80,11 @@ QT5_WRAP_UI(UI_FILES_MOC ${UI_FILES})
 #QT5_WRAP_CPP(SOURCE_MOC ${SOURCE_FILES})
 QT5_ADD_RESOURCES(UI_RESOURCES ${RESOURCE_FILES})
 
-ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES} ${UI_FILES_MOC} ${SOURCE_MOC} ${UI_RESOURCES})
+
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+	ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES} ${UI_FILES_MOC} ${SOURCE_MOC} ${UI_RESOURCES})
+
 	TARGET_LINK_LIBRARIES(
     ${PROJECT_NAME}
     ${QT_QTMAIN_LIBRARY}
@@ -92,16 +94,36 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     #"${AVUTIL_LIB}"
     #"${AVFORMAT_LIB}"
     #"${AVCODEC_LIB}"
-    "${OPENCL_LIB}"
+    #"${OPENCL_LIB}"
     #"${LIBJPEG_LIB}"
     pthread
   )
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+		
+	ADD_EXECUTABLE(${PROJECT_NAME} WIN32 ${SOURCE_FILES} ${UI_FILES_MOC} ${SOURCE_MOC} ${UI_RESOURCES})
+
+	TARGET_LINK_LIBRARIES(
+    ${PROJECT_NAME}
+	#Qt5::WinMain
+    #${Qt5Core_QTMAIN_LIBRARIES}
+    #${QT_LIBRARIES}
+    ${OPENGL_LIBRARIES}
+	"${CMAKE_BINARY_DIR}/bin/libraw.dll"
+    #"${AVUTIL_LIB}"
+    #"${AVFORMAT_LIB}"
+    #"${AVCODEC_LIB}"
+    #"${OPENCL_LIB}"
+    #"${LIBJPEG_LIB}"
+    #pthread
+  )
+  
+  
+  
 	#ADD_EXECUTABLE(${PROJECT_NAME} WIN32 ${SOURCE_FILES} ${HEADER_FILES} ${UI_FILES_MOC} ${HEADERS_MOC} ${RESOURCE_FILES} )
 
-	INCLUDE(BundleUtilities)
-	fixup_bundle(${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME}.exe ""  $ENV{CMAKE_PREFIX_PATH})
+	#INCLUDE(BundleUtilities)
+	#fixup_bundle(${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME}.exe ""  $ENV{CMAKE_PREFIX_PATH})
 
 	#Source: http://www.cmake.org/Wiki/CMake/Tutorials/Qt
 	if(MSVC) # Check if we are using the Visual Studio compiler

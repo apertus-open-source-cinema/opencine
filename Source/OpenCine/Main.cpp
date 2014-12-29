@@ -12,8 +12,8 @@
 
 #include "Core/Context.h"
 
-#include <OpenImageIO/imageio.h>
-OIIO_NAMESPACE_USING
+//#include <OpenImageIO/imageio.h>
+//OIIO_NAMESPACE_USING
 
 using namespace OpenCineAPI;
 
