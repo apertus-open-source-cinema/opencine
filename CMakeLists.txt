@@ -31,5 +31,5 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/LibRaw)
 
 #Projects
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OpenCine/)
-add_subdirectory(${PROJECT_SOURCE_DIR}/Source/CinemaDNGDecoder/)
-add_subdirectory(${PROJECT_SOURCE_DIR}/Source/CinemaDNGInfo/)
+#add_subdirectory(${PROJECT_SOURCE_DIR}/Source/CinemaDNGDecoder/)
+#add_subdirectory(${PROJECT_SOURCE_DIR}/Source/CinemaDNGInfo/)
