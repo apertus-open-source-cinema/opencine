@@ -17,8 +17,8 @@ PlaybackSlider::PlaybackSlider(PlaybackPresenter* presenter, QWidget *parent) :
   //connect(ui->playButton, SIGNAL(clicked()), _presenter, SLOT(Play()));
   connect(ui->playButton, SIGNAL(toggled(bool)), this, SLOT(OnPlayButtonToggled(bool)));
   connect(ui->stopButton, SIGNAL(clicked()), _presenter, SLOT(Stop()));
-  connect(ui->prevFrame, SIGNAL(clicked()), _presenter, SLOT(PrevFrame()));
-  connect(ui->nextFrame, SIGNAL(clicked()), _presenter, SLOT(NextFrame()));
+  connect(ui->prevFrameButton, SIGNAL(clicked()), _presenter, SLOT(PrevFrame()));
+  connect(ui->nextFrameButton, SIGNAL(clicked()), _presenter, SLOT(NextFrame()));
 }
 
 PlaybackSlider::~PlaybackSlider()

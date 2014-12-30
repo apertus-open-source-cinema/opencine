@@ -105,7 +105,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="prevFrame">
+      <widget class="QPushButton" name="playRevButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -119,10 +119,13 @@
         <iconset resource="Resources.qrc">
          <normaloff>:/Icons/Icons/frame_rev.png</normaloff>:/Icons/Icons/frame_rev.png</iconset>
        </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_5">
+      <widget class="QPushButton" name="prevFrameButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -156,7 +159,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="playButton">
+      <widget class="QPushButton" name="nextFrameButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -171,12 +174,12 @@
          <normaloff>:/Icons/Icons/play_fwd.png</normaloff>:/Icons/Icons/play_fwd.png</iconset>
        </property>
        <property name="checkable">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="nextFrame">
+      <widget class="QPushButton" name="playButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -189,6 +192,9 @@
        <property name="icon">
         <iconset resource="Resources.qrc">
          <normaloff>:/Icons/Icons/frame_fwd.png</normaloff>:/Icons/Icons/frame_fwd.png</iconset>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
