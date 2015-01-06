@@ -32,6 +32,7 @@ private slots:
     //void SelectImportFolder();
     //void PlayImages();
     void on_aboutButton_clicked();
+    void on_pushButton_clicked();
 };
 
 #endif // MAINWINDOW_H

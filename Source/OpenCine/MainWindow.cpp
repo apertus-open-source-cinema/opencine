@@ -15,6 +15,8 @@
 #include "PreviewPane.h"
 #include "TestPluginA.h"
 
+#include "Console.h"
+
 //#include <dirent.h>
 
 /*struct PreviewImageStruct
@@ -51,6 +53,19 @@ MainWindow::MainWindow(OCContext* context, QWidget *parent) :
     QGridLayout* layout = new QGridLayout();
     layout->addWidget(new PlaybackSlider(playbackPresenter)),
     ui->widget->setLayout(layout);
+
+    stdout = freopen("output_file", "w", stdout);
+
+    QFile f;
+    f.open(stderr, QIODevice::ReadOnly);
+    QByteArray output = f.readAll();
+    QString out(output);
+
+    ui->label_2->setText(out);
+    ui->textBrowser->setText(out);
+
+    ui->textBrowser->append("TEST\n");
+    ui->textBrowser->append("12345\n");
 
     /*QMenu* importMenu = new QMenu();
     QAction* testAction = new QAction("test menu item", this);
@@ -125,4 +140,10 @@ void MainWindow::on_aboutButton_clicked()
   QMessageBox msgBox;
   msgBox.setText("About");
   msgBox.exec();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    Console* console = new Console(this);
+    console->show();
 }

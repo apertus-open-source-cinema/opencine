@@ -17,11 +17,16 @@ public:
 
 public slots:
   void Play();
+  void PlayRev();
+
   void Pause();
   void Stop();
 
   void NextFrame();
   void PrevFrame();
+
+  void JumpToStart();
+  void JumpToEnd();
 
   void SetFrame(unsigned int frameNumber);
 
@@ -35,14 +40,17 @@ private:
 
   float _frameRate;
 
+  void Update();
+
 signals:
   void SessionChanged(OCSession* session);
   void FrameChanged(unsigned int frameNumber, OCFrame* frame);
 
 private slots:
-  //void UpdateViews();
   void OnSessionChanged(OCSession* session);
-  void Update();
+
+  void PlayHandler();
+  void PlayRevHandler();
 };
 
 

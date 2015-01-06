@@ -28,6 +28,9 @@ private slots:
   void OnSliderMoved(int frameNumber);
 
   void OnPlayButtonToggled(bool toggled);
+  void OnPlayRevButtonToggled(bool toggled);
+
+  void OnStopClicked();
 };
 
 #endif // PLAYBACKSLIDER_H

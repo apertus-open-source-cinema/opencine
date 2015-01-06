@@ -51,6 +51,14 @@ QPushButton:pressed
 	top: 5px; left: 5px;*/
 }
 
+QPushButton:checked
+{
+	/*padding: 1px -1px -1px 1px;*/
+	background: qlineargradient( x1:0 y1:1, x2:0 y2:0, stop:0 #FF0000, stop:1 #FF00FF);
+	/*position: relative;
+	top: 5px; left: 5px;*/
+}
+
 QPushButton:menu-indicator
 {
     image: url(Icons/arrow483.png);

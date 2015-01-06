@@ -2,7 +2,9 @@
 #include <QApplication>
 #include <QDir>
 #include <QFile>
+#include <QtGlobal>
 
+#include <QProcess>
 #include <QSurfaceFormat>
 #include <memory>
 
@@ -30,8 +32,64 @@ void SetStyle(QApplication* app)
   }
 }
 
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+  QByteArray localMsg = msg.toLocal8Bit();
+  switch (type)
+  {
+    case QtDebugMsg:
+      fprintf(stderr, "OC Debug: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+      break;
+    case QtWarningMsg:
+      fprintf(stderr, "OC Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+      break;
+    case QtCriticalMsg:
+      fprintf(stderr, "OC Critical: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+      break;
+    case QtFatalMsg:
+      fprintf(stderr, "OC Fatal: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+      abort();
+  }
+}
+
+QProcess *proc;
+
+void printOutput()
+{
+  //ui->e_Log->append("Got to printOutput()"); // TextEdit to see results
+
+  QByteArray byteArray = proc->readAllStandardOutput();
+  QStringList strLines = QString(byteArray).split("\n");
+
+  foreach (QString line, strLines)
+  {
+    std::cout << line.toStdString() << std::endl;
+
+    //ui->e_Log->append(line);
+  }
+}
+
+void printError()
+{
+  //ui->e_Log->append("Got to printError()");
+
+  QByteArray byteArray = proc->readAllStandardError();
+  QStringList strLines = QString(byteArray).split("\n");
+
+  foreach (QString line, strLines)
+  {
+    std::cout << line.toStdString() << std::endl;
+
+    //ui->e_Log->append(line);
+  }
+}
+
 int main(int argc, char *argv[])
 {
+  QApplication app(argc, argv);
+
+  qInstallMessageHandler(myMessageOutput); //install : set the callback
+
   //ImageOutput *out = ImageOutput::create ("Test.img");
 
   //TestFFMPEG();
@@ -66,7 +124,18 @@ int main(int argc, char *argv[])
 
   OCContext* context =  new OCContext();
 
-  QApplication app(argc, argv);
+
+
+  //proc = new QProcess(&app);
+
+  //QObject::connect(proc, &QProcess::readyReadStandardOutput, printOutput);
+  //QObject::connect(proc, &QProcess::readyReadStandardError, printError);
+
+  std::cerr << "CERR: Console application running!";
+  std::cout << "COUT: Console application running!";
+
+  //proc->start();
+
   MainWindow* mainWindow = new MainWindow(context);
   mainWindow->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 

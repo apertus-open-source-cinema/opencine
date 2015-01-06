@@ -72,7 +72,7 @@ Rectangle {
             {
                     anchors.fill: source
                     source: image2
-                    color: "#a27e34"
+                    color: "#A27E34"
                     cached: false
                     antialiasing: true
             }

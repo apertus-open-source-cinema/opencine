@@ -52,7 +52,6 @@ bool LibRawDataProvider::LoadFile(IDataStorage* dataStorage, std::string filePat
   }
 
   imageData = new unsigned short[width * height];
-  imageData2 = new unsigned short[width * height * 3];
   memcpy(imageData, imageProcessor->imgdata.rawdata.raw_image, pitch * height);
 
   unsigned int order = 0;
@@ -100,6 +99,9 @@ bool LibRawDataProvider::LoadFile(IDataStorage* dataStorage, std::string filePat
   //imageProcessor.dcraw_clear_mem(rawImage);
 
   dataStorage->AddFrame(frame);
+
+  delete[] imageData;
+  delete[] imageData2;
 
   return true;
 }
