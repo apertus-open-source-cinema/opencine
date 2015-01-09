@@ -117,7 +117,10 @@
        </property>
        <property name="icon">
         <iconset resource="Resources.qrc">
-         <normaloff>:/Icons/Icons/frame_rev.png</normaloff>:/Icons/Icons/frame_rev.png</iconset>
+         <normaloff>:/Icons/Icons/frame_rev.png</normaloff>
+         <normalon>:/Icons/Icons/frame_rev.png</normalon>
+         <disabledon>:/Icons/Icons/frame_rev.png</disabledon>
+         <activeon>:/Icons/Icons/pause.png</activeon>:/Icons/Icons/frame_rev.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -143,6 +146,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="stopButton">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -191,7 +197,10 @@
        </property>
        <property name="icon">
         <iconset resource="Resources.qrc">
-         <normaloff>:/Icons/Icons/frame_fwd.png</normaloff>:/Icons/Icons/frame_fwd.png</iconset>
+         <normaloff>:/Icons/Icons/frame_fwd.png</normaloff>
+         <normalon>:/Icons/Icons/frame_fwd.png</normalon>
+         <disabledon>:/Icons/Icons/frame_fwd.png</disabledon>
+         <activeon>:/Icons/Icons/pause.png</activeon>:/Icons/Icons/frame_fwd.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>

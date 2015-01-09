@@ -9,6 +9,7 @@
         <file>Icons/play_fwd.png</file>
         <file>Icons/play_rev.png</file>
         <file>Icons/stop.png</file>
+        <file>Icons/pause.png</file>
     </qresource>
     <qresource prefix="/Images">
         <file>Icons/logo.png</file>
