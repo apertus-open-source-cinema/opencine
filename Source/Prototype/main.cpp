@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <memory>
 
 #include "gl3w.h"
 #include <SDL2/SDL.h>
@@ -25,9 +26,9 @@ class IPlugin
   string _name;
 
 public:
-  IPlugin(string name)
+  IPlugin(string name) :
+  _name(name)
   {
-    _name = name;
   }
 
   string GetName()
@@ -42,16 +43,26 @@ struct Frame
 
 };
 
-class IProcessingPlugin : IPlugin
+class IProcessingPlugin : public IPlugin
 {
 public:
+  IProcessingPlugin(string name) : IPlugin(name)
+  {
+
+  }
+
   virtual void Process(Frame* input, Frame* output) = 0;
 };
 
-class SimnplProcessingPlugin : IPlugin
+class SimpleProcessingPlugin : public IProcessingPlugin
 {
 public:
-  virtual void Process(/*Frame* input, Frame* output*/)
+  SimpleProcessingPlugin(string name) : IProcessingPlugin(name)
+  {
+
+  }
+
+  virtual void Process(Frame* input, Frame* output)
   {
     // Do something
   }
@@ -87,6 +98,8 @@ int OGLPlusTest()
   // Setup chain of plugins with GLSL first
   // Let them process the data
   // Output processed image data with OIIO (simple to use for such things)
+
+  const std::unique_ptr<IProcessingPlugin> pluginA = std::unique_ptr<IProcessingPlugin>(new SimpleProcessingPlugin("PluginA"));
 
   int i = 0; // For breakpoint
 }
