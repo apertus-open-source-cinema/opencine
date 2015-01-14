@@ -13,7 +13,7 @@ QMAKE_CXXFLAGS += -std=c++11
 QMAKE_CXXFLAGS_RELEASE += -O2
 
 LIBS += -lOpenCL -lOpenImageIO -lGL -ldl -lSDL2 #-L"../OpenCine/build/lib/libraw.so" #-lraw -lraw_r
-LIBS += -L$$PWD/../OpenCine/build/lib/ -lraw
+#LIBS += -L$$PWD/../OpenCine/build/lib/ -lraw
 #LIBS +=  -L/usr/lib/x86_64-linux-gnu -lSDL2
 
 INCLUDEPATH += $$PWD/../OpenCine/3rdParty/LibRaw/libraw
@@ -28,4 +28,6 @@ DISTFILES += \
     Test1Form.ui.qml
 
 HEADERS += \
-    gl3w.h
+    gl3w.h \
+    librawtest.h \
+    opencltest.h

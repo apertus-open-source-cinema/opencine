@@ -1,4 +1,4 @@
-#include "gl3w.h"
+#include <gl3w.h>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN 1
@@ -762,10 +762,10 @@ PFNGLGETVERTEXARRAYINDEXED64IVPROC gl3wGetVertexArrayIndexed64iv;
 PFNGLCREATESAMPLERSPROC gl3wCreateSamplers;
 PFNGLCREATEPROGRAMPIPELINESPROC gl3wCreateProgramPipelines;
 PFNGLCREATEQUERIESPROC gl3wCreateQueries;
-PFNGLGETQUERYBUFFEROBJECTI64VPROC gl3wGetQueryBufferObjecti64v;
-PFNGLGETQUERYBUFFEROBJECTIVPROC gl3wGetQueryBufferObjectiv;
-PFNGLGETQUERYBUFFEROBJECTUI64VPROC gl3wGetQueryBufferObjectui64v;
-PFNGLGETQUERYBUFFEROBJECTUIVPROC gl3wGetQueryBufferObjectuiv;
+//PFNGLGETQUERYBUFFEROBJECTI64VPROC gl3wGetQueryBufferObjecti64v;
+//PFNGLGETQUERYBUFFEROBJECTIVPROC gl3wGetQueryBufferObjectiv;
+//PFNGLGETQUERYBUFFEROBJECTUI64VPROC gl3wGetQueryBufferObjectui64v;
+//PFNGLGETQUERYBUFFEROBJECTUIVPROC gl3wGetQueryBufferObjectuiv;
 PFNGLMEMORYBARRIERBYREGIONPROC gl3wMemoryBarrierByRegion;
 PFNGLGETTEXTURESUBIMAGEPROC gl3wGetTextureSubImage;
 PFNGLGETCOMPRESSEDTEXTURESUBIMAGEPROC gl3wGetCompressedTextureSubImage;
@@ -1465,10 +1465,10 @@ static void load_procs(void)
 	gl3wCreateSamplers = (PFNGLCREATESAMPLERSPROC) get_proc("glCreateSamplers");
 	gl3wCreateProgramPipelines = (PFNGLCREATEPROGRAMPIPELINESPROC) get_proc("glCreateProgramPipelines");
 	gl3wCreateQueries = (PFNGLCREATEQUERIESPROC) get_proc("glCreateQueries");
-	gl3wGetQueryBufferObjecti64v = (PFNGLGETQUERYBUFFEROBJECTI64VPROC) get_proc("glGetQueryBufferObjecti64v");
-	gl3wGetQueryBufferObjectiv = (PFNGLGETQUERYBUFFEROBJECTIVPROC) get_proc("glGetQueryBufferObjectiv");
-	gl3wGetQueryBufferObjectui64v = (PFNGLGETQUERYBUFFEROBJECTUI64VPROC) get_proc("glGetQueryBufferObjectui64v");
-	gl3wGetQueryBufferObjectuiv = (PFNGLGETQUERYBUFFEROBJECTUIVPROC) get_proc("glGetQueryBufferObjectuiv");
+	//gl3wGetQueryBufferObjecti64v = (PFNGLGETQUERYBUFFEROBJECTI64VPROC) get_proc("glGetQueryBufferObjecti64v");
+	//gl3wGetQueryBufferObjectiv = (PFNGLGETQUERYBUFFEROBJECTIVPROC) get_proc("glGetQueryBufferObjectiv");
+	//gl3wGetQueryBufferObjectui64v = (PFNGLGETQUERYBUFFEROBJECTUI64VPROC) get_proc("glGetQueryBufferObjectui64v");
+	//gl3wGetQueryBufferObjectuiv = (PFNGLGETQUERYBUFFEROBJECTUIVPROC) get_proc("glGetQueryBufferObjectuiv");
 	gl3wMemoryBarrierByRegion = (PFNGLMEMORYBARRIERBYREGIONPROC) get_proc("glMemoryBarrierByRegion");
 	gl3wGetTextureSubImage = (PFNGLGETTEXTURESUBIMAGEPROC) get_proc("glGetTextureSubImage");
 	gl3wGetCompressedTextureSubImage = (PFNGLGETCOMPRESSEDTEXTURESUBIMAGEPROC) get_proc("glGetCompressedTextureSubImage");
