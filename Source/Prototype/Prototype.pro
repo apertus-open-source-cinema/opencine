@@ -31,3 +31,4 @@ HEADERS += \
     gl3w.h \
     librawtest.h \
     opencltest.h
+
