@@ -33,7 +33,11 @@ public:
 // Dummy struct for now
 struct Frame
 {
+  int Width;
+  int Height;
 
+  void* imageData;
+  unsigned int dataSize;
 };
 
 class IProcessingPlugin : public IPlugin
@@ -62,20 +66,23 @@ public:
 };
 
 
-bool LoadImage(std::string fileName, unsigned short* imageData, unsigned int dataSize)
+bool LoadImage(std::string fileName, Frame* frame)
 {
-  ImageInput *image = ImageInput::open ("000100.dng");
+  ImageInput *image = ImageInput::open (fileName);
   if (! image)
   {
     return false;
   }
 
   const ImageSpec &spec = image->spec();
-  int width = spec.width;
-  int height = spec.height;
+  frame->Width = spec.width;
+  frame->Height = spec.height;
   int channelCount = spec.nchannels;
+
+  frame->dataSize = frame->Width * frame->Height * channelCount;
+  frame->imageData = new unsigned char[frame->dataSize];
   //std::vector<unsigned short> imageData(width * height * channelCount);
-  image->read_image (TypeDesc::UINT16, &imageData[0]);
+  image->read_image(TypeDesc::UINT8, frame->imageData);
 
   image->close();
   delete image;
@@ -83,7 +90,7 @@ bool LoadImage(std::string fileName, unsigned short* imageData, unsigned int dat
   return true;
 }
 
-bool SaveImage(std::string fileName, unsigned short* imageData, unsigned int dataSize)
+bool SaveImage(std::string fileName, Frame* frame /*unsigned short* imageData, unsigned int dataSize*/)
 {
   ImageOutput *image = ImageOutput::create(fileName);
   if (!image)
@@ -91,9 +98,9 @@ bool SaveImage(std::string fileName, unsigned short* imageData, unsigned int dat
     return false;
   }
 
-  ImageSpec spec (1920, 1080, 3, TypeDesc::UINT16);
-  image->open ("test.tif", spec);
-  image->write_image (TypeDesc::UINT16, imageData);
+  ImageSpec spec (frame->Width, frame->Height, 3, TypeDesc::UINT8);
+  image->open (fileName, spec);
+  image->write_image (TypeDesc::UINT8, frame->imageData);
 
   image->close();
   delete image;
@@ -104,7 +111,7 @@ bool SaveImage(std::string fileName, unsigned short* imageData, unsigned int dat
 std::string LoadTextFile(std::string fileName)
 {
   /*std::ifstream in(filename, std::ios::in | std::ios::binary);
-   if (in)
+   if (in)b
    {
      std::string contents;
      in.seekg(0, std::ios::end);
@@ -196,6 +203,89 @@ int OGLPlusTest()
   }
 
   const std::unique_ptr<IProcessingPlugin> pluginA = std::unique_ptr<IProcessingPlugin>(new SimpleProcessingPlugin("PluginA"));
+
+  //unsigned short* imageData = nullptr;
+  //unsigned int dataSize = 0;
+  Frame* frame = new Frame();
+  LoadImage("test_light.jpg", frame);
+
+  SaveImage("test_light2.jpg", frame/*, frame->dataSize*/);
+
+  // Processing here
+  oglplus::VertexArray rectangle;
+  oglplus::Buffer verts;
+  oglplus::Buffer texCoords;
+
+  rectangle.Bind();
+  /*GLfloat rectangle_verts[8] =
+  {
+  -1.0f, -1.0f,
+  -1.0f, 1.0f,
+  1.0f, -1.0f,
+  1.0f, 1.0f
+  };*/
+
+  GLfloat rectangleVertices[8] =
+  {
+   -0.9f, -0.9f,
+    0.9f, -0.9f,
+   -0.9f,  0.9f,
+    0.9f,  0.9f
+  };
+
+  GLfloat rectangleTexCoords[8] =
+  {
+   0.0f, 1.0f,
+   1.0f, 1.0f,
+   0.0f, 0.0f,
+   1.0f, 0.0f
+  };
+
+  verts.Bind(oglplus::Buffer::Target::Array);
+  oglplus::Buffer::Data(oglplus::Buffer::Target::Array, rectangleVertices);
+  (prog | "Position").Setup<oglplus::Vec2f>().Enable();
+
+  texCoords.Bind(oglplus::Buffer::Target::Array);
+  oglplus::Buffer::Data(oglplus::Buffer::Target::Array, rectangleTexCoords);
+  (prog | "vertTexCoord").Setup<oglplus::Vec2f>().Enable();
+
+  //gl.Disable(oglplus::Capability::DepthTest);
+
+  int maxTexSize = -1;
+  glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
+
+  oglplus::Texture tex;
+  tex.Bind(oglplus::Texture::Target::_2D);
+
+  //oglplus::Texture::Active(0);
+  gl.Bind(oglplus::TextureTarget::_2D, tex);
+  gl.PixelStore(oglplus::PixelParameter::UnpackAlignment, 1);
+  oglplus::Texture::Image2D(oglplus::TextureTarget::_2D, 0, oglplus::PixelDataInternalFormat::RGB, frame->Width, frame->Height, 0, oglplus::PixelDataFormat::RGB, oglplus::PixelDataType::UnsignedByte, frame->imageData);
+  //oglplus::Texture::SubImage2D(oglplus::TextureTarget::_2D, 0, 0, 0, frame->Width, frame->Height, oglplus::PixelDataFormat::RGB, oglplus::PixelDataType::UnsignedByte, frame->imageData);
+
+  oglplus::ErrorCode errorCode = gl.GetError();
+
+  oglplus::Texture::MinFilter(oglplus::TextureTarget::_2D, oglplus::TextureMinFilter::Linear);
+  oglplus::Texture::MagFilter(oglplus::TextureTarget::_2D, oglplus::TextureMagFilter::Linear);
+  oglplus::Texture::WrapS(oglplus::TextureTarget::_2D, oglplus::TextureWrap::ClampToEdge);
+  oglplus::Texture::WrapT(oglplus::TextureTarget::_2D, oglplus::TextureWrap::ClampToEdge);
+  oglplus::Texture::GenerateMipmap(oglplus::TextureTarget::_2D);
+  oglplus::UniformSampler(prog, "mainTexture").Set(0);
+
+  gl.ClearColor(0.0f, 0.3f, 0.5f, 1.0f);
+
+  for(;;)
+  {
+    gl.Clear().ColorBuffer();
+
+    rectangle.Bind();
+    tex.Bind(oglplus::Texture::Target::_2D);
+    gl.DrawArrays(oglplus::PrimitiveType::TriangleStrip, 0, 4);
+
+    SDL_GL_SwapWindow(window);
+  }
+
+  delete frame; //[] imageData;
 
   int i = 0; // For breakpoint
 }
