@@ -1,7 +1,5 @@
 #version 330
 in vec2 Position;
-//in vec3 Color;
-//out vec4 vertColor;
 in vec2 vertTexCoord;
 
 out vec2 fragTexCoord;
@@ -10,7 +8,6 @@ void main(void)
 {
   fragTexCoord = vertTexCoord;
   gl_Position = vec4(Position, 0.0, 1.0);
-  //vertColor = vec4(Color, 1.0);
 }
 
 /*

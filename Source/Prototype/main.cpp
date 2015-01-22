@@ -5,14 +5,18 @@
 #include <streambuf>
 
 #include "gl3w.h"
+#include "timer.h"
 #include <SDL2/SDL.h>
 
 #include <oglplus/gl.hpp>
-
 #include <oglplus/all.hpp>
+#include <oglplus/bound/texture.hpp>
+#include <oglplus/bound/framebuffer.hpp>
 
 #include <OpenImageIO/imageio.h>
 OIIO_NAMESPACE_USING
+
+using namespace oglplus;
 
 class IPlugin
 {
@@ -133,6 +137,8 @@ std::string LoadTextFile(std::string fileName)
 
 int OGLPlusTest()
 {
+  Timer timer(true);
+
   int width = 640, height = 480;
   int status = SDL_Init(SDL_INIT_VIDEO);
   SDL_Window *window = SDL_CreateWindow( "Grapics Application", 0, 0, width, height, SDL_WINDOW_OPENGL);
@@ -149,7 +155,7 @@ int OGLPlusTest()
     return 0;
   }
 
-  oglplus::Context gl;
+  Context gl;
 
   int majorVersion = gl.MajorVersion();
   int minorVersion = gl.MinorVersion();
@@ -162,8 +168,8 @@ int OGLPlusTest()
   // Let them process the data
   // Output processed image data with OIIO (simple to use for such things)
 
-  oglplus::VertexShader vs;
-  oglplus::FragmentShader fs;
+  VertexShader vs;
+  FragmentShader fs;
 
   try
   {
@@ -171,7 +177,7 @@ int OGLPlusTest()
     vs.Source(vertexShaderSource);
     vs.Compile();
   }
-  catch(oglplus::Error& err)
+  catch(Error& err)
   {
     std::cout << err.Log() << std::endl;
   }
@@ -182,12 +188,12 @@ int OGLPlusTest()
     fs.Source(fragmentShaderSource);
     fs.Compile();
   }
-  catch(oglplus::Error& err)
+  catch(Error& err)
   {
     std::cout << err.Log() << std::endl;
   }
 
-  oglplus::Program prog;
+  Program prog;
 
   prog.AttachShader(vs);
   prog.AttachShader(fs);
@@ -197,7 +203,7 @@ int OGLPlusTest()
     prog.Link();
     prog.Use();
   }
-  catch(oglplus::Error& err)
+  catch(Error& err)
   {
     std::cout << err.Log() << std::endl;
   }
@@ -207,14 +213,14 @@ int OGLPlusTest()
   //unsigned short* imageData = nullptr;
   //unsigned int dataSize = 0;
   Frame* frame = new Frame();
-  LoadImage("test_light.jpg", frame);
+  LoadImage("test.jpg", frame);
 
-  SaveImage("test_light2.jpg", frame/*, frame->dataSize*/);
+  SaveImage("test2.jpg", frame/*, frame->dataSize*/);
 
   // Processing here
-  oglplus::VertexArray rectangle;
-  oglplus::Buffer verts;
-  oglplus::Buffer texCoords;
+  VertexArray rectangle;
+  Buffer verts;
+  Buffer texCoords;
 
   rectangle.Bind();
   /*GLfloat rectangle_verts[8] =
@@ -227,62 +233,104 @@ int OGLPlusTest()
 
   GLfloat rectangleVertices[8] =
   {
-   -0.9f, -0.9f,
-    0.9f, -0.9f,
-   -0.9f,  0.9f,
-    0.9f,  0.9f
+  -0.9f, -0.9f,
+  0.9f, -0.9f,
+  -0.9f,  0.9f,
+  0.9f,  0.9f
   };
 
   GLfloat rectangleTexCoords[8] =
   {
-   0.0f, 1.0f,
-   1.0f, 1.0f,
-   0.0f, 0.0f,
-   1.0f, 0.0f
+  0.0f, 1.0f,
+  1.0f, 1.0f,
+  0.0f, 0.0f,
+  1.0f, 0.0f
   };
 
-  verts.Bind(oglplus::Buffer::Target::Array);
-  oglplus::Buffer::Data(oglplus::Buffer::Target::Array, rectangleVertices);
-  (prog | "Position").Setup<oglplus::Vec2f>().Enable();
+  verts.Bind(Buffer::Target::Array);
+  Buffer::Data(Buffer::Target::Array, rectangleVertices);
+  (prog | "Position").Setup<Vec2f>().Enable();
 
-  texCoords.Bind(oglplus::Buffer::Target::Array);
-  oglplus::Buffer::Data(oglplus::Buffer::Target::Array, rectangleTexCoords);
-  (prog | "vertTexCoord").Setup<oglplus::Vec2f>().Enable();
+  texCoords.Bind(Buffer::Target::Array);
+  Buffer::Data(Buffer::Target::Array, rectangleTexCoords);
+  (prog | "vertTexCoord").Setup<Vec2f>().Enable();
 
-  //gl.Disable(oglplus::Capability::DepthTest);
+  //gl.Disable(Capability::DepthTest);
 
   int maxTexSize = -1;
   glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
 
-  oglplus::Texture tex;
-  tex.Bind(oglplus::Texture::Target::_2D);
+  Texture tex;
+  tex.Bind(Texture::Target::_2D);
 
-  //oglplus::Texture::Active(0);
-  gl.Bind(oglplus::TextureTarget::_2D, tex);
-  gl.PixelStore(oglplus::PixelParameter::UnpackAlignment, 1);
-  oglplus::Texture::Image2D(oglplus::TextureTarget::_2D, 0, oglplus::PixelDataInternalFormat::RGB, frame->Width, frame->Height, 0, oglplus::PixelDataFormat::RGB, oglplus::PixelDataType::UnsignedByte, frame->imageData);
-  //oglplus::Texture::SubImage2D(oglplus::TextureTarget::_2D, 0, 0, 0, frame->Width, frame->Height, oglplus::PixelDataFormat::RGB, oglplus::PixelDataType::UnsignedByte, frame->imageData);
+  //Texture::Active(0);
+  gl.Bind(TextureTarget::_2D, tex);
+  gl.PixelStore(PixelParameter::UnpackAlignment, 1);
+  Texture::Image2D(TextureTarget::_2D, 0, PixelDataInternalFormat::RGB, frame->Width, frame->Height, 0, PixelDataFormat::RGB, PixelDataType::UnsignedByte, frame->imageData);
+  //Texture::SubImage2D(TextureTarget::_2D, 0, 0, 0, frame->Width, frame->Height, PixelDataFormat::RGB, PixelDataType::UnsignedByte, frame->imageData);
 
-  oglplus::ErrorCode errorCode = gl.GetError();
+  ErrorCode errorCode = gl.GetError();
 
-  oglplus::Texture::MinFilter(oglplus::TextureTarget::_2D, oglplus::TextureMinFilter::Linear);
-  oglplus::Texture::MagFilter(oglplus::TextureTarget::_2D, oglplus::TextureMagFilter::Linear);
-  oglplus::Texture::WrapS(oglplus::TextureTarget::_2D, oglplus::TextureWrap::ClampToEdge);
-  oglplus::Texture::WrapT(oglplus::TextureTarget::_2D, oglplus::TextureWrap::ClampToEdge);
-  oglplus::Texture::GenerateMipmap(oglplus::TextureTarget::_2D);
-  oglplus::UniformSampler(prog, "mainTexture").Set(0);
+  Texture::MinFilter(TextureTarget::_2D, TextureMinFilter::Linear);
+  Texture::MagFilter(TextureTarget::_2D, TextureMagFilter::Linear);
+  Texture::WrapS(TextureTarget::_2D, TextureWrap::ClampToEdge);
+  Texture::WrapT(TextureTarget::_2D, TextureWrap::ClampToEdge);
+  Texture::GenerateMipmap(TextureTarget::_2D);
+  //UniformSampler(prog, "mainTexture").Set(0);
 
-  gl.ClearColor(0.0f, 0.3f, 0.5f, 1.0f);
+  Framebuffer fbo;
+  DefaultFramebuffer dfb;
+  Texture color_tex;
+
+  gl.Bind(TextureTarget::_2D, color_tex);
+  //gl.PixelStore(PixelParameter::UnpackAlignment, 1);
+  Texture::Image2D(TextureTarget::_2D, 0, PixelDataInternalFormat::RGB, 640, 480, 0, PixelDataFormat::RGB, PixelDataType::UnsignedByte, nullptr);
+  Texture::MinFilter(TextureTarget::_2D, TextureMinFilter::Linear);
+  Texture::MagFilter(TextureTarget::_2D, TextureMagFilter::Linear);
+  Texture::WrapS(TextureTarget::_2D, TextureWrap::ClampToEdge);
+  Texture::WrapT(TextureTarget::_2D, TextureWrap::ClampToEdge);
+  //Texture::GenerateMipmap(TextureTarget::_2D);
+
+  //Texture::Image2D(TextureTarget::_2D, 0, PixelDataInternalFormat::RGB, frame->Width, frame->Height, 0, PixelDataFormat::RGB, PixelDataType::UnsignedByte, frame->imageData);
+
+//  Texture::Active(1);
+// UniformSampler(prog, "mainTexture").Set(0);
+// gl.Bound(Texture::Target::Rectangle, color_tex)
+// .MinFilter(TextureMinFilter::Linear)
+// .MagFilter(TextureMagFilter::Linear)
+// .WrapS(TextureWrap::ClampToEdge)
+// .WrapT(TextureWrap::ClampToEdge)
+// .Image2D(0, PixelDataInternalFormat::RGB, width, height, 0, PixelDataFormat::RGB, PixelDataType::UnsignedByte, nullptr);
+
+  gl.Bind(Framebuffer::Target::Draw, fbo);
+  fbo.AttachTexture(Framebuffer::Target::Draw, FramebufferAttachment::Color, color_tex, 0);
+  fbo.Complete(Framebuffer::Target::Draw);
+
+  std::cout << "GL setup: " << timer.Elapsed().count() << "ms" << std::endl;
 
   for(;;)
   {
-    gl.Clear().ColorBuffer();
+    //timer.Reset();
+
+    gl.ClearColor(0.0f, 0.3f, 0.5f, 1.0f);
+    gl.Bind(Framebuffer::Target::Draw, fbo);
+    gl.Clear().ColorBuffer().DepthBuffer();
+
+    //UniformSampler(prog, "mainTexture").Set(0);
+    rectangle.Bind();
+    tex.Bind(Texture::Target::_2D);
+    gl.DrawArrays(PrimitiveType::TriangleStrip, 0, 4);
+
+    gl.Bind(Framebuffer::Target::Draw, dfb);
+    gl.ClearColor(0.0f, 0.5f, 0.3f, 1.0f);
+    gl.Clear().ColorBuffer().DepthBuffer();
 
     rectangle.Bind();
-    tex.Bind(oglplus::Texture::Target::_2D);
-    gl.DrawArrays(oglplus::PrimitiveType::TriangleStrip, 0, 4);
+    color_tex.Bind(Texture::Target::_2D);
+    gl.DrawArrays(PrimitiveType::TriangleStrip, 0, 4);
 
     SDL_GL_SwapWindow(window);
+    //std::cout << "Elapsed: " << timer.Elapsed().count() << "ms" << std::endl;
   }
 
   delete frame; //[] imageData;

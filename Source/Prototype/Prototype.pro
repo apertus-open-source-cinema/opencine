@@ -30,5 +30,6 @@ DISTFILES += \
 HEADERS += \
     gl3w.h \
     librawtest.h \
-    opencltest.h
+    opencltest.h \
+    timer.h
 
