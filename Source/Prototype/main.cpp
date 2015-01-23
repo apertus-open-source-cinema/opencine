@@ -233,10 +233,10 @@ int OGLPlusTest()
 
   GLfloat rectangleVertices[8] =
   {
-  -0.9f, -0.9f,
-  0.9f, -0.9f,
-  -0.9f,  0.9f,
-  0.9f,  0.9f
+  -1.0f, -1.0f,
+   1.0f, -1.0f,
+  -1.0f,  1.0f,
+   1.0f,  1.0f
   };
 
   GLfloat rectangleTexCoords[8] =
@@ -289,7 +289,7 @@ int OGLPlusTest()
   Texture::MagFilter(TextureTarget::_2D, TextureMagFilter::Linear);
   Texture::WrapS(TextureTarget::_2D, TextureWrap::ClampToEdge);
   Texture::WrapT(TextureTarget::_2D, TextureWrap::ClampToEdge);
-  //Texture::GenerateMipmap(TextureTarget::_2D);
+  Texture::GenerateMipmap(TextureTarget::_2D);
 
   //Texture::Image2D(TextureTarget::_2D, 0, PixelDataInternalFormat::RGB, frame->Width, frame->Height, 0, PixelDataFormat::RGB, PixelDataType::UnsignedByte, frame->imageData);
 
@@ -308,6 +308,20 @@ int OGLPlusTest()
 
   std::cout << "GL setup: " << timer.Elapsed().count() << "ms" << std::endl;
 
+  //Lazy<ProgramUniform<Mat4f>> projection_matrix, camera_matrix, model_matrix;
+  ProgramUniform<Mat4f> projectionMatrix(prog, "ProjectionMatrix");
+  ProgramUniform<Mat4f> cameraMatrix(prog, "CameraMatrix");
+  ProgramUniform<Mat4f> modelMatrix(prog, "ModelMatrix");
+
+  float aspectRatio = 640.0 / 480.0;
+
+  bool imageSaved = false;
+  unsigned char* imData = new unsigned char[640 * 480 *3];
+  int imageSize = -1;
+  //projectionMatrix.Set(CamMatrixf::PerspectiveX(Degrees(60), aspectRatio, 0.1, 100.0));
+  //cameraMatrix.Set(CamMatrixf::Ortho(-2  * aspectRatio, 2 * aspectRatio, -2, 2, 0.1, 100.0));
+  //modelMatrix.Set(ModelMatrixf::Translation(0.0, 0.0, -12.0));
+
   for(;;)
   {
     //timer.Reset();
@@ -315,6 +329,10 @@ int OGLPlusTest()
     gl.ClearColor(0.0f, 0.3f, 0.5f, 1.0f);
     gl.Bind(Framebuffer::Target::Draw, fbo);
     gl.Clear().ColorBuffer().DepthBuffer();
+
+    projectionMatrix.Set(CamMatrixf::PerspectiveX(Degrees(60), aspectRatio, 0.1, 100.0));
+    cameraMatrix.Set(CamMatrixf::Ortho(-3  * aspectRatio, 3 * aspectRatio, -3, 3, 0.1, 100.0));
+    modelMatrix.Set(ModelMatrixf::Translation(0.0, 0.0, 0.0));
 
     //UniformSampler(prog, "mainTexture").Set(0);
     rectangle.Bind();
@@ -327,7 +345,22 @@ int OGLPlusTest()
 
     rectangle.Bind();
     color_tex.Bind(Texture::Target::_2D);
+
+    if(!imageSaved)
+    {
+      Texture::GetImage(TextureTarget::_2D, 0, PixelDataFormat::RGB, oglplus::PixelDataType::UnsignedByte, imageSize, imData);
+      Frame f;
+      f.imageData = imData;
+      f.dataSize = imageSize;
+      f.Width = 640;
+      f.Height = 480;
+
+      SaveImage("fbo_output.png", &f);
+      imageSaved = true;
+    }
+
     gl.DrawArrays(PrimitiveType::TriangleStrip, 0, 4);
+
 
     SDL_GL_SwapWindow(window);
     //std::cout << "Elapsed: " << timer.Elapsed().count() << "ms" << std::endl;
