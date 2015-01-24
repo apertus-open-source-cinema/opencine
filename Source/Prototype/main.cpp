@@ -12,6 +12,7 @@
 #include <oglplus/all.hpp>
 #include <oglplus/bound/texture.hpp>
 #include <oglplus/bound/framebuffer.hpp>
+#include <oglplus/detail/program.hpp>
 
 #include <OpenImageIO/imageio.h>
 OIIO_NAMESPACE_USING
@@ -146,12 +147,13 @@ int OGLPlusTest()
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
   SDL_GLContext glcontext = SDL_GL_CreateContext(window);
+  SDL_GL_SetSwapInterval(0);
 
   gl3wInit();
 
   if (!gl3wIsSupported(3, 3))
   {
-    fprintf(stderr, "OpenGL 3.2 not supported\n");
+    fprintf(stderr, "OpenGL 3.3 not supported\n");
     return 0;
   }
 
@@ -231,12 +233,20 @@ int OGLPlusTest()
   1.0f, 1.0f
   };*/
 
+//  GLfloat rectangleVertices[8] =
+//  {
+//    -frame->Width / 2.0, -frame->Height / 2.0,
+//     frame->Width / 2.0, -frame->Height / 2.0,
+//    -frame->Width / 2.0,  frame->Height / 2.0,
+//     frame->Width / 2.0,  frame->Height / 2.0
+//  };
+
   GLfloat rectangleVertices[8] =
   {
   -1.0f, -1.0f,
-   1.0f, -1.0f,
+  1.0f, -1.0f,
   -1.0f,  1.0f,
-   1.0f,  1.0f
+  1.0f,  1.0f
   };
 
   GLfloat rectangleTexCoords[8] =
@@ -254,8 +264,6 @@ int OGLPlusTest()
   texCoords.Bind(Buffer::Target::Array);
   Buffer::Data(Buffer::Target::Array, rectangleTexCoords);
   (prog | "vertTexCoord").Setup<Vec2f>().Enable();
-
-  //gl.Disable(Capability::DepthTest);
 
   int maxTexSize = -1;
   glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
@@ -293,14 +301,14 @@ int OGLPlusTest()
 
   //Texture::Image2D(TextureTarget::_2D, 0, PixelDataInternalFormat::RGB, frame->Width, frame->Height, 0, PixelDataFormat::RGB, PixelDataType::UnsignedByte, frame->imageData);
 
-//  Texture::Active(1);
-// UniformSampler(prog, "mainTexture").Set(0);
-// gl.Bound(Texture::Target::Rectangle, color_tex)
-// .MinFilter(TextureMinFilter::Linear)
-// .MagFilter(TextureMagFilter::Linear)
-// .WrapS(TextureWrap::ClampToEdge)
-// .WrapT(TextureWrap::ClampToEdge)
-// .Image2D(0, PixelDataInternalFormat::RGB, width, height, 0, PixelDataFormat::RGB, PixelDataType::UnsignedByte, nullptr);
+  //  Texture::Active(1);
+  // UniformSampler(prog, "mainTexture").Set(0);
+  // gl.Bound(Texture::Target::Rectangle, color_tex)
+  // .MinFilter(TextureMinFilter::Linear)
+  // .MagFilter(TextureMagFilter::Linear)
+  // .WrapS(TextureWrap::ClampToEdge)
+  // .WrapT(TextureWrap::ClampToEdge)
+  // .Image2D(0, PixelDataInternalFormat::RGB, width, height, 0, PixelDataFormat::RGB, PixelDataType::UnsignedByte, nullptr);
 
   gl.Bind(Framebuffer::Target::Draw, fbo);
   fbo.AttachTexture(Framebuffer::Target::Draw, FramebufferAttachment::Color, color_tex, 0);
@@ -309,7 +317,7 @@ int OGLPlusTest()
   std::cout << "GL setup: " << timer.Elapsed().count() << "ms" << std::endl;
 
   //Lazy<ProgramUniform<Mat4f>> projection_matrix, camera_matrix, model_matrix;
-  ProgramUniform<Mat4f> projectionMatrix(prog, "ProjectionMatrix");
+  //ProgramUniform<Mat4f> projectionMatrix(prog, "ProjectionMatrix");
   ProgramUniform<Mat4f> cameraMatrix(prog, "CameraMatrix");
   ProgramUniform<Mat4f> modelMatrix(prog, "ModelMatrix");
 
@@ -322,17 +330,23 @@ int OGLPlusTest()
   //cameraMatrix.Set(CamMatrixf::Ortho(-2  * aspectRatio, 2 * aspectRatio, -2, 2, 0.1, 100.0));
   //modelMatrix.Set(ModelMatrixf::Translation(0.0, 0.0, -12.0));
 
+  float angle = 0.0f;
+
+  gl.Disable(Capability::DepthTest);
+
+  gl.Viewport(640, 480);
+
   for(;;)
   {
-    //timer.Reset();
+    timer.Reset();
 
     gl.ClearColor(0.0f, 0.3f, 0.5f, 1.0f);
-    gl.Bind(Framebuffer::Target::Draw, fbo);
+    //gl.Bind(Framebuffer::Target::Draw, fbo);
     gl.Clear().ColorBuffer().DepthBuffer();
 
-    projectionMatrix.Set(CamMatrixf::PerspectiveX(Degrees(60), aspectRatio, 0.1, 100.0));
-    cameraMatrix.Set(CamMatrixf::Ortho(-3  * aspectRatio, 3 * aspectRatio, -3, 3, 0.1, 100.0));
-    modelMatrix.Set(ModelMatrixf::Translation(0.0, 0.0, 0.0));
+    //projectionMatrix.Set(CamMatrixf::Ortho(-3  * aspectRatio, 3 * aspectRatio, -3, 3, 0.1, 100.0)/*CamMatrixf::PerspectiveX(Degrees(60), aspectRatio, 0.1, 100.0)*/);
+    cameraMatrix.Set(CamMatrixf::Ortho(-1  * aspectRatio, 1 * aspectRatio, -1, 1, -20.0, 20.0));
+    modelMatrix.Set(/*ModelMatrixf::RotationZ(Degrees(angle)) * */ ModelMatrixf::Translation(0.0, 0.0, 0.0));
 
     //UniformSampler(prog, "mainTexture").Set(0);
     rectangle.Bind();
@@ -342,6 +356,9 @@ int OGLPlusTest()
     gl.Bind(Framebuffer::Target::Draw, dfb);
     gl.ClearColor(0.0f, 0.5f, 0.3f, 1.0f);
     gl.Clear().ColorBuffer().DepthBuffer();
+
+    cameraMatrix.Set(CamMatrixf::Ortho(-1  * aspectRatio, 1 * aspectRatio, -1, 1, -1.0, 1.0));
+    modelMatrix.Set(/*ModelMatrixf::RotationZ(Degrees(angle)) * */ ModelMatrixf::Translation(0.0, 0.0, 0.0));
 
     rectangle.Bind();
     color_tex.Bind(Texture::Target::_2D);
@@ -357,13 +374,50 @@ int OGLPlusTest()
 
       SaveImage("fbo_output.png", &f);
       imageSaved = true;
+
+      /*int total = -1;
+      glGetProgramiv(3, GL_ACTIVE_UNIFORMS, &total );
+      for(int i=0; i<total; ++i)
+      {
+          int name_len=-1, num=-1;
+          GLenum type = GL_ZERO;
+          char name[100];
+          glGetActiveUniform( 3, GLuint(i), sizeof(name)-1, &name_len, &num, &type, name );
+          name[name_len] = 0;
+          //GLuint location = glGetUniformLocation( program_id, name );
+          std::cout << "Uniform: " << name << " Type: " << type << std::endl;
+      }*/
+
+      int uniformCount = prog.ActiveUniforms().Size();
+
+      //aux::ActiveVariableInfo uniform = prog.ActiveUniforms().At(0);
+
+      for(unsigned int uniformIndex = 0; uniformIndex < uniformCount; uniformIndex++)
+      {
+        aux::ActiveVariableInfo uniform = prog.ActiveUniforms().At(uniformIndex);
+        std::cout << "Uniform: " << uniform.Name() << " Type: " << (int)uniform.Type() << std::endl;
+      }
+
+      uniformCount = prog.ActiveAttribs().Size();
+
+      //aux::ActiveVariableInfo uniform = prog.ActiveUniforms().At(0);
+
+      for(unsigned int uniformIndex = 0; uniformIndex < uniformCount; uniformIndex++)
+      {
+        aux::ActiveVariableInfo uniform = prog.ActiveAttribs().At(uniformIndex);
+        std::cout << "Uniform: " << uniform.Name() << " Type: " << (int)uniform.Type() << std::endl;
+      }
+
+
+      int i = 0;
     }
 
     gl.DrawArrays(PrimitiveType::TriangleStrip, 0, 4);
 
 
     SDL_GL_SwapWindow(window);
-    //std::cout << "Elapsed: " << timer.Elapsed().count() << "ms" << std::endl;
+    angle += 0.01;
+    std::cout << "Elapsed: " << timer.Elapsed().count() << "ms" << std::endl;
   }
 
   delete frame; //[] imageData;

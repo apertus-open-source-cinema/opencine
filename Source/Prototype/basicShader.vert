@@ -1,27 +1,16 @@
 #version 330
 in vec2 Position;
 in vec2 vertTexCoord;
+uniform mat4 ProjectionMatrix, CameraMatrix, ModelMatrix;
 
 out vec2 fragTexCoord;
 
 void main(void)
 {
-  fragTexCoord = vertTexCoord;
-  gl_Position = vec4(Position, 0.0, 1.0);
-}
+//   mat4 Matrix = ProjectionMatrix * CameraMatrix * ModelMatrix;
 
-/*
-"#version 130 \n\
-in vec2 position; \n\
-in vec2 vertTexCoord;\n\
-in vec2 vertTexCoord2;\n\
-out vec2 fragTexCoord;\n\
-out vec2 fragTexCoord2;\n\
-void main() \n\
-{ \n\
-  fragTexCoord = vertTexCoord; \n\
-  fragTexCoord2 = vertTexCoord2; \n\
-  gl_Position = vec4(position, 0.0, 1.0); \n\
-  } \n\
-  ");
-  */
+  mat4 Matrix = CameraMatrix * ModelMatrix;
+
+  fragTexCoord = vertTexCoord;
+  gl_Position = Matrix * vec4(Position, 0.0, 1.0);
+}
