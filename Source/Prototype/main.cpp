@@ -136,6 +136,19 @@ std::string LoadTextFile(std::string fileName)
   return str  ;
 }
 
+std::vector<float> GenerateRectangle(float width, float height)
+{
+  std::vector<float> vertices =
+  {
+   -width / 2.0f, -height / 2.0f,
+    width / 2.0f, -height / 2.0f,
+   -width / 2.0f,  height / 2.0f,
+    width / 2.0f,  height / 2.0f
+  };
+
+  return vertices;
+}
+
 int OGLPlusTest()
 {
   Timer timer(true);
@@ -241,13 +254,15 @@ int OGLPlusTest()
 //     frame->Width / 2.0,  frame->Height / 2.0
 //  };
 
-  GLfloat rectangleVertices[8] =
+  std::vector<float> rectangleVertices = GenerateRectangle(frame->Width / 1000.0f, frame->Height / 1000.0f);
+
+  /*GLfloat rectangleVertices[8] =
   {
   -1.0f, -1.0f,
   1.0f, -1.0f,
   -1.0f,  1.0f,
   1.0f,  1.0f
-  };
+  };*/
 
   GLfloat rectangleTexCoords[8] =
   {
@@ -291,8 +306,8 @@ int OGLPlusTest()
   Texture color_tex;
 
   gl.Bind(TextureTarget::_2D, color_tex);
-  //gl.PixelStore(PixelParameter::UnpackAlignment, 1);
-  Texture::Image2D(TextureTarget::_2D, 0, PixelDataInternalFormat::RGB, 640, 480, 0, PixelDataFormat::RGB, PixelDataType::UnsignedByte, nullptr);
+  gl.PixelStore(PixelParameter::UnpackAlignment, 1);
+  Texture::Image2D(TextureTarget::_2D, 0, PixelDataInternalFormat::RGB, frame->Width, frame->Height, 0, PixelDataFormat::RGB, PixelDataType::UnsignedByte, nullptr);
   Texture::MinFilter(TextureTarget::_2D, TextureMinFilter::Linear);
   Texture::MagFilter(TextureTarget::_2D, TextureMagFilter::Linear);
   Texture::WrapS(TextureTarget::_2D, TextureWrap::ClampToEdge);
@@ -321,10 +336,10 @@ int OGLPlusTest()
   ProgramUniform<Mat4f> cameraMatrix(prog, "CameraMatrix");
   ProgramUniform<Mat4f> modelMatrix(prog, "ModelMatrix");
 
-  float aspectRatio = 640.0 / 480.0;
+  float aspectRatio = frame->Width / frame->Height;
 
   bool imageSaved = false;
-  unsigned char* imData = new unsigned char[640 * 480 *3];
+  unsigned char* imData = new unsigned char[frame->Width * frame->Height * 3];
   int imageSize = -1;
   //projectionMatrix.Set(CamMatrixf::PerspectiveX(Degrees(60), aspectRatio, 0.1, 100.0));
   //cameraMatrix.Set(CamMatrixf::Ortho(-2  * aspectRatio, 2 * aspectRatio, -2, 2, 0.1, 100.0));
@@ -334,18 +349,19 @@ int OGLPlusTest()
 
   gl.Disable(Capability::DepthTest);
 
-  gl.Viewport(640, 480);
-
   for(;;)
   {
     timer.Reset();
 
+    //Render off-screen
     gl.ClearColor(0.0f, 0.3f, 0.5f, 1.0f);
     //gl.Bind(Framebuffer::Target::Draw, fbo);
     gl.Clear().ColorBuffer().DepthBuffer();
 
+    gl.Viewport(frame->Width, frame->Height);
+
     //projectionMatrix.Set(CamMatrixf::Ortho(-3  * aspectRatio, 3 * aspectRatio, -3, 3, 0.1, 100.0)/*CamMatrixf::PerspectiveX(Degrees(60), aspectRatio, 0.1, 100.0)*/);
-    cameraMatrix.Set(CamMatrixf::Ortho(-1  * aspectRatio, 1 * aspectRatio, -1, 1, -20.0, 20.0));
+    cameraMatrix.Set(CamMatrixf::Ortho(-(frame->Width / 1000.0f) / 2, (frame->Width / 1000.0f) / 2, -(frame->Height / 1000.0f) / 2, (frame->Height / 1000.0f) / 2, -20.0, 20.0));
     modelMatrix.Set(/*ModelMatrixf::RotationZ(Degrees(angle)) * */ ModelMatrixf::Translation(0.0, 0.0, 0.0));
 
     //UniformSampler(prog, "mainTexture").Set(0);
@@ -353,9 +369,11 @@ int OGLPlusTest()
     tex.Bind(Texture::Target::_2D);
     gl.DrawArrays(PrimitiveType::TriangleStrip, 0, 4);
 
+    //Render to screen
     gl.Bind(Framebuffer::Target::Draw, dfb);
     gl.ClearColor(0.0f, 0.5f, 0.3f, 1.0f);
     gl.Clear().ColorBuffer().DepthBuffer();
+    gl.Viewport(640, 480);
 
     cameraMatrix.Set(CamMatrixf::Ortho(-1  * aspectRatio, 1 * aspectRatio, -1, 1, -1.0, 1.0));
     modelMatrix.Set(/*ModelMatrixf::RotationZ(Degrees(angle)) * */ ModelMatrixf::Translation(0.0, 0.0, 0.0));
@@ -365,12 +383,12 @@ int OGLPlusTest()
 
     if(!imageSaved)
     {
-      Texture::GetImage(TextureTarget::_2D, 0, PixelDataFormat::RGB, oglplus::PixelDataType::UnsignedByte, imageSize, imData);
+        Texture::GetImage(TextureTarget::_2D, 0, PixelDataFormat::RGB, oglplus::PixelDataType::UnsignedByte, imageSize, imData);
       Frame f;
       f.imageData = imData;
       f.dataSize = imageSize;
-      f.Width = 640;
-      f.Height = 480;
+      f.Width = frame->Width;
+      f.Height = frame->Height;
 
       SaveImage("fbo_output.png", &f);
       imageSaved = true;
