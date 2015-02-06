@@ -31,5 +31,6 @@ HEADERS += \
     gl3w.h \
     librawtest.h \
     opencltest.h \
-    timer.h
+    timer.h \
+    catch.hpp
 

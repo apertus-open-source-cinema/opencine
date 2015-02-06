@@ -17,23 +17,30 @@
 #include <OpenImageIO/imageio.h>
 OIIO_NAMESPACE_USING
 
+#define CATCH_CONFIG_RUNNER
+#include "catch.hpp"
+
 using namespace oglplus;
 
 class IPlugin
 {
-  std::string _name;
-
 public:
-  IPlugin(std::string name) :
-  _name(name)
+  IPlugin()
   {
-  }
-
-  std::string GetName()
-  {
-    return _name;
   }
 };
+
+template<typename Interface>
+class Factory {
+  virtual Interface *create() = 0;
+};
+
+/*class Renderer {
+  virtual void beginScene() = 0;
+  virtual void endScene() = 0;
+};
+typedef Factory<Renderer> RendererFactory;
+*/
 
 // Dummy struct for now
 struct Frame
@@ -48,25 +55,29 @@ struct Frame
 class IProcessingPlugin : public IPlugin
 {
 public:
-  IProcessingPlugin(std::string name) : IPlugin(name)
+  IProcessingPlugin()
   {
-
   }
 
-  virtual void Process(Frame* input, Frame* output) = 0;
+  virtual void Process(Frame input, Frame* output) = 0;
 };
 
 class SimpleProcessingPlugin : public IProcessingPlugin
 {
 public:
-  SimpleProcessingPlugin(std::string name) : IProcessingPlugin(name)
+  SimpleProcessingPlugin()
   {
-
   }
 
-  virtual void Process(Frame* input, Frame* output)
+  virtual void Process(Frame input, Frame* output)
   {
     // Do something
+  }
+
+  // IPlugin interface
+private:
+  IPlugin *Create()
+  {
   }
 };
 
@@ -140,17 +151,78 @@ std::vector<float> GenerateRectangle(float width, float height)
 {
   std::vector<float> vertices =
   {
-   -width / 2.0f, -height / 2.0f,
-    width / 2.0f, -height / 2.0f,
-   -width / 2.0f,  height / 2.0f,
-    width / 2.0f,  height / 2.0f
+  -width / 2.0f, -height / 2.0f,
+  width / 2.0f, -height / 2.0f,
+  -width / 2.0f,  height / 2.0f,
+  width / 2.0f,  height / 2.0f
   };
 
   return vertices;
 }
 
+typedef Factory<IProcessingPlugin> ProcessingPluginFactory;
+
+#include <type_traits>
+
+template <typename RealType>
+class A
+{
+  static_assert(std::is_same<RealType, double>::value || std::is_same<RealType, float>::value, "Wrong type supplied. Only \"double\" or \"float\" accepted.");
+};
+
+enum class ClipType
+{
+  Test1,
+  Test2
+};
+
+template<class BaseType> class GenericFactory
+{
+public:
+  template <class T>
+  void Register(ClipType type)
+  {
+    std::function<T*()> func = []() { return new T(); };
+    registeredDataProviders.emplace(std::make_pair(type, func));
+  }
+
+  BaseType* Get(ClipType type)
+  {
+    auto it = registeredDataProviders.find(type);
+
+    if (it != registeredDataProviders.end())
+    {
+      return (*it).second();
+    }
+
+    return nullptr;
+  }
+
+private:
+  std::map<ClipType, std::function<BaseType*()>> registeredDataProviders;
+};
+
+TEST_CASE( "PluginFactory test", "[General]" )
+{
+  REQUIRE(1 == 2);
+}
+
 int OGLPlusTest()
 {
+  GenericFactory<IPlugin> pluginFactory;
+  pluginFactory.Register<SimpleProcessingPlugin>(ClipType::Test1);
+  pluginFactory.Register<SimpleProcessingPlugin>(ClipType::Test1);
+
+  Catch::Session session;
+  session.configData().processName = "Prototype";
+  session.run();
+
+  //pluginFactory.Register<A>(ClipType::Test2);
+  //ProcessingPluginFactory<SimpleProcessingPlugin> plugin;
+
+  A<float> a;
+
+
   Timer timer(true);
 
   int width = 640, height = 480;
@@ -223,14 +295,14 @@ int OGLPlusTest()
     std::cout << err.Log() << std::endl;
   }
 
-  const std::unique_ptr<IProcessingPlugin> pluginA = std::unique_ptr<IProcessingPlugin>(new SimpleProcessingPlugin("PluginA"));
+  const std::unique_ptr<IProcessingPlugin> pluginA = std::unique_ptr<IProcessingPlugin>(new SimpleProcessingPlugin());
 
   //unsigned short* imageData = nullptr;
   //unsigned int dataSize = 0;
   Frame* frame = new Frame();
-  LoadImage("test.jpg", frame);
+  LoadImage("color-test-file.jpg", frame);
 
-  SaveImage("test2.jpg", frame/*, frame->dataSize*/);
+  //SaveImage("test2.jpg", frame/*, frame->dataSize*/);
 
   // Processing here
   VertexArray rectangle;
@@ -246,13 +318,13 @@ int OGLPlusTest()
   1.0f, 1.0f
   };*/
 
-//  GLfloat rectangleVertices[8] =
-//  {
-//    -frame->Width / 2.0, -frame->Height / 2.0,
-//     frame->Width / 2.0, -frame->Height / 2.0,
-//    -frame->Width / 2.0,  frame->Height / 2.0,
-//     frame->Width / 2.0,  frame->Height / 2.0
-//  };
+  //  GLfloat rectangleVertices[8] =
+  //  {
+  //    -frame->Width / 2.0, -frame->Height / 2.0,
+  //     frame->Width / 2.0, -frame->Height / 2.0,
+  //    -frame->Width / 2.0,  frame->Height / 2.0,
+  //     frame->Width / 2.0,  frame->Height / 2.0
+  //  };
 
   std::vector<float> rectangleVertices = GenerateRectangle(frame->Width / 1000.0f, frame->Height / 1000.0f);
 
@@ -309,10 +381,10 @@ int OGLPlusTest()
   gl.PixelStore(PixelParameter::UnpackAlignment, 1);
   Texture::Image2D(TextureTarget::_2D, 0, PixelDataInternalFormat::RGB, frame->Width, frame->Height, 0, PixelDataFormat::RGB, PixelDataType::UnsignedByte, nullptr);
   Texture::MinFilter(TextureTarget::_2D, TextureMinFilter::Linear);
-  Texture::MagFilter(TextureTarget::_2D, TextureMagFilter::Linear);
+  Texture::MagFilter(TextureTarget::_2D, TextureMagFilter::Nearest);
   Texture::WrapS(TextureTarget::_2D, TextureWrap::ClampToEdge);
   Texture::WrapT(TextureTarget::_2D, TextureWrap::ClampToEdge);
-  Texture::GenerateMipmap(TextureTarget::_2D);
+  //Texture::GenerateMipmap(TextureTarget::_2D);
 
   //Texture::Image2D(TextureTarget::_2D, 0, PixelDataInternalFormat::RGB, frame->Width, frame->Height, 0, PixelDataFormat::RGB, PixelDataType::UnsignedByte, frame->imageData);
 
@@ -349,9 +421,12 @@ int OGLPlusTest()
 
   gl.Disable(Capability::DepthTest);
 
+
+  std::vector<IProcessingPlugin> pluginList;
+
   for(;;)
   {
-    timer.Reset();
+    //timer.Reset();
 
     //Render off-screen
     gl.ClearColor(0.0f, 0.3f, 0.5f, 1.0f);
@@ -375,7 +450,11 @@ int OGLPlusTest()
     gl.Clear().ColorBuffer().DepthBuffer();
     gl.Viewport(640, 480);
 
-    cameraMatrix.Set(CamMatrixf::Ortho(-1  * aspectRatio, 1 * aspectRatio, -1, 1, -1.0, 1.0));
+    //cameraMatrix.Set(CamMatrixf::Ortho(-1  * aspectRatio, 1 * aspectRatio, -1, 1, -1.0, 1.0));
+    //modelMatrix.Set(/*ModelMatrixf::RotationZ(Degrees(angle)) * */ ModelMatrixf::Translation(0.0, 0.0, 0.0));
+
+    //Flip drawing to correct FBO direction
+    cameraMatrix.Set(CamMatrixf::Ortho(-(frame->Width / 1000.0f) / 2, (frame->Width / 1000.0f) / 2, (frame->Height / 1000.0f) / 2, -(frame->Height / 1000.0f) / 2, -20.0, 20.0));
     modelMatrix.Set(/*ModelMatrixf::RotationZ(Degrees(angle)) * */ ModelMatrixf::Translation(0.0, 0.0, 0.0));
 
     rectangle.Bind();
@@ -383,7 +462,8 @@ int OGLPlusTest()
 
     if(!imageSaved)
     {
-        Texture::GetImage(TextureTarget::_2D, 0, PixelDataFormat::RGB, oglplus::PixelDataType::UnsignedByte, imageSize, imData);
+      gl.PixelStore(PixelParameter::PackAlignment, 1);
+      Texture::GetImage(TextureTarget::_2D, 0, PixelDataFormat::RGB, oglplus::PixelDataType::UnsignedByte, imageSize, imData);
       Frame f;
       f.imageData = imData;
       f.dataSize = imageSize;
@@ -435,7 +515,7 @@ int OGLPlusTest()
 
     SDL_GL_SwapWindow(window);
     angle += 0.01;
-    std::cout << "Elapsed: " << timer.Elapsed().count() << "ms" << std::endl;
+    //std::cout << "Elapsed: " << timer.Elapsed().count() << "ms" << std::endl;
   }
 
   delete frame; //[] imageData;
