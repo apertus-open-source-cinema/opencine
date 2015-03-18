@@ -9,6 +9,7 @@
 
 #include "../Core/ImageData.h"
 #include "../API/IDataStorage.h"
+#include "../Helper/GenericFactory.h"
 
 enum class ClipType : unsigned int
 {
