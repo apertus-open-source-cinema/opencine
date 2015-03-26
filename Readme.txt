@@ -1,3 +1,8 @@
+ATTENTION: The infos from Readme.txt and also from Wiki will be moved to https://wiki.apertus.org/index.php?title=Open_Cine
+
+
+-----
+
 !!!Placeholder for more sophisticated content, cleanup and structuring will follow
 
 TODO:
