@@ -5,17 +5,11 @@
 #include <QMessageBox>
 
 #include "Core/Context.h"
-
-//#include <IDataStorage.h>
-
 #include "../Model/MediaExplorerModel.h"
-
-//using namespace OpenCineAPI;
 
 class IMediaExplorerPresenter
 {
   virtual void ImportFolder() = 0;
-  //virtual void UpdateViews() = 0;
 };
 
 class MediaExplorerPresenter : public QObject, public IMediaExplorerPresenter
@@ -34,14 +28,10 @@ private:
     OCContext* _context;
 
 signals:
-    //void NewDataAvailable(OCImage* image);
     void NewDataFound(ClipInfo*);
 
 private slots:
     void ImportFolder();
-
-    //void OpenFolderSelection();
-    //void UpdateViews();
 };
 
 #endif //MEDIAEXPLORERPRESENTER_H
