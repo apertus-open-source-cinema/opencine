@@ -20,7 +20,7 @@ public:
     MediaExplorerPresenter(OCContext* context);
     ~MediaExplorerPresenter();
 
-    void LoadClip(int clipNumber);
+    void LoadClip(unsigned int clipNumber);
 
 private:
     MediaExplorerModel* _model;

@@ -36,6 +36,8 @@ namespace OpenCineAPI
 
     virtual OCFrame* GetMetadataFromFile(std::string) = 0;
 
+    virtual bool ScanFolder(std::vector<std::string>& foundData) = 0;
+
     // IPlugin interface
   public:
     void Initialize()

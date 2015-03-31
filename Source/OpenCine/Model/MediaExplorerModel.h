@@ -19,7 +19,6 @@ class ClipInfo : public QObject
     Q_PROPERTY(unsigned int clipFPS READ FPS CONSTANT)
 
 public:
-    //ClipInfo(QObject *parent=0);
     ClipInfo(const QString &path, const QString &name, const unsigned int& width, const unsigned int& height, const unsigned int& fps, QObject* parent = 0);
 
     QString Path() const;
@@ -35,46 +34,6 @@ private:
     unsigned int _height;
     unsigned int _fps;
 };
-
-/*class ClipInfo
-{
-  std::string _name;
-  unsigned int _width;
-  unsigned int _height;
-  std::string _path;
-
-public:
-  unsigned int GetWidth()
-  {
-    return _width;
-  }
-
-  unsigned int GetHeight()
-  {
-    return _height;
-  }
-
-  void SetName(std::string name)
-  {
-    _name = name;
-  }
-
-  std::string GetPath()
-  {
-    return _path;
-  }
-
-  std::string GetName()
-  {
-    return _name;
-  }
-
-  void SetSize(unsigned int width, unsigned int height)
-  {
-    _width = width;
-    _height = height;
-  }
-};*/
 
 class MediaExplorerModel : public QObject
 {

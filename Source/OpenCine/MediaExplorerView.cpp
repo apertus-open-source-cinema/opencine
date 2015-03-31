@@ -15,7 +15,7 @@ MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget 
 
     ui->quickWidget->setSource(QUrl("./Widgets/MediaExplorerList.qml"));
 
-    qmlContext = ui->quickWidget->rootContext();
+    _qmlContext = ui->quickWidget->rootContext();
 
     //TODO: Item (double) click processing
     QObject* item = (QObject*)ui->quickWidget->rootObject();
@@ -37,12 +37,12 @@ MediaExplorerView::~MediaExplorerView()
 
 void MediaExplorerView::NewClipsFound(ClipInfo* clipInfo)
 {
-     dataList.append(clipInfo);
+     _dataList.append(clipInfo);
 
-     qmlContext->setContextProperty("listModel", QVariant::fromValue(dataList));
+     _qmlContext->setContextProperty("listModel", QVariant::fromValue(_dataList));
 
      //HACK: For testing purpose only, loads last added clip, should be moved when double-clicking on a clip in MediaExplorer works again
-     _presenter->LoadClip(dataList.count() - 1);
+     _presenter->LoadClip(_dataList.count() - 1);
 }
 
 void MediaExplorerView::LoadClip(int clipNumber)

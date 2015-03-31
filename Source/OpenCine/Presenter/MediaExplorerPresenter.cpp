@@ -15,7 +15,7 @@ MediaExplorerPresenter::~MediaExplorerPresenter()
 {
 }
 
-void MediaExplorerPresenter::LoadClip(int clipNumber)
+void MediaExplorerPresenter::LoadClip(unsigned int clipNumber)
 {
   ClipInfo* clipData = _model->GetClipByID(clipNumber);
   

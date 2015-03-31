@@ -11,6 +11,7 @@
 #include "API/IDataProvider.h"
 #include "DataStorage/StaticMemoryAllocator.h"
 #include "DataProvider/LibRawDataProvider.h"
+#include "Log/ILogger.h"
 
 using namespace OpenCineAPI;
 
@@ -44,10 +45,12 @@ class OCContext : public QObject
 {
   Q_OBJECT
 
-  std::unique_ptr<OCSession> _session;
+  std::shared_ptr<OCSession> _session;
 
-  IDataProvider* _dataProvider;
   DataProviderFactory* _factory;
+  IDataProvider* _dataProvider;
+
+  std::shared_ptr<ILogger> _logger;
 
   std::vector<std::string> _availableData;
 
@@ -86,9 +89,14 @@ public:
     emit SessionChanged(_session.get());
   }
 
-  IDataProvider* GetDefaultDataProvider()
+  /*IDataProvider* GetDefaultDataProvider()
   {
     return _dataProvider;
+  }*/
+
+  ILogger* GetLogger()
+  {
+      return _logger.get();
   }
 
   void LoadClip();

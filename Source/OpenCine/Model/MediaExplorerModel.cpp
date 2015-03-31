@@ -2,11 +2,6 @@
 
 #include <QDir>
 
-/*ClipInfo::ClipInfo(QObject *parent)
-    : QObject(parent)
-{
-}*/
-
 ClipInfo::ClipInfo(const QString &path, const QString &name, const unsigned int& width, const unsigned int& height, const unsigned int& fps, QObject *parent):
 QObject(parent),
 _path(path),
@@ -70,12 +65,6 @@ bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipInfo
     delete imageData;
     return true;
   }
-
-  //if(imageData != nullptr)
-  //{
-  //  emit NewDataAdded(imageData);
-  //  return true;
-  // }
 
   return false;
 }
