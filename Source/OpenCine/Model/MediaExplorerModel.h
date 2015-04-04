@@ -9,7 +9,7 @@
 
 using namespace OpenCineAPI;
 
-class ClipInfo : public QObject
+class ClipItem : public QObject
 {
     Q_OBJECT
 
@@ -19,7 +19,7 @@ class ClipInfo : public QObject
     Q_PROPERTY(unsigned int clipFPS READ FPS CONSTANT)
 
 public:
-    ClipInfo(const QString &path, const QString &name, const unsigned int& width, const unsigned int& height, const unsigned int& fps, QObject* parent = 0);
+    ClipItem(const QString &path, const QString &name, const unsigned int& width, const unsigned int& height, const unsigned int& fps, QObject* parent = 0);
 
     QString Path() const;
     QString Name() const;
@@ -39,7 +39,7 @@ class MediaExplorerModel : public QObject
 {
   Q_OBJECT
 
-  std::vector<ClipInfo*> _availableData;
+  std::vector<ClipItem*> _availableData;
 
   IDataProvider* _dataProvider;
 
@@ -51,9 +51,9 @@ public:
   }
 
   //Currently single folder only, subfolders will be implemented later
-  bool EnumerateAvailableData(std::string folderPath, ClipInfo** clipData);
+  bool EnumerateAvailableData(std::string folderPath, ClipItem** clipData);
 
-  ClipInfo* GetClipByID(unsigned int clipID);
+  ClipItem* GetClipByID(unsigned int clipID);
 
 signals:
   void NewDataAdded(OCFrame* metaData);

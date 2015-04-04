@@ -28,7 +28,7 @@ private:
     OCContext* _context;
 
 signals:
-    void NewDataFound(ClipInfo*);
+    void NewDataFound(ClipItem*);
 
 private slots:
     void ImportFolder();

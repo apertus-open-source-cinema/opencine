@@ -27,7 +27,7 @@ MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget 
     importMenu->addAction(testAction);
     ui->pushButton_4->setMenu(importMenu);
 
-    connect(_presenter,SIGNAL(NewDataFound(ClipInfo*)), this, SLOT(NewClipsFound(ClipInfo*)));
+    connect(_presenter,SIGNAL(NewDataFound(ClipItem*)), this, SLOT(NewClipsFound(ClipItem*)));
 }
 
 MediaExplorerView::~MediaExplorerView()
@@ -35,7 +35,7 @@ MediaExplorerView::~MediaExplorerView()
     delete ui;
 }
 
-void MediaExplorerView::NewClipsFound(ClipInfo* clipInfo)
+void MediaExplorerView::NewClipsFound(ClipItem* clipInfo)
 {
      _dataList.append(clipInfo);
 

@@ -26,7 +26,7 @@ private:
     QList<QObject*> _dataList;
 
 private slots:
-    void NewClipsFound(ClipInfo*);
+    void NewClipsFound(ClipItem*);
     void LoadClip(int clipNumber);
 };
 
