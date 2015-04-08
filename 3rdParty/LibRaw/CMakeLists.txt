@@ -72,11 +72,11 @@ OPTION(ENABLE_DEMOSAIC_PACK_GPL2   "Build library with extra Demosaic pack GPL2 
 OPTION(ENABLE_DEMOSAIC_PACK_GPL3   "Build library with extra Demosaic pack GPL3     (default=OFF)"                OFF)
 OPTION(ENABLE_DCRAW_DEBUG          "Build library with debug message from dcraw     (default=OFF)"                OFF)
 
-SET(DEMOSAIC_PACK_GPL2_RPATH "LibRaw-demosaic-pack-GPL2-${RAW_LIB_VERSION_STRING}" CACHE STRING
-    "Relavive path to extra Demosaic pack GPL2 (default=LibRaw-demosaic-pack-GPL2-M.m.p)")
+SET(DEMOSAIC_PACK_GPL2_RPATH "LibRaw-demosaic-pack-GPL2" CACHE STRING
+    "Relavive path to extra Demosaic pack GPL2 (default=LibRaw-demosaic-pack-GPL2)")
 
-SET(DEMOSAIC_PACK_GPL3_RPATH "LibRaw-demosaic-pack-GPL3-${RAW_LIB_VERSION_STRING}" CACHE STRING 
-    "Relavive path to extra Demosaic pack GPL3 (default=LibRaw-demosaic-pack-GPL3-M.m.p)")
+SET(DEMOSAIC_PACK_GPL3_RPATH "LibRaw-demosaic-pack-GPL3" CACHE STRING 
+    "Relavive path to extra Demosaic pack GPL3 (default=LibRaw-demosaic-pack-GPL3)")
 
 SET(RAWSPEED_RPATH           "RawSpeed"           CACHE STRING 
     "Relavive path to extra RawSpeed codec     (default=RawSpeed)")

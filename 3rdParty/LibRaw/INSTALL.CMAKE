@@ -12,8 +12,9 @@ I. Installation steps
  $  tar xzvf LibRaw-demosaic-pack-GPL2-0.xx.yy.tar.gz
  $  tar xzvf LibRaw-demosaic-pack-GPL3-0.xx.yy.tar.gz
 
+3. Copy this LibRaw-cmake scripts in LibRaw-... folder
 
-3. Go to LibRaw folder and run ./configure and make:
+4. Go to LibRaw folder and run ./configure and make:
 
  $ cd LibRaw-0.xx.yy
  $ ./cmake  [...optional args...] .
