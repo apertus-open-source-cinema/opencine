@@ -91,6 +91,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     ${QT_LIBRARIES}
     ${OPENGL_LIBRARIES}
     "${CMAKE_BINARY_DIR}/lib/libraw.so"
+    "${CMAKE_BINARY_DIR}/lib/libPocoFoundationd.a"
     #"${AVUTIL_LIB}"
     #"${AVFORMAT_LIB}"
     #"${AVCODEC_LIB}"
@@ -100,7 +101,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   )
 
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-		
+
 	ADD_EXECUTABLE(${PROJECT_NAME} WIN32 ${SOURCE_FILES} ${UI_FILES_MOC} ${SOURCE_MOC} ${UI_RESOURCES})
 
 	TARGET_LINK_LIBRARIES(
@@ -110,6 +111,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     #${QT_LIBRARIES}
     ${OPENGL_LIBRARIES}
 	"${CMAKE_BINARY_DIR}/bin/libraw.dll"
+  "${CMAKE_BINARY_DIR}/bin/POCO.dll"
     #"${AVUTIL_LIB}"
     #"${AVFORMAT_LIB}"
     #"${AVCODEC_LIB}"
@@ -117,9 +119,9 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     #"${LIBJPEG_LIB}"
     #pthread
   )
-  
-  
-  
+
+
+
 	#ADD_EXECUTABLE(${PROJECT_NAME} WIN32 ${SOURCE_FILES} ${HEADER_FILES} ${UI_FILES_MOC} ${HEADERS_MOC} ${RESOURCE_FILES} )
 
 	#INCLUDE(BundleUtilities)

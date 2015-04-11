@@ -13,6 +13,8 @@
 #include "DataProvider/LibRawDataProvider.h"
 #include "Log/ILogger.h"
 
+#include "DataProvider/IDataFilter.h"
+
 using namespace OpenCineAPI;
 
 class OCSession
@@ -72,6 +74,7 @@ public:
 
     LibRawDataProvider* dataProvider = new LibRawDataProvider();
 
+    std::shared_ptr<IDataFilter> filter = std::make_shared<DNGFilter>();
     QDir dir(path);
 
     QStringList filters;

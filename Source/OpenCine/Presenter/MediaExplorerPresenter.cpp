@@ -8,7 +8,7 @@
 MediaExplorerPresenter::MediaExplorerPresenter(OCContext* context)
 {
   _context = context;
-  _model = new MediaExplorerModel(_context->GetDefaultDataProvider());
+  //_model = new MediaExplorerModel(_context->GetDefaultDataProvider());
 }
 
 MediaExplorerPresenter::~MediaExplorerPresenter()

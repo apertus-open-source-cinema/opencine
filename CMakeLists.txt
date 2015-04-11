@@ -22,12 +22,29 @@ SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 #Includes
 include_directories("${PROJECT_SOURCE_DIR}/3rdParty/LibRaw")
 include_directories("${PROJECT_SOURCE_DIR}/3rdParty/Catch")
+include_directories("${PROJECT_SOURCE_DIR}/3rdParty/POCO/Foundation/include")
 #include_directories("${PROJECT_SOURCE_DIR}/3rdParty/RawSpeed/include")
 
 #Dependencies
-SET(ENABLE_EXAMPLES OFF CACHE BOOL "Build LibRaw shared library (without examples)")
+SET(ENABLE_EXAMPLES OFF CACHE BOOL "LibRaw: Build shared library (without examples)")
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/LibRaw)
-#add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/oiio)
+
+SET(ENABLE_DATA OFF CACHE BOOL "POCO: Disable Data")
+SET(ENABLE_DATA_MYSQL OFF CACHE BOOL "POCO: Disable MySQL")
+SET(ENABLE_DATA_ODBC OFF CACHE BOOL "POCO: Disable ODBC")
+SET(ENABLE_DATA_SQLITE OFF CACHE BOOL "POCO: Disable SQLite")
+SET(ENABLE_CRYPTO OFF CACHE BOOL "POCO: Disable Crypto")
+SET(ENABLE_JSON OFF CACHE BOOL "POCO: Disable JSON")
+SET(ENABLE_NET OFF CACHE BOOL "POCO: Disable Net")
+SET(ENABLE_NETSSL OFF CACHE BOOL "POCO: Disable SSL")
+SET(ENABLE_MONGODB OFF CACHE BOOL "POCO: Disable MongoDB")
+SET(ENABLE_UTIL OFF CACHE BOOL "POCO: Disable Util")
+SET(ENABLE_XML OFF CACHE BOOL "POCO: Disable XML")
+SET(ENABLE_ZIP OFF CACHE BOOL "POCO: Disable Zip")
+SET(ENABLE_PAGECOMPILER OFF CACHE BOOL "POCO: Disable PageCompiler")
+SET(ENABLE_PAGECOMPILER_FILE2PAGE OFF CACHE BOOL "POCO: Disable PageCompiler File2Page")
+SET(POCO_STATIC ON CACHE BOOL "POCO: Static build")
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/POCO)
 
 #Projects
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OpenCine/)

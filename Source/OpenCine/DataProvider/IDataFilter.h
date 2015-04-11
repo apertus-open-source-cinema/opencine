@@ -1,3 +1,5 @@
+#include <Poco/DirectoryIterator.h>
+
 class IDataFilter
 {
 public:

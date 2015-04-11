@@ -30,12 +30,12 @@ public:
     void SetPath(const std::string &path);
 };
 
-std::string ClipInfo::GetPath() const
+inline std::string ClipInfo::GetPath() const
 {
     return _path;
 }
 
-void ClipInfo::SetPath(const std::string &path)
+inline void ClipInfo::SetPath(const std::string &path)
 {
     _path = path;
 }
