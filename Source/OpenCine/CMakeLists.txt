@@ -91,7 +91,6 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     ${QT_LIBRARIES}
     ${OPENGL_LIBRARIES}
     "${CMAKE_BINARY_DIR}/lib/libraw.so"
-    "${CMAKE_BINARY_DIR}/lib/libPocoFoundationd.a"
     #"${AVUTIL_LIB}"
     #"${AVFORMAT_LIB}"
     #"${AVCODEC_LIB}"
@@ -111,7 +110,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     #${QT_LIBRARIES}
     ${OPENGL_LIBRARIES}
 	"${CMAKE_BINARY_DIR}/bin/libraw.dll"
-  "${CMAKE_BINARY_DIR}/bin/POCO.dll"
     #"${AVUTIL_LIB}"
     #"${AVFORMAT_LIB}"
     #"${AVCODEC_LIB}"

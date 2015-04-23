@@ -17,6 +17,9 @@
 
 #include "Console.h"
 
+#include "ClipManagerLayout.h"
+#include "ClipProcessorLayout.h"
+
 //#include <dirent.h>
 
 /*struct PreviewImageStruct
@@ -45,14 +48,13 @@ MainWindow::MainWindow(OCContext* context, QWidget *parent) :
     PlaybackPresenter* playbackPresenter = new PlaybackPresenter(_context);
 
     //Add preview pane
-    ui->gridLayout_3->addWidget(new PreviewPane(playbackPresenter));
+    //ui->gridLayout_3->addWidget(new PreviewPane(playbackPresenter));
 
     //Set Media Explorer widget
-    ui->dockWidget_3->setWidget(new MediaExplorerView(mediaExplorerPresenter));
+    //ui->dockWidget_3->setWidget(new MediaExplorerView(mediaExplorerPresenter));
 
-    QGridLayout* layout = new QGridLayout();
-    layout->addWidget(new PlaybackSlider(playbackPresenter)),
-    ui->widget->setLayout(layout);
+    //QGridLayout* layout = new QGridLayout();
+    //layout->addWidget(new PlaybackSlider(playbackPresenter)), ui->widget->setLayout(layout);
 
     stdout = freopen("output_file", "w", stdout);
 
@@ -61,11 +63,14 @@ MainWindow::MainWindow(OCContext* context, QWidget *parent) :
     QByteArray output = f.readAll();
     QString out(output);
 
-    ui->label_2->setText(out);
+    /*ui->label_2->setText(out);
     ui->textBrowser->setText(out);
 
     ui->textBrowser->append("TEST\n");
     ui->textBrowser->append("12345\n");
+*/
+    ui->stackedWidget->addWidget(new ClipManagerLayout());
+    ui->stackedWidget->addWidget(new ClipProcessorLayout());
 
     /*QMenu* importMenu = new QMenu();
     QAction* testAction = new QAction("test menu item", this);
@@ -120,7 +125,7 @@ MainWindow::~MainWindow()
 
 //void MainWindow::resizeEvent(QResizeEvent *)
 //{
-    //ui->previewArea->fitInView(it, Qt::KeepAspectRatio);
+//ui->previewArea->fitInView(it, Qt::KeepAspectRatio);
 //}
 
 /*void MainWindow::SelectImportFolder()
@@ -137,13 +142,28 @@ MainWindow::~MainWindow()
 }*/
 void MainWindow::on_aboutButton_clicked()
 {
-  QMessageBox msgBox;
-  msgBox.setText("About");
-  msgBox.exec();
+    QMessageBox msgBox;
+    msgBox.setText("About");
+    msgBox.exec();
 }
 
 void MainWindow::on_pushButton_clicked()
 {
     Console* console = new Console(this);
     console->show();
+}
+
+void MainWindow::on_pushButton_7_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_pushButton_8_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::on_pushButton_9_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(2);
 }

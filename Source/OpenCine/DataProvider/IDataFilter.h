@@ -1,4 +1,4 @@
-#include <Poco/DirectoryIterator.h>
+#include <QDirIterator>
 
 class IDataFilter
 {
@@ -8,46 +8,62 @@ public:
 
 class DNGFilter : public IDataFilter
 {
-  std::vector<std::string> fileNames;
+    std::vector<std::string> fileNames;
 
 public:
-  bool ScanFolder(std::string folderPath)
-  {
-    std::string cwd(folderPath);
-    Poco::DirectoryIterator it(cwd);
-    Poco::DirectoryIterator end;
-    while (it != end)
+    bool ScanFolder(std::string folderPath)
     {
-      Poco::Path path(it->path());
+        //std::string cwd(folderPath);
+        QDir dir;
+        dir.setCurrent(QString::fromStdString(folderPath));
+        dir.setFilter(QDir::Files | QDir::NoSymLinks);
+        dir.setSorting(QDir::Name);
 
-      if (it->isFile() && path.getExtension() == "dng")
-      {
-        fileNames.push_back(path.getBaseName());
-      }
+        QFileInfoList list = dir.entryInfoList();
+        std::string fileName = "";
+        for (int i = 0; i < list.size(); ++i)
+        {
+            fileName = list.at(i).baseName().toStdString();
+            fileNames.push_back(fileName);
+            //std::cout << fileName << std::endl;
+            //QFileInfo fileInfo = list.at(i);
+            //std::cout << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10)
+            //                        .arg(fileInfo.fileName()));
+            //std::cout << std::endl;
+        }
 
-      ++it;
+        /*while (it != end)
+        {
+            Poco::Path path(it->path());
+
+            if (it->isFile() && path.getExtension() == "dng")
+            {
+                fileNames.push_back(path.getBaseName());
+            }
+
+            ++it;
+        }*/
+
+        // Sort the file names as they could have been added in wrong order by DirectoryIterator
+        //std::sort(fileNames.begin(), fileNames.end());
+
+        return CheckSequenceNumbering();
     }
 
-    // Sort the file names as they could have been added in wrong order by DirectoryIterator
-    std::sort(fileNames.begin(), fileNames.end());
-
-    return CheckSequenceNumbering();
-  }
-
-  bool CheckSequenceNumbering()
-  {
-    unsigned int prevNumber = std::stoi(fileNames.at(0));
-
-    for(unsigned int index = 1; index < fileNames.size(); index++)
+    bool CheckSequenceNumbering()
     {
-      if(std::stoi(fileNames.at(index)) != prevNumber + 1)
-      {
-        return false;
-      }
+        unsigned int prevNumber = std::stoi(fileNames.at(0));
 
-      prevNumber++;
+        for(unsigned int index = 1; index < fileNames.size(); index++)
+        {
+            if(std::stoi(fileNames.at(index)) != prevNumber + 1)
+            {
+                return false;
+            }
+
+            prevNumber++;
+        }
+
+        return true;
     }
-
-    return true;
-  }
 };
