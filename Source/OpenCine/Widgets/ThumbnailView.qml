@@ -6,7 +6,7 @@ Rectangle {
     id: root
     width: 640
     height: 480
-    color: "red"//"#1b1b1b"
+    color: "#1b1b1b"
 
     MouseArea {
         id: rootMouseArea

@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QTimer>
 #include <QGridLayout>
+#include <BackupPresenter.h>
 
 #include "API/IDataProvider.h"
 
@@ -17,7 +18,7 @@
 
 #include "Console.h"
 
-#include "ClipManagerLayout.h"
+#include "BackupLayout.h"
 #include "ClipProcessorLayout.h"
 
 //#include <dirent.h>
@@ -69,12 +70,18 @@ MainWindow::MainWindow(OCContext* context, QWidget *parent) :
     ui->textBrowser->append("TEST\n");
     ui->textBrowser->append("12345\n");
 */
-    ui->stackedWidget->addWidget(new ClipManagerLayout());
+    BackupPresenter* backupPresenter = new BackupPresenter(context);
+    ui->stackedWidget->addWidget(new BackupLayout(this, *backupPresenter));
+
     ui->stackedWidget->addWidget(new ClipProcessorLayout());
+
+    //ui->buttonGroup->addButton(new QPushButton("Test", this));
+
+    connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), SLOT(on_pushButton_7_clicked(int)));
 
     /*QMenu* importMenu = new QMenu();
     QAction* testAction = new QAction("test menu item", this);
-    connect(testAction,SIGNAL(triggered()),this, SLOT(SelectImportFolder()));
+    connect(testAction,SIGNAL(triggered()), SLOT(SelectImportFolder()));
     importMenu->addAction(testAction);*/
 }
 
@@ -153,17 +160,7 @@ void MainWindow::on_pushButton_clicked()
     console->show();
 }
 
-void MainWindow::on_pushButton_7_clicked()
+void MainWindow::on_pushButton_7_clicked(int id)
 {
-    ui->stackedWidget->setCurrentIndex(0);
-}
-
-void MainWindow::on_pushButton_8_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(1);
-}
-
-void MainWindow::on_pushButton_9_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(2);
+    ui->stackedWidget->setCurrentIndex(id);
 }

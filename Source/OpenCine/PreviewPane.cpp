@@ -15,8 +15,8 @@ ui(new Ui::PreviewPane)
 
   _presenter = presenter;
 
-  connect(_presenter, SIGNAL(FrameChanged(uint,OCFrame*)), this, SLOT(OnFrameChange(uint,OCFrame*)));
-  //connect(_presenter, SIGNAL(NewDataAvailable(OCImage*)), this, SLOT(UpdateFrame(OCImage*)));
+  connect(_presenter, SIGNAL(FrameChanged(uint,OCFrame*)), SLOT(OnFrameChange(uint,OCFrame*)));
+  //connect(_presenter, SIGNAL(NewDataAvailable(OCImage*)), SLOT(UpdateFrame(OCImage*)));
 
   //this->setAttribute(Qt::WA_DontCreateNativeAncestors);
 

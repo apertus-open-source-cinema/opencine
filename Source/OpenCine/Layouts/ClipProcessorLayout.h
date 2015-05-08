@@ -1,8 +1,9 @@
 #ifndef CLIPPROCESSORLAYOUT_H
 #define CLIPPROCESSORLAYOUT_H
 
-#include <Context.h>
 #include <QWidget>
+
+#include "Context.h"
 
 namespace Ui {
 class ClipProcessorLayout;
@@ -18,6 +19,7 @@ public:
 
 private:
     Ui::ClipProcessorLayout *ui;
+    OCContext* _context;
 };
 
 #endif // CLIPPROCESSORLAYOUT_H

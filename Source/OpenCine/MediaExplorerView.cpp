@@ -19,7 +19,7 @@ MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget 
 
     //TODO: Item (double) click processing
     QObject* item = (QObject*)ui->quickWidget->rootObject();
-    QObject::connect(item, SIGNAL(loadClip(int)), this, SLOT(LoadClip(int)));
+    QObject::connect(item, SIGNAL(loadClip(int)), SLOT(LoadClip(int)));
 
     QMenu* importMenu = new QMenu();
     QAction* testAction = new QAction("Import from folder...", this);
@@ -27,7 +27,7 @@ MediaExplorerView::MediaExplorerView(MediaExplorerPresenter* presenter, QWidget 
     importMenu->addAction(testAction);
     ui->pushButton_4->setMenu(importMenu);
 
-    connect(_presenter,SIGNAL(NewDataFound(ClipItem*)), this, SLOT(NewClipsFound(ClipItem*)));
+    connect(_presenter,SIGNAL(NewDataFound(ClipItem*)), SLOT(NewClipsFound(ClipItem*)));
 }
 
 MediaExplorerView::~MediaExplorerView()

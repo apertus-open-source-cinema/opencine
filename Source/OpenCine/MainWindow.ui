@@ -6,14 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1227</width>
-    <height>746</height>
+    <width>719</width>
+    <height>450</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>_OpenCine</string>
   </property>
   <widget class="QWidget" name="centralWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="spacing">
      <number>0</number>
@@ -32,6 +38,12 @@
     </property>
     <item>
      <widget class="QFrame" name="horizontalFrame_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
@@ -62,6 +74,12 @@
        </property>
        <item>
         <widget class="QPushButton" name="aboutButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="styleSheet">
           <string notr="true">QPushButton
 {
@@ -95,13 +113,19 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>40</width>
-           <height>20</height>
+           <height>0</height>
           </size>
          </property>
         </spacer>
        </item>
        <item>
         <widget class="QLabel" name="label">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="lineWidth">
           <number>0</number>
          </property>
@@ -127,7 +151,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>40</width>
-           <height>20</height>
+           <height>0</height>
           </size>
          </property>
         </spacer>
@@ -246,7 +270,7 @@ QPushButton::checked
        <item>
         <widget class="QPushButton" name="pushButton">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -272,6 +296,21 @@ QPushButton::checked
     <item>
      <widget class="QWidget" name="widget" native="true">
       <layout class="QGridLayout" name="gridLayout_3">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="currentIndex">
