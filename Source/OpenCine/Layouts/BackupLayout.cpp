@@ -28,7 +28,10 @@ BackupLayout::BackupLayout(QWidget *parent, const BackupPresenter& backupPresent
 {
     ui->setupUi(this);
 
+    _qmlContext = ui->quickWidget->rootContext();
+    _qmlContext->setContextProperty("fileList", QVariant::fromValue(_presenter->GetFileList()));
     ui->quickWidget->setSource(QUrl("./Widgets/ThumbnailView.qml"));
+    _qmlContext->setContextProperty("fileList", QVariant::fromValue(_presenter->GetFileList()));
 
     //QFileSystemModel* model = new QFileSystemModel();
     //model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot | QDir::AllDirs);
@@ -80,9 +83,9 @@ BackupLayout::BackupLayout(QWidget *parent, const BackupPresenter& backupPresent
     //ui->folderTree->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
 
     connect(ui->driveList->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), _presenter, SLOT(CurrentDriveChanged(QModelIndex, QModelIndex)));
-    connect(ui->driveList->selectionModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(DriveListChanged()));
+    //connect(ui->driveList->selectionModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(DriveListChanged()));
 
-    connect(_presenter, SIGNAL(DriveSelectionChanged(QModelIndex)), SLOT(DriveSelectionChanged(QModelIndex)));
+    connect(_presenter, SIGNAL(DriveSelectionChanged(QModelIndex)), SLOT(DriveSelectionChanged(QModelIndex)));     
 }
 
 BackupLayout::~BackupLayout()

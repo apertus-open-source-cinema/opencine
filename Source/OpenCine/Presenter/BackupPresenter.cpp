@@ -20,26 +20,8 @@ std::vector<std::string> GetMountsLinux()
     {
         directories.next();
 
-
         mountPoints.push_back(QString(mediaFolder + directories.fileName()).toStdString());//drive->mnt_dir);
-        //all_dirs << directories.filePath();
     }
-
-    /*FILE* file = setmntent("/etc/mtab", "r");
-
-    mntent* drive;
-    do
-    {
-        drive = getmntent(file);
-
-        if(drive != nullptr && std::string(drive->mnt_dir).find("/media") == 0)
-        {
-            mountPoints.push_back(drive->mnt_dir);
-        }
-    }while(drive != nullptr);
-
-    //mountPoints.push_back("/");
-    int i = 0;*/
 
     return mountPoints;
 }
@@ -86,6 +68,12 @@ QStringListModel* BackupPresenter::GetDriveListModel()
 QFileSystemModel* BackupPresenter::GetFolderTreeModel()
 {
     return _folderTreeModel;
+}
+
+std::vector<FileInfo*> BackupPresenter::GetFileList()
+{
+    _fileInfoList.push_back(new FileInfo("test1234", "NAME", 256, 192, 29.93));
+    return _fileInfoList;
 }
 
 std::vector<std::string> BackupPresenter::GetMounts()

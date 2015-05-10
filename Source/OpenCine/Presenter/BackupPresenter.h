@@ -6,7 +6,8 @@
 #include <QStringListModel>
 #include <QFileSystemWatcher>
 
-#include "Context.h"
+#include "Core/Context.h"
+#include "Model/FileInfo.h"
 
 class BackupPresenter : public QObject
 {
@@ -18,6 +19,7 @@ public:
 
   QStringListModel* GetDriveListModel();
   QFileSystemModel* GetFolderTreeModel();
+  std::vector<FileInfo*> GetFileList();
 
 public slots:
   void CurrentDriveChanged(const QModelIndex& current, const QModelIndex& previous);
@@ -29,6 +31,8 @@ private slots:
   void UpdateMounts();
 private:
   std::vector<std::string> GetMounts();
+
+  std::vector<FileInfo*> _fileInfoList;
 
   OCContext* _context;
   OCSession* _session;

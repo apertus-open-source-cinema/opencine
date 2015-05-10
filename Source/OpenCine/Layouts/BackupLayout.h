@@ -1,6 +1,7 @@
 #ifndef BACKUPLAYOUT_H
 #define BACKUPLAYOUT_H
 
+#include <QQmlContext>
 #include <QWidget>
 
 #include "BackupPresenter.h"
@@ -25,6 +26,7 @@ private:
     Ui::BackupLayout *ui;
 
     BackupPresenter* _presenter;
+    QQmlContext* _qmlContext;
 };
 
 #endif // BACKUPLAYOUT_H

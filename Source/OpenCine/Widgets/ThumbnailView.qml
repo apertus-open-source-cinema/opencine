@@ -20,81 +20,6 @@ Rectangle {
         propagateComposedEvents: true
     }
 
-    Grid {
-        id: grid1
-        anchors.rightMargin: 3302
-        anchors.bottomMargin: 650
-        anchors.leftMargin: -3302
-        anchors.topMargin: -650
-        flow: Grid.LeftToRight
-        anchors.fill: parent
-        scale: 1
-        transformOrigin: Item.TopLeft
-        smooth: true
-        antialiasing: false
-        spacing: 6
-        layoutDirection: Qt.LeftToRight
-        rows: 0
-        columns: 3
-
-        ThumbnailItem {
-        }
-
-        ThumbnailItem {
-        }
-
-        ThumbnailItem {
-        }
-
-        ThumbnailItem {
-        }
-
-        ThumbnailItem {
-        }
-
-        ThumbnailItem {
-        }
-
-        ThumbnailItem {
-        }
-
-        ThumbnailItem {
-        }
-
-        ThumbnailItem {
-        }
-
-        ThumbnailItem {
-        }
-    }
-
-    GridLayout {
-        anchors.rightMargin: -1390
-        anchors.bottomMargin: 448
-        anchors.leftMargin: 1390
-        anchors.topMargin: -448
-        anchors.fill: parent
-        clip: false
-        columnSpacing: 5
-        columns: 3
-
-        //        scale: scaleSlider.value
-        ThumbnailItem {
-        }
-        ThumbnailItem {
-        }
-        ThumbnailItem {
-        }
-        ThumbnailItem {
-        }
-        ThumbnailItem {
-        }
-        ThumbnailItem {
-        }
-        ThumbnailItem {
-        }
-    }
-
     GridView {
         id: gridView1
         anchors.fill: parent
@@ -106,82 +31,12 @@ Rectangle {
         snapMode: GridView.NoSnap
 
         //keyNavigationWraps: false
-        model: ListModel {
-            ListElement {
-                clipResolution: "1920x1080"
-            }
-            ListElement {
-                clipResolution: "1280x720"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-            ListElement {
-                name: "Test3"
-            }
-        }
 
+        model: fileList
         delegate: ThumbnailItem
         {
             id: thumbnailItem
-            clipResolution: model.clipResolution
+            clipResolution: model.clipName
         }
 
         addDisplaced: Transition {
