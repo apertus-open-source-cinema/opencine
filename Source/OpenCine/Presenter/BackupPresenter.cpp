@@ -99,3 +99,20 @@ void BackupPresenter::CurrentDriveChanged(const QModelIndex& current, const QMod
     QModelIndex index = _folderTreeModel->setRootPath(rootPath);
     emit DriveSelectionChanged(index);
 }
+
+void BackupPresenter::CurrentFolderChanged(const QItemSelection &current, const QItemSelection &previous)
+{
+    QString path = _folderTreeModel->filePath(current.indexes().at(0));
+    QDirIterator it(path, QDirIterator::NoIteratorFlags);
+    _fileInfoList.clear();
+    while (it.hasNext())
+    {
+        if(it.fileInfo().isFile())
+        {
+            _fileInfoList.push_back(new FileInfo(it.path(), it.fileName(), 100, 120, 23.95));
+        }
+        it.next();
+    }
+
+    emit FolderChanged(_fileInfoList);
+}

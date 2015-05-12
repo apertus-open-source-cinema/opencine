@@ -36,7 +36,7 @@ Rectangle {
         delegate: ThumbnailItem
         {
             id: thumbnailItem
-            clipResolution: model.clipName
+            clipResolution: model.modelData.clipName
         }
 
         addDisplaced: Transition {

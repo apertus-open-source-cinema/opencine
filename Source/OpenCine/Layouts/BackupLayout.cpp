@@ -28,11 +28,21 @@ BackupLayout::BackupLayout(QWidget *parent, const BackupPresenter& backupPresent
 {
     ui->setupUi(this);
 
-    _qmlContext = ui->quickWidget->rootContext();
-    _qmlContext->setContextProperty("fileList", QVariant::fromValue(_presenter->GetFileList()));
-    ui->quickWidget->setSource(QUrl("./Widgets/ThumbnailView.qml"));
-    _qmlContext->setContextProperty("fileList", QVariant::fromValue(_presenter->GetFileList()));
+    //std::vector<FileInfo*> fileList = _presenter->GetFileList();
+    //_fileList.append(fileList.at(0));
+//    //_qmlContext->setContextProperty("fileList", QVariant::fromValue(list));
 
+    _qmlContext = ui->quickWidget->rootContext();
+    _qmlContext->setContextProperty("fileList", QVariant::fromValue(_fileList));
+
+    ui->quickWidget->setSource(QUrl("./Widgets/ThumbnailView.qml"));
+
+//    list.append(fileList.at(0));
+//    list.append(fileList.at(0));
+//    list.append(fileList.at(0));
+//    _qmlContext->setContextProperty("fileList", QVariant::fromValue(list));
+
+    //_qmlContext->setContextProperty("fileList", QVariant::fromValue(list));
     //QFileSystemModel* model = new QFileSystemModel();
     //model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot | QDir::AllDirs);
     //model->setSorting(QDir::Name | QDir::IgnoreCase);
@@ -83,9 +93,12 @@ BackupLayout::BackupLayout(QWidget *parent, const BackupPresenter& backupPresent
     //ui->folderTree->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
 
     connect(ui->driveList->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), _presenter, SLOT(CurrentDriveChanged(QModelIndex, QModelIndex)));
+    connect(ui->folderTree->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), _presenter, SLOT(CurrentFolderChanged(QItemSelection, QItemSelection)));
+
     //connect(ui->driveList->selectionModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(DriveListChanged()));
 
-    connect(_presenter, SIGNAL(DriveSelectionChanged(QModelIndex)), SLOT(DriveSelectionChanged(QModelIndex)));     
+    connect(_presenter, SIGNAL(DriveSelectionChanged(QModelIndex)), SLOT(DriveSelectionChanged(QModelIndex)));
+    connect(_presenter, SIGNAL(FolderChanged(std::vector<FileInfo*>)), SLOT(FolderSelectionChanged(std::vector<FileInfo*>)));
 }
 
 BackupLayout::~BackupLayout()
@@ -96,6 +109,18 @@ BackupLayout::~BackupLayout()
 void BackupLayout::DriveSelectionChanged(QModelIndex driveRoot)
 {
     ui->folderTree->setRootIndex(driveRoot);
+}
+
+void BackupLayout::FolderSelectionChanged(std::vector<FileInfo*> fileList)
+{
+    _fileList.clear();
+
+    for(auto& fileInfo : fileList)
+    {
+        _fileList.push_back(fileInfo);
+    }
+
+    _qmlContext->setContextProperty("fileList", QVariant::fromValue(_fileList));
 }
 
 void BackupLayout::DriveListChanged()

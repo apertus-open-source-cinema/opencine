@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QStringListModel>
 #include <QFileSystemWatcher>
+#include <QItemSelection>
 
 #include "Core/Context.h"
 #include "Model/FileInfo.h"
@@ -23,9 +24,11 @@ public:
 
 public slots:
   void CurrentDriveChanged(const QModelIndex& current, const QModelIndex& previous);
+  void CurrentFolderChanged(const QItemSelection& current, const QItemSelection& previous);
 
 signals:
   void DriveSelectionChanged(QModelIndex diveRoot);
+  void FolderChanged(std::vector<FileInfo*> fileList);
 
 private slots:
   void UpdateMounts();

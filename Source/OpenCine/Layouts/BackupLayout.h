@@ -19,14 +19,17 @@ public:
     ~BackupLayout();
 
 private slots:
-    void DriveSelectionChanged(QModelIndex driveRoot);
     void DriveListChanged();
+    void DriveSelectionChanged(QModelIndex driveRoot);
+    void FolderSelectionChanged(std::vector<FileInfo*>);
 
 private:
     Ui::BackupLayout *ui;
 
     BackupPresenter* _presenter;
     QQmlContext* _qmlContext;
+
+    QList<QObject*> _fileList;
 };
 
 #endif // BACKUPLAYOUT_H
