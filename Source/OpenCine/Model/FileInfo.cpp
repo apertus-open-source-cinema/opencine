@@ -10,7 +10,7 @@ _width(width),
 _height(height),
 _fps(fps)
 {
-    _name = path;
+    //_name = path;
 }
 
 QString FileInfo::Path() const

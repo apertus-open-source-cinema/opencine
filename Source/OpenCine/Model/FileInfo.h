@@ -11,6 +11,7 @@ class FileInfo : public QObject
     Q_PROPERTY(unsigned int clipWidth READ Width CONSTANT)
     Q_PROPERTY(unsigned int clipHeight READ Height CONSTANT)
     Q_PROPERTY(unsigned int clipFPS READ FPS CONSTANT)
+     Q_PROPERTY(QString clipPath READ Path CONSTANT)
 
 public:
     FileInfo(const QString &path, const QString &name, const unsigned int& width, const unsigned int& height, const unsigned int& fps, QObject* parent = 0);

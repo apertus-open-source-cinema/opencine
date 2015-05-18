@@ -37,6 +37,8 @@ Rectangle {
         {
             id: thumbnailItem
             clipResolution: model.modelData.clipName
+            clipName: model.modelData.clipName
+            clipPath: model.modelData.clipPath
         }
 
         addDisplaced: Transition {

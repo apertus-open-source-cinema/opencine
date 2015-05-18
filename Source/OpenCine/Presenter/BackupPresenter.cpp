@@ -109,7 +109,7 @@ void BackupPresenter::CurrentFolderChanged(const QItemSelection &current, const 
     {
         if(it.fileInfo().isFile())
         {
-            _fileInfoList.push_back(new FileInfo(it.path(), it.fileName(), 100, 120, 23.95));
+            _fileInfoList.push_back(new FileInfo(it.filePath(), it.fileName(), 100, 120, 23.95));
         }
         it.next();
     }

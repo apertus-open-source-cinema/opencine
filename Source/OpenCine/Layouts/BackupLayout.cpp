@@ -13,7 +13,7 @@ public:
     void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const
     {
         painter->save();
-        painter->setPen(QColor("#ff0000"));
+        painter->setPen(QColor("#FA8756"));
         painter->drawRect(option.rect);
         painter->restore();
 
@@ -33,6 +33,8 @@ BackupLayout::BackupLayout(QWidget *parent, const BackupPresenter& backupPresent
 //    //_qmlContext->setContextProperty("fileList", QVariant::fromValue(list));
 
     _qmlContext = ui->quickWidget->rootContext();
+    ui->quickWidget->engine()->addImageProvider(QString("thumbnail"), new ThumbnailProvider());
+
     _qmlContext->setContextProperty("fileList", QVariant::fromValue(_fileList));
 
     ui->quickWidget->setSource(QUrl("./Widgets/ThumbnailView.qml"));
@@ -126,4 +128,22 @@ void BackupLayout::FolderSelectionChanged(std::vector<FileInfo*> fileList)
 void BackupLayout::DriveListChanged()
 {
     int i = 0;
+}
+
+
+QImage ThumbnailProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
+{
+//    dataStorage = new StaticMemoryAllocator();
+//    if(dataProvider.LoadFile(dataStorage, id.toStdString()))
+//    {
+//        image = QImage(dataStorage->GetFrame(0)->GetWidth(),dataStorage->GetFrame(0)->GetHeight(), QImage::Format_RGB16);
+//        image.fromData(QByteArray::fromRawData((const char*)dataStorage->GetFrame(0)->GetData(), dataStorage->GetFrame(0)->GetSize()));
+//        image = image.scaled(64, 32);
+//    }
+    if(!image.load(id))
+    {
+         image.load("./Widgets/thumbnail_placeholder.png");
+    }
+
+    return image;
 }

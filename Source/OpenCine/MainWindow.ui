@@ -176,11 +176,11 @@
 
 QPushButton::checked
 {
-	color: #ff6666;
+	color: #FA8756;
 }</string>
          </property>
          <property name="text">
-          <string>MANAGE</string>
+          <string>BACKUP</string>
          </property>
          <property name="checkable">
           <bool>true</bool>
@@ -197,6 +197,37 @@ QPushButton::checked
          <attribute name="buttonGroup">
           <string notr="true">buttonGroup</string>
          </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_2">
+         <property name="font">
+          <font>
+           <family>DejaVu Sans</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QPushButton
+{
+	color: gray;
+	background-color: transparent;
+	border: 0px;
+}
+
+QPushButton::checked
+{
+	color: #ffff66;
+}</string>
+         </property>
+         <property name="text">
+          <string>MANAGE</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
        <item>

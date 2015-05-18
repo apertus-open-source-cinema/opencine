@@ -2,9 +2,26 @@
 #define BACKUPLAYOUT_H
 
 #include <QQmlContext>
+#include <QQuickImageProvider>
 #include <QWidget>
 
 #include "BackupPresenter.h"
+
+class ThumbnailProvider : public QQuickImageProvider
+{
+    QImage image;
+    LibRawDataProvider dataProvider;
+    StaticMemoryAllocator* dataStorage;
+
+    // QQuickImageProvider interface
+public:
+    ThumbnailProvider()
+            : QQuickImageProvider(QQuickImageProvider::Image)
+        {
+        }
+
+    QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
+};
 
 namespace Ui {
 class BackupLayout;

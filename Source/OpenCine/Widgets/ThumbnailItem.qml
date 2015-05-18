@@ -11,6 +11,8 @@ Rectangle {
     transformOrigin: Item.Center
 
     property string clipResolution: "0x0"
+    property string clipName: text3.text
+    property string clipPath: image1.source
 
     FontLoader {
         id: fixedFont
@@ -50,7 +52,7 @@ Rectangle {
         smooth: true
         antialiasing: false
         fillMode: Image.PreserveAspectFit
-        source: "thumbnail_placeholder.png"
+        source: clipPath != null ? "image://thumbnail/" + clipPath : "thumbnail_placeholder.png" //"image://thumbnail/" + clipName //"thumbnail_placeholder.png"
     }
 
     Column {
