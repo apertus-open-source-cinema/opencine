@@ -1,6 +1,8 @@
 #include "BackupLayout.h"
 #include "ui_BackupLayout.h"
 
+#include <QFileDialog>
+#include <QGraphicsBlurEffect>
 #include <QPainter>
 #include <QStandardItemModel>
 #include <QStyledItemDelegate>
@@ -30,7 +32,7 @@ BackupLayout::BackupLayout(QWidget *parent, const BackupPresenter& backupPresent
 
     //std::vector<FileInfo*> fileList = _presenter->GetFileList();
     //_fileList.append(fileList.at(0));
-//    //_qmlContext->setContextProperty("fileList", QVariant::fromValue(list));
+    //    //_qmlContext->setContextProperty("fileList", QVariant::fromValue(list));
 
     _qmlContext = ui->quickWidget->rootContext();
     ui->quickWidget->engine()->addImageProvider(QString("thumbnail"), new ThumbnailProvider());
@@ -39,10 +41,10 @@ BackupLayout::BackupLayout(QWidget *parent, const BackupPresenter& backupPresent
 
     ui->quickWidget->setSource(QUrl("./Widgets/ThumbnailView.qml"));
 
-//    list.append(fileList.at(0));
-//    list.append(fileList.at(0));
-//    list.append(fileList.at(0));
-//    _qmlContext->setContextProperty("fileList", QVariant::fromValue(list));
+    //    list.append(fileList.at(0));
+    //    list.append(fileList.at(0));
+    //    list.append(fileList.at(0));
+    //    _qmlContext->setContextProperty("fileList", QVariant::fromValue(list));
 
     //_qmlContext->setContextProperty("fileList", QVariant::fromValue(list));
     //QFileSystemModel* model = new QFileSystemModel();
@@ -133,17 +135,42 @@ void BackupLayout::DriveListChanged()
 
 QImage ThumbnailProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
 {
-//    dataStorage = new StaticMemoryAllocator();
-//    if(dataProvider.LoadFile(dataStorage, id.toStdString()))
-//    {
-//        image = QImage(dataStorage->GetFrame(0)->GetWidth(),dataStorage->GetFrame(0)->GetHeight(), QImage::Format_RGB16);
-//        image.fromData(QByteArray::fromRawData((const char*)dataStorage->GetFrame(0)->GetData(), dataStorage->GetFrame(0)->GetSize()));
-//        image = image.scaled(64, 32);
-//    }
+    //    dataStorage = new StaticMemoryAllocator();
+    //    if(dataProvider.LoadFile(dataStorage, id.toStdString()))
+    //    {
+    //        image = QImage(dataStorage->GetFrame(0)->GetWidth(),dataStorage->GetFrame(0)->GetHeight(), QImage::Format_RGB16);
+    //        image.fromData(QByteArray::fromRawData((const char*)dataStorage->GetFrame(0)->GetData(), dataStorage->GetFrame(0)->GetSize()));
+    //        image = image.scaled(64, 32);
+    //    }
     if(!image.load(id))
     {
-         image.load("./Widgets/thumbnail_placeholder.png");
+        image.load("./Widgets/thumbnail_placeholder.png");
     }
 
     return image;
+}
+
+void BackupLayout::on_pushButton_3_clicked()
+{
+    QFileDialog dialog;
+    dialog.setFileMode(QFileDialog::Directory);
+    dialog.setOption(QFileDialog::ShowDirsOnly);
+    int result = dialog.exec();
+    if(result)
+    {
+        QString directory = dialog.selectedFiles().at(0);
+        ui->comboBox->setCurrentText(directory);
+        _presenter->SetMasterPath(directory);
+    }
+}
+
+void BackupLayout::on_pushButton_clicked()
+{
+    QGraphicsBlurEffect *effect = new QGraphicsBlurEffect();
+    effect->setBlurRadius(5);
+
+    this->setGraphicsEffect(effect);
+    _presenter->TransferData();
+
+    effect->setBlurRadius(0);
 }

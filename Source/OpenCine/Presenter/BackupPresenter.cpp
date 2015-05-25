@@ -1,4 +1,7 @@
 #include "BackupPresenter.h"
+#include "ProgressDialog.h"
+
+#include <thread>
 
 std::function<std::vector<std::string>()> GetMounts;
 
@@ -7,6 +10,7 @@ std::vector<std::string> GetMountsWindows()
 {
 }
 #elif defined (Q_OS_LINUX)
+
 #include <mntent.h>
 
 std::vector<std::string> GetMountsLinux()
@@ -30,7 +34,8 @@ std::vector<std::string> GetMountsLinux()
 #endif
 
 BackupPresenter::BackupPresenter(OCContext *context) :
-    _context(context)
+    _context(context),
+    _currentDrivePath("")
 {
     //Setup drive list model
     QStringList stringList;
@@ -76,6 +81,51 @@ std::vector<FileInfo*> BackupPresenter::GetFileList()
     return _fileInfoList;
 }
 
+void BackupPresenter::SetMasterPath(QString path)
+{
+    if(_backupPaths.empty())
+    {
+        _backupPaths.push_back(QString(path));
+    }
+    else
+    {
+        _backupPaths.at(0) = QString(path);
+    }
+}
+
+//Reference: http://stackoverflow.com/questions/2536524/copy-directory-using-qt
+QStringList BackupPresenter::GetPathContent(QString path, QStringList& list)
+{
+    QDir targetDir(path);
+    QDirIterator it(path, QDir::NoDotAndDotDot | QDir::Dirs | QDir::NoSymLinks, QDirIterator::Subdirectories);
+
+    QString entryPath = "";
+
+    while (it.hasNext())
+    {
+        QFileInfo fileInfo = it.fileInfo();
+
+        if(fileInfo.filePath() != "")
+        {
+            entryPath = QString(targetDir.relativeFilePath(fileInfo.absoluteFilePath()));
+            list.push_back(entryPath);
+        }
+        it.next();
+    }
+}
+
+void BackupPresenter::TransferData()
+{
+    IDataTransfer* driveTransfer = new DriveTransfer(nullptr, _currentDrivePath, _backupPaths[0]);
+    ProgressDialog progressDialog(nullptr, driveTransfer);
+
+    // Start copying files in separate thread
+    std::thread thr(&IDataTransfer::StartTransfer, driveTransfer);
+    thr.detach();
+
+    progressDialog.exec();
+}
+
 std::vector<std::string> BackupPresenter::GetMounts()
 {
     return GetMountsLinux();
@@ -95,8 +145,8 @@ void BackupPresenter::UpdateMounts()
 
 void BackupPresenter::CurrentDriveChanged(const QModelIndex& current, const QModelIndex& previous)
 {
-    QString rootPath = current.data().toString();
-    QModelIndex index = _folderTreeModel->setRootPath(rootPath);
+    _currentDrivePath = current.data().toString();
+    QModelIndex index = _folderTreeModel->setRootPath(_currentDrivePath);
     emit DriveSelectionChanged(index);
 }
 

@@ -40,6 +40,10 @@ private slots:
     void DriveSelectionChanged(QModelIndex driveRoot);
     void FolderSelectionChanged(std::vector<FileInfo*>);
 
+    void on_pushButton_3_clicked();
+
+    void on_pushButton_clicked();
+
 private:
     Ui::BackupLayout *ui;
 

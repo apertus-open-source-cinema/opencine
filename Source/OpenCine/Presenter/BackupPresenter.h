@@ -22,6 +22,10 @@ public:
   QFileSystemModel* GetFolderTreeModel();
   std::vector<FileInfo*> GetFileList();
 
+  void SetMasterPath(QString path);
+
+  void TransferData();
+
 public slots:
   void CurrentDriveChanged(const QModelIndex& current, const QModelIndex& previous);
   void CurrentFolderChanged(const QItemSelection& current, const QItemSelection& previous);
@@ -34,16 +38,21 @@ private slots:
   void UpdateMounts();
 private:
   std::vector<std::string> GetMounts();
+  QStringList GetPathContent(QString path, QStringList& list);
 
   std::vector<FileInfo*> _fileInfoList;
 
   OCContext* _context;
   OCSession* _session;
 
+  QString _currentDrivePath;
+
   QFileSystemWatcher* _fileWatcher;
 
   QStringListModel* _driveListModel;
   QFileSystemModel* _folderTreeModel;
+
+  std::vector<QString> _backupPaths;
 };
 
 
