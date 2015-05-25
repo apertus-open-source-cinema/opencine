@@ -7,7 +7,25 @@ namespace OpenCineAPI
 {
   class IPlugin
   {
-        virtual std::string GetName() = 0;
+      std::string _pluginName;
+
+    protected:
+      IPlugin(std::string pluginName) :
+      _pluginName(pluginName)
+      {
+      }
+
+    public:
+      virtual ~IPlugin()
+      {
+      }
+
+      virtual void Initialize() = 0;
+
+      std::string GetName()
+      {
+        return _pluginName;
+      }
   };
 }
 

@@ -22,11 +22,11 @@ private:
     Ui::MediaExplorerView *ui;
     MediaExplorerPresenter* _presenter;
 
-    QQmlContext *qmlContext;
-    QList<QObject*> dataList;
+    QQmlContext* _qmlContext;
+    QList<QObject*> _dataList;
 
 private slots:
-    void NewClipsFound(ClipInfo*);
+    void NewClipsFound(ClipItem*);
     void LoadClip(int clipNumber);
 };
 

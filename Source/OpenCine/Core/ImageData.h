@@ -40,6 +40,11 @@ public:
   {
       return _imageData;
   }
+
+  unsigned int GetSize()
+  {
+      return _dataSize;
+  }
 };
 
 #endif //IMAGEDATA_H

@@ -1,6 +1,6 @@
 #include "LibRawDataProvider.h"
 
-LibRawDataProvider::LibRawDataProvider()
+LibRawDataProvider::LibRawDataProvider() : IDataProvider("LibRawDataProvider")
 {
   imageProcessor = new LibRaw();
 }

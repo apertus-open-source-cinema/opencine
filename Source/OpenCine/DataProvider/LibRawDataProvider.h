@@ -30,6 +30,14 @@ public:
     std::string GetName();
 
     OCFrame* GetMetadataFromFile(std::string filePath);
+
+    // IPlugin interface
+public:
+    void Initialize() {}
+
+    // IDataProvider interface
+public:
+    bool ScanFolder(std::vector<ClipInfo> &foundData) {return false;}
 };
 
 #endif //LIBRAWDATAPROVIDER_H

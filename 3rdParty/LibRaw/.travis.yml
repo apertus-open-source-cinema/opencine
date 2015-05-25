@@ -1,0 +1,20 @@
+language: cpp
+
+env:
+  global:
+    - LIBRAW_GIT="git://github.com/LibRaw/LibRaw.git"
+    - LIBRAW_GPL2_GIT="git://github.com/LibRaw/LibRaw-demosaic-pack-GPL2.git"
+    - LIBRAW_GPL3_GIT="git://github.com/LibRaw/LibRaw-demosaic-pack-GPL3.git"
+    
+script:
+  - cd ..
+  - git clone $LIBRAW_GIT
+  - git clone $LIBRAW_GPL2_GIT
+  - git clone $LIBRAW_GPL3_GIT
+  - cp -R LibRaw-cmake/* LibRaw
+  - cp -R LibRaw-demosaic-pack-GPL2 LibRaw
+  - cp -R LibRaw-demosaic-pack-GPL3 LibRaw
+  - cd LibRaw
+  - cmake . -DENABLE_DEMOSAIC_PACK_GPL2=ON -DENABLE_DEMOSAIC_PACK_GPL3=ON
+  - make
+  - sudo make install

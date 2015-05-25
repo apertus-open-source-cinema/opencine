@@ -18,8 +18,8 @@ QProgressBar
 	height: 4px;
 	border: 1px solid #1e1e1e;
 	border-radius: 2px;
-	text-align: right;
-	margin-right: 5ex;
+	/*text-align: right;
+	margin-right: 5ex;*/
 }
 
 QProgressBar::chunk

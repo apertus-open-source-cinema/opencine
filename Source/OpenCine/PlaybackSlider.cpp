@@ -9,16 +9,16 @@ ui(new Ui::PlaybackSlider)
 
   _presenter = presenter;
 
-  connect(_presenter, SIGNAL(SessionChanged(OCSession*)), this, SLOT(OnSessionChanged(OCSession*)));
-  connect(_presenter, SIGNAL(FrameChanged(unsigned int, OCFrame*)), this, SLOT(OnFrameChanged(unsigned int, OCFrame*)));
+  connect(_presenter, SIGNAL(SessionChanged(OCSession*)), SLOT(OnSessionChanged(OCSession*)));
+  connect(_presenter, SIGNAL(FrameChanged(unsigned int, OCFrame*)), SLOT(OnFrameChanged(unsigned int, OCFrame*)));
 
-  connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(OnSliderMoved(int)));
+  connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), SLOT(OnSliderMoved(int)));
 
   //connect(ui->playButton, SIGNAL(clicked()), _presenter, SLOT(Play()));
-  connect(ui->playButton, SIGNAL(toggled(bool)), this, SLOT(OnPlayButtonToggled(bool)));
-  connect(ui->playRevButton, SIGNAL(toggled(bool)), this, SLOT(OnPlayRevButtonToggled(bool)));
+  connect(ui->playButton, SIGNAL(toggled(bool)), SLOT(OnPlayButtonToggled(bool)));
+  connect(ui->playRevButton, SIGNAL(toggled(bool)), SLOT(OnPlayRevButtonToggled(bool)));
 
-  connect(ui->stopButton, SIGNAL(clicked()), this, SLOT(OnStopClicked()));
+  connect(ui->stopButton, SIGNAL(clicked()), SLOT(OnStopClicked()));
 
   connect(ui->prevFrameButton, SIGNAL(clicked()), _presenter, SLOT(PrevFrame()));
   connect(ui->nextFrameButton, SIGNAL(clicked()), _presenter, SLOT(NextFrame()));
@@ -49,7 +49,7 @@ void PlaybackSlider::OnSliderMoved(int frameNumber)
   disconnect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(OnSliderMoved(int)));
 
   _presenter->SetFrame(frameNumber);
-  connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(OnSliderMoved(int)));
+  connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), SLOT(OnSliderMoved(int)));
 }
 
 void PlaybackSlider::OnPlayButtonToggled(bool toggled)

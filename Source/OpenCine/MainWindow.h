@@ -33,6 +33,7 @@ private slots:
     //void PlayImages();
     void on_aboutButton_clicked();
     void on_pushButton_clicked();
+    void on_pushButton_7_clicked(int);
 };
 
 #endif // MAINWINDOW_H

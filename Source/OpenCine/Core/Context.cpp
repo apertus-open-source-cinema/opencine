@@ -4,7 +4,8 @@
 #include <RawSpeedDataProvider.h>
 
 OCContext::OCContext() :
-_session(nullptr)
+_session(nullptr),
+_dataProvider(nullptr)
 {
   _factory = new DataProviderFactory();
 
@@ -12,7 +13,9 @@ _session(nullptr)
   //factory->Register<FFmpegDataProvider>(ClipType::MLV);
   //factory->Register<RawSpeedDataProvider>(ClipType::DNG);
 
-  _dataProvider = new LibRawDataProvider();
+  _dataProvider = _factory->Get(ClipType::DNG);
+
+  //_factory->Get(ClipType::DNG); //new LibRawDataProvider();
 
   /*std::map<ClipType, IDataProvider*> dataProviders;
   dataProviders.emplace(std::make_pair(ClipType::DNG, new LibRawDataProvider(nullptr)));

@@ -2,12 +2,7 @@
 
 #include <QDir>
 
-/*ClipInfo::ClipInfo(QObject *parent)
-    : QObject(parent)
-{
-}*/
-
-ClipInfo::ClipInfo(const QString &path, const QString &name, const unsigned int& width, const unsigned int& height, const unsigned int& fps, QObject *parent):
+ClipItem::ClipItem(const QString &path, const QString &name, const unsigned int& width, const unsigned int& height, const unsigned int& fps, QObject *parent):
 QObject(parent),
 _path(path),
 _name(name),
@@ -18,32 +13,32 @@ _fps(fps)
     _name = path;
 }
 
-QString ClipInfo::Path() const
+QString ClipItem::Path() const
 {
     return _path;
 }
 
-QString ClipInfo::Name() const
+QString ClipItem::Name() const
 {
     return _name;
 }
 
-unsigned int ClipInfo::Width() const
+unsigned int ClipItem::Width() const
 {
     return _width;
 }
 
-unsigned int ClipInfo::Height() const
+unsigned int ClipItem::Height() const
 {
     return _height;
 }
 
-unsigned int ClipInfo::FPS() const
+unsigned int ClipItem::FPS() const
 {
     return _fps;
 }
 
-bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipInfo** clipData)
+bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipItem** clipData)
 {
   QDir dir(QString::fromStdString(folderPath));
 
@@ -64,23 +59,17 @@ bool MediaExplorerModel::EnumerateAvailableData(std::string folderPath, ClipInfo
 
   if(imageData)
   {    
-    *clipData = new ClipInfo(QString::fromStdString(folderPath), dir.dirName(), imageData->GetWidth(), imageData->GetHeight(), 0);
+    *clipData = new ClipItem(QString::fromStdString(folderPath), dir.dirName(), imageData->GetWidth(), imageData->GetHeight(), 0);
       _availableData.push_back(*clipData);
 
     delete imageData;
     return true;
   }
 
-  //if(imageData != nullptr)
-  //{
-  //  emit NewDataAdded(imageData);
-  //  return true;
-  // }
-
   return false;
 }
 
-ClipInfo* MediaExplorerModel::GetClipByID(unsigned int clipID)
+ClipItem* MediaExplorerModel::GetClipByID(unsigned int clipID)
 {
   if(clipID < _availableData.size())
   {

@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QTimer>
 #include <QGridLayout>
+#include <BackupPresenter.h>
 
 #include "API/IDataProvider.h"
 
@@ -16,6 +17,9 @@
 #include "TestPluginA.h"
 
 #include "Console.h"
+
+#include "BackupLayout.h"
+#include "ClipProcessorLayout.h"
 
 //#include <dirent.h>
 
@@ -45,14 +49,13 @@ MainWindow::MainWindow(OCContext* context, QWidget *parent) :
     PlaybackPresenter* playbackPresenter = new PlaybackPresenter(_context);
 
     //Add preview pane
-    ui->gridLayout_3->addWidget(new PreviewPane(playbackPresenter));
+    //ui->gridLayout_3->addWidget(new PreviewPane(playbackPresenter));
 
     //Set Media Explorer widget
-    ui->dockWidget_3->setWidget(new MediaExplorerView(mediaExplorerPresenter));
+    //ui->dockWidget_3->setWidget(new MediaExplorerView(mediaExplorerPresenter));
 
-    QGridLayout* layout = new QGridLayout();
-    layout->addWidget(new PlaybackSlider(playbackPresenter)),
-    ui->widget->setLayout(layout);
+    //QGridLayout* layout = new QGridLayout();
+    //layout->addWidget(new PlaybackSlider(playbackPresenter)), ui->widget->setLayout(layout);
 
     stdout = freopen("output_file", "w", stdout);
 
@@ -61,15 +64,24 @@ MainWindow::MainWindow(OCContext* context, QWidget *parent) :
     QByteArray output = f.readAll();
     QString out(output);
 
-    ui->label_2->setText(out);
+    /*ui->label_2->setText(out);
     ui->textBrowser->setText(out);
 
     ui->textBrowser->append("TEST\n");
     ui->textBrowser->append("12345\n");
+*/
+    BackupPresenter* backupPresenter = new BackupPresenter(context);
+    ui->stackedWidget->addWidget(new BackupLayout(this, *backupPresenter));
+
+    ui->stackedWidget->addWidget(new ClipProcessorLayout());
+
+    //ui->buttonGroup->addButton(new QPushButton("Test", this));
+
+    connect(ui->buttonGroup, SIGNAL(buttonClicked(int)), SLOT(on_pushButton_7_clicked(int)));
 
     /*QMenu* importMenu = new QMenu();
     QAction* testAction = new QAction("test menu item", this);
-    connect(testAction,SIGNAL(triggered()),this, SLOT(SelectImportFolder()));
+    connect(testAction,SIGNAL(triggered()), SLOT(SelectImportFolder()));
     importMenu->addAction(testAction);*/
 }
 
@@ -120,7 +132,7 @@ MainWindow::~MainWindow()
 
 //void MainWindow::resizeEvent(QResizeEvent *)
 //{
-    //ui->previewArea->fitInView(it, Qt::KeepAspectRatio);
+//ui->previewArea->fitInView(it, Qt::KeepAspectRatio);
 //}
 
 /*void MainWindow::SelectImportFolder()
@@ -137,13 +149,18 @@ MainWindow::~MainWindow()
 }*/
 void MainWindow::on_aboutButton_clicked()
 {
-  QMessageBox msgBox;
-  msgBox.setText("About");
-  msgBox.exec();
+    QMessageBox msgBox;
+    msgBox.setText("About");
+    msgBox.exec();
 }
 
 void MainWindow::on_pushButton_clicked()
 {
     Console* console = new Console(this);
     console->show();
+}
+
+void MainWindow::on_pushButton_7_clicked(int id)
+{
+    ui->stackedWidget->setCurrentIndex(id);
 }

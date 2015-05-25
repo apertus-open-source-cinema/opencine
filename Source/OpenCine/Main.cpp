@@ -131,8 +131,8 @@ int main(int argc, char *argv[])
   //QObject::connect(proc, &QProcess::readyReadStandardOutput, printOutput);
   //QObject::connect(proc, &QProcess::readyReadStandardError, printError);
 
-  std::cerr << "CERR: Console application running!";
-  std::cout << "COUT: Console application running!";
+  std::cerr << "CERR: Console application running!" << std::endl;
+  std::cout << "COUT: Console application running!" << std::endl;
 
   //proc->start();
 

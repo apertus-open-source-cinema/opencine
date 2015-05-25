@@ -1,14 +1,13 @@
 #include "PlaybackPresenter.h"
 
 PlaybackPresenter::PlaybackPresenter(OCContext* context) :
-_currentFrame(0)
+    _currentFrame(0),
+    _context(context)
 {
-  _context = context;
+    connect(_context, SIGNAL(SessionChanged(OCSession*)), SLOT(OnSessionChanged(OCSession*)));
 
-  connect(_context, SIGNAL(SessionChanged(OCSession*)), this, SLOT(OnSessionChanged(OCSession*)));
-
-  _timer = new QTimer(this);
-  //connect(_timer, SIGNAL(timeout()), this, SLOT(Update()));
+    _timer = new QTimer(this);
+    //connect(_timer, SIGNAL(timeout()), SLOT(Update()));
 }
 
 PlaybackPresenter::~PlaybackPresenter()
@@ -17,114 +16,114 @@ PlaybackPresenter::~PlaybackPresenter()
 
 void PlaybackPresenter::SetFrame(unsigned int frameNumber)
 {
-  _currentFrame = frameNumber;
+    _currentFrame = frameNumber;
 
-  Update();
+    Update();
 }
 
 void PlaybackPresenter::OnSessionChanged(OCSession* session)
 {
-  _frameRate = 24;
+    _frameRate = 24;
 
-  _session = session;
+    _session = session;
 
-  Update();
+    Update();
 
-  emit SessionChanged(session);
+    emit SessionChanged(session);
 }
 
 void PlaybackPresenter::Update()
 {
-  OCFrame* frame = _session->GetDataStorage()->GetFrame(_currentFrame);
-  emit FrameChanged(_currentFrame, frame);
+    OCFrame* frame = _session->GetDataStorage()->GetFrame(_currentFrame);
+    emit FrameChanged(_currentFrame, frame);
 }
 
 void PlaybackPresenter::Play()
 {
-  connect(_timer, SIGNAL(timeout()), this, SLOT(PlayHandler()));
-  _timer->start(1000.0 / _frameRate);
+    connect(_timer, SIGNAL(timeout()), SLOT(PlayHandler()));
+    _timer->start(1000.0 / _frameRate);
 }
 
 void PlaybackPresenter::PlayHandler()
 {
-  _currentFrame++;
+    _currentFrame++;
 
-  if(_currentFrame > _session->GetFrameCount())
-  {
-    _currentFrame = 0;
-  }
+    if(_currentFrame > _session->GetFrameCount())
+    {
+        _currentFrame = 0;
+    }
 
-  Update();
+    Update();
 }
 
 void PlaybackPresenter::PlayRev()
 {
-  connect(_timer, SIGNAL(timeout()), this, SLOT(PlayRevHandler()));
-  _timer->start(1000.0 / _frameRate);
+    connect(_timer, SIGNAL(timeout()), SLOT(PlayRevHandler()));
+    _timer->start(1000.0 / _frameRate);
 }
 
 void PlaybackPresenter::PlayRevHandler()
 {
-  _currentFrame--;
+    _currentFrame--;
 
-  if(_currentFrame < 0)
-  {
-    _currentFrame = _session->GetFrameCount();
-  }
+    if(_currentFrame < 0)
+    {
+        _currentFrame = _session->GetFrameCount();
+    }
 
-  Update();
+    Update();
 }
 
 void PlaybackPresenter::Pause()
 {
-  disconnect(_timer, SIGNAL(timeout()), this, SLOT(PlayRevHandler()));
-  disconnect(_timer, SIGNAL(timeout()), this, SLOT(PlayHandler()));
+    disconnect(_timer, SIGNAL(timeout()), this, SLOT(PlayRevHandler()));
+    disconnect(_timer, SIGNAL(timeout()), this, SLOT(PlayHandler()));
 
-  _timer->stop();
+    _timer->stop();
 }
 
 void PlaybackPresenter::Stop()
 {
-  _timer->stop();
-  _currentFrame = 0;
+    _timer->stop();
+    _currentFrame = 0;
 
-  Update();
+    Update();
 }
 
 void PlaybackPresenter::NextFrame()
 {
-  _currentFrame++;
+    _currentFrame++;
 
-  if(_currentFrame > _session->GetFrameCount())
-  {
-    _currentFrame = _session->GetFrameCount();
-  }
+    if(_currentFrame > _session->GetFrameCount())
+    {
+        _currentFrame = _session->GetFrameCount();
+    }
 
-  Update();
+    Update();
 }
 
 void PlaybackPresenter::PrevFrame()
 {
-  _currentFrame--;
+    _currentFrame--;
 
- if(_currentFrame < 0)
- {
-   _currentFrame = 0;
- }
+    if(_currentFrame < 0)
+    {
+        _currentFrame = 0;
+    }
 
- Update();
+    Update();
 }
 
 void PlaybackPresenter::JumpToStart()
 {
-  _currentFrame = 0;
+    _currentFrame = 0;
 
-  Update();
+    Update();
 }
 
 void PlaybackPresenter::JumpToEnd()
 {
-  _currentFrame = _session->GetFrameCount();
+    _currentFrame = _session->GetFrameCount();
 
-  Update();
+    Update();
 }

@@ -15,8 +15,8 @@ ui(new Ui::PreviewPane)
 
   _presenter = presenter;
 
-  connect(_presenter, SIGNAL(FrameChanged(uint,OCFrame*)), this, SLOT(OnFrameChange(uint,OCFrame*)));
-  //connect(_presenter, SIGNAL(NewDataAvailable(OCImage*)), this, SLOT(UpdateFrame(OCImage*)));
+  connect(_presenter, SIGNAL(FrameChanged(uint,OCFrame*)), SLOT(OnFrameChange(uint,OCFrame*)));
+  //connect(_presenter, SIGNAL(NewDataAvailable(OCImage*)), SLOT(UpdateFrame(OCImage*)));
 
   //this->setAttribute(Qt::WA_DontCreateNativeAncestors);
 
@@ -95,14 +95,17 @@ void PreviewPane::CreateRectangle()
   glGenBuffers(1, &rectangleVBO); // Generate 1 buffer
   glGenBuffers(1, &rectangleUV); // Generate 1 buffer
 
+  int imageWidth = 2048;
+  int imageHeight = 1092;
+
   //TODO: UV flipped upside down to get correct presentation, investigate later
   float rectangleData[] =
   {
   //  Position      Texcoords
-  -1.0f, -1.0f, 0.0f, 1.0f,    0.0, 1080.0, // Top-left
-  1.0f, -1.0f, 1.0f, 1.0f, 1920.0, 1080.0, // Top-right
+  -1.0f, -1.0f, 0.0f, 1.0f,    0.0, imageHeight, // Top-left
+  1.0f, -1.0f, 1.0f, 1.0f, imageWidth, imageHeight, // Top-right
   -1.0f,  1.0f, 0.0f, 0.0f,    0.0,    0.0, // Bottom-right
-  1.0f,  1.0f, 1.0f, 0.0f, 1920.0,    0.0  // Bottom-left
+  1.0f,  1.0f, 1.0f, 0.0f, imageWidth,    0.0  // Bottom-left
   };
 
   glBindBuffer(GL_ARRAY_BUFFER, rectangleVBO);
@@ -139,7 +142,7 @@ void PreviewPane::CreateRectangle()
   //libraw_processed_image_t* image = imageProcessor.dcraw_make_mem_image();
 
   //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image->width, image->height, 0, GL_LUMINANCE, GL_UNSIGNED_SHORT, &imageProcessor.imgdata.rawdata.raw_image /*image->data*/);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1920 /*image->width*/, 1080 /*image->height*/, 0, GL_RGB, GL_UNSIGNED_SHORT, nullptr/* &image->data*/);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imageWidth /*image->width*/, imageHeight /*image->height*/, 0, GL_RGB, GL_UNSIGNED_SHORT, nullptr/* &image->data*/);
 
   //imageProcessor.dcraw_clear_mem(image);
   //imageProcessor.recycle();

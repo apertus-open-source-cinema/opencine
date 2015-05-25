@@ -1,4 +1,4 @@
-               #ifndef CONTEXT_H
+#ifndef CONTEXT_H
 #define CONTEXT_H
 
 #include <QObject>
@@ -11,6 +11,9 @@
 #include "API/IDataProvider.h"
 #include "DataStorage/StaticMemoryAllocator.h"
 #include "DataProvider/LibRawDataProvider.h"
+#include "Log/ILogger.h"
+
+#include "DataProvider/IDataFilter.h"
 
 using namespace OpenCineAPI;
 
@@ -44,10 +47,12 @@ class OCContext : public QObject
 {
   Q_OBJECT
 
-  std::unique_ptr<OCSession> _session;
+  std::shared_ptr<OCSession> _session;
 
-  IDataProvider* _dataProvider;
   DataProviderFactory* _factory;
+  IDataProvider* _dataProvider;
+
+  std::shared_ptr<ILogger> _logger;
 
   std::vector<std::string> _availableData;
 
@@ -69,6 +74,7 @@ public:
 
     LibRawDataProvider* dataProvider = new LibRawDataProvider();
 
+    std::shared_ptr<IDataFilter> filter = std::make_shared<DNGFilter>();
     QDir dir(path);
 
     QStringList filters;
@@ -82,15 +88,18 @@ public:
       QString tempPath = path + "/" + dir.entryList().at(fileIndex);
       dataProvider->LoadFile(dataStorage, tempPath.toStdString());
     }
-    //dataProvider->LoadFolder(path);
-
 
     emit SessionChanged(_session.get());
   }
 
-  IDataProvider* GetDefaultDataProvider()
+  /*IDataProvider* GetDefaultDataProvider()
   {
     return _dataProvider;
+  }*/
+
+  ILogger* GetLogger()
+  {
+      return _logger.get();
   }
 
   void LoadClip();
