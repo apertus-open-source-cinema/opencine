@@ -22,6 +22,7 @@ Rectangle {
 
     GridView {
         id: gridView1
+        cacheBuffer: 20
         anchors.fill: parent
         boundsBehavior: Flickable.StopAtBounds
         cellWidth: 276

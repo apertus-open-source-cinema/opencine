@@ -1,7 +1,7 @@
 #ifndef MEDIAEXPLORER_H
 #define MEDIAEXPLORER_H
 
-#include "MediaExplorerPresenter.h"
+#include "Presenter/MediaExplorerPresenter.h"
 
 #include <QWidget>
 #include <QQmlContext>

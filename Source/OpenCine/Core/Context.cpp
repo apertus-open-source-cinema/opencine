@@ -1,7 +1,7 @@
 #include "Context.h"
 
-#include <LibRawDataProvider.h>
-#include <RawSpeedDataProvider.h>
+#include "DataProvider/LibRawDataProvider.h"
+#include "DataProvider/RawSpeedDataProvider.h"
 
 OCContext::OCContext() :
 _session(nullptr),

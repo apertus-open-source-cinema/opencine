@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "Context.h"
+#include "Core/Context.h"
 
 namespace Ui {
 class ClipProcessorLayout;

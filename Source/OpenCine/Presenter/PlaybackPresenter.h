@@ -3,7 +3,6 @@
 
 #include "Core/Context.h"
 
-#include <Context.h>
 #include <QObject>
 #include <QTimer>
 

@@ -1,7 +1,7 @@
 #include "StaticMemoryAllocator.h"
 
-#include "LibRawDataProvider.h"
-#include "RawSpeedDataProvider.h"
+#include "DataProvider/LibRawDataProvider.h"
+#include "DataProvider/RawSpeedDataProvider.h"
 
 #include <QDirIterator>
 #include <QProgressDialog>

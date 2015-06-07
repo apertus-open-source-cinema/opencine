@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include <ImageData.h>
+#include "../Core/ImageData.h"
 
 namespace OpenCineAPI
 {

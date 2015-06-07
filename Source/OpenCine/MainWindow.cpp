@@ -7,7 +7,6 @@
 #include <QFileDialog>
 #include <QTimer>
 #include <QGridLayout>
-#include <BackupPresenter.h>
 
 #include "API/IDataProvider.h"
 
@@ -18,8 +17,9 @@
 
 #include "Console.h"
 
-#include "BackupLayout.h"
-#include "ClipProcessorLayout.h"
+#include "Layouts/BackupLayout.h"
+#include "Layouts/ClipProcessorLayout.h"
+#include "Presenter/BackupPresenter.h"
 
 //#include <dirent.h>
 

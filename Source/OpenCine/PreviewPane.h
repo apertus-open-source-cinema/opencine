@@ -1,13 +1,13 @@
 #ifndef PREVIEWPANE_H
 #define PREVIEWPANE_H
 
-#include "Presenter/PlaybackPresenter.h"
-
-#include <ImageData.h>
 #include <QOpenGLFunctions>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLWidget>
 #include <QOpenGLPaintDevice>
+
+#include "Presenter/PlaybackPresenter.h"
+#include "Core/ImageData.h"
 
 class IPresenter
 {

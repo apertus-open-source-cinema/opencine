@@ -13,6 +13,8 @@ ProgressDialog::ProgressDialog(QWidget *parent, IDataTransfer* dataTransfer) :
     ui->TargetPathLabel->setText("Target: " + dataTransfer->GetTargetPath());
 
     connect(dataTransfer, SIGNAL(ProgressChanged(int)), SLOT(ProgressChanged(int)));
+
+    ui->progressBar->setMaximum(dataTransfer->GetCount());
 }
 
 ProgressDialog::~ProgressDialog()
@@ -23,5 +25,5 @@ ProgressDialog::~ProgressDialog()
 void ProgressDialog::ProgressChanged(int currentProgress)
 {
     ui->progressBar->setValue(currentProgress);
-    //ui->label->setText("File " + std::to_string(currentProgress).c_str());
+    ui->label->setText(QString("File ") + std::to_string(currentProgress).c_str());
 }

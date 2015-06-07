@@ -7,6 +7,10 @@
 #include <QStandardItemModel>
 #include <QStyledItemDelegate>
 
+#include <QPdfWriter>
+
+#include <QtPrintSupport/QPrinter>
+
 class GridDelegate : public QStyledItemDelegate
 {
 public:
@@ -166,6 +170,26 @@ void BackupLayout::on_pushButton_3_clicked()
 
 void BackupLayout::on_pushButton_clicked()
 {
+    QImage image = ui->quickWidget->grabFramebuffer();
+    //QPdfWriter pdfWriter("test.pdf");
+    //pdfWriter.setResolution(96);
+    //pdfWriter.setPageSize(QPagedPaintDevice::A4);
+
+    //double xscale = (double)pdfWriter.width()/(double)image.width();
+    //double yscale = (double)pdfWriter.height()/(double)image.height();
+    //double scale = qMin(xscale, yscale);
+    //painter.translate(pdfWriter.paperRect().x() + pdfWriter.pageRect().width()/2,
+    //                  pdfWriter.paperRect().y() + pdfWriter.pageRect().height()/2);
+    //painter.scale(scale, scale);
+    //painter.translate(-width()/2, -height()/2);
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName("test.pdf");
+    QPainter painter(&printer); //ui->quickWidget->render(&pdfWriter);
+    painter.drawImage(0,0, image);
+    painter.end();
+
+
     QGraphicsBlurEffect *effect = new QGraphicsBlurEffect();
     effect->setBlurRadius(5);
 

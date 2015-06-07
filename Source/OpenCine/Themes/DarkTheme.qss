@@ -6,6 +6,18 @@ QWidget
 	font-weight: bold
 }
 
+QWidget:disabled
+{
+	color: #ffff00; /*#111111;*/
+	background: #111111;
+}
+
+QWidget:disabled
+{
+	color: #111111;
+	background: #111111;
+}
+
 QDockWidget
 {
         border: 3px solid red;
@@ -15,9 +27,10 @@ QDockWidget
 
 QProgressBar
 {
-	height: 4px;
+	max-height: 5px;
 	border: 1px solid #1e1e1e;
 	border-radius: 2px;
+        color: transparent;
 	/*text-align: right;
 	margin-right: 5ex;*/
 }
@@ -54,7 +67,7 @@ QPushButton:pressed
 QPushButton:checked
 {
 	/*padding: 1px -1px -1px 1px;*/
-	background: qlineargradient( x1:0 y1:1, x2:0 y2:0, stop:0 #FF0000, stop:1 #FF00FF);
+	background: qlineargradient( x1:0 y1:1, x2:0 y2:0, stop:0 #a27e34, stop:1 #644624);
 	/*position: relative;
 	top: 5px; left: 5px;*/
 }
