@@ -17,7 +17,7 @@
 //#include <OpenImageIO/imageio.h>
 //OIIO_NAMESPACE_USING
 
-#include "Tests.h"
+#include "Tests/Tests.h"
 
 using namespace OpenCineAPI;
 

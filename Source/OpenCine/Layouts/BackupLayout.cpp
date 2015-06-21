@@ -34,10 +34,6 @@ BackupLayout::BackupLayout(QWidget *parent, const BackupPresenter& backupPresent
 {
     ui->setupUi(this);
 
-    //std::vector<FileInfo*> fileList = _presenter->GetFileList();
-    //_fileList.append(fileList.at(0));
-    //    //_qmlContext->setContextProperty("fileList", QVariant::fromValue(list));
-
     _qmlContext = ui->quickWidget->rootContext();
     ui->quickWidget->engine()->addImageProvider(QString("thumbnail"), new ThumbnailProvider());
 
@@ -45,20 +41,6 @@ BackupLayout::BackupLayout(QWidget *parent, const BackupPresenter& backupPresent
 
     ui->quickWidget->setSource(QUrl("./Widgets/ThumbnailView.qml"));
 
-    //    list.append(fileList.at(0));
-    //    list.append(fileList.at(0));
-    //    list.append(fileList.at(0));
-    //    _qmlContext->setContextProperty("fileList", QVariant::fromValue(list));
-
-    //_qmlContext->setContextProperty("fileList", QVariant::fromValue(list));
-    //QFileSystemModel* model = new QFileSystemModel();
-    //model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot | QDir::AllDirs);
-    //model->setSorting(QDir::Name | QDir::IgnoreCase);
-
-    /*ui->treeView->setModel(model);
-    ui->treeView->setRootIndex(model->index(QDir::rootPath()));
-    ui->treeView->setWindowTitle(QObject::tr("Dir View:")+QDir::homePath());
-    */
     QStandardItemModel* model2 = new QStandardItemModel();
     model2->setRowCount(15);
     model2->setColumnCount(2);
@@ -84,10 +66,6 @@ BackupLayout::BackupLayout(QWidget *parent, const BackupPresenter& backupPresent
     ui->treeView_2->setItemDelegate(new GridDelegate());
     ui->treeView_2->setModel(model2);
 
-    //ui->treeView_3->setRootIndex(model3->index("/media/andi/TOSHIBA EXT"));
-
-    //model3->setFilter(QDir::AllDirs | QDir::NoDotAndDotDot);
-
     ui->driveList->setModel(_presenter->GetDriveListModel());
     ui->driveList->setCurrentIndex(ui->driveList->model()->index(0,0));
 
@@ -98,12 +76,8 @@ BackupLayout::BackupLayout(QWidget *parent, const BackupPresenter& backupPresent
     ui->folderTree->setColumnHidden(1, true);
     ui->folderTree->setColumnHidden(2, true);
 
-    //ui->folderTree->header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-
     connect(ui->driveList->selectionModel(), SIGNAL(currentRowChanged(QModelIndex, QModelIndex)), _presenter, SLOT(CurrentDriveChanged(QModelIndex, QModelIndex)));
     connect(ui->folderTree->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), _presenter, SLOT(CurrentFolderChanged(QItemSelection, QItemSelection)));
-
-    //connect(ui->driveList->selectionModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(DriveListChanged()));
 
     connect(_presenter, SIGNAL(DriveSelectionChanged(QModelIndex)), SLOT(DriveSelectionChanged(QModelIndex)));
     connect(_presenter, SIGNAL(FolderChanged(std::vector<FileInfo*>)), SLOT(FolderSelectionChanged(std::vector<FileInfo*>)));
@@ -170,26 +144,6 @@ void BackupLayout::on_pushButton_3_clicked()
 
 void BackupLayout::on_pushButton_clicked()
 {
-    QImage image = ui->quickWidget->grabFramebuffer();
-    //QPdfWriter pdfWriter("test.pdf");
-    //pdfWriter.setResolution(96);
-    //pdfWriter.setPageSize(QPagedPaintDevice::A4);
-
-    //double xscale = (double)pdfWriter.width()/(double)image.width();
-    //double yscale = (double)pdfWriter.height()/(double)image.height();
-    //double scale = qMin(xscale, yscale);
-    //painter.translate(pdfWriter.paperRect().x() + pdfWriter.pageRect().width()/2,
-    //                  pdfWriter.paperRect().y() + pdfWriter.pageRect().height()/2);
-    //painter.scale(scale, scale);
-    //painter.translate(-width()/2, -height()/2);
-    QPrinter printer(QPrinter::HighResolution);
-    printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName("test.pdf");
-    QPainter painter(&printer); //ui->quickWidget->render(&pdfWriter);
-    painter.drawImage(0,0, image);
-    painter.end();
-
-
     QGraphicsBlurEffect *effect = new QGraphicsBlurEffect();
     effect->setBlurRadius(5);
 

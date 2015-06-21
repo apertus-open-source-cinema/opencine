@@ -1,14 +1,11 @@
 #ifndef TESTS_H
 #define TESTS_H
 
-#define CATCH_CONFIG_RUNNER
-#include "catch.hpp"
-
-#include "IDataTransfer.h"
+#include "DataTransferTests.h"
 
 void RunUnitTests()
 {
-    int result = Catch::Session().run();
+    Catch::Session().run();
 }
 
 TEST_CASE( "File copying and MD5 check", "[General]" )
@@ -34,6 +31,8 @@ TEST_CASE( "Check C++11 enum", "[enum]" )
 {
     REQUIRE( TestFunc() == TestEnum::Idle );
 }
+
+
 
 #endif // TESTS_H
 

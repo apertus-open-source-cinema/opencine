@@ -18,6 +18,7 @@ public:
   explicit PlaybackSlider(PlaybackPresenter* presenter, QWidget *parent = 0);
   ~PlaybackSlider();
 
+    void SetupEvents();
 private:
   Ui::PlaybackSlider *ui;
   PlaybackPresenter* _presenter;

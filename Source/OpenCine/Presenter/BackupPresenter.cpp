@@ -144,6 +144,8 @@ void BackupPresenter::UpdateMounts()
 {
     //Setup drive list model
     QStringList stringList;
+
+    //Needs rework for multi-platform
     for(std::string drive : GetMountsLinux())
     {
         stringList.push_back(QString::fromStdString(drive));
