@@ -4,6 +4,8 @@
 #include <future>
 #include <fstream>
 
+//#include <experimental/filesystem>
+
 void DriveTransfer::CopyFiles()
 {
     QDirIterator fileIterator(_sourcePath, QDir::NoDotAndDotDot | QDir::Files | QDir::NoSymLinks, QDirIterator::Subdirectories);

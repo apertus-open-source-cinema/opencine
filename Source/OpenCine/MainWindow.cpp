@@ -7,7 +7,8 @@
 #include <QFileDialog>
 #include <QTimer>
 #include <QGridLayout>
-#include <BackupPresenter.h>
+#include <QStorageInfo>
+#include <QDebug>
 
 #include "API/IDataProvider.h"
 
@@ -17,9 +18,11 @@
 #include "TestPluginA.h"
 
 #include "Console.h"
+#include "ProgressDialog.h"
 
-#include "BackupLayout.h"
-#include "ClipProcessorLayout.h"
+#include "Layouts/BackupLayout.h"
+#include "Layouts/ClipProcessorLayout.h"
+#include "Presenter/BackupPresenter.h"
 
 //#include <dirent.h>
 
@@ -43,6 +46,31 @@ MainWindow::MainWindow(OCContext* context, QWidget *parent) :
 {
     ui->setupUi(this);
 
+    QStorageInfo storage(qApp->applicationDirPath());
+    qDebug() << storage.rootPath();
+    if (storage.isReadOnly())
+        qDebug() << "isReadOnly:" << storage.isReadOnly();
+
+    qDebug() << "name:" << storage.name();
+    qDebug() << "fileSystemType:" << storage.fileSystemType();
+    qDebug() << "size:" << storage.bytesTotal()/1000/1000 << "MB";
+    qDebug() << "availableSize:" << storage.bytesAvailable()/1000/1000 << "MB";
+
+
+
+    QList<QStorageInfo> drives = QStorageInfo::mountedVolumes();
+
+    for(auto& drive : drives)
+    {
+       qDebug() << drive.rootPath();
+       if (drive.isReadOnly())
+           qDebug() << "isReadOnly:" << drive.isReadOnly();
+
+       qDebug() << "name:" << drive.name();
+       qDebug() << "fileSystemType:" << drive.fileSystemType();
+       qDebug() << "size:" << drive.bytesTotal()/1000/1000 << "MB";
+       qDebug() << "availableSize:" << drive.bytesAvailable()/1000/1000 << "MB";
+    }
     _context = context;
 
     MediaExplorerPresenter* mediaExplorerPresenter = new MediaExplorerPresenter(_context);
@@ -156,8 +184,10 @@ void MainWindow::on_aboutButton_clicked()
 
 void MainWindow::on_pushButton_clicked()
 {
-    Console* console = new Console(this);
-    console->show();
+    ProgressDialog* progressDialog = new ProgressDialog(nullptr, new DriveTransfer(nullptr, ".", "./Test"));
+    progressDialog->show();
+    //Console* console = new Console(this);
+    //console->show();
 }
 
 void MainWindow::on_pushButton_7_clicked(int id)

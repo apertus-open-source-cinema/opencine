@@ -3,8 +3,8 @@
 
 #include "../API/IDataStorage.h"
 
-#include <IDataProvider.h>
-#include <ImageData.h>
+#include "../API/IDataProvider.h"
+#include "../Core/ImageData.h"
 #include <vector>
 
 using namespace OpenCineAPI;

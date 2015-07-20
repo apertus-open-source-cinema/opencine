@@ -29,6 +29,7 @@ public:
     }
 
     virtual void StartTransfer() = 0;
+    virtual int GetCount() = 0;
 
 signals:
     void ProgressChanged(int);
@@ -72,8 +73,14 @@ public:
         CopyFiles();
     }
 
+    int GetCount()
+    {
+        return 0;
+    }
+
 signals:
     void ProgressChanged(int);
+
 };
 
 #endif // IDATATRANSFER_H

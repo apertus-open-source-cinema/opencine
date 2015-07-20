@@ -11,6 +11,7 @@ std::vector<std::string> GetMountsWindows()
 }
 #elif defined (Q_OS_LINUX)
 
+#include <QMessageBox>
 #include <mntent.h>
 
 std::vector<std::string> GetMountsLinux()
@@ -116,10 +117,18 @@ QStringList BackupPresenter::GetPathContent(QString path, QStringList& list)
 
 void BackupPresenter::TransferData()
 {
+    if(_backupPaths.empty() || _backupPaths.at(0) == "")
+    {
+        QMessageBox messageBox;
+        messageBox.setText("Master path is not set.");
+        messageBox.exec();
+        return;
+    }
+
     IDataTransfer* driveTransfer = new DriveTransfer(nullptr, _currentDrivePath, _backupPaths[0]);
     ProgressDialog progressDialog(nullptr, driveTransfer);
 
-    // Start copying files in separate thread
+    // Start copying files in separate thread, possibly mutex required for progress data
     std::thread thr(&IDataTransfer::StartTransfer, driveTransfer);
     thr.detach();
 
@@ -135,6 +144,8 @@ void BackupPresenter::UpdateMounts()
 {
     //Setup drive list model
     QStringList stringList;
+
+    //Needs rework for multi-platform
     for(std::string drive : GetMountsLinux())
     {
         stringList.push_back(QString::fromStdString(drive));

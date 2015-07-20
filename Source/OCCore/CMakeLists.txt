@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 2.8)
+PROJECT(OCCore)
+
+CMAKE_POLICY(SET CMP0020 NEW)
+
+set( CMAKE_VERBOSE_MAKEFILE ON)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+
+file(GLOB_RECURSE SOURCE_FILES "*.cpp")
+file(GLOB_RECURSE HEADER_FILES "*.h")
+
+#SET(INCLUDE_DIRS "")
+#foreach (_headerFile ${HEADER_FILES})
+    #get_filename_component(_dir ${_headerFile} PATH)
+    #list (APPEND INCLUDE_DIRS ${_dir})
+#endforeach()
+#list(REMOVE_DUPLICATES INCLUDE_DIRS)
+
+ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES})

@@ -1,4 +1,4 @@
-#include "MediaExplorerPresenter.h"
+#include "Presenter/MediaExplorerPresenter.h"
 #include "PreviewPane.h"
 #include "ui_PreviewPane.h"
 

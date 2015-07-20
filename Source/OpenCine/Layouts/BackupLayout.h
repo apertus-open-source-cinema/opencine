@@ -5,7 +5,7 @@
 #include <QQuickImageProvider>
 #include <QWidget>
 
-#include "BackupPresenter.h"
+#include "Presenter/BackupPresenter.h"
 
 class ThumbnailProvider : public QQuickImageProvider
 {
