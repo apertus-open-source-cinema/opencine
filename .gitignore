@@ -1,3 +1,4 @@
 /build/
 *.autosave
 *.txt.user
+/.settings/

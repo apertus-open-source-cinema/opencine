@@ -1,0 +1,8 @@
+Commit: c7c4ae5f7b8c24a40e104b66d57221fb04aec501
+
+
+History:
+
+17.07.2015 (Andrej)
+-------------
+- Added CMakeLists.txt to include into already available CMake pipeline of OC

@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 2.8)
+PROJECT(OCLauncher)
+
+CMAKE_POLICY(SET CMP0020 NEW)
+
+set( CMAKE_VERBOSE_MAKEFILE ON)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+
+#FIND_PACKAGE(Qt5Widgets REQUIRED)
+
+file(GLOB_RECURSE SOURCE_FILES "*.cpp")
+file(GLOB_RECURSE HEADER_FILES "*.h")
+
+#SET(INCLUDE_DIRS "")
+#foreach (_headerFile ${HEADER_FILES})
+    #get_filename_component(_dir ${_headerFile} PATH)
+    #list (APPEND INCLUDE_DIRS ${_dir})
+#endforeach()
+#list(REMOVE_DUPLICATES INCLUDE_DIRS)
+
+#INCLUDE_DIRECTORIES(${BUILD_DIR}/include)
+include_directories("${OCui_SOURCE_DIR}")
+
+ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
+
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCui)# Qt5::Widgets)
+
+#QT5_USE_MODULES(${PROJECT_NAME} Widgets)
