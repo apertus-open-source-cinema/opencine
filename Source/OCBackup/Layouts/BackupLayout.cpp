@@ -4,7 +4,7 @@
 
 OCBackupLayout::OCBackupLayout(QWidget *parent, IBackupPresenter* presenter) :
     QWidget(parent),
-    _presenter(std::unique_ptr(presenter))
+    _presenter(presenter),
     ui(new Ui::OCBackupLayout)
 {
     ui->setupUi(this);

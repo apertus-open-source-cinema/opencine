@@ -10,41 +10,41 @@
 #include <vector>
 #include <functional>
 
-std::function<std::vector<std::string>()> GetMounts;
+//std::function<std::vector<std::string>()> GetMounts;
 
-#if defined(Q_OS_WIN)
-std::vector<std::string> GetMountsWindows()
-{
-}
-#elif defined (Q_OS_LINUX)
+//#if defined(Q_OS_WIN)
+//std::vector<std::string> GetMountsWindows()
+//{
+//}
+//#elif defined (Q_OS_LINUX)
 
-#include <QMessageBox>
-#include <mntent.h>
+//#include <QMessageBox>
+//#include <mntent.h>
 
-std::vector<std::string> GetMountsLinux()
-{
-    std::vector<std::string> mountPoints;
+//std::vector<std::string> GetMountsLinux()
+//{
+//    std::vector<std::string> mountPoints;
 
-    QString mediaFolder = "/media/" + qgetenv("USER") + "/";
-    QDirIterator directories(mediaFolder, QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
+//    QString mediaFolder = "/media/" + qgetenv("USER") + "/";
+//    QDirIterator directories(mediaFolder, QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
 
-    while(directories.hasNext())
-    {
-        directories.next();
+//    while(directories.hasNext())
+//    {
+//        directories.next();
 
-        mountPoints.push_back(QString(mediaFolder + directories.fileName()).toStdString());//drive->mnt_dir);
-    }
+//        mountPoints.push_back(QString(mediaFolder + directories.fileName()).toStdString());//drive->mnt_dir);
+//    }
 
-    return mountPoints;
-}
-#else
-#error "OS not supported yet."
-#endif
+//    return mountPoints;
+//}
+//#else
+//#error "OS not supported yet."
+//#endif
 
 //#include "Core/Context.h"
 //#include "Model/FileInfo.h"
 
-clas IBackupPresenter
+class IBackupPresenter
 {
 };
 

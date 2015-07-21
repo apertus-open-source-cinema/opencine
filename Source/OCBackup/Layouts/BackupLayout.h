@@ -17,7 +17,7 @@ class OCBackupLayout : public QWidget
   Q_OBJECT
 
 public:
-  explicit OCBackupLayout(QWidget *parent = 0, IBackupPresenter& presenter);
+  explicit OCBackupLayout(QWidget *parent = 0, IBackupPresenter* presenter = nullptr);
   ~OCBackupLayout();
 
 private:
