@@ -4,13 +4,13 @@ project(ApertusOpenCine)
 CMAKE_POLICY(SET CMP0020 NEW)
 
 #TODO: Enable C++11 support for all projects. Adjust when porting to windows (e.g. for Visual Studio compatibility)
-if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
+if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 
-if(WIN32)
-	ADD_DEFINITIONS(-DWIN32)
-endif()
+#if(WIN32)
+        #ADD_DEFINITIONS(-DWIN32)
+#endif()
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

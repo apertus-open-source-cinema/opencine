@@ -8,8 +8,18 @@ set( CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
-file(GLOB_RECURSE SOURCE_FILES "*.cpp")
-file(GLOB_RECURSE HEADER_FILES "*.h")
+file(GLOB SOURCE_FILES "*.cpp" "*.h")
+#file(GLOB HEADER_FILES "*.h")
+
+#include_directories(${PROJECT_SOURCE_DIR})
+
+if(WIN32)
+    file(GLOB PLATFORM_FILES "Platforms/Win/*.cpp" "Platforms/Win/*.h")
+    #file(GLOB HEADER_FILES "Platforms/Win")
+elseif(LINUX)
+    file(GLOB PLATFORM_FILES "Platforms/Linux")
+    #file(GLOB HEADER_FILES "Platforms/Linux")
+endif()
 
 #SET(INCLUDE_DIRS "")
 #foreach (_headerFile ${HEADER_FILES})
@@ -18,4 +28,4 @@ file(GLOB_RECURSE HEADER_FILES "*.h")
 #endforeach()
 #list(REMOVE_DUPLICATES INCLUDE_DIRS)
 
-ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES})
+ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${PLATFORM_FILES})
