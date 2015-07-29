@@ -16,4 +16,5 @@ MainWindow::~MainWindow()
 void MainWindow::SetLayout(QWidget &widget)
 {
     ui->mainPane->addWidget(&widget);
+    this->adjustSize();
 }

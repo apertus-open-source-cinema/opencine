@@ -1,10 +1,9 @@
+#include "OCBackup.h"
+
 #include <iostream>
 #include <memory>
 
 #include <OCui.h>
-#include <OCCore.h>
-
-#include "OCBackup.h"
 
 #include "Presenters/BackupPresenter.h"
 #include "Layouts/BackupLayout.h"
@@ -19,7 +18,7 @@ public:
     {
         _presenter = std::make_shared<BackupPresenter>();
         _layout = std::make_shared<OCBackupLayout>(nullptr, _presenter.get());
-        _layout->showFullScreen();
+
         SetLayout(*_layout.get());
     }
 };

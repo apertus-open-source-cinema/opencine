@@ -1,4 +1,7 @@
 #include "BackupPresenter.h"
+
+#include <FSHelper.h>
+
 //#include "ProgressDialog.h"
 
 //#include <thread>
@@ -177,3 +180,17 @@
 
 //    emit FolderChanged(_fileInfoList);
 //}
+
+
+void BackupPresenter::RefreshDriveList()
+{
+    IDriveManager* driveManager = new DriveManager();
+    std::vector<std::string> driveList = driveManager->GetRemovableDrives();
+
+    emit DriveListChanged(driveList);
+}
+
+void BackupPresenter::SelectDrive(std::string drivePath)
+{
+    int i = 0;
+}

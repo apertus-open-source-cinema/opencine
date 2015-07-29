@@ -44,53 +44,66 @@
 //#include "Core/Context.h"
 //#include "Model/FileInfo.h"
 
-class IBackupPresenter
+class IBackupPresenter : public QObject
 {
+    Q_OBJECT
+
+public:
+    virtual void RefreshDriveList() = 0;
+    virtual void SelectDrive(std::string drivePath) = 0;
+
+signals:
+    void DriveListChanged(std::vector<std::string> driveList);
+    void DriveSelectionChanged(std::vector<std::string> driveList);
 };
 
 class BackupPresenter : public IBackupPresenter //: public QObject
 {
-//  Q_OBJECT
+    Q_OBJECT
 
-//public:
-//  BackupPresenter(OCContext* context);
-//  ~BackupPresenter();
+public:
+    void RefreshDriveList() override;
 
-//  QStringListModel* GetDriveListModel();
-//  QFileSystemModel* GetFolderTreeModel();
-//  std::vector<FileInfo*> GetFileList();
+    void SelectDrive(std::string drivePath) override;
 
-//  void SetMasterPath(QString path);
+    //  BackupPresenter(OCContext* context);
+    //  ~BackupPresenter();
 
-//  void TransferData();
+    //  QStringListModel* GetDriveListModel();
+    //  QFileSystemModel* GetFolderTreeModel();
+    //  std::vector<FileInfo*> GetFileList();
 
-//public slots:
-//  void CurrentDriveChanged(const QModelIndex& current, const QModelIndex& previous);
-//  void CurrentFolderChanged(const QItemSelection& current, const QItemSelection& previous);
+    //  void SetMasterPath(QString path);
 
-//signals:
-//  void DriveSelectionChanged(QModelIndex diveRoot);
-//  void FolderChanged(std::vector<FileInfo*> fileList);
+    //  void TransferData();
 
-//private slots:
-//  void UpdateMounts();
-//private:
-//  std::vector<std::string> GetMounts();
-//  QStringList GetPathContent(QString path, QStringList& list);
+    //public slots:
+    //  void CurrentDriveChanged(const QModelIndex& current, const QModelIndex& previous);
+    //  void CurrentFolderChanged(const QItemSelection& current, const QItemSelection& previous);
 
-//  std::vector<FileInfo*> _fileInfoList;
 
-//  OCContext* _context;
-//  OCSession* _session;
+    //  void DriveSelectionChanged(QModelIndex diveRoot);
+    //  void FolderChanged(std::vector<FileInfo*> fileList);
 
-//  QString _currentDrivePath;
+    //private slots:
+    //  void UpdateMounts();
+    //private:
+    //  std::vector<std::string> GetMounts();
+    //  QStringList GetPathContent(QString path, QStringList& list);
 
-//  QFileSystemWatcher* _fileWatcher;
+    //  std::vector<FileInfo*> _fileInfoList;
 
-//  QStringListModel* _driveListModel;
-//  QFileSystemModel* _folderTreeModel;
+    //  OCContext* _context;
+    //  OCSession* _session;
 
-//  std::vector<QString> _backupPaths;
+    //  QString _currentDrivePath;
+
+    //  QFileSystemWatcher* _fileWatcher;
+
+    //  QStringListModel* _driveListModel;
+    //  QFileSystemModel* _folderTreeModel;
+
+    //  std::vector<QString> _backupPaths;
 };
 
 #endif // BACKUPPRESENTER_H

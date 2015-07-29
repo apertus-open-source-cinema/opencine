@@ -1,6 +1,8 @@
 #ifndef OCCORE_H
 #define OCCORE_H
 
+//#include "FSHelper.h"
+
 #ifdef _WIN32
 #define EXPORT_API __declspec(dllexport)
 #else
