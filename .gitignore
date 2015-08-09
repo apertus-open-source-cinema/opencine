@@ -2,3 +2,5 @@
 *.autosave
 *.txt.user
 /.settings/
+*.txt.user*
+*.user
