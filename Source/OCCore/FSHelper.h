@@ -4,27 +4,38 @@
 #include <string>
 #include <vector>
 
-#ifdef _WIN32
-#define EXPORT_API __declspec(dllexport)
-#else
-#define EXPORT_API
-#endif
+#include <QAbstractNativeEventFilter>
 
-//std::vector<std::string> EXPORT_API GetMounts();
+#include "Interfaces/IDriveManager.h"
 
-class EXPORT_API IDriveManager
+class NativeEventFilter : public QObject, public QAbstractNativeEventFilter
 {
+    Q_OBJECT
+
 public:
-    virtual ~IDriveManager() {}
-    virtual std::vector<std::string> GetRemovableDrives() = 0;
+    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, long* result );
+
+signals:
+    void DeviceInserted();
+    void DeviceRemoved();
 };
 
 class EXPORT_API DriveManager : public IDriveManager
 {
+    Q_OBJECT
+
+    NativeEventFilter *_filter;
+
+    std::vector<std::string> GetRemovableDrives();
     void EnumerateRemovableDrives(std::vector<std::string> availableDrives, std::vector<std::string>& removableDrives);
 
+    void UpdateDriveList();
+
 public:
-    std::vector<std::string> GetRemovableDrives();
+    DriveManager();
+    ~DriveManager() {}
+
+    void RequestDriveList();
 };
 
 #endif //FSHELPER_H

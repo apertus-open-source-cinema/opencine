@@ -1,7 +1,5 @@
 #include "BackupPresenter.h"
 
-#include <FSHelper.h>
-
 //#include "ProgressDialog.h"
 
 //#include <thread>
@@ -182,15 +180,47 @@
 //}
 
 
-void BackupPresenter::RefreshDriveList()
-{
-    IDriveManager* driveManager = new DriveManager();
-    std::vector<std::string> driveList = driveManager->GetRemovableDrives();
+//void BackupPresenter::RefreshDriveList()
+//{
+//    IDriveManager* driveManager = new DriveManager();
+//    std::vector<std::string> driveList = driveManager->GetRemovableDrives();
 
-    emit DriveListChanged(driveList);
+//    emit DriveListChanged(driveList);
+//}
+
+//void BackupPresenter::SelectDrive(std::string drivePath)
+//{
+//    int i = 0;
+//}
+
+//void BackupPresenter::StartTransfer()
+//{
+//    int i = 0;
+//}
+
+BackupPresenter::BackupPresenter(IBackupView &view) :
+    _view(&view)
+{
+    _driveManager = new DriveManager();
+
+    SetupSignals();
+
+    _driveManager->RequestDriveList();
 }
 
-void BackupPresenter::SelectDrive(std::string drivePath)
+void BackupPresenter::SetupSignals()
+{
+    connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
+    //connect(_driveManager, &IDriveManager::DriveListChanged, this, &BackupPresenter::DriveListChanged);
+    connect(_driveManager, SIGNAL(DriveListChanged(std::vector<std::string>)), this, SLOT(DriveListChanged(std::vector<std::string>)));
+}
+
+void BackupPresenter::StartTransfer()
 {
     int i = 0;
+}
+
+void BackupPresenter::DriveListChanged(std::vector<std::string> driveList)
+{
+    _view->SetDriveList(driveList);
 }

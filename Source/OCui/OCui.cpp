@@ -16,11 +16,10 @@ void TestFunc()
 GUIApplication::GUIApplication(int argc, char** argv, std::string moduleName)
 {
   _application = std::make_shared<QApplication>(argc, argv);
-
   _mainWindow = std::make_shared<MainWindow>();
 
   _mainWindow->setWindowTitle(moduleName.c_str());
-  _mainWindow->show();
+  _mainWindow->showMaximized();
 
   SetStyle(*_application.get());
 }

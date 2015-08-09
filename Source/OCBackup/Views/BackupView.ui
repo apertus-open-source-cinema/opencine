@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>OCBackupLayout</class>
- <widget class="QWidget" name="OCBackupLayout">
+ <class>BackupView</class>
+ <widget class="QWidget" name="BackupView">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1116</width>
-    <height>677</height>
+    <width>771</width>
+    <height>453</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -22,22 +28,58 @@
      <widget class="QWidget" name="verticalLayoutWidget">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QListView" name="driveList">
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="font">
+          <font>
+           <family>Aharoni</family>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+           <kerning>true</kerning>
+          </font>
+         </property>
          <property name="styleSheet">
-          <string notr="true">::item:selected
+          <string notr="true">color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="title">
+          <string>REMOVABLE DRIVES</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_5">
+          <property name="leftMargin">
+           <number>3</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>3</number>
+          </property>
+          <property name="bottomMargin">
+           <number>3</number>
+          </property>
+          <property name="spacing">
+           <number>3</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QListView" name="driveList">
+            <property name="styleSheet">
+             <string notr="true">::item:selected
 {
 background: #FA8756
 }</string>
-         </property>
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
-         <property name="selectionRectVisible">
-          <bool>true</bool>
-         </property>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectRows</enum>
+            </property>
+            <property name="selectionRectVisible">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
        <item>
@@ -265,7 +307,7 @@ background: #FA8756
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="transferButton">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -309,5 +351,25 @@ background: #FA8756
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>transferButton</sender>
+   <signal>clicked()</signal>
+   <receiver>BackupView</receiver>
+   <slot>TransferButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>578</x>
+     <y>392</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>446</x>
+     <y>-2</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>TransferButtonClicked()</slot>
+ </slots>
 </ui>

@@ -1,14 +1,19 @@
 #ifndef BACKUPPRESENTER_H
 #define BACKUPPRESENTER_H
 
+#include <vector>
+#include <functional>
+
 #include <QFileSystemModel>
 #include <QObject>
 #include <QStringListModel>
 #include <QFileSystemWatcher>
 #include <QItemSelection>
 
-#include <vector>
-#include <functional>
+#include <FSHelper.h>
+
+#include "../Interfaces/IBackupView.h"
+
 
 //std::function<std::vector<std::string>()> GetMounts;
 
@@ -52,19 +57,33 @@ public:
     virtual void RefreshDriveList() = 0;
     virtual void SelectDrive(std::string drivePath) = 0;
 
+    virtual void StartTransfer() = 0;
+
 signals:
     void DriveListChanged(std::vector<std::string> driveList);
     void DriveSelectionChanged(std::vector<std::string> driveList);
 };
 
-class BackupPresenter : public IBackupPresenter //: public QObject
+class BackupPresenter : public QObject // : public IBackupPresenter
 {
     Q_OBJECT
 
-public:
-    void RefreshDriveList() override;
+    IBackupView* _view;
+    IDriveManager* _driveManager;
 
-    void SelectDrive(std::string drivePath) override;
+    void SetupSignals();
+
+    void StartTransfer();
+
+private slots:
+    void DriveListChanged(std::vector<std::string> driveList);
+
+public:
+    BackupPresenter(IBackupView& view);
+
+    //void RefreshDriveList() override;
+
+    //void SelectDrive(std::string drivePath) override;
 
     //  BackupPresenter(OCContext* context);
     //  ~BackupPresenter();
@@ -104,6 +123,8 @@ public:
     //  QFileSystemModel* _folderTreeModel;
 
     //  std::vector<QString> _backupPaths;
+
+    // IBackupPresenter interface
 };
 
 #endif // BACKUPPRESENTER_H

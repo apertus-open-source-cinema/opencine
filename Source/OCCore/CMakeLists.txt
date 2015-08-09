@@ -8,7 +8,13 @@ set( CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
-file(GLOB SOURCE_FILES "*.cpp" "*.h")
+FIND_PACKAGE(Qt5Core REQUIRED)
+FIND_PACKAGE(Qt5Widgets REQUIRED)
+
+file(GLOB SOURCE_FILES "*.cpp" "*.h"
+                       "Transfer/*.cpp" "Transfer/*.h"
+                       "MVP/*.cpp" "MVP/*.h"
+                       "Interfaces/*.cpp" "Interfaces/*.h")
 #file(GLOB HEADER_FILES "*.h")
 
 #include_directories(${PROJECT_SOURCE_DIR})
@@ -29,3 +35,5 @@ endif()
 #list(REMOVE_DUPLICATES INCLUDE_DIRS)
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${PLATFORM_FILES})
+
+QT5_USE_MODULES(${PROJECT_NAME} Core Widgets)
