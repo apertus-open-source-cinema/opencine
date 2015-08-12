@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include <windows.h>
 #include <dbt.h>
@@ -10,13 +11,17 @@
 #include <QDebug>
 #include <QAbstractEventDispatcher>
 
+#include "NativeEventHelper.h"
+
+std::shared_ptr<NativeEventFilter> nativeEventFilter;
+
 DriveManager::DriveManager()
 {
-    _filter = new NativeEventFilter();
-    QAbstractEventDispatcher::instance()->installNativeEventFilter(_filter);
+    nativeEventFilter = std::make_shared<NativeEventFilter>();
+    QAbstractEventDispatcher::instance()->installNativeEventFilter(nativeEventFilter.get());
 
-    connect(_filter, &NativeEventFilter::DeviceInserted, this, &DriveManager::UpdateDriveList);
-    connect(_filter, &NativeEventFilter::DeviceRemoved, this, &DriveManager::UpdateDriveList);
+    connect(nativeEventFilter.get(), &NativeEventFilter::DeviceInserted, this, &DriveManager::UpdateDriveList);
+    connect(nativeEventFilter.get(), &NativeEventFilter::DeviceRemoved, this, &DriveManager::UpdateDriveList);
 }
 
 void DriveManager::RequestDriveList()

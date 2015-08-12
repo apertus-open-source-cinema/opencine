@@ -22,8 +22,8 @@ file(GLOB SOURCE_FILES "*.cpp" "*.h"
 if(WIN32)
     file(GLOB PLATFORM_FILES "Platforms/Win/*.cpp" "Platforms/Win/*.h")
     #file(GLOB HEADER_FILES "Platforms/Win")
-elseif(LINUX)
-    file(GLOB PLATFORM_FILES "Platforms/Linux")
+elseif(UNIX)
+    file(GLOB PLATFORM_FILES "Platforms/Linux/*.cpp" "Platforms/Linux/*.h")
     #file(GLOB HEADER_FILES "Platforms/Linux")
 endif()
 

@@ -79,7 +79,7 @@ private slots:
     void DriveListChanged(std::vector<std::string> driveList);
 
 public:
-    BackupPresenter(IBackupView& view);
+    explicit BackupPresenter(IBackupView& view);
 
     //void RefreshDriveList() override;
 
