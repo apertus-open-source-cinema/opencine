@@ -10,7 +10,7 @@
 #include <QFileSystemWatcher>
 #include <QItemSelection>
 
-#include <FSHelper.h>
+#include <DriveManager.h>
 
 #include "../Interfaces/IBackupView.h"
 
@@ -71,12 +71,15 @@ class BackupPresenter : public QObject // : public IBackupPresenter
     IBackupView* _view;
     IDriveManager* _driveManager;
 
+    std::vector<std::string> _driveList;
+
     void SetupSignals();
 
     void StartTransfer();
 
 private slots:
     void DriveListChanged(std::vector<std::string> driveList);
+    void DriveSelectionChanged(int driveIndex);
 
 public:
     explicit BackupPresenter(IBackupView& view);

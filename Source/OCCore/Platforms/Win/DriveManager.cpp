@@ -1,4 +1,4 @@
-#include "FSHelper.h"
+#include "DriveManager.h"
 
 #include <string>
 #include <vector>
@@ -60,29 +60,19 @@ void DriveManager::EnumerateRemovableDrives(std::vector<std::string> availableDr
 {
     for(auto& drive : availableDrives)
     {
-        if(GetDriveType(drive.c_str()) == DRIVE_REMOVABLE)
+        int driveType = GetDriveType(drive.c_str());
+        bool validVolume = GetVolumeInformation(drive.c_str(), NULL, 0, 0, 0, 0, NULL, 0);
+
+        if(driveType == DRIVE_REMOVABLE && validVolume)
         {
+            unsigned __int64 freeBytesAvailable = 0;
+            unsigned __int64 totalNumberOfBytes = 0;
+            unsigned __int64 totalNumberOfFreeBytes = 0;
+            GetDiskFreeSpaceEx(drive.c_str(), (PULARGE_INTEGER)&freeBytesAvailable, (PULARGE_INTEGER)&totalNumberOfBytes, (PULARGE_INTEGER)&totalNumberOfFreeBytes);
+
             removableDrives.push_back(drive);
         }
     }
 }
 
-bool NativeEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, long *result)
-{
-    MSG* msg = (MSG*)message;
 
-    if (msg->message == WM_DEVICECHANGE)
-    {
-        switch(msg->wParam)
-        {
-        case DBT_DEVICEARRIVAL: // never comes here!
-            emit DeviceInserted();
-            return true;
-        case DBT_DEVICEREMOVECOMPLETE:
-            emit DeviceRemoved();
-            break;
-        }
-    }
-
-    return false;
-}

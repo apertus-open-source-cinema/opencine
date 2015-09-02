@@ -213,6 +213,7 @@ void BackupPresenter::SetupSignals()
     connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
     //connect(_driveManager, &IDriveManager::DriveListChanged, this, &BackupPresenter::DriveListChanged);
     connect(_driveManager, SIGNAL(DriveListChanged(std::vector<std::string>)), this, SLOT(DriveListChanged(std::vector<std::string>)));
+    connect(_view, SIGNAL(DriveSelectionChanged(int)), this, SLOT(DriveSelectionChanged(int)));
 }
 
 void BackupPresenter::StartTransfer()
@@ -222,5 +223,20 @@ void BackupPresenter::StartTransfer()
 
 void BackupPresenter::DriveListChanged(std::vector<std::string> driveList)
 {
-    _view->SetDriveList(driveList);
+    _driveList = driveList;
+    _view->SetDriveList(_driveList);
+
+    if(!_driveList.empty())
+    {
+        _view->SetCurrentFolder(_driveList.at(0));
+    }
+    else
+    {
+        _view->SetCurrentFolder("");
+    }
+}
+
+void BackupPresenter::DriveSelectionChanged(int driveIndex)
+{
+    _view->SetCurrentFolder(_driveList.at(driveIndex));
 }

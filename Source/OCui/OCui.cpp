@@ -2,6 +2,8 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QFontDatabase>
+#include <QDebug>
 
 #include "OCui.h"
 #include "Layouts/MainWindow.h"
@@ -20,6 +22,16 @@ GUIApplication::GUIApplication(int argc, char** argv, std::string moduleName)
 
   _mainWindow->setWindowTitle(moduleName.c_str());
   _mainWindow->showMaximized();
+
+  QFontDatabase* fontDatabase = new QFontDatabase();
+  if(fontDatabase->addApplicationFont("Fonts/Titillium-Regular.otf") == -1)
+  {
+    qCritical() << "couldn't add application font";
+  }
+
+  QFont f = fontDatabase->font("Titillium", "bold", 10);
+  f.setStyleStrategy(QFont::PreferAntialias);
+  QApplication::setFont(f);
 
   SetStyle(*_application.get());
 }

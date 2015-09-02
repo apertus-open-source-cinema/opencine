@@ -20,8 +20,8 @@ QWidget:disabled
 
 QDockWidget
 {
-	border: 3px solid red;
-	border: 1px solid white;
+	/*border: 3px solid red;*/
+	border: 1px solid red;
 	border-color: #b6b6b6;
 }
 
@@ -129,3 +129,44 @@ QRadioButton::indicator::unchecked
 {
 	color: green;
 }
+
+QGroupBox 
+{
+    border: 1px solid #FA8756;
+    border-radius: 5px;
+	margin-top: 1ex;
+	
+	padding: 2ex 1ex 1ex 1ex;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top center; /* position at the top center */
+    padding: 0 1ex;
+    color: #FA8756;
+}
+
+QTreeView::branch:has-children:!has-siblings:closed,
+QTreeView::branch:closed:has-children:has-siblings 
+{
+	border-image: none;
+	border-image: url(Resources/Images/arrow_right.png);
+}
+   
+QTreeView::branch:open:has-children:!has-siblings,
+QTreeView::branch:open:has-children:has-siblings  
+{
+	border-image: none;
+	image: url(Resources/Images/arrow_bottom_right.png);
+}
+
+/*QGroupBox::indicator {
+    width: 13px;
+    height: 13px;
+	subcontrol-position: top left; 
+}
+
+QGroupBox::indicator:unchecked {
+    image: url(Resources/Images/logo.png);
+}
+*/

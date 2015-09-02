@@ -1,5 +1,5 @@
-#ifndef FSHELPER_H
-#define FSHELPER_H
+#ifndef DRIVEMANAGER_H
+#define DRIVEMANAGER_H
 
 #include <string>
 #include <vector>
@@ -23,4 +23,4 @@ public:
     void RequestDriveList();
 };
 
-#endif //FSHELPER_H
+#endif //DRIVEMANAGER_H
