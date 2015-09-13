@@ -10,8 +10,8 @@ class EXPORT_API DriveManager : public IDriveManager
 {
     Q_OBJECT
 
-    std::vector<std::string> GetRemovableDrives();
-    void EnumerateRemovableDrives(std::vector<std::string> availableDrives, std::vector<std::string>& removableDrives);
+    std::vector<DriveInfo> GetRemovableDrives();
+    void EnumerateRemovableDrives(std::vector<std::string> availableDrives, std::vector<DriveInfo>& removableDrives);
 
 public slots:
     void UpdateDriveList();
@@ -21,6 +21,7 @@ public:
     ~DriveManager() {}
 
     void RequestDriveList();
+    void RetrieveDriveInfo(DriveInfo &driveInfo);
 };
 
 #endif //DRIVEMANAGER_H

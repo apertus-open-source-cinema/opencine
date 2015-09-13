@@ -60,7 +60,7 @@ public:
     virtual void StartTransfer() = 0;
 
 signals:
-    void DriveListChanged(std::vector<std::string> driveList);
+    void DriveListChanged(std::vector<DriveInfo> driveList);
     void DriveSelectionChanged(std::vector<std::string> driveList);
 };
 
@@ -78,7 +78,7 @@ class BackupPresenter : public QObject // : public IBackupPresenter
     void StartTransfer();
 
 private slots:
-    void DriveListChanged(std::vector<std::string> driveList);
+    void DriveListChanged(std::vector<DriveInfo> driveList);
     void DriveSelectionChanged(int driveIndex);
 
 public:

@@ -14,7 +14,8 @@ FIND_PACKAGE(Qt5QuickWidgets REQUIRED)
 FILE(GLOB SOURCE_FILES "*.cpp" "*.h"
                        "Views/*.cpp" "Views/*.h"
                        "Interfaces/*.cpp" "Interfaces/*.h"
-                       "Presenters/*.cpp" "Presenters/*.h")
+                       "Presenters/*.cpp" "Presenters/*.h"
+                       "Data/*.cpp" "Data/*.h")
 FILE(GLOB UI_FILES "Views/*.ui")
 FILE(GLOB QML_FILES "Widgets/*.qml")
 

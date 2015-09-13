@@ -7,6 +7,8 @@
 
 #include "Presenters/BackupPresenter.h"
 
+#include "../Data/DriveListItem.h"
+
 BackupView::BackupView(/*QWidget *parent,*/ IBackupPresenter* presenter) :
     //QWidget(parent),
     //_presenter(presenter),
@@ -14,13 +16,18 @@ BackupView::BackupView(/*QWidget *parent,*/ IBackupPresenter* presenter) :
 {
     ui->setupUi(this);
 
-    _qmlContext = ui->quickWidget->rootContext();
+    //_qmlContext = ui->quickWidget->rootContext();
+    //ui->quickWidget->setSource(QUrl("./Widgets/ThumbnailView.qml"));
+
+    dataList = new QList<QObject*>();
+
+    _qmlContext = ui->quickWidget_2->rootContext();
+    ui->quickWidget_2->setSource(QUrl("./Widgets/DriveList.qml"));
+    _qmlContext->setContextProperty("listModel", QVariant::fromValue(*dataList));
+
     //ui->quickWidget->engine()->addImageProvider(QString("thumbnail"), new ThumbnailProvider());
 
     //_qmlContext->setContextProperty("fileList", QVariant::fromValue(_fileList));
-
-    ui->quickWidget->setSource(QUrl("./Widgets/ThumbnailView.qml"));
-
 
     QFileSystemModel* _folderTreeModel = new QFileSystemModel();
     QString rootPath = "C:\\Temp\\";//_driveListModel->index(0).data().toString();
@@ -42,23 +49,11 @@ BackupView::~BackupView()
 
 void BackupView::SetupDriveView()
 {
-    _driveListModel = new QStringListModel();
-    ui->driveList->setModel(_driveListModel);
+//    _driveListModel = new QStringListModel();
+//    ui->driveList->setModel(_driveListModel);
 
-    _tableModel = new QStandardItemModel();
-    ui->tableView->setModel(_tableModel);
-
-    _tableModel->insertColumn(0);
-    _tableModel->insertColumn(1);
-
-    _tableModel->setHorizontalHeaderItem(0, new QStandardItem("Drive"));
-    _tableModel->setHorizontalHeaderItem(1, new QStandardItem("Used/Avaialble"));
-
-    QHeaderView* header = ui->tableView->horizontalHeader();
-    header->setSectionsClickable(false);
-
-    QItemSelectionModel* selectionModel = ui->driveList->selectionModel();
-    connect(selectionModel, SIGNAL(currentRowChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(CurrentDriveChanged(const QModelIndex&, const QModelIndex&)));
+//    QItemSelectionModel* selectionModel = ui->driveList->selectionModel();
+//    connect(selectionModel, SIGNAL(currentRowChanged(const QModelIndex&, const QModelIndex&)), this, SLOT(CurrentDriveChanged(const QModelIndex&, const QModelIndex&)));
 }
 
 void BackupView::SetupFolderView()
@@ -78,26 +73,23 @@ void BackupView::CurrentDriveChanged(const QModelIndex& current, const QModelInd
     emit DriveSelectionChanged(current.row());
 }
 
-void BackupView::SetDriveList(std::vector<std::string> driveList)
+void BackupView::SetDriveList(std::vector<DriveInfo> driveList)
 {
-    QStringList stringList;
-    int i = 0;
+    dataList->clear();
 
-    _tableModel->removeRows(0, _tableModel->rowCount());
-    for(std::string drive : driveList)
+    for(auto& drive : driveList)
     {
-        stringList.push_back(QString::fromStdString(drive));
+        //stringList.push_back(QString::fromStdString(drive));
+        dataList->append(new DriveListItem(QString::fromStdString(drive.DriveName), QString::fromStdString(drive.DrivePath), drive.UsedSpace, drive.TotalSpace, QString::fromStdString(drive.SpaceUnit)));
 
-        _tableModel->insertRow(i, new QStandardItem(QString::fromStdString(drive)));
-        i++;
+        //i++;
     }
-       //stringList.push_back("C:");
 
-    _driveListModel->setStringList(stringList);
-    _driveListModel->index(0);
-    ui->driveList->setCurrentIndex(_driveListModel->index(0, 0));
+    _qmlContext->setContextProperty("listModel", QVariant::fromValue(*dataList));
 
-
+    //    _driveListModel->setStringList(stringList);
+    //    _driveListModel->index(0);
+    //    ui->driveList->setCurrentIndex(_driveListModel->index(0, 0));
 }
 
 void BackupView::SetCurrentFolder(std::string folderPath)

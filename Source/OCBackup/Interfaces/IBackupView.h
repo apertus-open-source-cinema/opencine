@@ -5,12 +5,14 @@
 
 #include <QWidget>
 
+#include <Interfaces/IDriveManager.h>
+
 class IBackupView : public QWidget
 {
     Q_OBJECT
 
 public:
-    virtual void SetDriveList(std::vector<std::string> driveList) = 0;
+    virtual void SetDriveList(std::vector<DriveInfo> driveList) = 0;
     virtual void SetCurrentFolder(std::string folderPath) = 0;
 
 signals:
