@@ -6,6 +6,7 @@ import QtQuick.Controls.Styles 1.4
 Rectangle
 {
     id: rectangle1
+    color: "#2e2e2e"
     width: 168
     height: 36
     smooth: false
@@ -13,12 +14,12 @@ Rectangle
     opacity: 1
     antialiasing: false
 
-    property string driveName: "?"
-    property string driveLetter: "?"
-    property real usedSpace: "?"
-    property real totalSpace: "?"
-    property string spaceUnit: "?"
-    property alias backgroundColor: rectangle1.color
+    property string driveName: model.driveName ? model.driveName : "?";
+    property string driveLetter: model.driveLetter ? model.driveLetter : "?";
+    property real usedSpace: model.usedSpace ? model.usedSpace : -1;
+    property real totalSpace: model.totalSpace ? model.totalSpace : -1;
+    property string spaceUnit: model.spaceUnit ? model.spaceUnit : "?";
+    property alias backgroundColor: rectangle1.color;
 
     Text {
         id: driveInfo

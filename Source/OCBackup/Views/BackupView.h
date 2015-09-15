@@ -34,12 +34,12 @@ class BackupView : public IBackupView
     void SetupFolderView();
 
 public:
-    explicit BackupView(/*QWidget *parent = 0,*/ IBackupPresenter* presenter = nullptr);
+    explicit BackupView(IBackupPresenter* presenter = nullptr);
     ~BackupView();
 
 private slots:
     void TransferButtonClicked();
-    void CurrentDriveChanged(const QModelIndex &current, const QModelIndex &previous);
+    void CurrentDriveChanged(int currentDrive);
 
 public:
     void SetCurrentFolder(std::string folderPath);

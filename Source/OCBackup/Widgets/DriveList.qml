@@ -6,35 +6,26 @@ Rectangle {
     width: 276
     height: 300
     color: "#191919"
-    //    smooth: false
-    //    antialiasing: false
 
     border.width: 1
     border.color: "#555555"
 
+    signal itemSelectionChanged(int currentItem)
+    property alias listDelegate: clipList.delegate
+
     Component {
         id: listDelegate
 
-        DriveItem
-        {
-            width: parent.width;
+        DriveItem {
+            width: parent.width
 
-            color: ListView.view.currentIndex === index ? "#CC0000" : "#333333";
-
-            driveName: model.driveName;
-            driveLetter: model.driveLetter;
-            usedSpace: model.usedSpace;
-            totalSpace: model.totalSpace;
-            spaceUnit: model.spaceUnit;
-
-            MouseArea
-            {
+            MouseArea {
                 id: itemMouseArea
                 anchors.fill: parent
 
-                onClicked:
-                {
-                    clipList.currentIndex = index
+                onClicked: {
+                    clipList.currentIndex = index;
+                    mediaExplorerList.itemSelectionChanged(index);
                 }
             }
         }
@@ -42,20 +33,26 @@ Rectangle {
 
     Component {
         id: highlightBox
+
         Rectangle {
+            z: 1
             id: highlightBar
             width: clipList.currentItem.width
             height: clipList.currentItem.height
-            color: "red"
-            radius: 5
+
+            border.width: 2
+            border.color: "#BB0000"
+
+            color: "transparent"
+
+            radius: 3
             x: clipList.currentItem.x
             y: clipList.currentItem.y
 
-            Behavior on y
-            {
-                PropertyAnimation
-                {
-                    duration: 50
+            Behavior on y {
+                PropertyAnimation {
+                    easing.type: Easing.Linear
+                    duration: 150
                 }
             }
         }
@@ -78,44 +75,13 @@ Rectangle {
         focus: true
 
         highlightFollowsCurrentItem: false
-        //highlight: highlightBox
+        highlight: highlightBox
 
         spacing: 3
     }
 
-    //        InnerShadow {
-    //            id: topLeftShadow
-    //            anchors.fill: source
-    //            radius: 8.0
-    //            smooth: false
-    //            scale: 1
-    //            antialiasing: false
-    //            samples: 16
-    //            horizontalOffset: 2
-    //            verticalOffset: 2
-    //            color: "#b0000000"
-    //            source: clipList
-    //        }
-
-    //        InnerShadow {
-    //            anchors.fill: source
-    //            radius: 8.0
-    //            smooth: false
-    //            anchors.rightMargin: 0
-    //            anchors.bottomMargin: 0
-    //            anchors.leftMargin: 0
-    //            anchors.topMargin: 0
-    //            antialiasing: false
-    //            samples: 16
-    //            horizontalOffset: -1
-    //            verticalOffset: -1
-    //            color: "#b0000000"
-    //            source: topLeftShadow
-    //        }
-
-    ScrollBar {
-        smooth: false
-        antialiasing: false
+    ScrollBar
+    {
         flickable: clipList
     }
 }

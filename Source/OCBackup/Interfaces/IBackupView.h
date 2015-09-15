@@ -1,8 +1,6 @@
 #ifndef IBACKUPVIEW_H
 #define IBACKUPVIEW_H
 
-//#include <MVP/MVP.h>
-
 #include <QWidget>
 
 #include <Interfaces/IDriveManager.h>

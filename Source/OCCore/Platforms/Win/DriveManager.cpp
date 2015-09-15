@@ -76,7 +76,7 @@ void DriveManager::EnumerateRemovableDrives(std::vector<std::string> availableDr
             RetrieveDriveInfo(driveInfo);
 
             removableDrives.push_back(driveInfo);
-        //}
+//        }
     }
 }
 
