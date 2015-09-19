@@ -21,17 +21,20 @@ void DriveManager::RequestDriveList()
   UpdateDriveList();
 }
 
-std::vector<std::string> DriveManager::GetRemovableDrives()
+std::vector<DriveInfo> DriveManager::GetRemovableDrives()
 {
-  std::vector<std::string> availableDrives;
+  std::vector<DriveInfo> availableDrives;
 
   QDirIterator directories(mediaFolder, QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
 
   while(directories.hasNext())
     {
+      DriveInfo driveInfo;
+
       directories.next();
 
-      availableDrives.push_back(QString(mediaFolder + directories.fileName()).toStdString());//drive->mnt_dir);
+      driveInfo.DrivePath = QString(mediaFolder + directories.fileName()).toStdString();
+      availableDrives.push_back(driveInfo);
     }
 
   return availableDrives;
@@ -40,4 +43,9 @@ std::vector<std::string> DriveManager::GetRemovableDrives()
 void DriveManager::UpdateDriveList()
 {
   emit DriveListChanged(GetRemovableDrives());
+}
+
+void DriveManager::RetrieveDriveInfo(DriveInfo& driveInfo)
+{
+
 }

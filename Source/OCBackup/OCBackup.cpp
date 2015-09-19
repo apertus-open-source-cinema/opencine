@@ -1,27 +1,20 @@
 #include <iostream>
 #include <memory>
 
-#include <OCui.h>
+#include "OCBackup.h"
 
-#include "Presenters/BackupPresenter.h"
-#include "Views/BackupView.h"
-
-class OCBackup : public OCui::GUIApplication
+OCBackup::OCBackup(int argc, char **argv) : GUIApplication(argc, argv, "OCBackup")
 {
-    std::shared_ptr<IBackupView> _view;
-    std::shared_ptr<BackupPresenter> _presenter;
+    _applicationController = std::make_shared<ApplicationController>();
 
-public:
-    OCBackup(int argc, char** argv) : GUIApplication(argc, argv, "OCBackup"),
-        _view(std::make_shared<BackupView>()),
-        _presenter(std::make_shared<BackupPresenter>(*_view))
-    {
-        SetLayout(*_view.get());
-    }
-};
+    SetLayout(*_applicationController->GetView());
+}
 
 int main(int argc, char** argv)
 {
     std::shared_ptr<OCBackup> backup = std::make_shared<OCBackup>(argc, argv);
-    return backup->Run();
+    backup->Run();
+
+    return 0;
 }
+

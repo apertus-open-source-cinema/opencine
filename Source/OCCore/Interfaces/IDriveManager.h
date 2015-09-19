@@ -1,6 +1,8 @@
 #ifndef IDRIVEMANAGER_H
 #define IDRIVEMANAGER_H
 
+#include <inttypes.h>
+
 #include <QObject>
 
 #ifdef _WIN32
@@ -11,11 +13,11 @@
 
 struct EXPORT_API DriveInfo
 {
-    std::string DriveName;
-    std::string DrivePath;
-    unsigned __int64 UsedSpace;
-    unsigned __int64 TotalSpace;
-    std::string SpaceUnit;
+    std::string DriveName = "?";
+    std::string DrivePath = "?";
+    unsigned long long UsedSpace = 0;
+    unsigned long long TotalSpace = 0;
+    std::string SpaceUnit = "?";
 };
 
 class EXPORT_API IDriveManager : public QObject

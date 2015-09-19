@@ -17,13 +17,13 @@ namespace OCui
 {
 class EXPORT_API GUIApplication
 {
-    std::shared_ptr<MainWindow> _mainWindow;
     std::shared_ptr<QApplication> _application;
+    std::shared_ptr<MainWindow> _mainWindow;
 
     void SetStyle(QApplication &app);
 
 public:
-    GUIApplication(int argc, char** argv, std::string moduleName);
+    GUIApplication(int& argc, char** argv, std::string moduleName);
 
     virtual ~GUIApplication();
 

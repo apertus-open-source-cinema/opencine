@@ -10,30 +10,24 @@
 
 using namespace OCui;
 
-void TestFunc()
+GUIApplication::GUIApplication(int& argc, char** argv, std::string moduleName) :
+    _application(std::make_shared<QApplication>(argc, argv)),
+    _mainWindow(std::make_shared<MainWindow>())
 {
-  int i = 0;
-}
+    _mainWindow->setWindowTitle(moduleName.c_str());
+    _mainWindow->showMaximized();
 
-GUIApplication::GUIApplication(int argc, char** argv, std::string moduleName)
-{
-  _application = std::make_shared<QApplication>(argc, argv);
-  _mainWindow = std::make_shared<MainWindow>();
+    QFontDatabase* fontDatabase = new QFontDatabase();
+    if(fontDatabase->addApplicationFont("Fonts/Titillium-Regular.otf") == -1)
+    {
+        qCritical() << "couldn't add application font";
+    }
 
-  _mainWindow->setWindowTitle(moduleName.c_str());
-  _mainWindow->showMaximized();
+    QFont f = fontDatabase->font("Titillium", "bold", 10);
+    f.setStyleStrategy(QFont::PreferAntialias);
+    QApplication::setFont(f);
 
-  QFontDatabase* fontDatabase = new QFontDatabase();
-  if(fontDatabase->addApplicationFont("Fonts/Titillium-Regular.otf") == -1)
-  {
-    qCritical() << "couldn't add application font";
-  }
-
-  QFont f = fontDatabase->font("Titillium", "bold", 10);
-  f.setStyleStrategy(QFont::PreferAntialias);
-  QApplication::setFont(f);
-
-  SetStyle(*_application.get());
+    SetStyle(*_application.get());
 }
 
 GUIApplication::~GUIApplication()
@@ -43,12 +37,12 @@ GUIApplication::~GUIApplication()
 
 void GUIApplication::SetLayout(QWidget& widget)
 {
-  _mainWindow->SetLayout(widget);
+    _mainWindow->SetLayout(widget);
 }
 
 int GUIApplication::Run()
 {
-  return _application->exec();
+    return _application->exec();
 }
 
 void GUIApplication::SetStyle(QApplication& app)

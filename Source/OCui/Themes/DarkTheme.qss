@@ -170,3 +170,21 @@ QGroupBox::indicator:unchecked {
     image: url(Resources/Images/logo.png);
 }
 */
+
+QSplitter::handle[orientation="2"] {
+    image: url(Resources/Images/splitter_off.png);
+    width: 2px;
+}
+
+QSplitter::handle[orientation="1"] {
+    height: 2px;
+	image: url(Resources/Images/vsplitter_off.png);
+}
+
+QSplitter::handle[orientation="2"]:pressed {
+    image: url(Resources/Images/splitter_on.png);
+}
+
+QSplitter::handle[orientation="1"]:pressed {
+    image: url(Resources/Images/vsplitter_on.png);
+}

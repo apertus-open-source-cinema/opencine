@@ -20,19 +20,13 @@ Rectangle {
     }
 
     DropShadow {
-        x: 6
-        y: 6
-        anchors.fill: image1
+        anchors.fill: source
         horizontalOffset: 3
         verticalOffset: 3
         radius: 8
-        antialiasing: false
         transparentBorder: true
-        spread: 0
-        cached: true
-        fast: false
         samples: 16
-        color: "#000000"
+        color: "#40000000"
         source: image1
     }
 
@@ -40,39 +34,36 @@ Rectangle {
         id: image1
         x: 6
         height: 28
+        source: "thumbnail_placeholder.png"
         anchors.top: parent.top
         anchors.topMargin: 6
         anchors.right: parent.right
         anchors.left: parent.left
         anchors.leftMargin: 0
         anchors.rightMargin: 0
-        anchors.bottomMargin: 48
+        anchors.bottomMargin: 40
         anchors.bottom: parent.bottom
         enabled: true
         smooth: true
-        antialiasing: false
         fillMode: Image.PreserveAspectFit
-        source: clipPath != null ? "image://thumbnail/" + clipPath : "thumbnail_placeholder.png" //"image://thumbnail/" + clipName //"thumbnail_placeholder.png"
     }
 
     Column {
         id: column3
+        x: 362
+        y: 96
+        width: 95
         height: 34
-        anchors.top: image1.bottom
-        anchors.topMargin: 6
-        anchors.leftMargin: parent.width / 2 - image1.paintedWidth / 2
-        anchors.rightMargin: parent.width / 2
-        anchors.right: parent.right
-        anchors.left: parent.left
 
         Text {
             id: text3
-            y: 193
             color: "#ffffff"
             text: clipResolution
-            font.family: fixedFont.name
+            anchors.top: parent.top
+            anchors.topMargin: 0
             anchors.left: parent.left
             anchors.leftMargin: 0
+            font.family: fixedFont.name
             anchors.right: parent.right
             anchors.rightMargin: 0
             font.bold: true
@@ -84,6 +75,8 @@ Rectangle {
             y: 193
             color: "#ffffff"
             text: qsTr("24fps")
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
             font.family: fixedFont.name
             anchors.left: parent.left
             anchors.leftMargin: 0
@@ -96,20 +89,18 @@ Rectangle {
 
     Column {
         id: column2
+        x: 354
+        y: 34
+        width: 112
         height: 34
-        anchors.top: image1.bottom
-        anchors.topMargin: 6
-        anchors.rightMargin: parent.width / 2 - image1.paintedWidth / 2
         spacing: 0
-        anchors.leftMargin: parent.width / 2
-        anchors.left: parent.left
-        anchors.right: parent.right
 
         Text {
             id: text1
-            y: 193
             color: "#ffffff"
             text: qsTr("14.01.2015")
+            anchors.top: parent.top
+            anchors.topMargin: 0
             font.family: fixedFont.name
             anchors.left: parent.left
             anchors.leftMargin: 0
@@ -125,6 +116,8 @@ Rectangle {
             y: 193
             color: "#ffffff"
             text: qsTr("00:00:05.02")
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 0
             style: Text.Normal
             font.family: fixedFont.name
             horizontalAlignment: Text.AlignRight

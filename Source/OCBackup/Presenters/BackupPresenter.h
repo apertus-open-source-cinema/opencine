@@ -39,8 +39,10 @@ class BackupPresenter : public QObject // : public IBackupPresenter
     std::vector<DriveInfo> _driveList;
 
     void SetupSignals();
-
     void StartTransfer();
+
+signals:
+    void StartTransferSig(std::string drivePath);
 
 private slots:
     void DriveListChanged(std::vector<DriveInfo> driveList);

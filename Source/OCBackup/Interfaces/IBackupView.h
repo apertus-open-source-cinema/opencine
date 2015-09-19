@@ -12,6 +12,7 @@ class IBackupView : public QWidget
 public:
     virtual void SetDriveList(std::vector<DriveInfo> driveList) = 0;
     virtual void SetCurrentFolder(std::string folderPath) = 0;
+     virtual void SetItemList(std::vector<std::string> fileList) = 0;
 
 signals:
     void StartTransfer();

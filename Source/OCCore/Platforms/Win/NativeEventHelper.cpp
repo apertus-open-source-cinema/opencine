@@ -1,8 +1,8 @@
 #include "NativeEventHelper.h"
 
-NativeEventFilter::NativeEventFilter()
+NativeEventFilter::NativeEventFilter() :
+dummyWidget(std::make_shared<QWidget>())
 {
-    dummyWidget = std::make_shared<QWidget>();
     LPITEMIDLIST itemList;
 
     if(SHGetFolderLocation((HWND)dummyWidget->winId(), CSIDL_DESKTOP, 0, 0, &itemList) == NOERROR)

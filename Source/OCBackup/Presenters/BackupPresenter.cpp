@@ -20,6 +20,7 @@ void BackupPresenter::SetupSignals()
 
 void BackupPresenter::StartTransfer()
 {
+    emit StartTransferSig("Test123");
 }
 
 void BackupPresenter::DriveListChanged(std::vector<DriveInfo> driveList)
@@ -30,6 +31,10 @@ void BackupPresenter::DriveListChanged(std::vector<DriveInfo> driveList)
     if(!_driveList.empty())
     {
         _view->SetCurrentFolder(driveList.at(0).DrivePath);
+
+        std::vector<std::string> flist;
+        flist.push_back("C:/Temp/test.jpg");
+        _view->SetItemList(flist);
     }
     else
     {
