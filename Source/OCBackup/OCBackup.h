@@ -34,6 +34,9 @@ private slots:
     void StartTransfer(std::string drivePath)
     {
         int i = 0;
+
+        //TEMPORARY: Gather all files and folders for drive backup, create list of folders
+
     }
 };
 

@@ -5,6 +5,7 @@
 
 OCBackup::OCBackup(int argc, char **argv) : GUIApplication(argc, argv, "OCBackup")
 {
+    //TODO: Review application controller usage, also the layout switching possibility and restructure accordingly
     _applicationController = std::make_shared<ApplicationController>();
 
     SetLayout(*_applicationController->GetView());

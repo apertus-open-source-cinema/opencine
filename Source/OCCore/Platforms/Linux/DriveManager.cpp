@@ -1,6 +1,8 @@
 #include "DriveManager.h"
 
 #include <memory>
+#include <sys/statvfs.h>
+#include <unistd.h>
 
 #include <QDirIterator>
 #include <QFileSystemWatcher>
@@ -10,42 +12,57 @@ QString mediaFolder = "/media/" + qgetenv("USER") + "/";
 
 DriveManager::DriveManager()
 {
-  fileWatcher = std::make_shared<QFileSystemWatcher>();
-  fileWatcher->addPath(mediaFolder);
+    fileWatcher = std::make_shared<QFileSystemWatcher>();
+    fileWatcher->addPath(mediaFolder);
 
-  QObject::connect(fileWatcher.get(), SIGNAL(directoryChanged(QString)), SLOT(UpdateDriveList()));
+    QObject::connect(fileWatcher.get(), SIGNAL(directoryChanged(QString)), SLOT(UpdateDriveList()));
 }
 
 void DriveManager::RequestDriveList()
 {
-  UpdateDriveList();
+    UpdateDriveList();
 }
 
 std::vector<DriveInfo> DriveManager::GetRemovableDrives()
 {
-  std::vector<DriveInfo> availableDrives;
+    std::vector<DriveInfo> availableDrives;
 
-  QDirIterator directories(mediaFolder, QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
+    QDirIterator directories(mediaFolder, QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
 
-  while(directories.hasNext())
+    while(directories.hasNext())
     {
-      DriveInfo driveInfo;
+        directories.next();
 
-      directories.next();
+        DriveInfo driveInfo;
+        driveInfo.DriveName = directories.fileName().toStdString();
 
-      driveInfo.DrivePath = QString(mediaFolder + directories.fileName()).toStdString();
-      availableDrives.push_back(driveInfo);
+        driveInfo.DrivePath = QString(mediaFolder + directories.fileName()).toStdString();
+
+        RetrieveDriveInfo(driveInfo);
+
+        availableDrives.push_back(driveInfo);
     }
 
-  return availableDrives;
+    return availableDrives;
 }
 
 void DriveManager::UpdateDriveList()
 {
-  emit DriveListChanged(GetRemovableDrives());
+    emit DriveListChanged(GetRemovableDrives());
 }
 
 void DriveManager::RetrieveDriveInfo(DriveInfo& driveInfo)
 {
+    usleep(500000);
 
+    struct statvfs64 fiData;
+
+    if(statvfs64(driveInfo.DrivePath.c_str(), &fiData) < 0)
+    {
+        int i = 0;
+    }
+
+    driveInfo.TotalSpace = (fiData.f_blocks * fiData.f_frsize) / 1024 / 1024;
+    driveInfo.UsedSpace = driveInfo.TotalSpace - ((fiData.f_bfree * fiData.f_frsize) / 1024 / 1024);
+    driveInfo.SpaceUnit = "MB";
 }
