@@ -19,8 +19,8 @@ class IBackupPresenter : public QObject
     Q_OBJECT
 
 public:
-    virtual void RefreshDriveList() = 0;
-    virtual void SelectDrive(std::string drivePath) = 0;
+    //virtual void RefreshDriveList() = 0;
+    //virtual void SelectDrive(std::string drivePath) = 0;
 
     virtual void StartTransfer() = 0;
 
@@ -29,7 +29,7 @@ signals:
     void DriveSelectionChanged(std::vector<std::string> driveList);
 };
 
-class BackupPresenter : public QObject // : public IBackupPresenter
+class BackupPresenter : public IBackupPresenter
 {
     Q_OBJECT
 

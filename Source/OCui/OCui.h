@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include <QObject>
+
 #ifdef _WIN32
 #define EXPORT_API __declspec(dllexport)
 #else
@@ -15,7 +17,7 @@ class QWidget;
 
 namespace OCui
 {
-class EXPORT_API GUIApplication
+class EXPORT_API GUIApplication : public QObject
 {
     std::shared_ptr<QApplication> _application;
     std::shared_ptr<MainWindow> _mainWindow;

@@ -26,6 +26,9 @@ Rectangle
         y: 3
         color: "#ffffff"
         text: driveName + " (" + driveLetter + ")"
+        anchors.right: driveSize.left
+        anchors.rightMargin: 10
+        clip: false
         antialiasing: false
         smooth: false
         styleColor: "#ff0000"
@@ -34,6 +37,7 @@ Rectangle
         anchors.top: parent.top
         anchors.topMargin: 5
         font.pixelSize: 12
+        elide: Text.ElideRight
     }
 
     ProgressBar
@@ -77,6 +81,7 @@ Rectangle
         id: driveSize
         color: "#ffffff"
         text: usedSpace + "/" + totalSpace + " " + spaceUnit
+        clip: true
 
         styleColor: "#db0000"
         anchors.right: parent.right

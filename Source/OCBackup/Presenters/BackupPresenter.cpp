@@ -20,7 +20,7 @@ void BackupPresenter::SetupSignals()
 
 void BackupPresenter::StartTransfer()
 {
-    emit StartTransferSig("Test123");
+    emit StartTransferSig("/media/andi/OC_TEST_MSD");
 }
 
 void BackupPresenter::DriveListChanged(std::vector<DriveInfo> driveList)

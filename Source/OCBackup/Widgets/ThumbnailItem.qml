@@ -10,9 +10,9 @@ Rectangle {
     scale: 1
     transformOrigin: Item.Center
 
-    property string clipResolution: "0x0"
-    property string clipName: text3.text
-    property string clipPath: image1.source
+    property alias clipResolution: text3.text
+    property string clipName: "" //text3.text
+    property string clipPath: "" //image1.source
 
     FontLoader {
         id: fixedFont
@@ -41,8 +41,8 @@ Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: 0
         anchors.rightMargin: 0
-        anchors.bottomMargin: 40
-        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 6
+        anchors.bottom: column2.top
         enabled: true
         smooth: true
         fillMode: Image.PreserveAspectFit
@@ -50,38 +50,36 @@ Rectangle {
 
     Column {
         id: column3
-        x: 362
-        y: 96
         width: 95
-        height: 34
+        anchors.leftMargin: -image1.paintedWidth / 2
+        anchors.left: image1.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
 
         Text {
             id: text3
             color: "#ffffff"
-            text: clipResolution
-            anchors.top: parent.top
-            anchors.topMargin: 0
-            anchors.left: parent.left
-            anchors.leftMargin: 0
-            font.family: fixedFont.name
+            text: "0x0"
             anchors.right: parent.right
             anchors.rightMargin: 0
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+            horizontalAlignment: Text.AlignLeft
+            font.family: fixedFont.name
             font.bold: true
             font.pixelSize: 16
         }
 
         Text {
             id: text4
-            y: 193
             color: "#ffffff"
-            text: qsTr("24fps")
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-            font.family: fixedFont.name
-            anchors.left: parent.left
-            anchors.leftMargin: 0
+            text: "24fps"
             anchors.right: parent.right
             anchors.rightMargin: 0
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+            horizontalAlignment: Text.AlignLeft
+            font.family: fixedFont.name
             font.bold: true
             font.pixelSize: 16
         }
@@ -89,23 +87,22 @@ Rectangle {
 
     Column {
         id: column2
-        x: 354
-        y: 34
         width: 112
-        height: 34
+        anchors.rightMargin: -image1.paintedWidth / 2
+        anchors.right: image1.horizontalCenter
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
         spacing: 0
 
         Text {
             id: text1
             color: "#ffffff"
-            text: qsTr("14.01.2015")
-            anchors.top: parent.top
-            anchors.topMargin: 0
-            font.family: fixedFont.name
+            text: "14.01.2015"
             anchors.left: parent.left
             anchors.leftMargin: 0
             anchors.right: parent.right
             anchors.rightMargin: 0
+            font.family: fixedFont.name
             horizontalAlignment: Text.AlignRight
             font.bold: true
             font.pixelSize: 16
@@ -113,18 +110,15 @@ Rectangle {
 
         Text {
             id: text2
-            y: 193
             color: "#ffffff"
-            text: qsTr("00:00:05.02")
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-            style: Text.Normal
-            font.family: fixedFont.name
-            horizontalAlignment: Text.AlignRight
+            text: "00:00:05.02"
             anchors.right: parent.right
             anchors.rightMargin: 0
             anchors.left: parent.left
             anchors.leftMargin: 0
+            style: Text.Normal
+            font.family: fixedFont.name
+            horizontalAlignment: Text.AlignRight
             font.bold: true
             font.pixelSize: 16
         }

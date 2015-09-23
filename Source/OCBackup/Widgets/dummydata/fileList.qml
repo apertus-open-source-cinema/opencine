@@ -1,7 +1,8 @@
 import QtQuick 2.3
 
 ListModel {
-    ListElement { driveName: "KINGSTON DT-100 G2"
+    ListElement { clipWidth: 1920
+			clipHeight: 1080
 						driveLetter: "E:"
 						usedSpace: "1.2"
 						totalSpace: "1.5"
