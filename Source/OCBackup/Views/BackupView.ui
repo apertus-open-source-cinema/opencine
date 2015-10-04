@@ -179,21 +179,24 @@ background: #FA8756
            <number>3</number>
           </property>
           <property name="topMargin">
-           <number>6</number>
+           <number>0</number>
           </property>
           <property name="rightMargin">
            <number>3</number>
           </property>
           <property name="bottomMargin">
-           <number>6</number>
+           <number>3</number>
           </property>
           <property name="spacing">
            <number>3</number>
           </property>
           <item row="0" column="0">
-           <widget class="QQuickWidget" name="destinationListControl">
-            <property name="resizeMode">
-             <enum>QQuickWidget::SizeRootObjectToView</enum>
+           <widget class="DestinationsControl" name="widget" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>30</width>
+              <height>50</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -283,6 +286,12 @@ background: #FA8756
    <class>QQuickWidget</class>
    <extends>QWidget</extends>
    <header>QtQuickWidgets/QQuickWidget</header>
+  </customwidget>
+  <customwidget>
+   <class>DestinationsControl</class>
+   <extends>QWidget</extends>
+   <header>Controls/DestinationsControl.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

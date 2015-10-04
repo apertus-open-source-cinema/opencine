@@ -15,8 +15,9 @@ FILE(GLOB SOURCE_FILES "*.cpp" "*.h"
                        "Views/*.cpp" "Views/*.h"
                        "Interfaces/*.cpp" "Interfaces/*.h"
                        "Presenters/*.cpp" "Presenters/*.h"
-                       "Data/*.cpp" "Data/*.h")
-FILE(GLOB UI_FILES "Views/*.ui")
+                       "Data/*.cpp" "Data/*.h"
+                       "Controls/*.cpp" "Controls/*.h")
+FILE(GLOB UI_FILES "Views/*.ui" "Controls/*.ui")
 FILE(GLOB QML_FILES "Widgets/*.qml")
 
 QT5_WRAP_UI(UI_FILES_MOC ${UI_FILES})

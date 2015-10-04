@@ -7,12 +7,9 @@ Rectangle
 {
     id: rectangle1
     color: "#2e2e2e"
-    width: 168
+
     height: 36
-    smooth: false
-    visible: true
-    opacity: 1
-    antialiasing: false
+    width: 220
 
     property string driveName: model.driveName ? model.driveName : "?";
     property string driveLetter: model.driveLetter ? model.driveLetter : "?";
