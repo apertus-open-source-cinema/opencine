@@ -47,6 +47,7 @@ signals:
 private slots:
     void DriveListChanged(std::vector<DriveInfo> driveList);
     void DriveSelectionChanged(int driveIndex);
+    void AddDestination();
 
 public:
     explicit BackupPresenter(IBackupView& view);

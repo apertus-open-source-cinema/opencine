@@ -16,8 +16,11 @@ public:
 
 signals:
     void StartTransfer();
+
     void DriveSelectionChanged(int driveIndex);
     void FolderSelectionChanged();
+
+    void AddDestinationClicked();
 };
 
 #endif //IBACKUPVIEW_H

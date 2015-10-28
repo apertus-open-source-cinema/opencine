@@ -8,9 +8,16 @@ DestinationsControl::DestinationsControl(QWidget *parent) :
     ui->setupUi(this);
 
     ui->destinationsListControl->setSource(QUrl("./Widgets/DestinationsList.qml"));
+
+    SetupSignals();
 }
 
 DestinationsControl::~DestinationsControl()
 {
     delete ui;
+}
+
+void DestinationsControl::SetupSignals()
+{
+    connect(ui->AddDestinationButton, SIGNAL(clicked()), this, SIGNAL(AddDestinationClicked()));
 }

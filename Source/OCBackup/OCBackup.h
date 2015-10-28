@@ -21,7 +21,7 @@ public:
     {
         SetupSignals();
 
-        SetLayout(*_view);
+       SetLayout(*_view);
     }
 
     void SetupSignals()

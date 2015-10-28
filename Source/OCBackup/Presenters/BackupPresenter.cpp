@@ -1,5 +1,9 @@
 #include "BackupPresenter.h"
 
+#include <QFileDialog>
+#include <QTreeView>
+#include <QDebug>
+
 BackupPresenter::BackupPresenter(IBackupView &view) :
     _view(&view)
 {
@@ -14,6 +18,8 @@ void BackupPresenter::SetupSignals()
 {
     connect(_driveManager, SIGNAL(DriveListChanged(std::vector<DriveInfo>)), this, SLOT(DriveListChanged(std::vector<DriveInfo>)));
     connect(_view, SIGNAL(DriveSelectionChanged(int)), this, SLOT(DriveSelectionChanged(int)));
+
+    connect(_view, &IBackupView::AddDestinationClicked, this, &BackupPresenter::AddDestination);
 
     connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
 }
@@ -50,4 +56,20 @@ void BackupPresenter::DriveSelectionChanged(int driveIndex)
     }
 
     _view->SetCurrentFolder(_driveList.at(driveIndex).DrivePath);
+}
+
+void BackupPresenter::AddDestination()
+{
+    QFileDialog dialog;
+    dialog.setFileMode(QFileDialog::Directory);
+    dialog.setOption(QFileDialog::ShowDirsOnly);
+    dialog.setViewMode(QFileDialog::Detail);
+    int result = dialog.exec();
+
+    QString directory;
+    if (result)
+    {
+        directory = dialog.selectedFiles()[0];
+        qDebug()<<directory;
+    }
 }

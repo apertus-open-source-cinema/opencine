@@ -30,6 +30,7 @@ BackupView::BackupView(/*QWidget *parent,*/ IBackupPresenter* presenter) :
     SetupThumbnailView();
     SetupDestinationsView();
 
+     connect(ui->destinationsControl, SIGNAL(AddDestinationClicked()), this, SIGNAL(AddDestinationClicked()));
     //ui->folderTreeControl->setModel(_folderTreeControlModel.get());
     //ui->folderTreeControl->setRootIndex(_folderTreeControlModel->index("E:"));
 }

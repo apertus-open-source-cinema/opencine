@@ -55,8 +55,6 @@ QPushButton
 	border:1px solid #191919;
 	border-radius: 3px;
 	background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #575757, stop:1 #4b4b4b);
-
-	padding: 3ex
 }
 
 QPushButton:pressed

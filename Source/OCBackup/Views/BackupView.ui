@@ -10,20 +10,20 @@
     <height>662</height>
    </rect>
   </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QSplitter" name="splitter_2">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="opaqueResize">
+      <bool>true</bool>
      </property>
      <property name="handleWidth">
       <number>16</number>
@@ -45,6 +45,9 @@
        <bool>true</bool>
       </property>
       <widget class="QGroupBox" name="groupBox_1">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -86,6 +89,9 @@
        </layout>
       </widget>
       <widget class="QGroupBox" name="groupBox">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -191,7 +197,7 @@ background: #FA8756
            <number>3</number>
           </property>
           <item row="0" column="0">
-           <widget class="DestinationsControl" name="widget" native="true">
+           <widget class="DestinationsControl" name="destinationsControl" native="true">
             <property name="minimumSize">
              <size>
               <width>30</width>
