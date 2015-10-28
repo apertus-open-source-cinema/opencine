@@ -1,0 +1,13 @@
+.qmake.stash
+Makefile
+tests/tst_material
+*.o
+*.pro.user*
+build
+*.qmlproject.user*
+*~
+
+deploy_key
+deploy_key.pub
+documentation/ditaxml
+.DS_Store

@@ -1,6 +1,8 @@
 #ifndef DRIVELISTITEM_H
 #define DRIVELISTITEM_H
 
+#include <inttypes.h>
+
 #include <QObject>
 
 class DriveListItem : public QObject
@@ -22,7 +24,7 @@ class DriveListItem : public QObject
     QString _spaceUnit;
 
 public:
-    DriveListItem(QString driveName, QString driveLetter, unsigned __int64 usedSpace, unsigned __int64 totalSpace, QString spaceUnit)
+    DriveListItem(QString driveName, QString driveLetter, unsigned int usedSpace, unsigned int totalSpace, QString spaceUnit)
     {
         _driveName = driveName;
         _driveLetter = driveLetter;

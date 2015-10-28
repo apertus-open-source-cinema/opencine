@@ -68,15 +68,15 @@ void DriveManager::EnumerateRemovableDrives(std::vector<std::string> availableDr
         int driveType = GetDriveType(drive.c_str());
         bool validVolume = GetVolumeInformation(drive.c_str(), NULL, 0, 0, 0, 0, NULL, 0);
 
-//        if(driveType == DRIVE_REMOVABLE && validVolume)
-//        {
+        if(driveType == DRIVE_REMOVABLE && validVolume)
+        {
             DriveInfo driveInfo;
             driveInfo.DrivePath = drive;
 
             RetrieveDriveInfo(driveInfo);
 
             removableDrives.push_back(driveInfo);
-//        }
+        }
     }
 }
 
@@ -95,7 +95,5 @@ void DriveManager::RetrieveDriveInfo(DriveInfo &driveInfo)
     char volumeName[MAX_PATH];
     GetVolumeInformation(driveInfo.DrivePath.c_str(), volumeName, MAX_PATH, NULL, NULL, NULL, {0} , 0);
     driveInfo.DriveName = volumeName;
-
-    int i = 0;
 }
 

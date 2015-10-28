@@ -1,0 +1,16 @@
+project = Material
+url = http://developer.ubuntu.com/api/ubuntu-12.10/qml/mobile/
+description = Material for QtQuick
+sourcedirs = ./
+sourcedirs += ../modules/Material/
+sourcedirs += ../modules/Material/ListItems
+exampledirs += snippets
+imagedirs = images
+sources.fileextensions = "*.qml *.qdoc *.cpp"
+headers.fileextensions = "*.h"
+version = 0.1
+syntaxhighlighting = true
+sourceencoding = UTF-8
+outputencoding = UTF-8
+outputdir                  = ditaxml
+outputformats              = DITAXML

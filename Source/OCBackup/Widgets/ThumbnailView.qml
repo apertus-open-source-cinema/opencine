@@ -8,6 +8,8 @@ Rectangle {
     height: 480
     color: "#1b1b1b"
 
+    //property alias fileList: gridView1.model
+
     MouseArea {
         id: rootMouseArea
         anchors.rightMargin: -700
@@ -34,12 +36,13 @@ Rectangle {
         //keyNavigationWraps: false
 
         model: fileList
+
         delegate: ThumbnailItem
         {
             id: thumbnailItem
-            clipResolution: model.modelData.clipName
-            clipName: model.modelData.clipName
-            clipPath: model.modelData.clipPath
+            clipResolution: model.clipWidth + "x" + model.clipHeight
+            clipName: model.clipName
+            clipPath: model.clipPath
         }
 
         addDisplaced: Transition {
@@ -81,5 +84,5 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             value: 0.5
         }
-    }
+}
 }

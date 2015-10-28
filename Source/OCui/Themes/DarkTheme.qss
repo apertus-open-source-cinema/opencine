@@ -51,7 +51,7 @@ QLabel#previewArea
 QPushButton
 {
 	/*background-color: rgb(150, 150, 150);*/
-	
+
 	border:1px solid #191919;
 	border-radius: 3px;
 	background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #575757, stop:1 #4b4b4b);
@@ -60,9 +60,9 @@ QPushButton
 QPushButton:pressed
 {
 	/*padding: 1px -1px -1px 1px;*/
-	
+
 	background: qlineargradient( x1:0 y1:1, x2:0 y2:0, stop:0 #575757, stop:1 #4b4b4b);
-	
+
 	/*position: relative;
 	top: 5px; left: 5px;*/
 }
@@ -70,9 +70,9 @@ QPushButton:pressed
 QPushButton:checked
 {
 	/*padding: 1px -1px -1px 1px;*/
-	
+
 	background: qlineargradient( x1:0 y1:1, x2:0 y2:0, stop:0 #a27e34, stop:1 #644624);
-	
+
 	/*position: relative;
 	top: 5px; left: 5px;*/
 }
@@ -130,13 +130,13 @@ QRadioButton::indicator::unchecked
 	color: green;
 }
 
-QGroupBox 
+QGroupBox
 {
     border: 1px solid #FA8756;
     border-radius: 5px;
 	margin-top: 1ex;
-	
-	padding: 2ex 1ex 1ex 1ex;
+
+	padding: 1ex 0 0 0;
 }
 
 QGroupBox::title {
@@ -147,14 +147,14 @@ QGroupBox::title {
 }
 
 QTreeView::branch:has-children:!has-siblings:closed,
-QTreeView::branch:closed:has-children:has-siblings 
+QTreeView::branch:closed:has-children:has-siblings
 {
 	border-image: none;
 	border-image: url(Resources/Images/arrow_right.png);
 }
-   
+
 QTreeView::branch:open:has-children:!has-siblings,
-QTreeView::branch:open:has-children:has-siblings  
+QTreeView::branch:open:has-children:has-siblings
 {
 	border-image: none;
 	image: url(Resources/Images/arrow_bottom_right.png);
@@ -163,10 +163,28 @@ QTreeView::branch:open:has-children:has-siblings
 /*QGroupBox::indicator {
     width: 13px;
     height: 13px;
-	subcontrol-position: top left; 
+	subcontrol-position: top left;
 }
 
 QGroupBox::indicator:unchecked {
     image: url(Resources/Images/logo.png);
 }
 */
+
+QSplitter::handle[orientation="2"] {
+    image: url(Resources/Images/splitter_off.png);
+    width: 2px;
+}
+
+QSplitter::handle[orientation="1"] {
+    height: 2px;
+	image: url(Resources/Images/vsplitter_off.png);
+}
+
+QSplitter::handle[orientation="2"]:pressed {
+    image: url(Resources/Images/splitter_on.png);
+}
+
+QSplitter::handle[orientation="1"]:pressed {
+    image: url(Resources/Images/vsplitter_on.png);
+}
