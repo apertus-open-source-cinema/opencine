@@ -15,7 +15,6 @@ GUIApplication::GUIApplication(int& argc, char** argv, std::string moduleName) :
     _mainWindow(std::make_shared<MainWindow>())
 {
     _mainWindow->setWindowTitle(moduleName.c_str());
-   // _mainWindow->showMaximized();
 
     QFontDatabase* fontDatabase = new QFontDatabase();
     if(fontDatabase->addApplicationFont("Fonts/Titillium-Regular.otf") == -1)
@@ -28,19 +27,11 @@ GUIApplication::GUIApplication(int& argc, char** argv, std::string moduleName) :
     QApplication::setFont(f);
 
     SetStyle(*_application.get());
-
-    _mainWindow->showMaximized();
-}
-
-GUIApplication::~GUIApplication()
-{
-
 }
 
 void GUIApplication::SetLayout(QWidget& widget)
 {
     _mainWindow->SetLayout(widget);
-     _mainWindow->showMaximized();
 }
 
 int GUIApplication::Run()
@@ -61,3 +52,20 @@ void GUIApplication::SetStyle(QApplication& app)
     }
 }
 
+void GUIApplication::Show()
+{
+    _mainWindow->show();
+}
+
+void GUIApplication::ShowMaximized()
+{
+    _mainWindow->showMaximized();
+}
+
+void GUIApplication::SetWindowOptions(bool fixedSize)
+{
+    if(fixedSize)
+    {
+        _mainWindow->setFixedSize(_mainWindow->width(), _mainWindow->height());
+    }
+}

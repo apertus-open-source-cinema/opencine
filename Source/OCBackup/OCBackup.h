@@ -22,6 +22,8 @@ public:
         SetupSignals();
 
        SetLayout(*_view);
+
+       ShowMaximized();
     }
 
     void SetupSignals()

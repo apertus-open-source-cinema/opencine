@@ -1,0 +1,9 @@
+#ifndef IPROCESSINGPRESENTER_H
+#define IPROCESSINGPRESENTER_H
+
+class IProcessingPresenter
+{
+
+};
+
+#endif //IPROCESSINGPRESENTER_H

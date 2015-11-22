@@ -49,6 +49,9 @@ public:
 
         _layout = std::make_shared<LauncherLayout>();//(nullptr, _presenter.get());
         SetLayout(*_layout.get());
+
+        SetWindowOptions(true);
+        Show();
     }
 };
 

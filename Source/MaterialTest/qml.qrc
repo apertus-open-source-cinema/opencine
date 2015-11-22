@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>FlipCard.qml</file>
+        <file>DriveFrontPanel.qml</file>
+        <file>DriveBackPanel.qml</file>
+        <file>settings.svg</file>
+    </qresource>
+</RCC>

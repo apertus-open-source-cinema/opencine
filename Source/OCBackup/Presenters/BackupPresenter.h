@@ -39,6 +39,7 @@ class BackupPresenter : public IBackupPresenter
     std::vector<DriveInfo> _driveList;
 
     void SetupSignals();
+
     void StartTransfer();
 
 signals:
