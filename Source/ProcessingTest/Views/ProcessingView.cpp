@@ -12,6 +12,29 @@
 
 #include "Controls/PreviewPane.h"
 
+enum BayerPattern
+{
+    RGGB,
+    BGGR,
+    GRBG,
+    GBRG
+};
+
+class IFrameProcessor
+{
+public:
+    virtual void Process() = 0;
+};
+
+class BayerFrameProcessor : public IFrameProcessor
+{
+public:
+    BayerFrameProcessor(unsigned char* data, int width, int height, BayerPattern pattern)
+    {
+
+    }
+};
+
 QByteArray imageData;
 unsigned short* textureData;
 unsigned short* textureDataRed;
@@ -159,6 +182,104 @@ void task1(int value, int offset, int length)
     qDebug() << value << " elapsed: " <<  timer.elapsed();
 }
 
+void ExtractRedGreen()
+{
+    unsigned int rowIndex = 0;
+    unsigned int columnIndex = 0;
+
+    for(rowIndex = 0; rowIndex < 3072; rowIndex += 2)
+    {
+        for(columnIndex = 0; columnIndex < 4096; columnIndex++)
+        {
+            if(columnIndex % 2)
+            {
+                textureDataGreen[rowIndex * 4096 + columnIndex] = textureData[rowIndex * 4096 + columnIndex];
+                textureDataGreen[rowIndex * 4096 + columnIndex - 1] = textureData[rowIndex * 4096 + columnIndex];
+            }
+            else
+            {
+                textureDataRed[rowIndex * 4096 + columnIndex] = textureData[rowIndex * 4096 + columnIndex];
+                textureDataRed[rowIndex * 4096 + columnIndex + 1] = textureData[rowIndex * 4096 + columnIndex];
+
+                if(columnIndex == 4094)
+                {
+                    memcpy((unsigned short*)&textureDataRed[(rowIndex + 1) * 4096], (unsigned short*)&textureDataRed[(rowIndex) * 4096], 4096 * sizeof(unsigned short));
+                }
+            }
+        }
+    }
+}
+
+void ExtractGreenBlue()
+{
+    unsigned int rowIndex = 1;
+    unsigned int columnIndex = 0;
+
+    for(rowIndex = 1; rowIndex < 3072; rowIndex += 2)
+    {
+        for(columnIndex = 0; columnIndex < 4096; columnIndex++)
+        {
+            if(columnIndex % 2)
+            {
+                textureDataBlue[rowIndex * 4096 + columnIndex] = textureData[rowIndex * 4096 + columnIndex];
+                textureDataBlue[rowIndex * 4096 + columnIndex - 1] = textureData[rowIndex * 4096 + columnIndex];
+
+                if(columnIndex == 4095)
+                {
+                    memcpy((unsigned short*)&textureDataBlue[(rowIndex - 1) * 4096], (unsigned short*)&textureDataBlue[rowIndex * 4096], 4096 * sizeof(unsigned short));
+                }
+            }
+            else
+            {
+                textureDataGreen[rowIndex * 4096 + columnIndex] = textureData[rowIndex * 4096 + columnIndex];
+                textureDataGreen[rowIndex * 4096 + columnIndex + 1] = textureData[rowIndex * 4096 + columnIndex];
+            }
+        }
+    }
+}
+
+void ExtractRedGreenNoInterpolation()
+{
+    unsigned int rowIndex = 0;
+    unsigned int columnIndex = 0;
+
+    for(rowIndex = 0; rowIndex < 3072; rowIndex += 2)
+    {
+        for(columnIndex = 0; columnIndex < 4096; columnIndex++)
+        {
+            if(columnIndex % 2)
+            {
+                textureDataGreen[rowIndex * 4096 + columnIndex] = textureData[rowIndex * 4096 + columnIndex];
+            }
+            else
+            {
+                textureDataRed[rowIndex * 4096 + columnIndex] = textureData[rowIndex * 4096 + columnIndex];
+            }
+        }
+    }
+}
+
+void ExtractGreenBlueNoInterpolation()
+{
+    unsigned int rowIndex = 1;
+    unsigned int columnIndex = 0;
+
+    for(rowIndex = 1; rowIndex < 3072; rowIndex += 2)
+    {
+        for(columnIndex = 0; columnIndex < 4096; columnIndex++)
+        {
+            if(columnIndex % 2)
+            {
+                textureDataBlue[rowIndex * 4096 + columnIndex] = textureData[rowIndex * 4096 + columnIndex];
+            }
+            else
+            {
+                textureDataGreen[rowIndex * 4096 + columnIndex] = textureData[rowIndex * 4096 + columnIndex];
+            }
+        }
+    }
+}
+
 void ProcessingView::LoadTexture()
 {
     QFile file("axiom.raw12");
@@ -183,63 +304,49 @@ void ProcessingView::LoadTexture()
         j += 2;
     }
 
-    QTime timer;
-    timer.start();
 
     textureDataRed = new unsigned short[4096 * 3072];
     textureDataGreen = new unsigned short[4096 * 3072];
     textureDataBlue = new unsigned short[4096 * 3072];
-    qDebug() << "Alllocate buffers: " <<  timer.elapsed();
+
+    QTime timer;
+    timer.start();
+
+    ExtractRedGreen();
+    ExtractGreenBlue();
+
+    qDebug() << "Extract colors: " <<  timer.elapsed();
+
+    memset(textureDataRed, 0, 4096*3072 * sizeof(unsigned short));
+    memset(textureDataGreen, 0, 4096*3072 * sizeof(unsigned short));
+    memset(textureDataBlue, 0, 4096*3072 * sizeof(unsigned short));
 
     timer.restart();
-    for(int rowIndex = 0; rowIndex < 3072; rowIndex += 2)
-    {
-        for(int columnIndex = 0; columnIndex < 4096; columnIndex++)
-        {
-            if(columnIndex % 2)
-            {
-                textureDataGreen[rowIndex * 4096 + columnIndex] = textureData[rowIndex * 4096 + columnIndex];
-                textureDataGreen[rowIndex * 4096 + columnIndex - 1] = textureData[rowIndex * 4096 + columnIndex];
-            }
-            else
-            {
-                textureDataRed[rowIndex * 4096 + columnIndex] = textureData[rowIndex * 4096 + columnIndex];
-                textureDataRed[rowIndex * 4096 + columnIndex + 1] = textureData[rowIndex * 4096 + columnIndex];
 
-                if(columnIndex == 4094)
-                {
-                    memcpy((unsigned short*)&textureDataRed[(rowIndex + 1) * 4096], (unsigned short*)&textureDataRed[(rowIndex) * 4096], 4096 * sizeof(unsigned short));
-                }
-            }
-        }
-    }
+    std::thread t1(ExtractRedGreen);
+    std::thread t2(ExtractGreenBlue);
 
-    qDebug() << "Extract red/green: " <<  timer.elapsed();
+    t1.join();
+    t2.join();
+
+    qDebug() << "Extract colors (2 threads): " <<  timer.elapsed();
+
+    memset(textureDataRed, 0, 4096*3072 * sizeof(unsigned short));
+    memset(textureDataGreen, 0, 4096*3072 * sizeof(unsigned short));
+    memset(textureDataBlue, 0, 4096*3072 * sizeof(unsigned short));
+
     timer.restart();
 
-    for(int rowIndex = 1; rowIndex < 3072; rowIndex += 2)
-    {
-        for(int columnIndex = 0; columnIndex < 4096; columnIndex++)
-        {
-            if(columnIndex % 2)
-            {
-                textureDataBlue[rowIndex * 4096 + columnIndex] = textureData[rowIndex * 4096 + columnIndex];
-                textureDataBlue[rowIndex * 4096 + columnIndex - 1] = textureData[rowIndex * 4096 + columnIndex];
+    std::thread t3(ExtractRedGreenNoInterpolation);
+    std::thread t4(ExtractGreenBlueNoInterpolation);
 
-                if(columnIndex == 4095)
-                {
-                    memcpy((unsigned short*)&textureDataBlue[(rowIndex - 1) * 4096], (unsigned short*)&textureDataBlue[rowIndex * 4096], 4096 * sizeof(unsigned short));
-                }
-            }
-            else
-            {
-                textureDataGreen[rowIndex * 4096 + columnIndex] = textureData[rowIndex * 4096 + columnIndex];
-                textureDataGreen[rowIndex * 4096 + columnIndex + 1] = textureData[rowIndex * 4096 + columnIndex];
-            }
-        }
-    }
+    t3.join();
+    t4.join();
 
-    qDebug() << "Extract green/blue: " <<  timer.elapsed();
+    qDebug() << "Extract colors (2 threads, no interpolation): " <<  timer.elapsed();
+
+
+
 
 //    //Fill missing pixels arrays
 //    for(int rowIndex = 0; rowIndex < 3072; rowIndex++)
