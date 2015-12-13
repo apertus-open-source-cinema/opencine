@@ -16,8 +16,8 @@ FILE(GLOB SOURCE_FILES "*.cpp" "*.h" "*.hpp"
                        "Views/*.cpp" "Views/*.h"
                        "Interfaces/*.cpp" "Interfaces/*.h"
                        "Presenters/*.cpp" "Presenters/*.h"
-                       "Controls/*.cpp" "Controls/*.h")
-#                      "Data/*.cpp" "Data/*.h"
+                       "Controls/*.cpp" "Controls/*.h"
+                       "API/*.cpp" "API/*.h")
 
 FILE(GLOB UI_FILES "Views/*.ui" "Controls/*.ui")
 #FILE(GLOB QML_FILES "Widgets/*.qml")
@@ -33,7 +33,7 @@ ELSE(UNIX)
     ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES} ${UI_FILES_MOC} ${QML_FILES})
 ENDIF()
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCCore OCui)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} -lpthread OCCore OCui)
 
 QT5_USE_MODULES(${PROJECT_NAME} Widgets OpenGL QuickWidgets)
 

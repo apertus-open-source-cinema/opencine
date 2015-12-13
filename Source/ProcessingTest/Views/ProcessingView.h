@@ -18,6 +18,13 @@ public:
     ~ProcessingView();
 
     void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
+      
+private slots:
+    void on_pushButton_toggled(bool checked);
+
+    void on_pushButton_3_toggled(bool checked);
+
+    void on_pushButton_4_toggled(bool checked);
 
 private:
     Ui::ProcessingView *ui;

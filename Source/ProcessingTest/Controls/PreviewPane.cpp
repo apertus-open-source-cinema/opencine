@@ -1,16 +1,23 @@
 #include "PreviewPane.h"
 
+#include <QWheelEvent>
+
 unsigned char pixels[12] = {
     255,   0, 0,     0, 255,   0,
     0, 255, 0,     0,   0, 255
 };
 
+float xOffset = 0.5f / 4096.0f;
+float yOffset = 0.5f / 3072.0f;
+
+float wheelValue = 1.0;
+
 // Create a colored triangle
 static const float vertices[] = {
-    -0.90f,  0.90f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0, 0.0,
-    -0.90f, -0.90f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0, 1.0,
-     0.90f,  0.90f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0, 0.0,
-     0.90f, -0.90f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0, 1.0
+    -0.90f,  0.90f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 0.0,
+    -0.90f, -0.90f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 1.0,
+    0.90f,  0.90f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 0.0,
+    0.90f, -0.90f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 1.0
 };
 
 PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent)
@@ -49,9 +56,14 @@ void PreviewPane::initializeGL()
 
 void PreviewPane::resizeGL(int w, int h)
 {
-    m_projection.setToIdentity();
-    m_projection.perspective(60.0f, w / float(h), 0.01f, 1000.0f);
+    //    QMatrix4x4 projection;
+    //    projection.ortho(-1.0 - wheelValue, 1.0 + wheelValue, -0.1, 0.1, 0.01f, 1000.0f);
+    //    QMatrix4x4 view;
+    //    view.lookAt(QVector3D(0.0,0.0,-5.0), QVector3D(0.0,0.0,0.0), QVector3D(0.0,1.0,0.0));
+    //    QMatrix4x4 model;
+    //    model.setToIdentity();
 
+    //    mvp = projection * view * model;
     //glLoadMatrixf(m_projection.data());
 }
 
@@ -62,31 +74,55 @@ GLuint textureBlue = 0;
 void PreviewPane::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     program->bind();
     {
+        QMatrix4x4 projection;
+        projection.ortho(-1.0 * wheelValue, 1.0 * wheelValue, -1.0 * wheelValue, 1.0 * wheelValue, 0.01f, 1000.0f);
+        QMatrix4x4 view;
+        view.lookAt(QVector3D(0.0, 0.0, 1.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
+        QMatrix4x4 model;
+        model.setToIdentity();
+
+        mvp = projection * view * model;
+
+        program->setUniformValue("MVP", mvp);
+
         object.bind();
-        //glBindTexture(GL_TEXTURE_2D, textureRed);
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, textureRed);
-        //glBindSampler(0, textureRed);
 
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, textureGreen);
+        if(redChannel)
+        {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, textureRed);
+            program->setUniformValue("texture1", 0);
+        }
+        else
+            program->setUniformValue("texture1", -1);
+        if(greenChannel)
+        {
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, textureGreen);
+            program->setUniformValue("texture2", 1);
+        }
+        else
+            program->setUniformValue("texture2", -1);
 
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, textureBlue);
-        //glBindSampler(1, textureBlue);
-
-        program->setUniformValue("texture1", 0);
-        program->setUniformValue("texture2", 1);
-        program->setUniformValue("texture3", 2);
+        if(blueChannel)
+        {
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, textureBlue);
+            program->setUniformValue("texture3", 2);
+        }
+        else
+            program->setUniformValue("texture3", -1);
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindTexture(GL_TEXTURE_2D, 0);
         object.release();
     }
     program->release();
+
+    this->update();
 }
 
 void PreviewPane::printVersionInformation()
@@ -142,24 +178,56 @@ void PreviewPane::SetupObject()
     program->setAttributeBuffer(0, GL_FLOAT, 0, 3, 8 * sizeof(float));
     program->setAttributeBuffer(1, GL_FLOAT, 3 * sizeof(float), 3, 8 * sizeof(float));
     program->setAttributeBuffer(2, GL_FLOAT, 6 * sizeof(float), 2, 8 * sizeof(float));
+
+    program->setUniformValue("MVP", mvp);
 }
 
 void PreviewPane::SetupTexture()
 {
-//    glGenTextures(1, &texture);
+    //    glGenTextures(1, &texture);
 
-//    glBindTexture(GL_TEXTURE_2D, texture);
+    //    glBindTexture(GL_TEXTURE_2D, texture);
 
-//    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-//    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixels[0]);
-//    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE16, 4096, 3072, 0, GL_LUMINANCE, GL_UNSIGNED_SHORT, nullptr);
+    //    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    //    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixels[0]);
+    //    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE16, 4096, 3072, 0, GL_LUMINANCE, GL_UNSIGNED_SHORT, nullptr);
 
-//    glGenerateMipmap(GL_TEXTURE_2D);
+    //    glGenerateMipmap(GL_TEXTURE_2D);
 
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-//    glBindTexture(GL_TEXTURE_2D, 0);
+    //    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+float zoomFactor = 1.1f;
+
+void PreviewPane::wheelEvent(QWheelEvent* event)
+{
+    if(event->delta() < 0)
+    {
+        wheelValue *= zoomFactor;
+
+        if(wheelValue > 100.0)
+        {
+            wheelValue = 100.0;
+        }
+    }
+    else
+    {
+        wheelValue *= (1.0f / zoomFactor);
+        if(wheelValue < 0.01)
+        {
+            wheelValue = 0.01;
+        }
+    }
+
+    //wheelValue += event->pixelDelta().y() / 100.0f;
+
+
+
+
+
 }
 
 void PreviewPane::SetTextureRed(int width, int height, unsigned short* imageData)
@@ -186,10 +254,10 @@ void PreviewPane::SetTextureRed(int width, int height, unsigned short* imageData
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,  GL_NEAREST); //GL_NEAREST_MIPMAP_NEAREST
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,  GL_LINEAR); //GL_LINEAR_MIPMAP_NEAREST
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glGenerateMipmap(GL_TEXTURE_2D);
+    //glGenerateMipmap(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -223,10 +291,10 @@ void PreviewPane::SetTextureBlue(int width, int height, unsigned short* imageDat
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_NEAREST_MIPMAP_NEAREST
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //GL_LINEAR_MIPMAP_NEAREST
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glGenerateMipmap(GL_TEXTURE_2D);
+    //glGenerateMipmap(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -234,6 +302,21 @@ void PreviewPane::SetTextureBlue(int width, int height, unsigned short* imageDat
     {
         qDebug() << "3 OpenGL error: " << err;
     }
+}
+
+void PreviewPane::SwitchRedChannel(bool enabled)
+{
+    redChannel = enabled;
+}
+
+void PreviewPane::SwitchGreenChannel(bool enabled)
+{
+    greenChannel = enabled;
+}
+
+void PreviewPane::SwitchBlueChannel(bool enabled)
+{
+    blueChannel = enabled;
 }
 
 void PreviewPane::SetTextureGreen(int width, int height, unsigned short* imageData)
@@ -260,10 +343,10 @@ void PreviewPane::SetTextureGreen(int width, int height, unsigned short* imageDa
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,  GL_NEAREST); //GL_NEAREST_MIPMAP_NEAREST
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR ); //GL_LINEAR_MIPMAP_NEAREST
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glGenerateMipmap(GL_TEXTURE_2D);
+    //glGenerateMipmap(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
