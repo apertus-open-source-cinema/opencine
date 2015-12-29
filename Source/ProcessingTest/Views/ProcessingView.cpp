@@ -1,4 +1,4 @@
-#include "ProcessingView.h"
+ #include "ProcessingView.h"
 #include "ui_ProcessingView.h"
 
 #include <fstream>
@@ -218,6 +218,11 @@ void ProcessingView::paintEvent(QPaintEvent *)
     //painter.drawImage(0, 0, *img);
 
     //ui->openGLWidget->SetTexture(2, 2, texPixels);
+}
+
+void ProcessingView::SetFrame(Image &image)
+{
+
 }
 
 //void task1(int value, int offset, int length)
