@@ -1,6 +1,8 @@
 #ifndef IFRAMEPROCESSOR_H
 #define IFRAMEPROCESSOR_H
 
+#include <thread>
+
 enum class BayerPattern
 {
     RGGB,
@@ -30,6 +32,8 @@ class BayerFrameProcessor : public IFrameProcessor
     unsigned char* _data;
     unsigned short* _outputData;
     unsigned int _size;
+    unsigned int _width;
+    unsigned int _height;
 
     unsigned short* _dataRed;
     unsigned short* _dataGreen;
@@ -58,17 +62,17 @@ class BayerFrameProcessor : public IFrameProcessor
         //            }
         //        }
 
-        for(rowIndex = 0; rowIndex < 3072; rowIndex += 2)
+        for(rowIndex = 0; rowIndex < _height; rowIndex += 2)
         {
-            for(columnIndex = 0; columnIndex < 4096; columnIndex++)
+            for(columnIndex = 0; columnIndex < _width; columnIndex++)
             {
                 if(columnIndex % 2)
                 {
-                    _dataGreen[rowIndex * 4096 + columnIndex] = _outputData[rowIndex * 4096 + columnIndex];
+                    _dataGreen[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
                 }
                 else
                 {
-                    _dataRed[rowIndex * 4096 + columnIndex] = _outputData[rowIndex * 4096 + columnIndex];
+                    _dataRed[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
                 }
             }
         }
@@ -98,15 +102,15 @@ class BayerFrameProcessor : public IFrameProcessor
 
         for(rowIndex = 1; rowIndex < 3072; rowIndex += 2)
         {
-            for(columnIndex = 0; columnIndex < 4096; columnIndex++)
+            for(columnIndex = 0; columnIndex < _width; columnIndex++)
             {
                 if(columnIndex % 2)
                 {
-                    _dataBlue[rowIndex * 4096 + columnIndex] = _outputData[rowIndex * 4096 + columnIndex];
+                    _dataBlue[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
                 }
                 else
                 {
-                    _dataGreen[rowIndex * 4096 + columnIndex] = _outputData[rowIndex * 4096 + columnIndex];
+                    _dataGreen[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
                 }
             }
         }
@@ -122,6 +126,9 @@ public:
     {
         _data = &data;
         _size = width * height;
+
+        _width = width;
+        _height = height;
 
         _outputData = new unsigned short[_size];
 
@@ -188,6 +195,9 @@ public:
     {
         _data = &data;
         _size = width * height;
+
+        _width = width;
+        _height = height;
 
         _outputData = new unsigned short[_size];
 

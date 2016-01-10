@@ -3,13 +3,14 @@
 
 #include <QWidget>
 
-#include <API/IDataProvider.h>
+#include <Image/OCImage.h>
 
 using namespace OC::DataProvider;
 
 class IProcessingView : public QWidget
 {
-    virtual void SetFrame(Image& image) = 0;
+public:
+    virtual void SetFrame(OCImage& image) = 0;
 };
 
 #endif //IPROCESSINGVIEW_H

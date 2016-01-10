@@ -32,7 +32,7 @@ namespace OCui
 
         void SetWindowOptions(bool resizeable);
 
-        void SetLayout(QWidget &widget);
+        void SetLayout(QWidget& widget);
 
         int Run();
     };

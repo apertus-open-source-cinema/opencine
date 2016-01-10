@@ -220,9 +220,9 @@ void ProcessingView::paintEvent(QPaintEvent *)
     //ui->openGLWidget->SetTexture(2, 2, texPixels);
 }
 
-void ProcessingView::SetFrame(Image &image)
+void ProcessingView::SetFrame(OCImage &image)
 {
-
+    int i = 0;
 }
 
 //void task1(int value, int offset, int length)

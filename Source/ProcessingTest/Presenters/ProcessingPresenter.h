@@ -6,6 +6,8 @@
 
 class ProcessingPresenter : public IProcessingPresenter
 {
+    IProcessingView* _view;
+
 public:
     explicit ProcessingPresenter(IProcessingView& view);
 };

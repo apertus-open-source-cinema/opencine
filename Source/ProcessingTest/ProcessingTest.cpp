@@ -20,7 +20,7 @@ public:
         _view(std::make_shared<ProcessingView>()),
         _presenter(std::make_shared<ProcessingPresenter>(*_view))
     {
-        SetLayout(*_view);
+        SetLayout(*static_cast<QWidget*>(_view.get()));
         Show();
     }
 

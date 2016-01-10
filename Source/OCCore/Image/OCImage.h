@@ -1,3 +1,8 @@
+ #ifndef OCIMAGE_H
+#define OCIMAGE_H
+
+#include <fstream>
+
 namespace OC
 {
     namespace DataProvider
@@ -6,6 +11,13 @@ namespace OC
         {
             Integer12,
             Integer16
+        };
+
+        enum class FileFormat
+        {
+            TIFF,
+            DNG,
+            CinemaDNG
         };
 
         class OCImage
@@ -35,6 +47,11 @@ namespace OC
                 memcpy(_data, data, _dataSize);
             }
 
+            unsigned char* Data()
+            {
+                return _data;
+            }
+
             void SetFormat(ImageFormat format)
             {
                 _format = format;
@@ -49,6 +66,14 @@ namespace OC
             {
                 return _height;
             }
+
+            ImageFormat Format()
+            {
+                return _format;
+            }
+
         };
     }
 }
+
+#endif //OCIMAGE_H
