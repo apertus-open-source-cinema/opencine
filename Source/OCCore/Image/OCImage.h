@@ -1,56 +1,69 @@
- #ifndef OCIMAGE_H
+#ifndef OCIMAGE_H
 #define OCIMAGE_H
 
+#include <cstring>
 #include <fstream>
+
+#include "ImageDefines.h"
 
 namespace OC
 {
     namespace DataProvider
     {
-        enum class ImageFormat
-        {
-            Integer12,
-            Integer16
-        };
-
-        enum class FileFormat
-        {
-            TIFF,
-            DNG,
-            CinemaDNG
-        };
-
         class OCImage
         {
             unsigned int _width;
             unsigned int _height;
-            unsigned char* _data;
-            unsigned int _dataSize;
+            //unsigned char* _data;
+
+            ImageType _type;
+
+            void* _redData;
+            void* _greenData;
+            void* _blueData;
+
+            //unsigned int _dataSize;
+            unsigned int _dataLength;
             ImageFormat _format;
 
         public:
-            void SetWidth(int width)
+            void SetWidth(unsigned int width)
             {
                 _width = width;
             }
 
-            void SetHeight(int height)
+            void SetHeight(unsigned int height)
             {
                 _height = height;
             }
 
-            void SetData(unsigned char* data, unsigned int size)
+            /*void SetData(unsigned char* data, unsigned int size)
             {
                 _dataSize = size;
 
                 _data = new unsigned char[_dataSize];
                 memcpy(_data, data, _dataSize);
+            }*/
+
+            void* RedChannel()
+            {
+                return _redData;
             }
 
-            unsigned char* Data()
+            void* GreenChannel()
+            {
+                return _greenData;
+            }
+
+            void* BlueChannel()
+            {
+                return _blueData;
+            }
+
+            /*unsigned char* Data()
             {
                 return _data;
-            }
+            }*/
 
             void SetFormat(ImageFormat format)
             {
@@ -72,6 +85,42 @@ namespace OC
                 return _format;
             }
 
+            ImageType Type()
+            {
+                return _type;
+            }
+
+            void SetType(ImageType type)
+            {
+                _type = type;
+            }
+
+            //TODO: Should be called before Set*Channel() at the moment, later (see TODO below) it shouldn't be a problem anymore
+            unsigned int DataLength()
+            {
+                return _dataLength;
+            }
+
+            //TODO: Remove memcpy() when static allocator is implemented, just store pointer to data instead
+            void SetRedChannel(void* redData)
+            {
+                _dataLength = _width * _height * (int)_format;
+
+                _redData = new unsigned char[_dataLength];
+                memcpy(_redData, redData, _dataLength);
+            }
+
+            void SetGreenChannel(void* greenData)
+            {
+                _greenData = new unsigned char[_dataLength];
+                memcpy(_greenData, greenData, _dataLength);
+            }
+
+            void SetBlueChannel(void* blueData)
+            {
+                _blueData = new unsigned char[_dataLength];
+                memcpy(_blueData, blueData, _dataLength);
+            }
         };
     }
 }

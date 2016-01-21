@@ -16,7 +16,7 @@
 
 #include "Controls/PreviewPane.h"
 
-#include "API/IFrameProcessor.h"
+#include "Image/BayerFrameProcessor.h"
 
 //unsigned char* imageData;
 //unsigned short* textureData;

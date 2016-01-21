@@ -16,8 +16,7 @@ FILE(GLOB SOURCE_FILES "*.cpp" "*.h" "*.hpp"
                        "Views/*.cpp" "Views/*.h"
                        "Interfaces/*.cpp" "Interfaces/*.h"
                        "Presenters/*.cpp" "Presenters/*.h"
-                       "Controls/*.cpp" "Controls/*.h"
-                       "API/*.cpp" "API/*.h")
+                       "Controls/*.cpp" "Controls/*.h")
 
 FILE(GLOB UI_FILES "Views/*.ui" "Controls/*.ui")
 #FILE(GLOB QML_FILES "Widgets/*.qml")

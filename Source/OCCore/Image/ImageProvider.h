@@ -19,6 +19,12 @@ namespace OC
                 std::ifstream is;
                 is.open (fileName, std::ios::binary );
 
+                if(!is.is_open())
+                {
+                    std::cout << "ImageProvider: File couldn't be opened" << std::endl;
+                    return;
+                }
+
                 // get length of file:
                 is.seekg (0, std::ios::end);
                 length = is.tellg();

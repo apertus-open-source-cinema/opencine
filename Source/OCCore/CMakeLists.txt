@@ -17,6 +17,7 @@ file(GLOB SOURCE_FILES "*.cpp" "*.h"
                        "API/*.cpp" "API/*.h"
                        "Image/*.cpp" "Image/*.h"
                        "Interfaces/*.cpp" "Interfaces/*.h")
+
 #file(GLOB HEADER_FILES "*.h")
 
 #include_directories(${PROJECT_SOURCE_DIR})

@@ -1,5 +1,9 @@
-#ifndef IFRAMEPROCESSOR_H
-#define IFRAMEPROCESSOR_H
+#ifndef BAYERPROCESSOR_H
+#define BAYERPROCESSOR_H
+
+#include <thread>
+
+#include "IFrameProcessor.h"
 
 enum class BayerPattern
 {
@@ -9,23 +13,7 @@ enum class BayerPattern
     GBRG
 };
 
-enum class SourceFormat
-{
-    Integer12 = 12,
-    Integer14 = 14
-};
-
-class IFrameProcessor
-{
-public:
-    virtual void Process() = 0;
-    virtual void SetData(unsigned char& data, int width, int height, SourceFormat sourceFormat) = 0;
-    virtual unsigned short* GetDataRed() = 0;
-    virtual unsigned short* GetDataGreen() = 0;
-    virtual unsigned short* GetDataBlue() = 0;
-};
-
-class BayerFrameProcessor : public IFrameProcessor
+class BayerFrameProcessor : public OC::DataProvider::IFrameProcessor
 {
     unsigned char* _data;
     unsigned short* _outputData;
@@ -34,6 +22,9 @@ class BayerFrameProcessor : public IFrameProcessor
     unsigned short* _dataRed;
     unsigned short* _dataGreen;
     unsigned short* _dataBlue;
+
+    unsigned int _width;
+    unsigned int _height;
 
     void ExtractRedGreen()
     {
@@ -58,17 +49,17 @@ class BayerFrameProcessor : public IFrameProcessor
         //            }
         //        }
 
-        for(rowIndex = 0; rowIndex < 3072; rowIndex += 2)
+        for(rowIndex = 0; rowIndex < _height; rowIndex += 2)
         {
-            for(columnIndex = 0; columnIndex < 4096; columnIndex++)
+            for(columnIndex = 0; columnIndex < _width; columnIndex++)
             {
                 if(columnIndex % 2)
                 {
-                    _dataGreen[rowIndex * 4096 + columnIndex] = _outputData[rowIndex * 4096 + columnIndex];
+                    _dataGreen[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
                 }
                 else
                 {
-                    _dataRed[rowIndex * 4096 + columnIndex] = _outputData[rowIndex * 4096 + columnIndex];
+                    _dataRed[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
                 }
             }
         }
@@ -96,17 +87,17 @@ class BayerFrameProcessor : public IFrameProcessor
         //            }
         //        }
 
-        for(rowIndex = 1; rowIndex < 3072; rowIndex += 2)
+        for(rowIndex = 1; rowIndex < _height; rowIndex += 2)
         {
-            for(columnIndex = 0; columnIndex < 4096; columnIndex++)
+            for(columnIndex = 0; columnIndex < _width; columnIndex++)
             {
                 if(columnIndex % 2)
                 {
-                    _dataBlue[rowIndex * 4096 + columnIndex] = _outputData[rowIndex * 4096 + columnIndex];
+                    _dataBlue[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
                 }
                 else
                 {
-                    _dataGreen[rowIndex * 4096 + columnIndex] = _outputData[rowIndex * 4096 + columnIndex];
+                    _dataGreen[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
                 }
             }
         }
@@ -118,10 +109,14 @@ public:
 
     }
 
-    void SetData(unsigned char& data, int width, int height, SourceFormat sourceFormat, BayerPattern pattern)
+    virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat) override
     {
         _data = &data;
-        _size = width * height;
+
+        _width = width;
+        _height = height;
+
+        _size = _width * _height;
 
         _outputData = new unsigned short[_size];
 
@@ -165,8 +160,6 @@ public:
 
     }
 
-    // IFrameProcessor interface
-public:
     unsigned short *GetDataRed()
     {
         return _dataRed;
@@ -182,12 +175,14 @@ public:
         return _dataBlue;
     }
 
-    // IFrameProcessor interface
-public:
-    void SetData(unsigned char &data, int width, int height, SourceFormat sourceFormat)
+    void SetData(unsigned char &data, int width, int height, OC::DataProvider::SourceFormat sourceFormat)
     {
         _data = &data;
-        _size = width * height;
+
+        _width = width;
+        _height = height;
+
+        _size = _width * _height;
 
         _outputData = new unsigned short[_size];
 
@@ -198,4 +193,3 @@ public:
 };
 
 #endif // IFRAMEPROCESSOR_H
-

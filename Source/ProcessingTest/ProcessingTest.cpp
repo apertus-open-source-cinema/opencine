@@ -16,7 +16,7 @@ class ProcessingTest : public OCui::GUIApplication
     std::shared_ptr<IProcessingPresenter> _presenter;
 
 public:
-    ProcessingTest(int& argc, char** argv) : OCui::GUIApplication(argc,argv, "ProcessingTest"),
+    ProcessingTest(int& argc, char** argv) : OCui::GUIApplication(argc, argv, "ProcessingTest"),
         _view(std::make_shared<ProcessingView>()),
         _presenter(std::make_shared<ProcessingPresenter>(*_view))
     {
@@ -28,8 +28,14 @@ public:
 
 int main(int argc, char** argv)
 {
-    std::shared_ptr<ProcessingTest> application = std::make_shared<ProcessingTest>(argc, argv);
-    application->Run();
+    //std::shared_ptr<ProcessingTest> application = std::make_shared<ProcessingTest>(argc, argv);
+    ProcessingTest* app = new ProcessingTest(argc, argv);
+    app->Run();
+
+    if(app != nullptr)
+    {
+        delete app;
+    }
 
     return 0;
 }
