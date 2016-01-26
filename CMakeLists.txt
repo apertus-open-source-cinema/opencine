@@ -42,4 +42,4 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCBackup/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/ProcessingTest/)
 
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/CinemaDNGDecoder/)
-add_subdirectory(${PROJECT_SOURCE_DIR}/Source/CinemaDNGInfo/)
+#add_subdirectory(${PROJECT_SOURCE_DIR}/Source/CinemaDNGInfo/)

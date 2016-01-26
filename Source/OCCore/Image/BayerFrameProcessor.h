@@ -56,10 +56,12 @@ class BayerFrameProcessor : public OC::DataProvider::IFrameProcessor
                 if(columnIndex % 2)
                 {
                     _dataGreen[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                    //_dataGreen[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
                 else
                 {
                     _dataRed[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                    //_dataRed[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
             }
         }
@@ -94,10 +96,12 @@ class BayerFrameProcessor : public OC::DataProvider::IFrameProcessor
                 if(columnIndex % 2)
                 {
                     _dataBlue[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                    //_dataBlue[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
                 else
                 {
                     _dataGreen[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                    //_dataGreen[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
             }
         }

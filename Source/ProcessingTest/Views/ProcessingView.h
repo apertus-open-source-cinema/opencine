@@ -13,6 +13,8 @@ class ProcessingView : public IProcessingView
 {
     Q_OBJECT
 
+    OCImage* testImage = nullptr;
+
 public:
     explicit ProcessingView(QWidget *parent = 0);
     ~ProcessingView();

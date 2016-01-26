@@ -104,21 +104,21 @@ namespace OC
             //TODO: Remove memcpy() when static allocator is implemented, just store pointer to data instead
             void SetRedChannel(void* redData)
             {
-                _dataLength = _width * _height * (int)_format;
+                _dataLength = _width * _height * sizeof(unsigned short);
 
-                _redData = new unsigned char[_dataLength];
+                _redData = new unsigned short[_dataLength];
                 memcpy(_redData, redData, _dataLength);
             }
 
             void SetGreenChannel(void* greenData)
             {
-                _greenData = new unsigned char[_dataLength];
+                _greenData = new unsigned short[_dataLength];
                 memcpy(_greenData, greenData, _dataLength);
             }
 
             void SetBlueChannel(void* blueData)
             {
-                _blueData = new unsigned char[_dataLength];
+                _blueData = new unsigned short[_dataLength];
                 memcpy(_blueData, blueData, _dataLength);
             }
         };

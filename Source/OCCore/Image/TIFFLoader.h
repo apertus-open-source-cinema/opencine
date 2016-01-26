@@ -7,6 +7,12 @@
 #include <iostream> //TODO: Remove when tests are finished
 #include <unordered_map>
 
+#ifdef _WIN32
+#define EXPORT_API __declspec(dllexport)
+#else
+#define EXPORT_API
+#endif
+
 #include "OCImage.h"
 
 namespace OC
@@ -40,13 +46,13 @@ namespace OC
             uint32_t DataOffset;
         };
 
-        class TIFFLoader : public IImageLoader
+        class EXPORT_API TIFFLoader : public IImageLoader
         {
             bool _swapEndianess;
             uint16_t _ifdEntries;
 
         public:
-            TIFFLoader(unsigned char* data, unsigned int size, OC::DataProvider::OCImage& image);
+            TIFFLoader(unsigned char* data, unsigned int size, OCImage& image);
 
             TIFFHeader ProcessHeader(char* buffer);
 
@@ -78,7 +84,7 @@ namespace OC
                 }
             }
 
-            void ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&)>>& varMap, ImageFormat& bitsPerPixel, unsigned int size, OC::DataProvider::OCImage& image);
+            void ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&)>>& varMap, ImageFormat& bitsPerPixel, unsigned int size, OC::DataProvider::OCImage& image, unsigned char* data);
 
             void PreProcess(unsigned char* data, OC::DataProvider::OCImage& image);
         };

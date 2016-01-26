@@ -6,6 +6,8 @@
 
 using namespace OC::DataProvider;
 
+unsigned char* imageData;
+
 TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image) :
     _swapEndianess(false)
 {
@@ -27,7 +29,7 @@ TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image) :
 
     ImageFormat bitsPerPixel = ImageFormat::Integer12;
     std::unordered_map<int, std::function<void(TIFFTag&)>> varMap;
-    ProcessTags(varMap, bitsPerPixel, size, image);
+    ProcessTags(varMap, bitsPerPixel, size, image, data);
 
     for(int i = 0; i < _ifdEntries; i++)
     {
@@ -61,7 +63,9 @@ TIFFHeader TIFFLoader::ProcessHeader(char* buffer)
     return header;
 }
 
-void TIFFLoader::ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&)>>& varMap, ImageFormat& bitsPerPixel, unsigned int size, OCImage& image)
+static int testOffset = 0;
+
+void TIFFLoader::ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&)>>& varMap, ImageFormat& bitsPerPixel, unsigned int size, OCImage& image, unsigned char* data)
 {
     //std::unordered_map<int, std::function<void(TIFFTag&)>> varMap;
     varMap.insert(std::make_pair(256, [&image] (TIFFTag& tag) { image.SetWidth(tag.DataOffset); }));
@@ -76,6 +80,9 @@ void TIFFLoader::ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&
     varMap.insert(std::make_pair(273, [&/*&data, &buffer, &width, &height, &bitsPerPixel*/] (TIFFTag& tag) mutable
     {
                       unsigned int size = (unsigned int)(image.Width() * image.Height() * ((float)bitsPerPixel / 8.0f));
+                      imageData = new unsigned char[size];
+                      testOffset = tag.DataOffset;
+                      //memcpy(imageData, data + tag.DataOffset, size);
                       //image.SetData((unsigned char*)data + tag.DataOffset, size);
                   }));
 }
@@ -84,7 +91,7 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image)
 {
     std::unique_ptr<IFrameProcessor> frameProcessor(new BayerFrameProcessor());
 
-    frameProcessor->SetData(*data, image.Width(), image.Height(), SourceFormat::Integer12);
+    frameProcessor->SetData(data[testOffset], image.Width(), image.Height(), SourceFormat::Integer12);
 
     frameProcessor->Process();
 

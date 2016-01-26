@@ -33,17 +33,17 @@ ProcessingView::ProcessingView(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    quint32 a[256];
-    quint32 b[256];
-    quint32 c[256];
+//    quint32 a[256];
+//    quint32 b[256];
+//    quint32 c[256];
 
-    for (int i = 0; i < 256; i += 4)
-    {
-        __m128i vectorA = _mm_loadu_si128((__m128i*)&a[i]);
-        __m128i vectorB = _mm_loadu_si128((__m128i*)&b[i]);
-        __m128i vectorC = _mm_add_epi32(vectorA, vectorB);
-        _mm_storeu_si128((__m128i*)&c[i], vectorC);
-    }
+//    for (int i = 0; i < 256; i += 4)
+//    {
+//        __m128i vectorA = _mm_loadu_si128((__m128i*)&a[i]);
+//        __m128i vectorB = _mm_loadu_si128((__m128i*)&b[i]);
+//        __m128i vectorC = _mm_add_epi32(vectorA, vectorB);
+//        _mm_storeu_si128((__m128i*)&c[i], vectorC);
+//    }
 
     //LoadTexture();
 
@@ -132,62 +132,68 @@ void ProcessingView::paintEvent(QPaintEvent *)
 
     painter.drawText(x+10, y+10, "Machine " + QString::number(12345));
 
-    if(!init)
+    if(testImage != nullptr)
     {
-        QTime timer;
-        timer.start();
-
-        int length;
-
-        std::ifstream is;
-        is.open ("axiom.raw12", std::ios::binary );
-
-        // get length of file:
-        is.seekg (0, std::ios::end);
-        length = is.tellg();
-        is.seekg (0, std::ios::beg);
-
-        // allocate memory:
-        unsigned char* imageData = new unsigned char [length];
-
-        // read data as a block:
-        is.read ((char*)imageData,length);
-        is.close();
-
-        qDebug() << "File loading: " <<  timer.elapsed();
-        timer.restart();
-
-        std::unique_ptr<IFrameProcessor> frameProcessor(new BayerFrameProcessor());
-
-        frameProcessor->SetData(*imageData, 4096, 3072, SourceFormat::Integer12);
-        frameProcessor->Process();
-
-        qDebug() << "Process(): " <<  timer.elapsed();
-        timer.restart();
-
-        unsigned short* textureDataRed = frameProcessor->GetDataRed();
-        unsigned short* textureDataGreen = frameProcessor->GetDataGreen();
-        unsigned short* textureDataBlue = frameProcessor->GetDataBlue();
-
-        ui->openGLWidget->SetTextureRed(4096, 3072, textureDataRed);
-        ui->openGLWidget->SetTextureGreen(4096, 3072, textureDataGreen);
-        ui->openGLWidget->SetTextureBlue(4096, 3072, textureDataBlue);
-
-        qDebug() << "Data to OpenGL: " <<  timer.elapsed();
-        timer.restart();
-
-        textureDataRed = frameProcessor->GetDataRed();
-        textureDataGreen = frameProcessor->GetDataGreen();
-        textureDataBlue = frameProcessor->GetDataBlue();
-
-        ui->openGLWidget->SetTextureRed(4096, 3072, textureDataRed);
-        ui->openGLWidget->SetTextureGreen(4096, 3072, textureDataGreen);
-        ui->openGLWidget->SetTextureBlue(4096, 3072, textureDataBlue);
-
-        qDebug() << "Data to OpenGL(2nd run): " <<  timer.elapsed();
-
-        init = true;
+        ui->openGLWidget->SetTextureRed(testImage->Width(), testImage->Height(), (unsigned short*)testImage->RedChannel());
+        ui->openGLWidget->SetTextureGreen(testImage->Width(), testImage->Height(), (unsigned short*)testImage->GreenChannel());
+        ui->openGLWidget->SetTextureBlue(testImage->Width(), testImage->Height(), (unsigned short*)testImage->BlueChannel());
     }
+//    if(!init)
+//    {
+//        QTime timer;
+//        timer.start();
+
+//        int length;
+
+//        std::ifstream is;
+//        is.open ("axiom.raw12", std::ios::binary );
+
+//        // get length of file:
+//        is.seekg (0, std::ios::end);
+//        length = is.tellg();
+//        is.seekg (0, std::ios::beg);
+
+//        // allocate memory:
+//        unsigned char* imageData = new unsigned char [length];
+
+//        // read data as a block:
+//        is.read ((char*)imageData,length);
+//        is.close();
+
+//        qDebug() << "File loading: " <<  timer.elapsed();
+//        timer.restart();
+
+//        std::unique_ptr<IFrameProcessor> frameProcessor(new BayerFrameProcessor());
+
+//        frameProcessor->SetData(*imageData, 4096, 3072, SourceFormat::Integer12);
+//        frameProcessor->Process();
+
+//        qDebug() << "Process(): " <<  timer.elapsed();
+//        timer.restart();
+
+//        unsigned short* textureDataRed = frameProcessor->GetDataRed();
+//        unsigned short* textureDataGreen = frameProcessor->GetDataGreen();
+//        unsigned short* textureDataBlue = frameProcessor->GetDataBlue();
+
+        //ui->openGLWidget->SetTextureRed(4096, 3072, textureDataRed);
+        //ui->openGLWidget->SetTextureGreen(4096, 3072, textureDataGreen);
+        //ui->openGLWidget->SetTextureBlue(4096, 3072, textureDataBlue);
+
+//        qDebug() << "Data to OpenGL: " <<  timer.elapsed();
+//        timer.restart();
+
+//        textureDataRed = frameProcessor->GetDataRed();
+//        textureDataGreen = frameProcessor->GetDataGreen();
+//        textureDataBlue = frameProcessor->GetDataBlue();
+
+//        ui->openGLWidget->SetTextureRed(4096, 3072, textureDataRed);
+//        ui->openGLWidget->SetTextureGreen(4096, 3072, textureDataGreen);
+//        ui->openGLWidget->SetTextureBlue(4096, 3072, textureDataBlue);
+
+//        qDebug() << "Data to OpenGL(2nd run): " <<  timer.elapsed();
+
+//        init = true;
+//    }
 
     //img->loadFromData((const char*)imageData);
     //pixels = pixels2;
@@ -222,7 +228,11 @@ void ProcessingView::paintEvent(QPaintEvent *)
 
 void ProcessingView::SetFrame(OCImage &image)
 {
+    testImage = &image;
     int i = 0;
+    //ui->openGLWidget->SetTextureRed(image.Width(), image.Height(), (unsigned short*)image.RedChannel());
+    //ui->openGLWidget->SetTextureGreen(4096, 3072, textureDataGreen);
+    //ui->openGLWidget->SetTextureBlue(4096, 3072, textureDataBlue);
 }
 
 //void task1(int value, int offset, int length)
