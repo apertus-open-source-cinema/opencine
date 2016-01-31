@@ -5,11 +5,7 @@
 
 #include <QObject>
 
-#ifdef _WIN32
-#define EXPORT_API __declspec(dllexport)
-#else
-#define EXPORT_API
-#endif
+#include "OCCore_export.h"
 
 struct EXPORT_API DriveInfo
 {

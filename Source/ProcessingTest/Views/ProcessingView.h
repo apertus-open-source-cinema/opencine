@@ -13,11 +13,22 @@ class ProcessingView : public IProcessingView
 {
     Q_OBJECT
 
+    OCImage* testImage = nullptr;
+
 public:
     explicit ProcessingView(QWidget *parent = 0);
     ~ProcessingView();
 
-    void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
+    virtual void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
+
+    virtual void SetFrame(OCImage& image);
+      
+private slots:
+    void on_pushButton_toggled(bool checked);
+
+    void on_pushButton_3_toggled(bool checked);
+
+    void on_pushButton_4_toggled(bool checked);
 
 private:
     Ui::ProcessingView *ui;

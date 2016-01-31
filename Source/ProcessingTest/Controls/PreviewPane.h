@@ -10,7 +10,11 @@
 
 class PreviewPane : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
-    QMatrix4x4 m_projection;
+    QMatrix4x4 mvp;
+
+    bool redChannel = true;
+    bool greenChannel = true;
+    bool blueChannel = true;
 
 public:
     PreviewPane(QWidget *parent = 0);
@@ -18,6 +22,10 @@ public:
     void SetTextureRed(int width, int height, unsigned short* imageData);
     void SetTextureGreen(int width, int height, unsigned short* imageData);
     void SetTextureBlue(int width, int height, unsigned short* imageData);
+
+    void SwitchRedChannel(bool enabled);
+    void SwitchGreenChannel(bool enabled);
+    void SwitchBlueChannel(bool enabled);
 
 signals:
 
@@ -39,6 +47,10 @@ private:
     QOpenGLShaderProgram* program;
     QOpenGLBuffer vertex;
     QOpenGLVertexArrayObject object;
+
+    // QWidget interface
+protected:
+    void wheelEvent(QWheelEvent* event);
 };
 
 #endif // PREVIEWPANE_H

@@ -5,11 +5,7 @@
 
 #include <QObject>
 
-#ifdef _WIN32
-#define EXPORT_API __declspec(dllexport)
-#else
-#define EXPORT_API
-#endif
+#include "OCui_export.h"
 
 class QApplication;
 class MainWindow;
@@ -32,7 +28,7 @@ namespace OCui
 
         void SetWindowOptions(bool resizeable);
 
-        void SetLayout(QWidget &widget);
+        void SetLayout(QWidget& widget);
 
         int Run();
     };

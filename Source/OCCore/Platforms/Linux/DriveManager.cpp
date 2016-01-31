@@ -53,13 +53,14 @@ void DriveManager::UpdateDriveList()
 
 void DriveManager::RetrieveDriveInfo(DriveInfo& driveInfo)
 {
+    //HACK: Used to to give Linux some time while mounting new drives is in progress
     usleep(500000);
 
     struct statvfs64 fiData;
 
     if(statvfs64(driveInfo.DrivePath.c_str(), &fiData) < 0)
     {
-        int i = 0;
+        return;
     }
 
     driveInfo.TotalSpace = (fiData.f_blocks * fiData.f_frsize) / 1024 / 1024;
