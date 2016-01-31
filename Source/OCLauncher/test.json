@@ -1,0 +1,10 @@
+{
+	{
+		"Application": "OCBackup",
+		"Image": "OCBackup_icon.png"
+	},
+	{
+		"Application": "OCManager",
+		"Image": "OCManager_icon.png"
+	}
+}

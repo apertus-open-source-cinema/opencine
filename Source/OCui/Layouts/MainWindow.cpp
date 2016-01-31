@@ -15,5 +15,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::SetLayout(QWidget &widget)
 {
+     //ui->mainPane->setAttribute(Qt::WA_OpaquePaintEvent);
+
+     //ui->mainPane->setAttribute(Qt::WA_NoSystemBackground);
+
     ui->mainPane->addWidget(&widget);
+
+    //widget.showFullScreen();
+    //this->adjustSize();
 }

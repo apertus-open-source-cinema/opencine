@@ -1,179 +1,75 @@
 #include "BackupPresenter.h"
-//#include "ProgressDialog.h"
 
-//#include <thread>
+#include <QFileDialog>
+#include <QTreeView>
+#include <QDebug>
 
-//std::function<std::vector<std::string>()> GetMounts;
+BackupPresenter::BackupPresenter(IBackupView &view) :
+    _view(&view)
+{
+    _driveManager = new DriveManager();
 
-//#if defined(Q_OS_WIN)
-//std::vector<std::string> GetMountsWindows()
-//{
-//}
-//#elif defined (Q_OS_LINUX)
+    SetupSignals();
 
-//#include <QMessageBox>
-//#include <mntent.h>
+    _driveManager->RequestDriveList();
+}
 
-//std::vector<std::string> GetMountsLinux()
-//{
-//    std::vector<std::string> mountPoints;
+void BackupPresenter::SetupSignals()
+{
+    connect(_driveManager, SIGNAL(DriveListChanged(std::vector<DriveInfo>)), this, SLOT(DriveListChanged(std::vector<DriveInfo>)));
+    connect(_view, SIGNAL(DriveSelectionChanged(int)), this, SLOT(DriveSelectionChanged(int)));
 
-//    QString mediaFolder = "/media/" + qgetenv("USER") + "/";
-//    QDirIterator directories(mediaFolder, QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
+    connect(_view, &IBackupView::AddDestinationClicked, this, &BackupPresenter::AddDestination);
 
-//    while(directories.hasNext())
-//    {
-//        directories.next();
+    connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
+}
 
-//        mountPoints.push_back(QString(mediaFolder + directories.fileName()).toStdString());//drive->mnt_dir);
-//    }
+void BackupPresenter::StartTransfer()
+{
+    emit StartTransferSig("/media/andi/OC_TEST_MSD");
+}
 
-//    return mountPoints;
-//}
-//#else
-//#error "OS not supported yet."
-//#endif
+void BackupPresenter::DriveListChanged(std::vector<DriveInfo> driveList)
+{
+    _driveList = driveList;
+    _view->SetDriveList(driveList);
 
-//BackupPresenter::BackupPresenter(OCContext *context) :
-//    _context(context),
-//    _currentDrivePath("")
-//{
-//    //Setup drive list model
-//    QStringList stringList;
-//    for(std::string drive : GetMountsLinux())
-//    {
-//        stringList.push_back(QString::fromStdString(drive));
-//    }
+    if(!_driveList.empty())
+    {
+        _view->SetCurrentFolder(driveList.at(0).DrivePath);
 
-//    _driveListModel = new QStringListModel();
-//    _driveListModel->setStringList(stringList);
+        std::vector<std::string> flist;
+        flist.push_back("C:/Temp/test.jpg");
+        _view->SetItemList(flist);
+    }
+    else
+    {
+        _view->SetCurrentFolder("");
+    }
+}
 
-//    //Setup folder tree model
-//    _folderTreeModel = new QFileSystemModel();
-//    QString rootPath = _driveListModel->index(0).data().toString();
-//    _folderTreeModel->setRootPath(rootPath);
-//    _folderTreeModel->setFilter(QDir::Dirs | QDir::NoDotAndDotDot | QDir::AllDirs);
+void BackupPresenter::DriveSelectionChanged(int driveIndex)
+{
+    if(_driveList.empty())
+    {
+        return;
+    }
 
-//    _fileWatcher = new QFileSystemWatcher();
-//    QString mediaFolder = "/media/" + qgetenv("USER") + "/";
-//    _fileWatcher->addPath(mediaFolder);
+    _view->SetCurrentFolder(_driveList.at(driveIndex).DrivePath);
+}
 
-//    QObject::connect(_fileWatcher, SIGNAL(directoryChanged(QString)), SLOT(UpdateMounts()));
-//}
+void BackupPresenter::AddDestination()
+{
+    QFileDialog dialog;
+    dialog.setFileMode(QFileDialog::Directory);
+    dialog.setOption(QFileDialog::ShowDirsOnly);
+    dialog.setViewMode(QFileDialog::Detail);
+    int result = dialog.exec();
 
-//BackupPresenter::~BackupPresenter()
-//{
-
-//}
-
-//QStringListModel* BackupPresenter::GetDriveListModel()
-//{
-//    return _driveListModel;
-//}
-
-//QFileSystemModel* BackupPresenter::GetFolderTreeModel()
-//{
-//    return _folderTreeModel;
-//}
-
-//std::vector<FileInfo*> BackupPresenter::GetFileList()
-//{
-//    _fileInfoList.push_back(new FileInfo("test1234", "NAME", 256, 192, 29.93));
-//    return _fileInfoList;
-//}
-
-//void BackupPresenter::SetMasterPath(QString path)
-//{
-//    if(_backupPaths.empty())
-//    {
-//        _backupPaths.push_back(QString(path));
-//    }
-//    else
-//    {
-//        _backupPaths.at(0) = QString(path);
-//    }
-//}
-
-////Reference: http://stackoverflow.com/questions/2536524/copy-directory-using-qt
-//QStringList BackupPresenter::GetPathContent(QString path, QStringList& list)
-//{
-//    QDir targetDir(path);
-//    QDirIterator it(path, QDir::NoDotAndDotDot | QDir::Dirs | QDir::NoSymLinks, QDirIterator::Subdirectories);
-
-//    QString entryPath = "";
-
-//    while (it.hasNext())
-//    {
-//        QFileInfo fileInfo = it.fileInfo();
-
-//        if(fileInfo.filePath() != "")
-//        {
-//            entryPath = QString(targetDir.relativeFilePath(fileInfo.absoluteFilePath()));
-//            list.push_back(entryPath);
-//        }
-//        it.next();
-//    }
-//}
-
-//void BackupPresenter::TransferData()
-//{
-//    if(_backupPaths.empty() || _backupPaths.at(0) == "")
-//    {
-//        QMessageBox messageBox;
-//        messageBox.setText("Master path is not set.");
-//        messageBox.exec();
-//        return;
-//    }
-
-//    IDataTransfer* driveTransfer = new DriveTransfer(nullptr, _currentDrivePath, _backupPaths[0]);
-//    ProgressDialog progressDialog(nullptr, driveTransfer);
-
-//    // Start copying files in separate thread, possibly mutex required for progress data
-//    std::thread thr(&IDataTransfer::StartTransfer, driveTransfer);
-//    thr.detach();
-
-//    progressDialog.exec();
-//}
-
-//std::vector<std::string> BackupPresenter::GetMounts()
-//{
-//    return GetMountsLinux();
-//}
-
-//void BackupPresenter::UpdateMounts()
-//{
-//    //Setup drive list model
-//    QStringList stringList;
-
-//    //Needs rework for multi-platform
-//    for(std::string drive : GetMountsLinux())
-//    {
-//        stringList.push_back(QString::fromStdString(drive));
-//    }
-
-//    _driveListModel->setStringList(stringList);
-//}
-
-//void BackupPresenter::CurrentDriveChanged(const QModelIndex& current, const QModelIndex& previous)
-//{
-//    _currentDrivePath = current.data().toString();
-//    QModelIndex index = _folderTreeModel->setRootPath(_currentDrivePath);
-//    emit DriveSelectionChanged(index);
-//}
-
-//void BackupPresenter::CurrentFolderChanged(const QItemSelection &current, const QItemSelection &previous)
-//{
-//    QString path = _folderTreeModel->filePath(current.indexes().at(0));
-//    QDirIterator it(path, QDirIterator::NoIteratorFlags);
-//    _fileInfoList.clear();
-//    while (it.hasNext())
-//    {
-//        if(it.fileInfo().isFile())
-//        {
-//            _fileInfoList.push_back(new FileInfo(it.filePath(), it.fileName(), 100, 120, 23.95));
-//        }
-//        it.next();
-//    }
-
-//    emit FolderChanged(_fileInfoList);
-//}
+    QString directory;
+    if (result)
+    {
+        directory = dialog.selectedFiles()[0];
+        qDebug()<<directory;
+    }
+}

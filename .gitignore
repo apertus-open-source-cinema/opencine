@@ -2,3 +2,7 @@
 *.autosave
 *.txt.user
 /.settings/
+*.txt.user*
+*.user
+Source/WidgetsTest/
+/.project

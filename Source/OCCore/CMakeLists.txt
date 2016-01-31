@@ -1,14 +1,24 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.2)
 PROJECT(OCCore)
 
 CMAKE_POLICY(SET CMP0020 NEW)
+CMAKE_POLICY(SET CMP0063 NEW)
 
 set( CMAKE_VERBOSE_MAKEFILE ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
-file(GLOB SOURCE_FILES "*.cpp" "*.h")
+FIND_PACKAGE(Qt5Core REQUIRED)
+FIND_PACKAGE(Qt5Widgets REQUIRED)
+
+file(GLOB SOURCE_FILES "*.cpp" "*.h"
+                       "Transfer/*.cpp" "Transfer/*.h"
+                       "MVP/*.cpp" "MVP/*.h"
+                       "API/*.cpp" "API/*.h"
+                       "Image/*.cpp" "Image/*.h"
+                       "Interfaces/*.cpp" "Interfaces/*.h")
+
 #file(GLOB HEADER_FILES "*.h")
 
 #include_directories(${PROJECT_SOURCE_DIR})
@@ -16,8 +26,8 @@ file(GLOB SOURCE_FILES "*.cpp" "*.h")
 if(WIN32)
     file(GLOB PLATFORM_FILES "Platforms/Win/*.cpp" "Platforms/Win/*.h")
     #file(GLOB HEADER_FILES "Platforms/Win")
-elseif(LINUX)
-    file(GLOB PLATFORM_FILES "Platforms/Linux")
+elseif(UNIX)
+    file(GLOB PLATFORM_FILES "Platforms/Linux/*.cpp" "Platforms/Linux/*.h")
     #file(GLOB HEADER_FILES "Platforms/Linux")
 endif()
 
@@ -29,3 +39,10 @@ endif()
 #list(REMOVE_DUPLICATES INCLUDE_DIRS)
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${PLATFORM_FILES})
+
+include(GenerateExportHeader)
+GENERATE_EXPORT_HEADER(${PROJECT_NAME} EXPORT_MACRO_NAME EXPORT_API EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/exports/${PROJECT_NAME}_export.h)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_BINARY_DIR}/exports)
+
+QT5_USE_MODULES(${PROJECT_NAME} Core Widgets)

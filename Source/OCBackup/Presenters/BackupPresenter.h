@@ -1,96 +1,57 @@
 #ifndef BACKUPPRESENTER_H
 #define BACKUPPRESENTER_H
 
+#include <vector>
+#include <functional>
+
 #include <QFileSystemModel>
 #include <QObject>
 #include <QStringListModel>
 #include <QFileSystemWatcher>
 #include <QItemSelection>
 
-#include <vector>
-#include <functional>
+#include <DriveManager.h>
 
-//std::function<std::vector<std::string>()> GetMounts;
+#include "../Interfaces/IBackupView.h"
 
-//#if defined(Q_OS_WIN)
-//std::vector<std::string> GetMountsWindows()
-//{
-//}
-//#elif defined (Q_OS_LINUX)
-
-//#include <QMessageBox>
-//#include <mntent.h>
-
-//std::vector<std::string> GetMountsLinux()
-//{
-//    std::vector<std::string> mountPoints;
-
-//    QString mediaFolder = "/media/" + qgetenv("USER") + "/";
-//    QDirIterator directories(mediaFolder, QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
-
-//    while(directories.hasNext())
-//    {
-//        directories.next();
-
-//        mountPoints.push_back(QString(mediaFolder + directories.fileName()).toStdString());//drive->mnt_dir);
-//    }
-
-//    return mountPoints;
-//}
-//#else
-//#error "OS not supported yet."
-//#endif
-
-//#include "Core/Context.h"
-//#include "Model/FileInfo.h"
-
-class IBackupPresenter
+class IBackupPresenter : public QObject
 {
+    Q_OBJECT
+
+public:
+    //virtual void RefreshDriveList() = 0;
+    //virtual void SelectDrive(std::string drivePath) = 0;
+
+    virtual void StartTransfer() = 0;
+
+signals:
+    void DriveListChanged(std::vector<DriveInfo> driveList);
+    void DriveSelectionChanged(std::vector<std::string> driveList);
 };
 
-class BackupPresenter : public IBackupPresenter //: public QObject
+class BackupPresenter : public IBackupPresenter
 {
-//  Q_OBJECT
+    Q_OBJECT
 
-//public:
-//  BackupPresenter(OCContext* context);
-//  ~BackupPresenter();
+    IBackupView* _view;
+    IDriveManager* _driveManager;
 
-//  QStringListModel* GetDriveListModel();
-//  QFileSystemModel* GetFolderTreeModel();
-//  std::vector<FileInfo*> GetFileList();
+    std::vector<DriveInfo> _driveList;
 
-//  void SetMasterPath(QString path);
+    void SetupSignals();
 
-//  void TransferData();
+    void StartTransfer();
 
-//public slots:
-//  void CurrentDriveChanged(const QModelIndex& current, const QModelIndex& previous);
-//  void CurrentFolderChanged(const QItemSelection& current, const QItemSelection& previous);
+signals:
+    void StartTransferSig(std::string drivePath);
 
-//signals:
-//  void DriveSelectionChanged(QModelIndex diveRoot);
-//  void FolderChanged(std::vector<FileInfo*> fileList);
+private slots:
+    void DriveListChanged(std::vector<DriveInfo> driveList);
+    void DriveSelectionChanged(int driveIndex);
+    void AddDestination();
 
-//private slots:
-//  void UpdateMounts();
-//private:
-//  std::vector<std::string> GetMounts();
-//  QStringList GetPathContent(QString path, QStringList& list);
-
-//  std::vector<FileInfo*> _fileInfoList;
-
-//  OCContext* _context;
-//  OCSession* _session;
-
-//  QString _currentDrivePath;
-
-//  QFileSystemWatcher* _fileWatcher;
-
-//  QStringListModel* _driveListModel;
-//  QFileSystemModel* _folderTreeModel;
-
-//  std::vector<QString> _backupPaths;
+public:
+    explicit BackupPresenter(IBackupView& view);
 };
 
 #endif // BACKUPPRESENTER_H
