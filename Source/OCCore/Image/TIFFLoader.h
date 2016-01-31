@@ -7,13 +7,9 @@
 #include <iostream> //TODO: Remove when tests are finished
 #include <unordered_map>
 
-#ifdef _WIN32
-#define EXPORT_API __declspec(dllexport)
-#else
-#define EXPORT_API
-#endif
-
 #include "OCImage.h"
+
+#include "OCCore_export.h"
 
 namespace OC
 {
