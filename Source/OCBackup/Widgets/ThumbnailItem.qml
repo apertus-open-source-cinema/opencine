@@ -73,7 +73,7 @@ Rectangle {
         Text {
             id: text4
             color: "#ffffff"
-            text: "24fps"
+            text: clipName;
             anchors.right: parent.right
             anchors.rightMargin: 0
             anchors.left: parent.left

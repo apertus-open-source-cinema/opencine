@@ -9,6 +9,7 @@
 #include <QFileSystemModel>
 #include <QStandardItemModel>
 #include <QtQml/QQmlComponent>
+#include <QItemSelection>
 
 #include "../Interfaces/IBackupView.h"
 
@@ -45,6 +46,7 @@ public:
 private slots:
     void TransferButtonClicked();
     void CurrentDriveChanged(int currentDrive);
+    void CurrentFolderChanged(const QItemSelection& selected, const QItemSelection& deselected);
 
 public:
     void SetCurrentFolder(std::string folderPath);

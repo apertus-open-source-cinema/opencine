@@ -30,7 +30,7 @@ BackupView::BackupView(/*QWidget *parent,*/ IBackupPresenter* presenter) :
     SetupThumbnailView();
     SetupDestinationsView();
 
-     connect(ui->destinationsControl, SIGNAL(AddDestinationClicked()), this, SIGNAL(AddDestinationClicked()));
+    connect(ui->destinationsControl, SIGNAL(AddDestinationClicked()), this, SIGNAL(AddDestinationClicked()));
     //ui->folderTreeControl->setModel(_folderTreeControlModel.get());
     //ui->folderTreeControl->setRootIndex(_folderTreeControlModel->index("E:"));
 }
@@ -49,30 +49,30 @@ void BackupView::SetupDriveView()
 
     //ui->driveListControl->setAttribute(Qt::WA_NoSystemBackground);
 
-//    _driveListDelegate = std::make_shared<QQmlComponent>(ui->driveListControl->engine(), QUrl::fromLocalFile("Widgets/DriveItem.qml"));
+    //    _driveListDelegate = std::make_shared<QQmlComponent>(ui->driveListControl->engine(), QUrl::fromLocalFile("Widgets/DriveItem.qml"));
 
-//    if(_driveListDelegate != nullptr)
-//    {
-//        _qmlContext->setContextProperty("listDelegate", QVariant::fromValue(_driveListDelegate.get()));
+    //    if(_driveListDelegate != nullptr)
+    //    {
+    //        _qmlContext->setContextProperty("listDelegate", QVariant::fromValue(_driveListDelegate.get()));
 
-//        if(_driveListDelegate->isError())
-//        {
-//            qDebug() << "Error: " <<_driveListDelegate->errorString();
-//        }
+    //        if(_driveListDelegate->isError())
+    //        {
+    //            qDebug() << "Error: " <<_driveListDelegate->errorString();
+    //        }
 
-//        //        if( _driveListDelegate->status != QQmlComponent::Status::Ready )
-//        //        {
-//        //            if( _driveListDelegate->status == QQmlComponent::Error )
-//        //            {
-//        //                qDebug() << "Error: " <<_driveListDelegate->errorString();
-//        //            }
-//        //            return; // or maybe throw
-//        //        }
+    //        //        if( _driveListDelegate->status != QQmlComponent::Status::Ready )
+    //        //        {
+    //        //            if( _driveListDelegate->status == QQmlComponent::Error )
+    //        //            {
+    //        //                qDebug() << "Error: " <<_driveListDelegate->errorString();
+    //        //            }
+    //        //            return; // or maybe throw
+    //        //        }
 
-//        _driveListDelegate->create(_qmlContext);
-//        ui->driveListControl->engine()->setObjectOwnership(_driveListDelegate.get(), QQmlEngine::CppOwnership);
+    //        _driveListDelegate->create(_qmlContext);
+    //        ui->driveListControl->engine()->setObjectOwnership(_driveListDelegate.get(), QQmlEngine::CppOwnership);
 
-//    }
+    //    }
 
     ui->driveListControl->setSource(QUrl("./Widgets/DriveList.qml"));
 
@@ -84,6 +84,8 @@ void BackupView::SetupFolderView()
 {
     _folderTreeModel = std::make_shared<QFileSystemModel>();
     ui->folderTreeControl->setModel(_folderTreeModel.get());
+
+    connect(ui->folderTreeControl->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(CurrentFolderChanged(const QItemSelection&, const QItemSelection&)));
 }
 
 QQmlContext*  qmlContext2;
@@ -114,6 +116,14 @@ void BackupView::CurrentDriveChanged(int currentDrive)
     emit DriveSelectionChanged(currentDrive);
 }
 
+void BackupView::CurrentFolderChanged(const QItemSelection& selected, const QItemSelection& deselected)
+{
+    QModelIndex itemIndex = ui->folderTreeControl->selectionModel()->currentIndex();
+    std::string path = _folderTreeModel->filePath(itemIndex).toStdString();
+
+    emit FolderSelectionChanged(path);
+}
+
 void BackupView::SetDriveList(std::vector<DriveInfo> driveList)
 {
     dataList->clear();
@@ -132,7 +142,8 @@ void BackupView::SetItemList(std::vector<std::string> fileList)
 
     for(auto& file : fileList)
     {
-        _fileList->append(new ThumbnailViewItem("Test1", "Test2", 640, 480, 30));
+        _fileList->append(new ThumbnailViewItem(QString::fromStdString(file), QString::fromStdString(file), 640, 480, 30));
+        //_fileList->append(new ThumbnailViewItem("Test1", "Test2", 640, 480, 30));
     }
 
     qmlContext2->setContextProperty("fileList", QVariant::fromValue(*_fileList));

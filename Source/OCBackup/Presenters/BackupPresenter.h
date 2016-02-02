@@ -49,6 +49,7 @@ private slots:
     void DriveListChanged(std::vector<DriveInfo> driveList);
     void DriveSelectionChanged(int driveIndex);
     void AddDestination();
+    void FolderSelectionChanged(std::string folderPath);
 
 public:
     explicit BackupPresenter(IBackupView& view);

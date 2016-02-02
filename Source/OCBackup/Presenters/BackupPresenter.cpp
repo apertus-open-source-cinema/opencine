@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QTreeView>
 #include <QDebug>
+#include <QFileInfoList>
 
 BackupPresenter::BackupPresenter(IBackupView &view) :
     _view(&view)
@@ -20,6 +21,8 @@ void BackupPresenter::SetupSignals()
     connect(_view, SIGNAL(DriveSelectionChanged(int)), this, SLOT(DriveSelectionChanged(int)));
 
     connect(_view, &IBackupView::AddDestinationClicked, this, &BackupPresenter::AddDestination);
+
+    connect(_view, &IBackupView::FolderSelectionChanged, this, &BackupPresenter::FolderSelectionChanged);
 
     connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
 }
@@ -72,4 +75,19 @@ void BackupPresenter::AddDestination()
         directory = dialog.selectedFiles()[0];
         qDebug()<<directory;
     }
+}
+
+void BackupPresenter::FolderSelectionChanged(std::string folderPath)
+{
+    QDir dir(QString::fromStdString(folderPath));
+    QFileInfoList fileList = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Files);
+
+    std::vector<std::string> fileNameList;
+
+    for(QFileInfo fileInfo : fileList)
+    {
+        fileNameList.push_back(fileInfo.fileName().toStdString());
+    }
+
+    _view->SetItemList(fileNameList);
 }

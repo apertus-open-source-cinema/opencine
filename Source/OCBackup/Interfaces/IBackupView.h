@@ -18,7 +18,7 @@ signals:
     void StartTransfer();
 
     void DriveSelectionChanged(int driveIndex);
-    void FolderSelectionChanged();
+    void FolderSelectionChanged(std::string folderPath);
 
     void AddDestinationClicked();
 };
