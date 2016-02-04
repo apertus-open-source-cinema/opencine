@@ -29,7 +29,7 @@ void BackupPresenter::SetupSignals()
 
 void BackupPresenter::StartTransfer()
 {
-    emit StartTransferSig("/media/andi/OC_TEST_MSD");
+    //emit StartTransferSig("/media/andi/OC_TEST_MSD");
 }
 
 void BackupPresenter::DriveListChanged(std::vector<DriveInfo> driveList)
@@ -39,11 +39,12 @@ void BackupPresenter::DriveListChanged(std::vector<DriveInfo> driveList)
 
     if(!_driveList.empty())
     {
-        _view->SetCurrentFolder(driveList.at(0).DrivePath);
+        QString drive = QString::fromStdString(driveList.at(0).DrivePath);
+        _view->SetCurrentFolder(drive);
 
-        std::vector<std::string> flist;
+        /*std::vector<std::string> flist;
         flist.push_back("C:/Temp/test.jpg");
-        _view->SetItemList(flist);
+        _view->SetItemList(flist);*/
     }
     else
     {
@@ -58,7 +59,8 @@ void BackupPresenter::DriveSelectionChanged(int driveIndex)
         return;
     }
 
-    _view->SetCurrentFolder(_driveList.at(driveIndex).DrivePath);
+    QString folderPath = QString::fromStdString(_driveList.at(driveIndex).DrivePath);
+    _view->SetCurrentFolder(folderPath);
 }
 
 void BackupPresenter::AddDestination()
@@ -77,16 +79,16 @@ void BackupPresenter::AddDestination()
     }
 }
 
-void BackupPresenter::FolderSelectionChanged(std::string folderPath)
+void BackupPresenter::FolderSelectionChanged(QString folderPath)
 {
-    QDir dir(QString::fromStdString(folderPath));
+    QDir dir(folderPath);
     QFileInfoList fileList = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Files);
 
-    std::vector<std::string> fileNameList;
+    std::vector<QString> fileNameList;
 
     for(QFileInfo fileInfo : fileList)
     {
-        fileNameList.push_back(fileInfo.fileName().toStdString());
+        fileNameList.push_back(fileInfo.fileName());
     }
 
     _view->SetItemList(fileNameList);

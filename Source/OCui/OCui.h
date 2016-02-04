@@ -21,7 +21,7 @@ namespace OCui
         void SetStyle(QApplication &app);
 
     public:
-        GUIApplication(int& argc, char** argv, std::string moduleName);
+        GUIApplication(int& argc, char** argv, QString moduleName);
 
         void Show();
         void ShowMaximized();

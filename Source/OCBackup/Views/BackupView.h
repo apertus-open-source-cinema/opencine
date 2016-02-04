@@ -30,8 +30,6 @@ class BackupView : public IBackupView
     QStringListModel* _driveListModel;
     std::shared_ptr<QFileSystemModel> _folderTreeModel;
 
-    //std::shared_ptr<QQmlComponent> _driveListDelegate;
-
     QList<QObject*>* dataList;
 
     void SetupDriveView();
@@ -49,9 +47,9 @@ private slots:
     void CurrentFolderChanged(const QItemSelection& selected, const QItemSelection& deselected);
 
 public:
-    void SetCurrentFolder(std::string folderPath);
+    void SetCurrentFolder(QString folderPath);
     void SetDriveList(std::vector<DriveInfo> driveList);
-    void SetItemList(std::vector<std::string> fileList);
+    void SetItemList(std::vector<QString> fileList);
 };
 
 #endif // OCBACKUPLAYOUT_H

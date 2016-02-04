@@ -10,11 +10,11 @@
 
 using namespace OCui;
 
-GUIApplication::GUIApplication(int& argc, char** argv, std::string moduleName) :
+GUIApplication::GUIApplication(int& argc, char** argv, QString moduleName) :
     _application(std::make_shared<QApplication>(argc, argv)),
     _mainWindow(std::make_shared<MainWindow>())
 {
-    _mainWindow->setWindowTitle(moduleName.c_str());
+    _mainWindow->setWindowTitle(moduleName);
 
     QFontDatabase* fontDatabase = new QFontDatabase();
     if(fontDatabase->addApplicationFont("Fonts/Titillium-Regular.otf") == -1)

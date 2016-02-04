@@ -28,45 +28,46 @@ public:
 
     void SetupSignals()
     {
-        QObject::connect(_presenter.get(), SIGNAL(StartTransferSig(std::string)), this, SLOT(StartTransfer(std::string)));
+        //QObject::connect(_presenter.get(), SIGNAL(StartTransferSig(std::string)), this, SLOT(StartTransfer(std::string)));
 
     }
 
 private slots:
-    void StartTransfer(std::string drivePath)
-    {
-        int i = 0;
+    //TODO: Obsolete, will be replaced by a handler class, which will subscribe an event from EventBus, more loose coupling
+//    void StartTransfer(std::string drivePath)
+//    {
+//        int i = 0;
 
-        //TEMPORARY: Gather all files and folders for drive backup, create list of folders
+//        //TEMPORARY: Gather all files and folders for drive backup, create list of folders
 
-        //Get folders
-        QDir::Filters filters = QDir::NoDotAndDotDot | QDir::AllDirs | QDir::NoSymLinks;
-        QDirIterator dirIterator(QString::fromStdString(drivePath), filters, QDirIterator::Subdirectories);
-        std::vector<QString> dirList;
+//        //Get folders
+//        QDir::Filters filters = QDir::NoDotAndDotDot | QDir::AllDirs | QDir::NoSymLinks;
+//        QDirIterator dirIterator(QString::fromStdString(drivePath), filters, QDirIterator::Subdirectories);
+//        std::vector<QString> dirList;
 
-        while(dirIterator.hasNext())
-        {
-            dirIterator.next();
+//        while(dirIterator.hasNext())
+//        {
+//            dirIterator.next();
 
-            dirList.push_back(dirIterator.fileName());
-        }
+//            dirList.push_back(dirIterator.fileName());
+//        }
 
-        filters = QDir::Files | QDir::NoSymLinks;
-        QDirIterator fileIterator(QString::fromStdString(drivePath), filters, QDirIterator::Subdirectories);
-        std::vector<QString> fileList;
+//        filters = QDir::Files | QDir::NoSymLinks;
+//        QDirIterator fileIterator(QString::fromStdString(drivePath), filters, QDirIterator::Subdirectories);
+//        std::vector<QString> fileList;
 
-        while(fileIterator.hasNext())
-        {
-            fileIterator.next();
+//        while(fileIterator.hasNext())
+//        {
+//            fileIterator.next();
 
-            fileList.push_back(fileIterator.fileName());
-        }
+//            fileList.push_back(fileIterator.fileName());
+//        }
 
-        QMessageBox msgBox;
-        msgBox.setText("The document has been modified.");
-        msgBox.exec();
+//        QMessageBox msgBox;
+//        msgBox.setText("The document has been modified.");
+//        msgBox.exec();
 
-    }
+//    }
 };
 
 #endif //OCBACKUP_H

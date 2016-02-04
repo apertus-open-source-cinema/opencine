@@ -119,7 +119,7 @@ void BackupView::CurrentDriveChanged(int currentDrive)
 void BackupView::CurrentFolderChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
     QModelIndex itemIndex = ui->folderTreeControl->selectionModel()->currentIndex();
-    std::string path = _folderTreeModel->filePath(itemIndex).toStdString();
+    QString path = _folderTreeModel->filePath(itemIndex);
 
     emit FolderSelectionChanged(path);
 }
@@ -136,23 +136,21 @@ void BackupView::SetDriveList(std::vector<DriveInfo> driveList)
     _qmlContext->setContextProperty("listModel", QVariant::fromValue(*dataList));
 }
 
-void BackupView::SetItemList(std::vector<std::string> fileList)
+void BackupView::SetItemList(std::vector<QString> fileList)
 {
     _fileList->clear();
 
     for(auto& file : fileList)
     {
-        _fileList->append(new ThumbnailViewItem(QString::fromStdString(file), QString::fromStdString(file), 640, 480, 30));
+        _fileList->append(new ThumbnailViewItem(file, file, 640, 480, 30));
         //_fileList->append(new ThumbnailViewItem("Test1", "Test2", 640, 480, 30));
     }
 
     qmlContext2->setContextProperty("fileList", QVariant::fromValue(*_fileList));
 }
 
-void BackupView::SetCurrentFolder(std::string folderPath)
+void BackupView::SetCurrentFolder(QString folderPath)
 {
-    QString rootPath = QString::fromStdString(folderPath);
-
     if(folderPath == "")
     {
         ui->folderTreeControl->setModel(nullptr);
@@ -163,5 +161,5 @@ void BackupView::SetCurrentFolder(std::string folderPath)
     _folderTreeModel->setRootPath(QDir::currentPath());
     _folderTreeModel->setFilter(QDir::Dirs | QDir::NoDotAndDotDot | QDir::AllDirs);
 
-    ui->folderTreeControl->setRootIndex(_folderTreeModel->index(rootPath));
+    ui->folderTreeControl->setRootIndex(_folderTreeModel->index(folderPath));
 }
