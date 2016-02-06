@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.2)
 project(ApertusOpenCine)
 
 CMAKE_POLICY(SET CMP0020 NEW)
-CMAKE_POLICY(SET CMP0063 NEW)
-
-set(CMAKE_CXX_VISIBILITY_PRESET hidden)
-set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 
 #TODO: Enable C++11 support for all projects. Adjust when porting to windows (e.g. for Visual Studio compatibility)
 if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)

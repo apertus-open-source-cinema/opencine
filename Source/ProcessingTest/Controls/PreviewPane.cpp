@@ -14,10 +14,10 @@ float wheelValue = 1.0;
 
 // Create a colored triangle
 static const float vertices[] = {
-    -0.90f,  0.90f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 0.0,
-    -0.90f, -0.90f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 1.0,
-    0.90f,  0.90f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 0.0,
-    0.90f, -0.90f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 1.0
+    -1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 0.0,
+    -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 1.0,
+    1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 0.0,
+    1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 1.0
 };
 
 PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent)
@@ -42,7 +42,7 @@ void PreviewPane::initializeGL()
 
     printVersionInformation();
 
-    glClearColor(0.18f, 0.18f, 0.18f, 1.0f);
+    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 
     SetupShaders();
     SetupVertexBuffer();
@@ -54,8 +54,15 @@ void PreviewPane::initializeGL()
     program->release();
 }
 
+float viewWidth = 1;
+float viewHeight = 1;
+int imageWidth = 1;
+int imageHeight = 1;
+
 void PreviewPane::resizeGL(int w, int h)
 {
+    viewWidth = (float)w/ (float)h;
+    //viewHeight = 1.0;
     //    QMatrix4x4 projection;
     //    projection.ortho(-1.0 - wheelValue, 1.0 + wheelValue, -0.1, 0.1, 0.01f, 1000.0f);
     //    QMatrix4x4 view;
@@ -78,11 +85,12 @@ void PreviewPane::paintGL()
     program->bind();
     {
         QMatrix4x4 projection;
-        projection.ortho(-1.0 * wheelValue, 1.0 * wheelValue, -1.0 * wheelValue, 1.0 * wheelValue, 0.01f, 1000.0f);
+        projection.ortho(-viewWidth / 2.0 * wheelValue, viewWidth / 2.0 * wheelValue, -viewHeight / 2.0 * wheelValue, viewHeight / 2.0 * wheelValue, 0.01f, 1000.0f);
         QMatrix4x4 view;
         view.lookAt(QVector3D(0.0, 0.0, 1.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
         QMatrix4x4 model;
         model.setToIdentity();
+        model.scale(float(imageWidth) / (float)imageHeight, 1.0f, 1.0f);
 
         mvp = projection * view * model;
 
@@ -97,7 +105,10 @@ void PreviewPane::paintGL()
             program->setUniformValue("texture1", 0);
         }
         else
+        {
             program->setUniformValue("texture1", -1);
+        }
+
         if(greenChannel)
         {
             glActiveTexture(GL_TEXTURE1);
@@ -105,7 +116,9 @@ void PreviewPane::paintGL()
             program->setUniformValue("texture2", 1);
         }
         else
+        {
             program->setUniformValue("texture2", -1);
+        }
 
         if(blueChannel)
         {
@@ -114,7 +127,9 @@ void PreviewPane::paintGL()
             program->setUniformValue("texture3", 2);
         }
         else
+        {
             program->setUniformValue("texture3", -1);
+        }
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -237,6 +252,9 @@ void PreviewPane::SetTextureRed(int width, int height, unsigned short* imageData
         return;
     }
 
+    imageWidth = width;
+    imageHeight = height;
+
     glGenTextures(1, &textureRed);
 
     glBindTexture(GL_TEXTURE_2D, textureRed);
@@ -254,8 +272,8 @@ void PreviewPane::SetTextureRed(int width, int height, unsigned short* imageData
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,  GL_LINEAR); //GL_LINEAR_MIPMAP_NEAREST
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,  GL_NEAREST); //GL_LINEAR_MIPMAP_NEAREST
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     //glGenerateMipmap(GL_TEXTURE_2D);
 
