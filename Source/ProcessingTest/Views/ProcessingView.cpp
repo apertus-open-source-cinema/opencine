@@ -118,26 +118,20 @@ bool init = false;
 
 void ProcessingView::paintEvent(QPaintEvent *)
 {
-    QPainter painter(this);
-    QRect geo = this->geometry();
+//    QPainter painter(this);
+//    QRect geo = this->geometry();
 
-    int x, y, width, height;
+//    int x, y, width, height;
 
-    x = geo.x()+10;
-    y = geo.y()+10;
-    width = geo.width()-10;
-    height = geo.height()-10;
+//    x = geo.x()+10;
+//    y = geo.y()+10;
+//    width = geo.width()-10;
+//    height = geo.height()-10;
 
-    painter.fillRect(x, y, width, height, QColor(220,220,220));
+//    painter.fillRect(x, y, width, height, QColor(220,220,220));
 
-    painter.drawText(x+10, y+10, "Machine " + QString::number(12345));
+//    painter.drawText(x+10, y+10, "Machine " + QString::number(12345));
 
-    if(testImage != nullptr)
-    {
-        ui->openGLWidget->SetTextureRed(testImage->Width(), testImage->Height(), (unsigned short*)testImage->RedChannel());
-        ui->openGLWidget->SetTextureGreen(testImage->Width(), testImage->Height(), (unsigned short*)testImage->GreenChannel());
-        ui->openGLWidget->SetTextureBlue(testImage->Width(), testImage->Height(), (unsigned short*)testImage->BlueChannel());
-    }
 //    if(!init)
 //    {
 //        QTime timer;
@@ -230,6 +224,14 @@ void ProcessingView::SetFrame(OCImage &image)
 {
     testImage = &image;
     int i = 0;
+
+    if(testImage != nullptr && ui->openGLWidget->isValid())
+    {
+        ui->openGLWidget->SetTextureRed(testImage->Width(), testImage->Height(), (unsigned short*)testImage->RedChannel());
+        ui->openGLWidget->SetTextureGreen(testImage->Width(), testImage->Height(), (unsigned short*)testImage->GreenChannel());
+        ui->openGLWidget->SetTextureBlue(testImage->Width(), testImage->Height(), (unsigned short*)testImage->BlueChannel());
+    }
+    //this->repaint();
     //ui->openGLWidget->SetTextureRed(image.Width(), image.Height(), (unsigned short*)image.RedChannel());
     //ui->openGLWidget->SetTextureGreen(4096, 3072, textureDataGreen);
     //ui->openGLWidget->SetTextureBlue(4096, 3072, textureDataBlue);

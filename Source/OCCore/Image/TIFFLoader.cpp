@@ -48,6 +48,8 @@ TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image) :
     }
 
     PreProcess(data, image);
+
+    delete[] tags;
 }
 TIFFHeader TIFFLoader::ProcessHeader(char* buffer)
 {
@@ -98,4 +100,6 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image)
     image.SetRedChannel(frameProcessor->GetDataRed());
     image.SetGreenChannel(frameProcessor->GetDataGreen());
     image.SetBlueChannel(frameProcessor->GetDataBlue());
+
+    delete[] imageData;
 }

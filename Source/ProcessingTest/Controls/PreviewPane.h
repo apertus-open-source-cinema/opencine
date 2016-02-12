@@ -18,6 +18,7 @@ class PreviewPane : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 
 public:
     PreviewPane(QWidget *parent = 0);
+    ~PreviewPane();
 
     void SetTextureRed(int width, int height, unsigned short* imageData);
     void SetTextureGreen(int width, int height, unsigned short* imageData);
@@ -26,6 +27,9 @@ public:
     void SwitchRedChannel(bool enabled);
     void SwitchGreenChannel(bool enabled);
     void SwitchBlueChannel(bool enabled);
+
+
+    bool IsInitialized();
 
 signals:
 
@@ -47,6 +51,8 @@ private:
     QOpenGLShaderProgram* program;
     QOpenGLBuffer vertex;
     QOpenGLVertexArrayObject object;
+
+    bool _initialized;
 
     // QWidget interface
 protected:

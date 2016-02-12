@@ -42,6 +42,10 @@ namespace OC
                 {
                     imageLoader = new TIFFLoader(imageData, length, image);
                 }
+
+                delete imageLoader;
+
+                delete[] imageData;
             }
         };
     }

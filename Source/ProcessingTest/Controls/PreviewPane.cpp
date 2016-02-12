@@ -20,7 +20,8 @@ static const float vertices[] = {
     1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 1.0
 };
 
-PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent)
+PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent),
+    _initialized(false)
 {
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
@@ -34,6 +35,11 @@ PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent)
     //format.setDepthBufferSize(24);
     //format.setStencilBufferSize(8);
     //QSurfaceFormat::setDefaultFormat(format);
+}
+
+PreviewPane::~PreviewPane()
+{
+    delete program;
 }
 
 void PreviewPane::initializeGL()
@@ -52,6 +58,8 @@ void PreviewPane::initializeGL()
     object.release();
     vertex.release();
     program->release();
+
+    _initialized = true;
 }
 
 float viewWidth = 1;
@@ -372,4 +380,9 @@ void PreviewPane::SetTextureGreen(int width, int height, unsigned short* imageDa
     {
         qDebug() << "3 OpenGL error: " << err;
     }
+}
+
+bool PreviewPane::IsInitialized()
+{
+    return isValid();
 }

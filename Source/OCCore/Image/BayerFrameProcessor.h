@@ -113,6 +113,15 @@ public:
 
     }
 
+    ~BayerFrameProcessor()
+    {
+        delete[] _dataRed;
+        delete[] _dataGreen;
+        delete[] _dataBlue;
+
+        delete[] _outputData;
+    }
+
     virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat) override
     {
         _data = &data;

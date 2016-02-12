@@ -27,6 +27,20 @@ namespace OC
             ImageFormat _format;
 
         public:
+            OCImage()
+            {
+                _redData = nullptr;
+                _greenData = nullptr;
+                _blueData = nullptr;
+            }
+
+            ~OCImage()
+            {
+                delete[] (short*)_redData;
+                delete[] (short*)_greenData;
+                delete[] (short*)_blueData;
+            }
+
             void SetWidth(unsigned int width)
             {
                 _width = width;
@@ -106,23 +120,36 @@ namespace OC
             {
                 _dataLength = _width * _height * sizeof(unsigned short);
 
-                _redData = new unsigned short[_dataLength];
-                memcpy(_redData, redData, _dataLength);
+                if(_redData == nullptr)
+                {
+                    _redData = new unsigned short[_dataLength];
+                }
+
+                memmove(_redData, redData, _dataLength);
             }
 
             void SetGreenChannel(void* greenData)
             {
-                _greenData = new unsigned short[_dataLength];
-                memcpy(_greenData, greenData, _dataLength);
+                if(_greenData == nullptr)
+                {
+                    _greenData = new unsigned short[_dataLength];
+                }
+
+                memmove(_greenData, greenData, _dataLength);
             }
 
             void SetBlueChannel(void* blueData)
             {
-                _blueData = new unsigned short[_dataLength];
-                memcpy(_blueData, blueData, _dataLength);
+                if(_blueData == nullptr)
+                {
+                    _blueData = new unsigned short[_dataLength];
+                }
+
+                memmove(_blueData, blueData, _dataLength);
             }
         };
     }
 }
 
 #endif //OCIMAGE_H
+

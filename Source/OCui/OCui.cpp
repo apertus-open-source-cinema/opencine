@@ -25,6 +25,7 @@ GUIApplication::GUIApplication(int& argc, char** argv, QString moduleName) :
     QFont f = fontDatabase->font("Titillium", "bold", 10);
     //f.setStyleStrategy(QFont::PreferAntialias);
     QApplication::setFont(f);
+    delete fontDatabase;
 
     SetStyle(*_application.get());
 }

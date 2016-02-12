@@ -22,7 +22,7 @@ public:
     virtual void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
 
     virtual void SetFrame(OCImage& image);
-      
+
 private slots:
     void on_pushButton_toggled(bool checked);
 

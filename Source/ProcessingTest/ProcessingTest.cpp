@@ -1,6 +1,7 @@
 #include <memory>
 #include <thread>
 
+#include <QtConcurrent/QtConcurrentRun>
 #include <QDebug>
 
 #include <OCui.h>
@@ -22,6 +23,8 @@ public:
     {
         SetLayout(*static_cast<QWidget*>(_view.get()));
         Show();
+
+        QtConcurrent::run(_presenter.get(), &IProcessingPresenter::Test);
     }
 
 };
