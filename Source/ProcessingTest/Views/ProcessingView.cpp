@@ -118,6 +118,16 @@ bool init = false;
 
 void ProcessingView::paintEvent(QPaintEvent *)
 {
+    if(ui->openGLWidget->isValid())
+    {
+        ui->openGLWidget->SetTextureRed(testImage->Width(), testImage->Height(), (unsigned short*)testImage->RedChannel());
+        ui->openGLWidget->SetTextureGreen(testImage->Width(), testImage->Height(), (unsigned short*)testImage->GreenChannel());
+        ui->openGLWidget->SetTextureBlue(testImage->Width(), testImage->Height(), (unsigned short*)testImage->BlueChannel());
+    }
+
+    //ui->openGLWidget->update();
+
+    //ui->openGLWidget->update();
 //    QPainter painter(this);
 //    QRect geo = this->geometry();
 
@@ -224,14 +234,9 @@ void ProcessingView::SetFrame(OCImage &image)
 {
     testImage = &image;
     int i = 0;
-
-    if(testImage != nullptr && ui->openGLWidget->isValid())
-    {
-        ui->openGLWidget->SetTextureRed(testImage->Width(), testImage->Height(), (unsigned short*)testImage->RedChannel());
-        ui->openGLWidget->SetTextureGreen(testImage->Width(), testImage->Height(), (unsigned short*)testImage->GreenChannel());
-        ui->openGLWidget->SetTextureBlue(testImage->Width(), testImage->Height(), (unsigned short*)testImage->BlueChannel());
-    }
     //this->repaint();
+
+
     //ui->openGLWidget->SetTextureRed(image.Width(), image.Height(), (unsigned short*)image.RedChannel());
     //ui->openGLWidget->SetTextureGreen(4096, 3072, textureDataGreen);
     //ui->openGLWidget->SetTextureBlue(4096, 3072, textureDataBlue);

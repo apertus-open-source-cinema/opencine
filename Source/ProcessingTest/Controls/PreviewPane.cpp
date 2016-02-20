@@ -12,6 +12,10 @@ float yOffset = 0.5f / 3072.0f;
 
 float wheelValue = 1.0;
 
+GLuint textureRed  = 0;
+GLuint textureGreen = 0;
+GLuint textureBlue = 0;
+
 // Create a colored triangle
 static const float vertices[] = {
     -1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 0.0,
@@ -60,6 +64,10 @@ void PreviewPane::initializeGL()
     program->release();
 
     _initialized = true;
+
+    glGenTextures(1, &textureRed);
+    glGenTextures(1, &textureGreen);
+    glGenTextures(1, &textureBlue);
 }
 
 float viewWidth = 1;
@@ -81,10 +89,6 @@ void PreviewPane::resizeGL(int w, int h)
     //    mvp = projection * view * model;
     //glLoadMatrixf(m_projection.data());
 }
-
-GLuint textureRed  = 0;
-GLuint textureGreen = 0;
-GLuint textureBlue = 0;
 
 void PreviewPane::paintGL()
 {
@@ -255,15 +259,13 @@ void PreviewPane::wheelEvent(QWheelEvent* event)
 
 void PreviewPane::SetTextureRed(int width, int height, unsigned short* imageData)
 {
-    if(textureRed != 0)
-    {
-        return;
-    }
+//    if(textureRed != 0)
+//    {
+//        return;
+//    }
 
     imageWidth = width;
     imageHeight = height;
-
-    glGenTextures(1, &textureRed);
 
     glBindTexture(GL_TEXTURE_2D, textureRed);
 
@@ -295,13 +297,6 @@ void PreviewPane::SetTextureRed(int width, int height, unsigned short* imageData
 
 void PreviewPane::SetTextureBlue(int width, int height, unsigned short* imageData)
 {
-    if(textureBlue != 0)
-    {
-        return;
-    }
-
-    glGenTextures(1, &textureBlue);
-
     glBindTexture(GL_TEXTURE_2D, textureBlue);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
@@ -347,13 +342,6 @@ void PreviewPane::SwitchBlueChannel(bool enabled)
 
 void PreviewPane::SetTextureGreen(int width, int height, unsigned short* imageData)
 {
-    if(textureBlue != 0)
-    {
-        return;
-    }
-
-    glGenTextures(1, &textureGreen);
-
     glBindTexture(GL_TEXTURE_2D, textureGreen);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 2);

@@ -101,5 +101,8 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image)
     image.SetGreenChannel(frameProcessor->GetDataGreen());
     image.SetBlueChannel(frameProcessor->GetDataBlue());
 
-    delete[] imageData;
+    if(imageData != nullptr)
+    {
+        delete[] imageData;
+    }
 }

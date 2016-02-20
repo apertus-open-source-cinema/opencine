@@ -160,6 +160,18 @@ background: #FA8756
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>PREVIEW</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="PlaybackSlider" name="widget_2" native="true"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QTreeView" name="infoTreeView">
          <property name="focusPolicy">
           <enum>Qt::NoFocus</enum>
@@ -297,6 +309,12 @@ background: #FA8756
    <class>DestinationsControl</class>
    <extends>QWidget</extends>
    <header>Controls/DestinationsControl.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PlaybackSlider</class>
+   <extends>QWidget</extends>
+   <header>Controls/PlaybackSlider.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
