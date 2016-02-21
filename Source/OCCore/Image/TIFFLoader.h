@@ -7,6 +7,7 @@
 #include <iostream> //TODO: Remove when tests are finished
 #include <unordered_map>
 
+#include "Log/ILogger.h"
 #include "OCImage.h"
 
 #include "OCCore_export.h"
@@ -42,13 +43,11 @@ namespace OC
             uint32_t DataOffset;
         };
 
-        class EXPORT_API TIFFLoader : public IImageLoader
+        class EXPORT_API TIFFLoader : public IImageLoader, Logger
         {
             bool _swapEndianess;
             uint16_t _ifdEntries;
-
-        public:
-            TIFFLoader(unsigned char* data, unsigned int size, OCImage& image);
+            TIFFTag* tags;
 
             TIFFHeader ProcessHeader(char* buffer);
 
@@ -83,6 +82,11 @@ namespace OC
             void ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&)>>& varMap, ImageFormat& bitsPerPixel, unsigned int size, OC::DataProvider::OCImage& image, unsigned char* data);
 
             void PreProcess(unsigned char* data, OC::DataProvider::OCImage& image);
+
+            void Cleanup();
+
+        public:
+            TIFFLoader(unsigned char* data, unsigned int size, OCImage& image);
         };
     }
 }

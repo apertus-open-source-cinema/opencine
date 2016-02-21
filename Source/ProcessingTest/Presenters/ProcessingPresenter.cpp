@@ -32,7 +32,7 @@ void ProcessingPresenter::Test()
             return;
         }
 
-        provider->Load("Shot 1/helloworld-ML-cleanup.DNG", FileFormat::DNG, *_image.get());
+        provider->Load("Shot 1/Frame000320.DNG", FileFormat::DNG, *_image.get());
         _view->SetFrame(*_image.get());
         QThread::sleep(1);
 

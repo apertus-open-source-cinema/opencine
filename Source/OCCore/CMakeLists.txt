@@ -16,7 +16,8 @@ file(GLOB SOURCE_FILES "*.cpp" "*.h"
                        "MVP/*.cpp" "MVP/*.h"
                        "API/*.cpp" "API/*.h"
                        "Image/*.cpp" "Image/*.h"
-                       "Interfaces/*.cpp" "Interfaces/*.h")
+                       "Interfaces/*.cpp" "Interfaces/*.h"
+                       "Log/*.cpp" "Log/*.h")
 
 #file(GLOB HEADER_FILES "*.h")
 

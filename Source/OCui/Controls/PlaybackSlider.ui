@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>846</width>
-    <height>83</height>
+    <height>86</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,6 +20,28 @@
    <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QFrame" name="frame">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>63</height>
+      </size>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <property name="lineWidth">
+      <number>3</number>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QSlider" name="horizontalSlider">
      <property name="maximum">
@@ -67,7 +89,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/Icons/Icons/marker_start.png</normaloff>:/Icons/Icons/marker_start.png</iconset>
+         <normaloff>Resources/Icons/marker_start.png</normaloff>Resources/Icons/marker_start.png</iconset>
        </property>
       </widget>
      </item>
@@ -100,7 +122,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/Icons/Icons/jump_rev.png</normaloff>:/Icons/Icons/jump_rev.png</iconset>
+         <normaloff>Resources/Icons/jump_rev.png</normaloff>Resources/Icons/jump_rev.png</iconset>
        </property>
       </widget>
      </item>
@@ -117,10 +139,10 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/Icons/Icons/frame_rev.png</normaloff>
-         <normalon>:/Icons/Icons/frame_rev.png</normalon>
-         <disabledon>:/Icons/Icons/frame_rev.png</disabledon>
-         <activeon>:/Icons/Icons/pause.png</activeon>:/Icons/Icons/frame_rev.png</iconset>
+         <normaloff>Resources/Icons/frame_rev.png</normaloff>
+         <normalon>Resources/Icons/frame_rev.png</normalon>
+         <disabledon>Resources/Icons/frame_rev.png</disabledon>
+         <activeon>Resources/Icons/pause.png</activeon>Resources/Icons/frame_rev.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -140,7 +162,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/Icons/Icons/play_rev.png</normaloff>:/Icons/Icons/play_rev.png</iconset>
+         <normaloff>Resources/Icons/play_rev.png</normaloff>Resources/Icons/play_rev.png</iconset>
        </property>
       </widget>
      </item>
@@ -160,7 +182,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>/Resources/Icons/stop.png</normaloff>/Resources/Icons/stop.png</iconset>
+         <normaloff>Resources/Icons/stop.png</normaloff>Resources/Icons/stop.png</iconset>
        </property>
       </widget>
      </item>
@@ -177,7 +199,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/Icons/Icons/play_fwd.png</normaloff>:/Icons/Icons/play_fwd.png</iconset>
+         <normaloff>Resources/Icons/play_fwd.png</normaloff>Resources/Icons/play_fwd.png</iconset>
        </property>
        <property name="checkable">
         <bool>false</bool>
@@ -197,10 +219,10 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/Icons/Icons/frame_fwd.png</normaloff>
-         <normalon>:/Icons/Icons/frame_fwd.png</normalon>
-         <disabledon>:/Icons/Icons/frame_fwd.png</disabledon>
-         <activeon>:/Icons/Icons/pause.png</activeon>:/Icons/Icons/frame_fwd.png</iconset>
+         <normaloff>Resources/Icons/frame_fwd.png</normaloff>
+         <normalon>Resources/Icons/frame_fwd.png</normalon>
+         <disabledon>Resources/Icons/frame_fwd.png</disabledon>
+         <activeon>Resources/Icons/pause.png</activeon>Resources/Icons/frame_fwd.png</iconset>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -220,7 +242,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/Icons/Icons/jump_fwd.png</normaloff>:/Icons/Icons/jump_fwd.png</iconset>
+         <normaloff>Resources/Icons/jump_fwd.png</normaloff>Resources/Icons/jump_fwd.png</iconset>
        </property>
       </widget>
      </item>
@@ -253,7 +275,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>:/Icons/Icons/marker_end.png</normaloff>:/Icons/Icons/marker_end.png</iconset>
+         <normaloff>Resources/Icons/marker_end.png</normaloff>Resources/Icons/marker_end.png</iconset>
        </property>
       </widget>
      </item>

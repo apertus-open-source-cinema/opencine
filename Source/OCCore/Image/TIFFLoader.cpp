@@ -24,7 +24,7 @@ TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image) :
         SwapEndian(_ifdEntries);
     }
 
-    TIFFTag* tags = new TIFFTag[_ifdEntries];
+    tags  = new TIFFTag[_ifdEntries];
     memcpy(tags, data + header.IFDOffset + sizeof(_ifdEntries), sizeof(TIFFTag) * _ifdEntries);
 
     ImageFormat bitsPerPixel = ImageFormat::Integer12;
@@ -39,6 +39,7 @@ TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image) :
         }
 
         std::cout << "Tag ID: " << tags[i].ID << std::endl;
+        LogInfo("Tag ID: " + std::to_string(tags[i].ID));
 
         auto it = varMap.find(tags[i].ID);
         if(it != varMap.end())
@@ -49,8 +50,22 @@ TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image) :
 
     PreProcess(data, image);
 
-    delete[] tags;
+    Cleanup();
 }
+
+void TIFFLoader::Cleanup()
+{
+    if(imageData != nullptr)
+    {
+        delete[] imageData;
+    }
+
+    if(tags != nullptr)
+    {
+        delete[] tags;
+    }
+}
+
 TIFFHeader TIFFLoader::ProcessHeader(char* buffer)
 {
     TIFFHeader header;
@@ -100,9 +115,4 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image)
     image.SetRedChannel(frameProcessor->GetDataRed());
     image.SetGreenChannel(frameProcessor->GetDataGreen());
     image.SetBlueChannel(frameProcessor->GetDataBlue());
-
-    if(imageData != nullptr)
-    {
-        delete[] imageData;
-    }
 }
