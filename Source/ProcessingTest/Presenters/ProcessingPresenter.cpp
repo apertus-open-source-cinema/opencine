@@ -32,15 +32,17 @@ void ProcessingPresenter::Test()
             return;
         }
 
+        LogWarning("Loading file: Shot 1/Frame000320.DNG");
         provider->Load("Shot 1/Frame000320.DNG", FileFormat::DNG, *_image.get());
         _view->SetFrame(*_image.get());
-        QThread::sleep(1);
+        QThread::sleep(1);        
 
         if(_image == nullptr)
         {
             return;
         }
 
+        LogWarning("Loading file: Shot 1/Frame000460.DNG");
         provider->Load("Shot 1/Frame000460.dng", FileFormat::DNG, *_image.get());
         _view->SetFrame(*_image.get());
         QThread::sleep(1);

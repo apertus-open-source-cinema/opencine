@@ -10,7 +10,7 @@
 
 using namespace OC::DataProvider;
 
-class ProcessingPresenter : public IProcessingPresenter
+class ProcessingPresenter : public IProcessingPresenter, public Logger
 {
     IProcessingView* _view;
 

@@ -1,10 +1,12 @@
 #include "ILogger.h"
 
+#include "EasyLoggingAdapter.h"
 #include "log4cxxLogger.h"
 
 Logger::Logger()
 {
-    loggerImplementation = new log4cxxLogger();
+    //loggerImplementation = new log4cxxLogger();
+    loggerImplementation = new EasyLoggingAdapter();
 }
 
 void Logger::LogWarning(std::string message)
