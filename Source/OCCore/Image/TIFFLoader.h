@@ -9,6 +9,7 @@
 
 #include "Log/ILogger.h"
 #include "OCImage.h"
+#include "IImageLoader.h"
 
 #include "OCCore_export.h"
 
@@ -22,11 +23,6 @@ namespace OC
             const uint16_t endianness = 256;
             return *(const uint8_t *)&endianness;
         }
-
-        class IImageLoader
-        {
-
-        };
 
         struct TIFFHeader
         {
@@ -43,7 +39,7 @@ namespace OC
             uint32_t DataOffset;
         };
 
-        class EXPORT_API TIFFLoader : public IImageLoader, Logger
+        class OCCORE_EXPORT TIFFLoader : public IImageLoader, Logger
         {
             bool _swapEndianess;
             uint16_t _ifdEntries;

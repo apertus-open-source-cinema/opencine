@@ -7,7 +7,7 @@
 
 #include "OCCore_export.h"
 
-struct EXPORT_API DriveInfo
+struct OCCORE_EXPORT DriveInfo
 {
     std::string DriveName = "?";
     std::string DrivePath = "?";
@@ -16,7 +16,7 @@ struct EXPORT_API DriveInfo
     std::string SpaceUnit = "?";
 };
 
-class EXPORT_API IDriveManager : public QObject
+class OCCORE_EXPORT IDriveManager : public QObject
 {
     Q_OBJECT
 

@@ -13,7 +13,7 @@ class QWidget;
 
 namespace OCui
 {
-    class EXPORT_API GUIApplication : public QObject
+    class OCUI_EXPORT GUIApplication : public QObject
     {
         std::shared_ptr<QApplication> _application;
         std::shared_ptr<MainWindow> _mainWindow;

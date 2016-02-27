@@ -4,8 +4,8 @@ import QtQuick.Controls 1.3
 
 Rectangle {
     id: root
-    width: 640
-    height: 480
+    width: 700
+    height: 700
     color: "#1b1b1b"
 
     //property alias fileList: gridView1.model
@@ -27,9 +27,9 @@ Rectangle {
         cacheBuffer: 20
         anchors.fill: parent
         boundsBehavior: Flickable.StopAtBounds
-        cellWidth: 276
+        cellWidth: 210
         scale: 1
-        cellHeight: 223
+        cellHeight: (cellWidth / 4 * 3) + 10
         highlightRangeMode: GridView.NoHighlightRange
         snapMode: GridView.NoSnap
 
@@ -40,9 +40,11 @@ Rectangle {
         delegate: ThumbnailItem
         {
             id: thumbnailItem
-            clipResolution: model.clipWidth + "x" + model.clipHeight
-            clipName: model.clipName
-            clipPath: model.clipPath
+            //clipResolution: model.clipWidth + "x" + model.clipHeight
+            //clipName: model.clipName
+            //clipPath: model.clipPath
+            width: 200
+            //height: 200
         }
 
         addDisplaced: Transition {

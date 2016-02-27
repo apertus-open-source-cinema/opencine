@@ -6,7 +6,7 @@
 
 #include "Interfaces/IDriveManager.h"
 
-class EXPORT_API DriveManager : public IDriveManager
+class OCCORE_EXPORT DriveManager : public IDriveManager
 {
     Q_OBJECT
 

@@ -10,6 +10,8 @@
 
 #include "Presenters/BackupPresenter.h"
 
+#include <Helper/QMLThumbnailProvider.h>
+
 #include "../Data/DriveListItem.h"
 #include "../Data/ThumbnailViewItem.h"
 
@@ -92,6 +94,9 @@ QQmlContext*  qmlContext2;
 QList<QObject*>*  _fileList;
 void BackupView::SetupThumbnailView()
 {
+    QQmlEngine *engine = ui->thumbnailViewControl->engine();
+    engine->addImageProvider(QLatin1String("colors"), new QMLThumbnailProvider());
+
     _fileList = new QList<QObject*>();
     qmlContext2 = ui->thumbnailViewControl->rootContext();
     qmlContext2->setContextProperty("fileList", QVariant::fromValue(*_fileList));

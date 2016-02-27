@@ -9,7 +9,7 @@ EasyLoggingAdapter::EasyLoggingAdapter()
     el::Configurations defaultConf;
     defaultConf.setToDefault();
     defaultConf.setGlobally(el::ConfigurationType::Format, "%datetime %level %msg");
-    defaultConf.setGlobally(el::ConfigurationType::Filename, "logs/OC.log");
+    defaultConf.setGlobally(el::ConfigurationType::Filename, "Logs/OC.log");
     el::Loggers::reconfigureLogger("default", defaultConf);
 }
 

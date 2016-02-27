@@ -3,8 +3,9 @@
 
 #include <libraw.h>
 
-class LibRawAdapter //: public IImageLoader
+class LibRawAdapter : public IImageLoader
 {
+public:
 
 };
 

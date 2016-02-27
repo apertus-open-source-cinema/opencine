@@ -14,7 +14,7 @@ public:
     virtual void LogFatal(std::string message) = 0;
 };
 
-class EXPORT_API Logger : public ILogger
+class OCCORE_EXPORT  Logger : public ILogger
 {
     ILogger* loggerImplementation;
 

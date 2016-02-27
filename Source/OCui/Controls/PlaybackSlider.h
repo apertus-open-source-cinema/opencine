@@ -9,7 +9,7 @@ namespace Ui {
   class PlaybackSlider;
 }
 
-class EXPORT_API PlaybackSlider : public QWidget
+class OCUI_EXPORT PlaybackSlider : public QWidget
 {
   Q_OBJECT
 
