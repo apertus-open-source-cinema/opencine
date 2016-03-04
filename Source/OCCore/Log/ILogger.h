@@ -5,10 +5,10 @@
 #include <sstream>
 #include <string>
 
-#define OC_LOG_WARNING(message) LogWarning(FormatMessage(message, __FILE__, __LINE__))
-#define OC_LOG_ERROR(message) LogError(FormatMessage(message, __FILE__, __LINE__))
-#define OC_LOG_INFO(message) LogInfo(FormatMessage(message, __FILE__, __LINE__))
-#define OC_LOG_FATAL(message) LogFatal(FormatMessage(message, __FILE__, __LINE__))
+#define OC_LOG_INFO(message) this->LogInfo(this->FormatMessage(this->LevelInfo, message, __FILE__, __LINE__))
+#define OC_LOG_WARNING(message) this->LogWarning(this->FormatMessage(this->LevelWarning, message, __FILE__, __LINE__))
+#define OC_LOG_ERROR(message) this->LogError(this->FormatMessage(this->LevelError, message, __FILE__, __LINE__))
+#define OC_LOG_FATAL(message) this->LogFatal(this->FormatMessage(this->LevelFatal, message, __FILE__, __LINE__))
 
 namespace OC {
 namespace Log {
@@ -35,8 +35,20 @@ public:
     virtual void LogFatal(std::string message);
 
 protected:
+    enum Level {
+        LevelNone = 0,
+
+        LevelFatal,
+        LevelError,
+        LevelWarning,
+        LevelInfo,
+
+        FirstLevel = LevelFatal,
+        LastLevel =  LevelInfo,
+        Levels = LastLevel - FirstLevel + 1
+    };
     std::string FormatMessage
-    (std::string message, std::string file, int lineNumber);
+    (Level level, std::string message, std::string file, int lineNumber);
 };
 
 } // namespace Log
