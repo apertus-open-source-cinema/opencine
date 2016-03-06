@@ -40,7 +40,7 @@ void ProcessingPresenter::Test()
             return;
         }
 
-        Logger::LogWarning("test warning", __FILE__, __LINE__);
+        //Logger::LogWarning("test warning", __FILE__, __LINE__);
         OC_LOG_WARNING("Loading file: Shot 1/Frame000320.dng");
         OC_LOG_ERROR("Loading file: Shot 1/Frame000320.dng failed");
         provider->Load("Shot 1/Frame000320.dng", FileFormat::DNG, *_image.get());
