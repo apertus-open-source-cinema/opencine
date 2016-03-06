@@ -89,7 +89,27 @@ void TIFFLoader::ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&
     //std::unordered_map<int, std::function<void(TIFFTag&)>> varMap;
     varMap.insert(std::make_pair(256, [&image] (TIFFTag& tag) { image.SetWidth(tag.DataOffset); }));
     varMap.insert(std::make_pair(257, [&image] (TIFFTag& tag) { image.SetHeight(tag.DataOffset); }));
-    varMap.insert(std::make_pair(33422, [&image] (TIFFTag& tag) { image.SetType(ImageType::Bayer); }));
+    varMap.insert(std::make_pair(33422, [&image] (TIFFTag& tag)
+    {
+                      image.SetType(ImageType::Bayer);
+                      switch(tag.DataOffset)
+                      {
+                          //read right to left to get right values
+                          //e.g. RGGB -> 02 B | 01 G | 01 G | 00 R
+                          case 0x02010100:
+                          image.SetBayerPattern(BayerPattern::RGGB);
+                          break;
+                          case 0x00010102:
+                          image.SetBayerPattern(BayerPattern::BGGR);
+                          break;
+                          case 0x01000201:
+                          image.SetBayerPattern(BayerPattern::GBRG);
+                          break;
+                          case 0x01020001:
+                          image.SetBayerPattern(BayerPattern::GRBG);
+                          break;
+                      }
+                  }));
 
     varMap.insert(std::make_pair(258, [&bitsPerPixel] (TIFFTag& tag)
     {
@@ -110,7 +130,7 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image)
 {
     std::unique_ptr<BayerFramePreProcessor> frameProcessor(new BayerFramePreProcessor());
 
-    frameProcessor->SetData(data[testOffset], image.Width(), image.Height(), SourceFormat::Integer12, BayerPattern::GRBG);
+    frameProcessor->SetData(data[testOffset], image.Width(), image.Height(), SourceFormat::Integer12, image.GetBayerPattern());
 
     frameProcessor->Process();
 

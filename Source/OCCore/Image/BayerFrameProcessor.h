@@ -4,14 +4,9 @@
 #include <thread>
 
 #include "IFrameProcessor.h"
+#include "OCImage.h"
 
-enum class BayerPattern
-{
-    RGGB,
-    BGGR,
-    GRBG,
-    GBRG
-};
+using namespace OC::DataProvider;
 
 class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor
 {
@@ -19,7 +14,7 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor
     unsigned short* _outputData;
     unsigned int _size;
 
-    BayerPattern _pattern = BayerPattern::RGGB;
+    OC::DataProvider::BayerPattern _pattern = BayerPattern::RGGB;
 
     unsigned short* dataUL; //upper-left data
     unsigned short* dataUR; //upper-right data

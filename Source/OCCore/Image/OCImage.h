@@ -10,11 +10,22 @@ namespace OC
 {
     namespace DataProvider
     {
+        //TODO: Move to some general definition file
+        enum class BayerPattern
+        {
+            RGGB,
+            BGGR,
+            GRBG,
+            GBRG
+        };
+
         class OCImage
         {
             unsigned int _width;
             unsigned int _height;
             //unsigned char* _data;
+
+            BayerPattern _pattern;
 
             ImageType _type;
 
@@ -146,6 +157,16 @@ namespace OC
                 }
 
                 memmove(_blueData, blueData, _dataLength);
+            }
+
+            void SetBayerPattern(BayerPattern pattern)
+            {
+                _pattern = pattern;
+            }
+
+            BayerPattern GetBayerPattern()
+            {
+                return _pattern;
             }
         };
     }
