@@ -4,6 +4,8 @@
 
 #include <Image/NearestNeighborScaler.h>
 
+#include <Log/ILogger.h>
+
 using namespace OC::DataProvider;
 
 ProcessingPresenter::ProcessingPresenter(IProcessingView& view)
@@ -12,6 +14,11 @@ ProcessingPresenter::ProcessingPresenter(IProcessingView& view)
 
     provider.reset(new ImageProvider());
 }
+
+//LOG_WARNING("Test 4321");
+/*LogError("Test");
+LogFatal("Test");
+LogInfo("Test")*/;
 
 void ProcessingPresenter::Test()
 {
@@ -25,6 +32,7 @@ void ProcessingPresenter::Test()
 
     //frameProcessor->SetData(*image->Data(), image->Width(), image->Height(), SourceFormat::Integer12);
     //frameProcessor->Process();
+
     while(true)
     {
         if(_image == nullptr)
@@ -32,7 +40,9 @@ void ProcessingPresenter::Test()
             return;
         }
 
-        LogWarning("Loading file: Shot 1/Frame000320.dng");
+        Logger::LogWarning("test warning", __FILE__, __LINE__);
+        OC_LOG_WARNING("Loading file: Shot 1/Frame000320.dng");
+        OC_LOG_ERROR("Loading file: Shot 1/Frame000320.dng failed");
         provider->Load("Shot 1/Frame000320.dng", FileFormat::DNG, *_image.get());
         _view->SetFrame(*_image.get());
         QThread::sleep(1);        
@@ -42,7 +52,7 @@ void ProcessingPresenter::Test()
             return;
         }
 
-        LogWarning("Loading file: Shot 1/Frame000338.dng");
+       // LOG_WARNING("Loading file: Shot 1/Frame000338.dng");
         provider->Load("Shot 1/Frame000338.dng", FileFormat::DNG, *_image.get());
         _view->SetFrame(*_image.get());
         QThread::sleep(1);
@@ -52,7 +62,7 @@ void ProcessingPresenter::Test()
             return;
         }
 
-        LogWarning("Loading file: Shot 1/Frame000460.dng");
+        //LOG_WARNING("Loading file: Shot 1/Frame000460.dng");
         provider->Load("Shot 1/Frame000460.dng", FileFormat::DNG, *_image.get());
         _view->SetFrame(*_image.get());
         QThread::sleep(1);
