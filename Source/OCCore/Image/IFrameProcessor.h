@@ -9,14 +9,6 @@ namespace OC
 {
     namespace DataProvider
     {
-        enum class BayerPattern
-        {
-            RGGB,
-            BGGR,
-            GRBG,
-            GBRG
-        };
-
         class IFrameProcessor
         {
         public:

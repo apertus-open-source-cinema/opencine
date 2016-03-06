@@ -13,11 +13,18 @@ enum class BayerPattern
     GBRG
 };
 
-class BayerFrameProcessor : public OC::DataProvider::IFrameProcessor
+class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor
 {
     unsigned char* _data;
     unsigned short* _outputData;
     unsigned int _size;
+
+    BayerPattern _pattern = BayerPattern::RGGB;
+
+    unsigned short* dataUL; //upper-left data
+    unsigned short* dataUR; //upper-right data
+    unsigned short* dataLL; //lower-left data
+    unsigned short* dataLR; //lower-right data
 
     unsigned short* _dataRed;
     unsigned short* _dataGreen;
@@ -25,6 +32,37 @@ class BayerFrameProcessor : public OC::DataProvider::IFrameProcessor
 
     unsigned int _width;
     unsigned int _height;
+
+    void MapPatternToData()
+    {
+        switch(_pattern)
+        {
+        case BayerPattern::RGGB:
+            dataUL = _dataRed;
+            dataUR = _dataGreen;
+            dataLL = _dataGreen;
+            dataLR = _dataBlue;
+            break;
+        case BayerPattern::BGGR:
+            dataUL = _dataBlue;
+            dataUR = _dataGreen;
+            dataLL = _dataGreen;
+            dataLR = _dataRed;
+            break;
+        case BayerPattern::GRBG:
+            dataUL = _dataGreen;
+            dataUR = _dataRed;
+            dataLL = _dataBlue;
+            dataLR = _dataGreen;
+            break;
+        case BayerPattern::GBRG:
+            dataUL = _dataGreen;
+            dataUR = _dataBlue;
+            dataLL = _dataRed;
+            dataLR = _dataGreen;
+            break;
+        }
+    }
 
     void ExtractRedGreen()
     {
@@ -55,12 +93,12 @@ class BayerFrameProcessor : public OC::DataProvider::IFrameProcessor
             {
                 if(columnIndex % 2)
                 {
-                    _dataGreen[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                    dataUR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
                     //_dataGreen[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
                 else
                 {
-                    _dataRed[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                    dataUL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
                     //_dataRed[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
             }
@@ -95,12 +133,12 @@ class BayerFrameProcessor : public OC::DataProvider::IFrameProcessor
             {
                 if(columnIndex % 2)
                 {
-                    _dataBlue[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                    dataLR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
                     //_dataBlue[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
                 else
                 {
-                    _dataGreen[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                    dataLL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
                     //_dataGreen[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
             }
@@ -108,12 +146,12 @@ class BayerFrameProcessor : public OC::DataProvider::IFrameProcessor
     }
 
 public:
-    BayerFrameProcessor()
+    BayerFramePreProcessor()
     {
 
     }
 
-    ~BayerFrameProcessor()
+    ~BayerFramePreProcessor()
     {
         delete[] _dataRed;
         delete[] _dataGreen;
@@ -136,14 +174,36 @@ public:
         _dataRed = new unsigned short[_size];
         _dataGreen = new unsigned short[_size];
         _dataBlue = new unsigned short[_size];
+
+        MapPatternToData();
+    }
+
+    virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat, BayerPattern pattern)
+    {
+        _data = &data;
+
+        _width = width;
+        _height = height;
+
+        _size = _width * _height;
+
+        _outputData = new unsigned short[_size];
+
+        _dataRed = new unsigned short[_size];
+        _dataGreen = new unsigned short[_size];
+        _dataBlue = new unsigned short[_size];
+
+        _pattern = pattern;
+
+        MapPatternToData();
     }
 
     void Process()
     {
         Convert12To16Bit();
 
-        std::thread t1(&BayerFrameProcessor::ExtractRedGreen, this);
-        std::thread t2(&BayerFrameProcessor::ExtractGreenBlue, this);
+        std::thread t1(&BayerFramePreProcessor::ExtractRedGreen, this);
+        std::thread t2(&BayerFramePreProcessor::ExtractGreenBlue, this);
 
         t1.join();
         t2.join();
@@ -206,3 +266,4 @@ public:
 };
 
 #endif // IFRAMEPROCESSOR_H
+

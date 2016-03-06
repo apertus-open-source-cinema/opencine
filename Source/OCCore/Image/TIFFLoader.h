@@ -39,7 +39,7 @@ namespace OC
             uint32_t DataOffset;
         };
 
-        class OCCORE_EXPORT TIFFLoader : public IImageLoader, Logger
+        class OCCORE_EXPORT TIFFLoader : public IImageLoader, OC::Log::Logger
         {
             bool _swapEndianess;
             uint16_t _ifdEntries;

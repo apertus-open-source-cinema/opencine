@@ -3,15 +3,21 @@
 
 #include "ILogger.h"
 
-class EasyLoggingAdapter : public ILogger
+namespace OC
 {
-public:
-    EasyLoggingAdapter();
+    namespace Log
+    {
+        class EasyLoggingAdapter : public ILogger
+        {
+        public:
+            EasyLoggingAdapter();
 
-    void LogWarning(std::string message);
-    void LogError(std::string message);
-    void LogInfo(std::string message);
-    void LogFatal(std::string message);
-};
+            void LogWarningImpl(std::string message);
+            void LogErrorImpl(std::string message);
+            void LogInfoImpl(std::string message);
+            void LogFatalImpl(std::string message);
+        };
+    }
+}
 
 #endif //EASYLOGGINGADAPTER_H

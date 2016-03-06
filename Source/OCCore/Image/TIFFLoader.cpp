@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include <Log/ILogger.h>
+
 #include "BayerFrameProcessor.h"
 
 using namespace OC::DataProvider;
@@ -39,7 +41,7 @@ TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image) :
         }
 
         std::cout << "Tag ID: " << tags[i].ID << std::endl;
-        LogInfo("Tag ID: " + std::to_string(tags[i].ID));
+        //LOG_WARNING("Tag ID: ");// << std::to_string(tags[i].ID));
 
         auto it = varMap.find(tags[i].ID);
         if(it != varMap.end())
@@ -106,9 +108,9 @@ void TIFFLoader::ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&
 
 void TIFFLoader::PreProcess(unsigned char* data, OCImage& image)
 {
-    std::unique_ptr<IFrameProcessor> frameProcessor(new BayerFrameProcessor());
+    std::unique_ptr<BayerFramePreProcessor> frameProcessor(new BayerFramePreProcessor());
 
-    frameProcessor->SetData(data[testOffset], image.Width(), image.Height(), SourceFormat::Integer12);
+    frameProcessor->SetData(data[testOffset], image.Width(), image.Height(), SourceFormat::Integer12, BayerPattern::GRBG);
 
     frameProcessor->Process();
 
