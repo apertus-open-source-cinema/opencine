@@ -12,7 +12,7 @@ namespace OC
         class IFrameProcessor
         {
         public:
-            virtual ~IFrameProcessor();
+            virtual ~IFrameProcessor() {}
 
             virtual void Process() = 0;
             virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, SourceFormat sourceFormat) = 0;
@@ -21,8 +21,8 @@ namespace OC
             virtual unsigned short* GetDataBlue() = 0;
         };
 
-        IFrameProcessor::~IFrameProcessor() {}
+        //IFrameProcessor::~IFrameProcessor() {}
     }
 }
-#endif // IFRAMEPROCESSOR_H
+#endif //IFRAMEPROCESSOR_H
 

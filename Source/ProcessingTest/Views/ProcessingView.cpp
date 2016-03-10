@@ -16,7 +16,7 @@
 
 #include "Controls/PreviewPane.h"
 
-#include "Image/BayerFrameProcessor.h"
+#include "Image/BayerFramePreProcessor.h"
 
 //unsigned char* imageData;
 //unsigned short* textureData;
@@ -118,7 +118,7 @@ bool init = false;
 
 void ProcessingView::paintEvent(QPaintEvent *)
 {
-    if(ui->openGLWidget->isValid())
+    if(ui->openGLWidget->isValid() && testImage != nullptr)
     {
         ui->openGLWidget->SetTextureRed(testImage->Width(), testImage->Height(), (unsigned short*)testImage->RedChannel());
         ui->openGLWidget->SetTextureGreen(testImage->Width(), testImage->Height(), (unsigned short*)testImage->GreenChannel());

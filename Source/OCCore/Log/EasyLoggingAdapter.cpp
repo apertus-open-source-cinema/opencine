@@ -15,22 +15,22 @@ EasyLoggingAdapter::EasyLoggingAdapter()
     el::Loggers::reconfigureLogger("default", defaultConf);
 }
 
-void EasyLoggingAdapter::LogWarningImpl(std::string message)
+void EasyLoggingAdapter::LogWarning(std::string message)
 {
     LOG(WARNING) << message;
 }
 
-void EasyLoggingAdapter::LogErrorImpl(std::string message)
+void EasyLoggingAdapter::LogError(std::string message)
 {
     LOG(ERROR) << message;
 }
 
-void EasyLoggingAdapter::LogInfoImpl(std::string message)
+void EasyLoggingAdapter::LogInfo(std::string message)
 {
     LOG(INFO) << message;
 }
 
-void EasyLoggingAdapter::LogFatalImpl(std::string message)
+void EasyLoggingAdapter::LogFatal(std::string message)
 {
     LOG(FATAL) << message;
 }

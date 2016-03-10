@@ -4,7 +4,7 @@
 
 #include <Log/ILogger.h>
 
-#include "BayerFrameProcessor.h"
+#include "BayerFramePreProcessor.h"
 
 using namespace OC::DataProvider;
 
@@ -89,7 +89,7 @@ void TIFFLoader::ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&
     //std::unordered_map<int, std::function<void(TIFFTag&)>> varMap;
     varMap.insert(std::make_pair(256, [&image] (TIFFTag& tag) { image.SetWidth(tag.DataOffset); }));
     varMap.insert(std::make_pair(257, [&image] (TIFFTag& tag) { image.SetHeight(tag.DataOffset); }));
-    varMap.insert(std::make_pair(33422, [&image] (TIFFTag& tag)
+    varMap.insert(std::make_pair(33422, [&image] (TIFFTag& tag) //Bayer pattern
     {
                       image.SetType(ImageType::Bayer);
                       switch(tag.DataOffset)

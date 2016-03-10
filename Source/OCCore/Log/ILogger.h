@@ -15,6 +15,8 @@ namespace Log {
 
 class OCCORE_EXPORT ILogger {
 public:
+    ~ILogger() {};
+
     virtual void LogWarning(std::string message) = 0;
     virtual void LogError(std::string message) = 0;
     virtual void LogInfo(std::string message) = 0;

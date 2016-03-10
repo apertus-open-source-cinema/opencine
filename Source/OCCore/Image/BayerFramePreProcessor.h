@@ -3,12 +3,14 @@
 
 #include <thread>
 
+#include <Log/ILogger.h>
+
 #include "IFrameProcessor.h"
 #include "OCImage.h"
 
 using namespace OC::DataProvider;
 
-class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor
+class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor, public OC::Log::Logger
 {
     unsigned char* _data;
     unsigned short* _outputData;
@@ -59,7 +61,7 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor
         }
     }
 
-    void ExtractRedGreen()
+    void ExtractOddRows()
     {
         unsigned int rowIndex = 0;
         unsigned int columnIndex = 0;
@@ -100,7 +102,7 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor
         }
     }
 
-    void ExtractGreenBlue()
+    void ExtractEvenRows()
     {
         unsigned int rowIndex = 1;
         unsigned int columnIndex = 0;
@@ -134,8 +136,74 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor
                 else
                 {
                     dataLL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+
                     //_dataGreen[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
+            }
+        }
+    }
+
+    void FilterUL()
+    {
+        unsigned int rowIndex = 0;
+        unsigned int columnIndex = 0;
+
+        for(rowIndex = 1; rowIndex < _height; rowIndex += 2)
+        {
+            for(columnIndex = 2; columnIndex < _width - 2; columnIndex += 2)
+            {                
+                //dataUL[(rowIndex) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex) * _width + columnIndex + 2]) / 2;
+                //dataUL[(rowIndex + 1) * _width + columnIndex] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
+
+                //dataUL[(rowIndex + 1) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
+                //dataUL[(rowIndex + 1) * _width + columnIndex - 1] = dataUL[(rowIndex + 1) * _width + columnIndex + 1];
+                dataUL[rowIndex * _width + columnIndex] = ((dataUL[rowIndex * _width + columnIndex - 1] + dataUL[rowIndex * _width + columnIndex + 1]) + (dataUL[(rowIndex - 1) * _width + columnIndex] + dataUL[(rowIndex + 1) * _width + columnIndex])) / 4;
+            }
+        }
+
+        for(rowIndex = 2; rowIndex < _height; rowIndex += 2)
+        {
+            for(columnIndex = 1; columnIndex < _width - 2; columnIndex += 2)
+            {
+                //dataUL[(rowIndex) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex) * _width + columnIndex + 2]) / 2;
+                //dataUL[(rowIndex + 1) * _width + columnIndex] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
+
+                //dataUL[(rowIndex + 1) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
+                //dataUL[(rowIndex + 1) * _width + columnIndex - 1] = dataUL[(rowIndex + 1) * _width + columnIndex + 1];
+                dataUL[rowIndex * _width + columnIndex] = ((dataUL[rowIndex * _width + columnIndex - 1] + dataUL[rowIndex * _width + columnIndex + 1]) + (dataUL[(rowIndex - 1) * _width + columnIndex] + dataUL[(rowIndex + 1) * _width + columnIndex])) / 4;
+            }
+        }
+    }
+
+    void FilterLL()
+    {
+        unsigned int rowIndex = 1;
+        unsigned int columnIndex = 0;
+
+        for(rowIndex = 1; rowIndex < _height; rowIndex += 2)
+        {
+            for(columnIndex = 0; columnIndex < _width - 2; columnIndex += 2)
+            {
+                dataLL[(rowIndex + 1) * _width + columnIndex] = (dataLL[rowIndex * _width + columnIndex] + dataLL[(rowIndex + 2) * _width + columnIndex]) / 2;
+            }
+        }
+    }
+
+    void FilterUR()
+    {
+        unsigned int rowIndex = 0;
+        unsigned int columnIndex = 2;
+
+        for(rowIndex = 0; rowIndex < _height; rowIndex += 2)
+        {
+            for(columnIndex = 2; columnIndex < _width - 2; columnIndex += 2)
+            {
+                if(columnIndex == 0)
+                {
+                    columnIndex = 2;
+
+                }
+                dataUR[(rowIndex) * _width + columnIndex] = (dataUR[(rowIndex) * _width + columnIndex - 1] + dataUR[(rowIndex) * _width + columnIndex + 1]) / 2;
             }
         }
     }
@@ -195,13 +263,24 @@ public:
 
     void Process()
     {
+        OC_LOG_INFO("12->16bit conversion");
         Convert12To16Bit();
 
-        std::thread t1(&BayerFramePreProcessor::ExtractRedGreen, this);
-        std::thread t2(&BayerFramePreProcessor::ExtractGreenBlue, this);
+        //Process2();
+        OC_LOG_INFO("Extract rows");
+        std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
+        std::thread t2(&BayerFramePreProcessor::ExtractEvenRows, this);
 
         t1.join();
         t2.join();
+
+        OC_LOG_INFO("Extract finished");
+
+         //std::thread t3(&BayerFramePreProcessor::FilterUL, this);
+        //FilterLL();
+         //std::thread t4(&BayerFramePreProcessor::FilterUR, this);
+         //t3.join();
+         //t4.join();
     }
 
     void Convert12To16Bit()
@@ -209,7 +288,7 @@ public:
         int j = 0;
         int dataSize = _size * 1.5; //16bit / 12bit
 
-        for (long long i=0; i < dataSize; i += 3)
+        for (long long i = 0; i < dataSize; i += 3)
         {
             uint16_t pixel1 = (_data[i] << 4) + ((_data[i + 1] & 0xF0) >> 4);
             pixel1 &= 0xFFF;

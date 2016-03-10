@@ -7,14 +7,7 @@
 namespace OC {
 namespace Log {
 
-Logger::Logger() {
-    loggerImplementation = new log4cxxLogger();
-}
-Logger::~Logger() {
-    if ((loggerImplementation)) {
-        delete loggerImplementation;
-    }
-}
+
 
 } // namespace Log
 } // namespace OC 
