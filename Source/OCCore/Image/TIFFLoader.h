@@ -7,7 +7,6 @@
 #include <iostream> //TODO: Remove when tests are finished
 #include <unordered_map>
 
-#include "Log/ILogger.h"
 #include "OCImage.h"
 #include "IImageLoader.h"
 
@@ -39,7 +38,7 @@ namespace OC
             uint32_t DataOffset;
         };
 
-        class OCCORE_EXPORT TIFFLoader : public IImageLoader, OC::Log::Logger
+        class OCCORE_EXPORT TIFFLoader : public IImageLoader
         {
             bool _swapEndianess;
             uint16_t _ifdEntries;

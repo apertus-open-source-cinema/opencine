@@ -10,27 +10,27 @@ EasyLoggingAdapter::EasyLoggingAdapter()
 {
     el::Configurations defaultConf;
     defaultConf.setToDefault();
-    defaultConf.setGlobally(el::ConfigurationType::Format, "%datetime %level %msg (%loc)");
+    //defaultConf.setGlobally(el::ConfigurationType::Format, "%datetime %level %msg (%loc)");
     defaultConf.setGlobally(el::ConfigurationType::Filename, "Logs/OC.log");
     el::Loggers::reconfigureLogger("default", defaultConf);
 }
 
-void EasyLoggingAdapter::LogWarning(std::string message)
+void EasyLoggingAdapter::LogWarning(std::string message, std::string file, unsigned int line)
 {
-    LOG(WARNING) << message;
+    LOG(WARNING) << message << "(" << file << ", " << line << ")";
 }
 
-void EasyLoggingAdapter::LogError(std::string message)
+void EasyLoggingAdapter::LogError(std::string message, std::string file, unsigned int line)
 {
-    LOG(ERROR) << message;
+    LOG(ERROR) << message << "(" << file << ", " << line << ")";
 }
 
-void EasyLoggingAdapter::LogInfo(std::string message)
+void EasyLoggingAdapter::LogInfo(std::string message, std::string file, unsigned int line)
 {
-    LOG(INFO) << message;
+    LOG(INFO) << message << "(" << file << ", " << line << ")";
 }
 
-void EasyLoggingAdapter::LogFatal(std::string message)
+void EasyLoggingAdapter::LogFatal(std::string message, std::string file, unsigned int line)
 {
-    LOG(FATAL) << message;
+    LOG(FATAL) << message << "(" << file << ", " << line << ")";
 }

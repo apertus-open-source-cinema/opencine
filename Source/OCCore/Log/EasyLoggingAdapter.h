@@ -12,10 +12,10 @@ namespace OC
         public:
             EasyLoggingAdapter();
 
-            void LogWarning(std::string message);
-            void LogError(std::string message);
-            void LogInfo(std::string message);
-            void LogFatal(std::string message);
+            void LogWarning(std::string message, std::string file, unsigned int line);
+            void LogError(std::string message, std::string file, unsigned int line);
+            void LogInfo(std::string message, std::string file, unsigned int line);
+            void LogFatal(std::string message, std::string file, unsigned int line);
         };
     }
 }

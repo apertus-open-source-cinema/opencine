@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include <Log/ILogger.h>
+#include "Log/ILogger.h"
 
 #include "BayerFramePreProcessor.h"
 

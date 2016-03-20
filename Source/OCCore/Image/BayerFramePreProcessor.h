@@ -10,7 +10,7 @@
 
 using namespace OC::DataProvider;
 
-class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor, public OC::Log::Logger
+class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor
 {
     unsigned char* _data;
     unsigned short* _outputData;
@@ -66,24 +66,6 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor, public 
         unsigned int rowIndex = 0;
         unsigned int columnIndex = 0;
 
-        //        for(rowIndex = 0; rowIndex <= 3072; rowIndex += 2)
-        //        {
-        //            for(columnIndex = 0; columnIndex <= 4096; columnIndex+=2)
-        //            {
-        //                _dataGreen[rowIndex * 4096 + columnIndex + 1] = _outputData[rowIndex * 4096 + columnIndex + 1];
-        //                _dataGreen[rowIndex * 4096 + columnIndex] = _outputData[rowIndex * 4096 + columnIndex + 1];
-
-        //                _dataRed[rowIndex * 4096 + columnIndex] = _outputData[rowIndex * 4096 + columnIndex];
-        //                _dataRed[rowIndex * 4096 + columnIndex + 1] = _outputData[rowIndex * 4096 + columnIndex];
-
-        //                if(columnIndex == 4095)
-        //                {
-        //                    memcpy((unsigned short*)&_dataRed[(rowIndex + 1) * 4096], (unsigned short*)&_dataRed[(rowIndex) * 4096], 4096 * sizeof(unsigned short));
-        //                }
-
-        //            }
-        //        }
-
         for(rowIndex = 0; rowIndex < _height; rowIndex += 2)
         {
             for(columnIndex = 0; columnIndex < _width; columnIndex++)
@@ -91,12 +73,10 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor, public 
                 if(columnIndex % 2)
                 {
                     dataUR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
-                    //_dataGreen[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
                 else
                 {
                     dataUL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
-                    //_dataRed[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
             }
         }
@@ -107,23 +87,6 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor, public 
         unsigned int rowIndex = 1;
         unsigned int columnIndex = 0;
 
-        //        for(rowIndex = 1; rowIndex < 3072; rowIndex += 2)
-        //        {
-        //            for(columnIndex = 0; columnIndex < 4096; columnIndex += 2)
-        //            {
-        //                _dataBlue[rowIndex * 4096 + columnIndex + 1] = _outputData[rowIndex * 4096 + columnIndex + 1];
-        //                _dataBlue[rowIndex * 4096 + columnIndex] = _outputData[rowIndex * 4096 + columnIndex + 1];
-
-        //                if(columnIndex == 4096)
-        //                {
-        //                    memcpy((unsigned short*)&_dataBlue[(rowIndex - 1) * 4096], (unsigned short*)&_dataBlue[rowIndex * 4096], 4096 * sizeof(unsigned short));
-        //                }
-
-        //                _dataGreen[rowIndex * 4096 + columnIndex] = _outputData[rowIndex * 4096 + columnIndex];
-        //                _dataGreen[rowIndex * 4096 + columnIndex + 1] = _outputData[rowIndex * 4096 + columnIndex + 1];
-        //            }
-        //        }
-
         for(rowIndex = 1; rowIndex < _height; rowIndex += 2)
         {
             for(columnIndex = 0; columnIndex < _width; columnIndex++)
@@ -131,13 +94,10 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor, public 
                 if(columnIndex % 2)
                 {
                     dataLR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
-                    //_dataBlue[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
                 else
                 {
                     dataLL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
-
-                    //_dataGreen[rowIndex * _width + columnIndex + 1] = _outputData[rowIndex * _width + columnIndex + 1];
                 }
             }
         }
@@ -151,12 +111,7 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor, public 
         for(rowIndex = 1; rowIndex < _height; rowIndex += 2)
         {
             for(columnIndex = 2; columnIndex < _width - 2; columnIndex += 2)
-            {                
-                //dataUL[(rowIndex) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex) * _width + columnIndex + 2]) / 2;
-                //dataUL[(rowIndex + 1) * _width + columnIndex] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
-
-                //dataUL[(rowIndex + 1) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
-                //dataUL[(rowIndex + 1) * _width + columnIndex - 1] = dataUL[(rowIndex + 1) * _width + columnIndex + 1];
+            {
                 dataUL[rowIndex * _width + columnIndex] = ((dataUL[rowIndex * _width + columnIndex - 1] + dataUL[rowIndex * _width + columnIndex + 1]) + (dataUL[(rowIndex - 1) * _width + columnIndex] + dataUL[(rowIndex + 1) * _width + columnIndex])) / 4;
             }
         }
@@ -165,11 +120,6 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor, public 
         {
             for(columnIndex = 1; columnIndex < _width - 2; columnIndex += 2)
             {
-                //dataUL[(rowIndex) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex) * _width + columnIndex + 2]) / 2;
-                //dataUL[(rowIndex + 1) * _width + columnIndex] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
-
-                //dataUL[(rowIndex + 1) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
-                //dataUL[(rowIndex + 1) * _width + columnIndex - 1] = dataUL[(rowIndex + 1) * _width + columnIndex + 1];
                 dataUL[rowIndex * _width + columnIndex] = ((dataUL[rowIndex * _width + columnIndex - 1] + dataUL[rowIndex * _width + columnIndex + 1]) + (dataUL[(rowIndex - 1) * _width + columnIndex] + dataUL[(rowIndex + 1) * _width + columnIndex])) / 4;
             }
         }
@@ -263,24 +213,17 @@ public:
 
     void Process()
     {
-        OC_LOG_INFO("12->16bit conversion");
+        //OC_LOG_INFO("12->16bit conversion");
         Convert12To16Bit();
 
-        //Process2();
-        OC_LOG_INFO("Extract rows");
+        //OC_LOG_INFO("Extract rows");
         std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
         std::thread t2(&BayerFramePreProcessor::ExtractEvenRows, this);
 
         t1.join();
         t2.join();
 
-        OC_LOG_INFO("Extract finished");
-
-         //std::thread t3(&BayerFramePreProcessor::FilterUL, this);
-        //FilterLL();
-         //std::thread t4(&BayerFramePreProcessor::FilterUR, this);
-         //t3.join();
-         //t4.join();
+        //OC_LOG_INFO("Extract finished");
     }
 
     void Convert12To16Bit()

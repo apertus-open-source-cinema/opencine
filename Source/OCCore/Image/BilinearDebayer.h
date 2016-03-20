@@ -37,11 +37,6 @@ namespace OC
                 {
                     for(columnIndex = 2; columnIndex < _width - 2; columnIndex += 2)
                     {
-                        //dataUL[(rowIndex) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex) * _width + columnIndex + 2]) / 2;
-                        //dataUL[(rowIndex + 1) * _width + columnIndex] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
-
-                        //dataUL[(rowIndex + 1) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
-                        //dataUL[(rowIndex + 1) * _width + columnIndex - 1] = dataUL[(rowIndex + 1) * _width + columnIndex + 1];
                         greenChannel[rowIndex * _width + columnIndex] = ((greenChannel[rowIndex * _width + columnIndex - 1] + greenChannel[rowIndex * _width + columnIndex + 1]) + (greenChannel[(rowIndex - 1) * _width + columnIndex] + greenChannel[(rowIndex + 1) * _width + columnIndex])) / 4;
                     }
                 }
@@ -50,11 +45,6 @@ namespace OC
                 {
                     for(columnIndex = 1; columnIndex < _width - 2; columnIndex += 2)
                     {
-                        //dataUL[(rowIndex) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex) * _width + columnIndex + 2]) / 2;
-                        //dataUL[(rowIndex + 1) * _width + columnIndex] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
-
-                        //dataUL[(rowIndex + 1) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
-                        //dataUL[(rowIndex + 1) * _width + columnIndex - 1] = dataUL[(rowIndex + 1) * _width + columnIndex + 1];
                         greenChannel[rowIndex * _width + columnIndex] = ((greenChannel[rowIndex * _width + columnIndex - 1] + greenChannel[rowIndex * _width + columnIndex + 1]) + (greenChannel[(rowIndex - 1) * _width + columnIndex] + greenChannel[(rowIndex + 1) * _width + columnIndex])) / 4;
                     }
                 }
@@ -69,13 +59,8 @@ namespace OC
                 {
                     for(columnIndex = 2; columnIndex < _width - 2; columnIndex += 2)
                     {
-                        //dataUL[(rowIndex) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex) * _width + columnIndex + 2]) / 2;
-                        //dataUL[(rowIndex + 1) * _width + columnIndex] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
-
-                        //dataUL[(rowIndex + 1) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
-                        //dataUL[(rowIndex + 1) * _width + columnIndex - 1] = dataUL[(rowIndex + 1) * _width + columnIndex + 1];
                         redChannel[rowIndex * _width + columnIndex] = ((redChannel[(rowIndex - 1) * _width + columnIndex - 1] + redChannel[(rowIndex - 1) * _width + columnIndex + 1]) +
-                                                                  (redChannel[(rowIndex + 1) * _width + columnIndex - 1] + redChannel[(rowIndex + 1) * _width + columnIndex + 1])) / 4;
+                                (redChannel[(rowIndex + 1) * _width + columnIndex - 1] + redChannel[(rowIndex + 1) * _width + columnIndex + 1])) / 4;
 
                         redChannel[(rowIndex + 1) * _width + columnIndex] = (redChannel[(rowIndex + 1) * _width + columnIndex - 1] + redChannel[(rowIndex + 1) * _width + columnIndex + 1]) / 2;
                         redChannel[rowIndex * _width + columnIndex + 1] = (redChannel[(rowIndex + 1) * _width + columnIndex + 1] + redChannel[(rowIndex - 1) * _width + columnIndex + 1]) / 2;
@@ -92,13 +77,8 @@ namespace OC
                 {
                     for(columnIndex = 1; columnIndex < _width - 2; columnIndex += 2)
                     {
-                        //dataUL[(rowIndex) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex) * _width + columnIndex + 2]) / 2;
-                        //dataUL[(rowIndex + 1) * _width + columnIndex] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
-
-                        //dataUL[(rowIndex + 1) * _width + columnIndex + 1] = (dataUL[rowIndex * _width + columnIndex] + dataUL[(rowIndex + 2) * _width + columnIndex]) / 2;
-                        //dataUL[(rowIndex + 1) * _width + columnIndex - 1] = dataUL[(rowIndex + 1) * _width + columnIndex + 1];
                         blueChannel[rowIndex * _width + columnIndex] = ((blueChannel[(rowIndex - 1) * _width + columnIndex - 1] + blueChannel[(rowIndex - 1) * _width + columnIndex + 1]) +
-                                                                  (blueChannel[(rowIndex + 1) * _width + columnIndex - 1] + blueChannel[(rowIndex + 1) * _width + columnIndex + 1])) / 4;
+                                (blueChannel[(rowIndex + 1) * _width + columnIndex - 1] + blueChannel[(rowIndex + 1) * _width + columnIndex + 1])) / 4;
 
                         blueChannel[(rowIndex + 1) * _width + columnIndex] = (blueChannel[(rowIndex + 1) * _width + columnIndex - 1] + blueChannel[(rowIndex + 1) * _width + columnIndex + 1]) / 2;
                         blueChannel[rowIndex * _width + columnIndex + 1] = (blueChannel[(rowIndex + 1) * _width + columnIndex + 1] + blueChannel[(rowIndex - 1) * _width + columnIndex + 1]) / 2;

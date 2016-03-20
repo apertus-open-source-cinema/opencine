@@ -12,7 +12,7 @@ namespace OC
 {
     namespace DataProvider
     {
-        class ImageProvider : public OC::Log::Logger
+        class ImageProvider
         {
         public:
             void Load(std::string fileName, FileFormat format, OCImage& image)
@@ -45,7 +45,7 @@ namespace OC
                 auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(diffTime).count();
 
                 std::string log = "File loading: " + std::to_string(frameTime) + "ms";
-                OC_LOG_INFO(log);
+                //OC_LOG_INFO(log);
 
                 start = std::chrono::high_resolution_clock::now();
                 IImageLoader* imageLoader = nullptr;
@@ -58,7 +58,7 @@ namespace OC
                 frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(diffTime).count();
 
                 log = "File processing: " + std::to_string(frameTime) + "ms";
-                OC_LOG_INFO(log);
+                //OC_LOG_INFO(log);
 
                 delete imageLoader;
 
