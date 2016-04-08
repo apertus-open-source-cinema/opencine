@@ -6,7 +6,6 @@
 class LibRawAdapter : public IImageLoader
 {
 public:
-
 };
 
 #endif //LIBRAWADAPTER_H

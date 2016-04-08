@@ -8,14 +8,14 @@
 
 namespace OC
 {
-    namespace DataProvider
-    {
-        class OCCORE_EXPORT ThumbnailProvider
-        {
-        public:
-            ThumbnailProvider();
-        };
-    }
+	namespace DataProvider
+	{
+		class OCCORE_EXPORT ThumbnailProvider
+		{
+		public:
+			ThumbnailProvider();
+		};
+	}
 }
 
 #endif //THUMBNAILPROVIDER_H

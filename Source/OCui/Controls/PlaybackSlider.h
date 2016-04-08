@@ -6,30 +6,30 @@
 #include "OCui_export.h"
 
 namespace Ui {
-  class PlaybackSlider;
+	class PlaybackSlider;
 }
 
 class OCUI_EXPORT PlaybackSlider : public QWidget
 {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  explicit PlaybackSlider(QWidget *parent = 0);
-  ~PlaybackSlider();
+	explicit PlaybackSlider(QWidget *parent = 0);
+	~PlaybackSlider();
 
-    void SetupEvents();
+	void SetupEvents();
 private:
-  Ui::PlaybackSlider *ui;
+	Ui::PlaybackSlider *ui;
 
-private slots:
-  //void OnSessionChanged(OCSession* session);
-  //void OnFrameChanged(unsigned int frameNumber, OCFrame* frame);
-  //void OnSliderMoved(int frameNumber);
+	private slots:
+	//void OnSessionChanged(OCSession* session);
+	//void OnFrameChanged(unsigned int frameNumber, OCFrame* frame);
+	//void OnSliderMoved(int frameNumber);
 
-  //void OnPlayButtonToggled(bool toggled);
-  //void OnPlayRevButtonToggled(bool toggled);
+	//void OnPlayButtonToggled(bool toggled);
+	//void OnPlayRevButtonToggled(bool toggled);
 
-  //void OnStopClicked();
+	//void OnStopClicked();
 };
 
 #endif // PLAYBACKSLIDER_H

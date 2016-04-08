@@ -3,34 +3,34 @@
 
 namespace OC
 {
-    namespace DataProvider
-    {
-        enum class SourceFormat
-        {
-            Integer12 = 12,
-            Integer14 = 14
-        };
+	namespace DataProvider
+	{
+		enum class SourceFormat
+		{
+			Integer12 = 12,
+			Integer14 = 14
+		};
 
-        enum class ImageFormat
-        {
-            Unknown,
-            Integer12,
-            Integer16
-        };
+		enum class ImageFormat
+		{
+			Unknown,
+			Integer12,
+			Integer16
+		};
 
-        enum class ImageType
-        {
-            Unknown,
-            Bayer
-        };
+		enum class ImageType
+		{
+			Unknown,
+			Bayer
+		};
 
-        enum class FileFormat
-        {
-            Unknown,
-            TIFF,
-            DNG,
-            CinemaDNG
-        };
-    }
+		enum class FileFormat
+		{
+			Unknown,
+			TIFF,
+			DNG,
+			CinemaDNG
+		};
+	}
 }
 #endif //IMAGEDEFINES_H

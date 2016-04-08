@@ -5,23 +5,23 @@
 #include <QBoxLayout>
 
 namespace Ui {
-class MainWindow;
+	class MainWindow;
 }
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+	explicit MainWindow(QWidget *parent = 0);
+	~MainWindow();
 
-  void SetLayout(QWidget& widget);
+	void SetLayout(QWidget& widget);
 
 private:
-    Ui::MainWindow *ui;
+	Ui::MainWindow *ui;
 
-    QVBoxLayout* _layout;
+	QVBoxLayout* _layout;
 };
 
 #endif // MAINWINDOW_H

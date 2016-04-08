@@ -13,21 +13,21 @@
 
 class NativeEventFilter : public QObject, public QAbstractNativeEventFilter
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    std::shared_ptr<QWidget> dummyWidget;
+		std::shared_ptr<QWidget> dummyWidget;
 
-    int notifyID;
+	int notifyID;
 
 public:
-    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, long* result );
+	virtual bool nativeEventFilter(const QByteArray& eventType, void* message, long* result);
 
-    NativeEventFilter();
-    ~NativeEventFilter();
+	NativeEventFilter();
+	~NativeEventFilter();
 
 signals:
-    void DeviceInserted();
-    void DeviceRemoved();
+	void DeviceInserted();
+	void DeviceRemoved();
 };
 
 #endif //NATIVEEVENTHELPER_H

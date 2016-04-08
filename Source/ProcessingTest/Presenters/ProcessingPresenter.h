@@ -12,15 +12,15 @@ using namespace OC::DataProvider;
 
 class ProcessingPresenter : public IProcessingPresenter
 {
-    IProcessingView* _view;
+	IProcessingView* _view;
 
-    std::shared_ptr<OCImage> _image = std::make_shared<OCImage>();
-    std::unique_ptr<ImageProvider> provider;
+	std::shared_ptr<OCImage> _image = std::make_shared<OCImage>();
+	std::unique_ptr<ImageProvider> provider;
 
 public:
-    explicit ProcessingPresenter(IProcessingView& view);
+	explicit ProcessingPresenter(IProcessingView& view);
 
-    void Test();
+	void Test();
 };
 
 #endif // PROCESSINGPRESENTER_H

@@ -14,77 +14,77 @@
 
 namespace OC
 {
-    namespace DataProvider
-    {
-        // Source: http://esr.ibiblio.org/?p=5095
-        static inline uint8_t IsBigEndianMachine()
-        {
-            const uint16_t endianness = 256;
-            return *(const uint8_t *)&endianness;
-        }
+	namespace DataProvider
+	{
+		// Source: http://esr.ibiblio.org/?p=5095
+		static inline uint8_t IsBigEndianMachine()
+		{
+			const uint16_t endianness = 256;
+			return *(const uint8_t *)&endianness;
+		}
 
-        struct TIFFHeader
-        {
-            uint16_t Identifier;
-            uint16_t Version;
-            uint32_t IFDOffset;
-        };
+		struct TIFFHeader
+		{
+			uint16_t Identifier;
+			uint16_t Version;
+			uint32_t IFDOffset;
+		};
 
-        struct TIFFTag
-        {
-            uint16_t ID;
-            uint16_t DataType;
-            uint32_t DataCount;
-            uint32_t DataOffset;
-        };
+		struct TIFFTag
+		{
+			uint16_t ID;
+			uint16_t DataType;
+			uint32_t DataCount;
+			uint32_t DataOffset;
+		};
 
-        class OCCORE_EXPORT TIFFLoader : public IImageLoader
-        {
-            bool _swapEndianess;
-            uint16_t _ifdEntries;
-            TIFFTag* tags;
+		class OCCORE_EXPORT TIFFLoader : public IImageLoader
+		{
+			bool _swapEndianess;
+			uint16_t _ifdEntries;
+			TIFFTag* tags;
 
-            TIFFHeader ProcessHeader(char* buffer);
+			TIFFHeader ProcessHeader(char* buffer);
 
-            inline void SwapEndian(uint16_t& val)
-            {
-                val = (val << 8) |         // left-shift always fills with zeros
-                        ((uint16_t)val >> 8); // right-shift sign-extends, so force to zero
-            }
+			inline void SwapEndian(uint16_t& val)
+			{
+				val = (val << 8) |         // left-shift always fills with zeros
+					((uint16_t)val >> 8); // right-shift sign-extends, so force to zero
+			}
 
-            inline void SwapEndian(uint32_t& val)
-            {
-                val = (val<<24) | ((val<<8) & 0x00ff0000) |
-                        ((val>>8) & 0x0000ff00) | (val>>24);
-            }
+			inline void SwapEndian(uint32_t& val)
+			{
+				val = (val << 24) | ((val << 8) & 0x00ff0000) |
+					((val >> 8) & 0x0000ff00) | (val >> 24);
+			}
 
-            inline void SwapTagEndianess(TIFFTag& tag)
-            {
-                SwapEndian(tag.ID);
-                SwapEndian(tag.DataType);
-                SwapEndian(tag.DataCount);
+			inline void SwapTagEndianess(TIFFTag& tag)
+			{
+				SwapEndian(tag.ID);
+				SwapEndian(tag.DataType);
+				SwapEndian(tag.DataCount);
 
-                if(tag.DataType == 3)
-                {
+				if (tag.DataType == 3)
+				{
+                    tag.DataOffset = tag.DataOffset >> 16;
                     SwapEndian(reinterpret_cast<uint16_t&>(tag.DataOffset));
-                }
-                else if(tag.DataType == 4)
-                {
-                    SwapEndian(static_cast<uint32_t&>(tag.DataOffset));
-                }
-            }
+				}
+				else if (tag.DataType == 4)
+				{
+                    SwapEndian(tag.DataOffset);
+				}
+			}
 
-            void ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&)>>& varMap, ImageFormat& bitsPerPixel, unsigned int size, OC::DataProvider::OCImage& image, unsigned char* data);
+			void ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&)>>& varMap, ImageFormat& bitsPerPixel, unsigned int size, OC::DataProvider::OCImage& image, unsigned char* data);
 
-            void PreProcess(unsigned char* data, OC::DataProvider::OCImage& image);
+			void PreProcess(unsigned char* data, OC::DataProvider::OCImage& image);
 
-            void Cleanup();
+			void Cleanup();
 
-        public:
-            TIFFLoader(unsigned char* data, unsigned int size, OCImage& image);
-        };
-    }
+		public:
+			TIFFLoader(unsigned char* data, unsigned int size, OCImage& image);
+		};
+	}
 }
 
 #endif //TIFFLOADER_H
-

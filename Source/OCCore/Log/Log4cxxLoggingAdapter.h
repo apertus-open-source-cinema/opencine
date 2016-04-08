@@ -8,12 +8,8 @@
 #include "log4cxxLogger.h"
 
 namespace OC {
-namespace Log {
+	namespace Log {
+	} // namespace Log
+} // namespace OC
 
-} // namespace Log 
-} // namespace OC 
-
-
-#endif // _OC_LOG_LOG4CXXLOGGINGADAPTER_H 
-        
-
+#endif // _OC_LOG_LOG4CXXLOGGINGADAPTER_H

@@ -5,18 +5,17 @@
 
 namespace OC
 {
-    namespace Log
-    {
-        class OCCORE_EXPORT log4cxxLogger : virtual public ILogger
-        {
-        public:
-            virtual void LogWarning(std::string message);
-            virtual void LogError(std::string message);
-            virtual void LogInfo(std::string message);
-            virtual void LogFatal(std::string message);
-        };
-
-    } // namespace Log
+	namespace Log
+	{
+		class OCCORE_EXPORT log4cxxLogger : virtual public ILogger
+		{
+		public:
+			virtual void LogWarning(std::string message);
+			virtual void LogError(std::string message);
+			virtual void LogInfo(std::string message);
+			virtual void LogFatal(std::string message);
+		};
+	} // namespace Log
 } // namespace OC
 
 #endif //LOG4CXXLOGGER_H

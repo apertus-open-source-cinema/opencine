@@ -9,11 +9,13 @@
 using namespace OC::DataProvider;
 
 unsigned char* imageData;
+unsigned short* linearizationTable;
+unsigned int linearizationLength;
 
 TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image) :
     _swapEndianess(false)
 {
-    if((data[0] << 8 | data[1]) == 0x4d4d && !IsBigEndianMachine())
+    if ((data[0] << 8 | data[1]) == 0x4d4d && !IsBigEndianMachine())
     {
         _swapEndianess = true;
     }
@@ -21,21 +23,21 @@ TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image) :
     TIFFHeader header = ProcessHeader((char*)data);
 
     memcpy(&_ifdEntries, data + header.IFDOffset, sizeof(_ifdEntries));
-    if(_swapEndianess)
+    if (_swapEndianess)
     {
         SwapEndian(_ifdEntries);
     }
 
-    tags  = new TIFFTag[_ifdEntries];
+    tags = new TIFFTag[_ifdEntries];
     memcpy(tags, data + header.IFDOffset + sizeof(_ifdEntries), sizeof(TIFFTag) * _ifdEntries);
 
     ImageFormat bitsPerPixel = ImageFormat::Integer12;
     std::unordered_map<int, std::function<void(TIFFTag&)>> varMap;
     ProcessTags(varMap, bitsPerPixel, size, image, data);
 
-    for(int i = 0; i < _ifdEntries; i++)
+    for (int i = 0; i < _ifdEntries; i++)
     {
-        if(_swapEndianess)
+        if (_swapEndianess)
         {
             SwapTagEndianess(tags[i]);
         }
@@ -44,7 +46,7 @@ TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image) :
         //LOG_WARNING("Tag ID: ");// << std::to_string(tags[i].ID));
 
         auto it = varMap.find(tags[i].ID);
-        if(it != varMap.end())
+        if (it != varMap.end())
         {
             (*it).second(tags[i]);
         }
@@ -57,12 +59,12 @@ TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image) :
 
 void TIFFLoader::Cleanup()
 {
-    if(imageData != nullptr)
+    if (imageData != nullptr)
     {
         delete[] imageData;
     }
 
-    if(tags != nullptr)
+    if (tags != nullptr)
     {
         delete[] tags;
     }
@@ -73,7 +75,7 @@ TIFFHeader TIFFLoader::ProcessHeader(char* buffer)
     TIFFHeader header;
     memcpy(&header, buffer, sizeof(TIFFHeader));
 
-    if(_swapEndianess)
+    if (_swapEndianess)
     {
         SwapEndian(header.Version);
         SwapEndian(header.IFDOffset);
@@ -87,12 +89,12 @@ static int testOffset = 0;
 void TIFFLoader::ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&)>>& varMap, ImageFormat& bitsPerPixel, unsigned int size, OCImage& image, unsigned char* data)
 {
     //std::unordered_map<int, std::function<void(TIFFTag&)>> varMap;
-    varMap.insert(std::make_pair(256, [&image] (TIFFTag& tag) { image.SetWidth(tag.DataOffset); }));
-    varMap.insert(std::make_pair(257, [&image] (TIFFTag& tag) { image.SetHeight(tag.DataOffset); }));
-    varMap.insert(std::make_pair(33422, [&image] (TIFFTag& tag) //Bayer pattern
+    varMap.insert(std::make_pair(256, [&image](TIFFTag& tag) { image.SetWidth(tag.DataOffset); }));
+    varMap.insert(std::make_pair(257, [&image](TIFFTag& tag) { image.SetHeight(tag.DataOffset); }));
+    varMap.insert(std::make_pair(33422, [&image](TIFFTag& tag) //Bayer pattern
     {
                       image.SetType(ImageType::Bayer);
-                      switch(tag.DataOffset)
+                      switch (tag.DataOffset)
                       {
                           //read right to left to get right values
                           //e.g. RGGB -> 02 B | 01 G | 01 G | 00 R
@@ -111,17 +113,26 @@ void TIFFLoader::ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&
                       }
                   }));
 
-    varMap.insert(std::make_pair(258, [&bitsPerPixel] (TIFFTag& tag)
+    varMap.insert(std::make_pair(50712, [=](TIFFTag& tag) //Bayer pattern
+    {
+        linearizationLength = tag.DataCount;
+        linearizationTable = new unsigned short[linearizationLength];
+
+        memcpy(linearizationTable, data + tag.DataOffset, sizeof(unsigned short) * linearizationLength);
+        int i = 0;
+    }));
+
+    varMap.insert(std::make_pair(258, [&bitsPerPixel](TIFFTag& tag)
     {
                       bitsPerPixel = static_cast<ImageFormat>(tag.DataOffset);
                   }));
 
-    varMap.insert(std::make_pair(273, [&/*&data, &buffer, &width, &height, &bitsPerPixel*/] (TIFFTag& tag) mutable
+    varMap.insert(std::make_pair(273, [=, &image](TIFFTag& tag) mutable
     {
                       unsigned int size = (unsigned int)(image.Width() * image.Height() * ((float)bitsPerPixel / 8.0f));
                       imageData = new unsigned char[size];
-                      testOffset = tag.DataOffset;
-                      //memcpy(imageData, data + tag.DataOffset, size);
+                      //testOffset = tag.DataOffset;
+                      memcpy(imageData, data + tag.DataOffset, size);
                       //image.SetData((unsigned char*)data + tag.DataOffset, size);
                   }));
 }
@@ -130,9 +141,15 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image)
 {
     std::unique_ptr<BayerFramePreProcessor> frameProcessor(new BayerFramePreProcessor());
 
-    frameProcessor->SetData(data[testOffset], image.Width(), image.Height(), SourceFormat::Integer12, image.GetBayerPattern());
+	for (unsigned int j = 0; j < linearizationLength - 1; j++)
+	{
+		SwapEndian(linearizationTable[j]);
+	}
 
+    frameProcessor->SetData(*imageData, image.Width(), image.Height(), SourceFormat::Integer12, image.GetBayerPattern());
+    frameProcessor->SetLinearizationData(linearizationTable, linearizationLength);
     frameProcessor->Process();
+
 
     image.SetRedChannel(frameProcessor->GetDataRed());
     image.SetGreenChannel(frameProcessor->GetDataGreen());

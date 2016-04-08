@@ -11,7 +11,7 @@ Rectangle {
     transformOrigin: Item.Center
 
     //property alias clipResolution: text3.text
-    //property string clipName: "" //text3.text
+    property string clipName: "" //text3.text
     //property string clipPath: "" //image1.source
 
     FontLoader {
@@ -32,11 +32,15 @@ Rectangle {
         Image {
             id: image1
             anchors.fill: parent
-            source: "image://colors/yellow" //"thumbnail_placeholder.png"
+            source: "image://colors/" + clipName
+            sourceSize.width: 200
+            sourceSize.height: 150
+            //"thumbnail_placeholder.png"
             anchors.bottom: column2.top
             enabled: true
             smooth: true
             fillMode: Image.PreserveAspectFit
+            asynchronous: true
         }
 
         DropShadow {

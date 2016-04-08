@@ -5,9 +5,6 @@
 #include "Log4cxxLoggingAdapter.h"
 
 namespace OC {
-namespace Log {
-
-
-
-} // namespace Log
-} // namespace OC 
+	namespace Log {
+	} // namespace Log
+} // namespace OC

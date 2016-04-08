@@ -3,7 +3,6 @@
 
 class GEDIDebayer : public IFrameProcessor
 {
-
 };
 
 #endif //GEDIDEBAYER_H

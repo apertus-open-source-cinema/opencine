@@ -16,43 +16,43 @@
 
 class IBackupPresenter : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    //virtual void RefreshDriveList() = 0;
-    //virtual void SelectDrive(std::string drivePath) = 0;
+	//virtual void RefreshDriveList() = 0;
+	//virtual void SelectDrive(std::string drivePath) = 0;
 
-    //virtual void StartTransfer() = 0;
+	//virtual void StartTransfer() = 0;
 
 signals:
-    //void DriveListChanged(std::vector<DriveInfo> driveList);
-    //void DriveSelectionChanged(std::vector<std::string> driveList);
+	//void DriveListChanged(std::vector<DriveInfo> driveList);
+	//void DriveSelectionChanged(std::vector<std::string> driveList);
 };
 
 class BackupPresenter : public IBackupPresenter
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    IBackupView* _view;
-    IDriveManager* _driveManager;
+		IBackupView* _view;
+	IDriveManager* _driveManager;
 
-    std::vector<DriveInfo> _driveList;
+	std::vector<DriveInfo> _driveList;
 
-    void SetupSignals();
+	void SetupSignals();
 
-    void StartTransfer();
+	void StartTransfer();
 
-//signals:
-    //void StartTransferSig(std::string drivePath);
+	//signals:
+		//void StartTransferSig(std::string drivePath);
 
-private slots:
-    void DriveListChanged(std::vector<DriveInfo> driveList);
-    void DriveSelectionChanged(int driveIndex);
-    void AddDestination();
-    void FolderSelectionChanged(QString folderPath);
+	private slots:
+	void DriveListChanged(std::vector<DriveInfo> driveList);
+	void DriveSelectionChanged(int driveIndex);
+	void AddDestination();
+	void FolderSelectionChanged(QString folderPath);
 
 public:
-    explicit BackupPresenter(IBackupView& view);
+	explicit BackupPresenter(IBackupView& view);
 };
 
 #endif // BACKUPPRESENTER_H

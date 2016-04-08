@@ -6,34 +6,41 @@
 #include "Interfaces/IProcessingView.h"
 
 namespace Ui {
-class ProcessingView;
+	class ProcessingView;
 }
 
 class ProcessingView : public IProcessingView
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    OCImage* testImage = nullptr;
+		OCImage* testImage = nullptr;
+	QImage* thumbnailImage;
 
 public:
-    explicit ProcessingView(QWidget *parent = 0);
-    ~ProcessingView();
+	explicit ProcessingView(QWidget *parent = 0);
+	~ProcessingView();
 
-    virtual void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
+	virtual void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
 
-    virtual void SetFrame(OCImage& image);
+	virtual void SetFrame(OCImage& image);
 
-private slots:
-    void on_pushButton_toggled(bool checked);
+	void SetThumbnail(unsigned int width, unsigned int height, unsigned char* data);
 
-    void on_pushButton_3_toggled(bool checked);
+	private slots:
+	void on_pushButton_toggled(bool checked);
 
-    void on_pushButton_4_toggled(bool checked);
+	void on_pushButton_3_toggled(bool checked);
+
+	void on_pushButton_4_toggled(bool checked);
 
 private:
-    Ui::ProcessingView *ui;
+	Ui::ProcessingView *ui;
 
-    void LoadTexture();
+	void LoadTexture();
+
+	// QObject interface
+public:
+	bool eventFilter(QObject *, QEvent *);
 };
 
 #endif // PROCESSINGVIEW_H

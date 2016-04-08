@@ -3,7 +3,6 @@
 
 class IImageLoader
 {
-
 };
 
 #endif //IIMAGELOADER_H

@@ -3,7 +3,6 @@
 
 class SHOODAKDebayer : public IFrameProcessor
 {
-
 };
 
 #endif //SHOODAKDEBAYER_H

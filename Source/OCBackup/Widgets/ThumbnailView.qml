@@ -41,7 +41,7 @@ Rectangle {
         {
             id: thumbnailItem
             //clipResolution: model.clipWidth + "x" + model.clipHeight
-            //clipName: model.clipName
+            clipName: model.clipName
             //clipPath: model.clipPath
             width: 200
             //height: 200

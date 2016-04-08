@@ -2,5 +2,4 @@
 
 OC::DataProvider::ThumbnailProvider::ThumbnailProvider()
 {
-
 }

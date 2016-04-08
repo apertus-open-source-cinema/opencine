@@ -2,37 +2,37 @@
 #include "ui_PlaybackSlider.h"
 
 PlaybackSlider::PlaybackSlider(QWidget *parent) :
-QWidget(parent),
-ui(new Ui::PlaybackSlider)
+	QWidget(parent),
+	ui(new Ui::PlaybackSlider)
 {
-  ui->setupUi(this);
+	ui->setupUi(this);
 
-  SetupEvents();
+	SetupEvents();
 }
 
 void PlaybackSlider::SetupEvents()
 {
-//    connect(_presenter, SIGNAL(SessionChanged(OCSession*)), SLOT(OnSessionChanged(OCSession*)));
-//    connect(_presenter, SIGNAL(FrameChanged(unsigned int, OCFrame*)), SLOT(OnFrameChanged(unsigned int, OCFrame*)));
+	//    connect(_presenter, SIGNAL(SessionChanged(OCSession*)), SLOT(OnSessionChanged(OCSession*)));
+	//    connect(_presenter, SIGNAL(FrameChanged(unsigned int, OCFrame*)), SLOT(OnFrameChanged(unsigned int, OCFrame*)));
 
-//    connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), SLOT(OnSliderMoved(int)));
+	//    connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), SLOT(OnSliderMoved(int)));
 
-//    //connect(ui->playButton, SIGNAL(clicked()), _presenter, SLOT(Play()));
-//    connect(ui->playButton, SIGNAL(toggled(bool)), SLOT(OnPlayButtonToggled(bool)));
-//    connect(ui->playRevButton, SIGNAL(toggled(bool)), SLOT(OnPlayRevButtonToggled(bool)));
+	//    //connect(ui->playButton, SIGNAL(clicked()), _presenter, SLOT(Play()));
+	//    connect(ui->playButton, SIGNAL(toggled(bool)), SLOT(OnPlayButtonToggled(bool)));
+	//    connect(ui->playRevButton, SIGNAL(toggled(bool)), SLOT(OnPlayRevButtonToggled(bool)));
 
-//    connect(ui->stopButton, SIGNAL(clicked()), SLOT(OnStopClicked()));
+	//    connect(ui->stopButton, SIGNAL(clicked()), SLOT(OnStopClicked()));
 
-//    connect(ui->prevFrameButton, SIGNAL(clicked()), _presenter, SLOT(PrevFrame()));
-//    connect(ui->nextFrameButton, SIGNAL(clicked()), _presenter, SLOT(NextFrame()));
+	//    connect(ui->prevFrameButton, SIGNAL(clicked()), _presenter, SLOT(PrevFrame()));
+	//    connect(ui->nextFrameButton, SIGNAL(clicked()), _presenter, SLOT(NextFrame()));
 
-//    connect(ui->jumpStartButton, SIGNAL(clicked()), _presenter, SLOT(JumpToStart()));
-//    connect(ui->jumpEndButton, SIGNAL(clicked()), _presenter, SLOT(JumpToEnd()));
+	//    connect(ui->jumpStartButton, SIGNAL(clicked()), _presenter, SLOT(JumpToStart()));
+	//    connect(ui->jumpEndButton, SIGNAL(clicked()), _presenter, SLOT(JumpToEnd()));
 }
 
 PlaybackSlider::~PlaybackSlider()
 {
-  delete ui;
+	delete ui;
 }
 
 //void PlaybackSlider::OnSessionChanged(OCSession* session)
