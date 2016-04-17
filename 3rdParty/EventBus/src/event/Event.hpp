@@ -30,9 +30,9 @@
 #include <vector>
 #include <stdexcept>
 
-/**
- * \brief The base event class, all events inherit from this class
- */
+ /**
+  * \brief The base event class, all events inherit from this class
+  */
 class Event : public Object
 {
 public:
@@ -47,12 +47,10 @@ public:
 		canceled(false) {
 	}
 
-
 	/**
 	 * \brief Empty virtual destructor
 	 */
 	virtual ~Event() { }
-
 
 	/**
 	 * \brief Gets the source object for this event
@@ -63,7 +61,6 @@ public:
 		return sender;
 	}
 
-
 	/**
 	 * \brief Gets whether the event has been canceled
 	 *
@@ -72,7 +69,6 @@ public:
 	bool getCanceled() {
 		return canceled;
 	}
-
 
 	/**
 	 * \brief Sets the canceled status for the event
@@ -86,7 +82,6 @@ public:
 private:
 	Object & sender;
 	bool canceled;
-
 };
 
 #endif /* _SRC_EVENT_EVENT_HPP_ */

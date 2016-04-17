@@ -51,9 +51,9 @@ void ProcessingPresenter::Test()
 	//#pragma omp for private(interleavedArray, i)
 	for (; i < dataLength; i++)
 	{
-        interleavedArray[i * 3] = (((unsigned short*)_image->RedChannel())[i] >> 7) * 1.0;
-        interleavedArray[i * 3 + 1] = (((unsigned short*)_image->GreenChannel())[i] >> 7)  * 1.0;
-        interleavedArray[i * 3 + 2] = (((unsigned short*)_image->BlueChannel())[i] >> 7) * 1.0;
+		interleavedArray[i * 3] = (((unsigned short*)_image->RedChannel())[i] >> 7) * 1.0;
+		interleavedArray[i * 3 + 1] = (((unsigned short*)_image->GreenChannel())[i] >> 7)  * 1.0;
+		interleavedArray[i * 3 + 2] = (((unsigned short*)_image->BlueChannel())[i] >> 7) * 1.0;
 	}
 	OC_LOG_INFO("Conversion finished");
 

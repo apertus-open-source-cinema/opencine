@@ -3,7 +3,8 @@
 
 PlaybackSlider::PlaybackSlider(QWidget *parent) :
 	QWidget(parent),
-	ui(new Ui::PlaybackSlider)
+	ui(new Ui::PlaybackSlider),
+	_advancedMode(false)
 {
 	ui->setupUi(this);
 

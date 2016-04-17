@@ -67,13 +67,13 @@ void ProcessingView::LoadTexture()
 
 bool ProcessingView::eventFilter(QObject *, QEvent *)
 {
-    QPainter painter(ui->widget);
-    QPoint po(0,0);
+	QPainter painter(ui->widget);
+	QPoint po(0, 0);
 
-    if(thumbnailImage != nullptr)
-    {
-        painter.drawImage(po, *thumbnailImage);
-    }
+	if (thumbnailImage != nullptr)
+	{
+		painter.drawImage(po, *thumbnailImage);
+	}
 
 	return true;
 }

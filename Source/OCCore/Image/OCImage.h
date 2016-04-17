@@ -44,10 +44,9 @@ namespace OC
 				_pattern(BayerPattern::RGGB),
 				_redData(nullptr),
 				_greenData(nullptr),
-				_blueData(nullptr),				
+				_blueData(nullptr),
 				_dataLength(0)
 			{
-
 			}
 
 			~OCImage()

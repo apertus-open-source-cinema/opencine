@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="0">
+   <item row="3" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="pushButton">
@@ -67,6 +67,9 @@
    <item row="1" column="0">
     <widget class="QWidget" name="widget" native="true"/>
    </item>
+   <item row="2" column="0">
+    <widget class="PlaybackSlider" name="widget_2" native="true"/>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -74,6 +77,12 @@
    <class>PreviewPane</class>
    <extends>QOpenGLWidget</extends>
    <header>./Controls/PreviewPane.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PlaybackSlider</class>
+   <extends>QWidget</extends>
+   <header>./Controls/PlaybackSlider.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

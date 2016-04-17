@@ -32,11 +32,10 @@
 #include <typeinfo>
 #include <unordered_map>
 
-
-/**
- * \brief An Event system that allows decoupling of code through synchronous events
- *
- */
+ /**
+  * \brief An Event system that allows decoupling of code through synchronous events
+  *
+  */
 class EventBus : public Object {
 public:
 	/**
@@ -44,12 +43,10 @@ public:
 	 */
 	EventBus() { }
 
-
 	/**
 	 * \brief Empty virtual destructor
 	 */
 	virtual ~EventBus() { }
-
 
 	/**
 	 * \brief Returns the EventBus singleton instance
@@ -65,7 +62,6 @@ public:
 
 		return instance;
 	}
-
 
 	/**
 	 * \brief Registers a new event handler to the EventBus with a source specifier
@@ -101,7 +97,6 @@ public:
 		return registration;
 	}
 
-
 	/**
 	 * \brief Registers a new event handler to the EventBus with no source specified
 	 *
@@ -131,7 +126,6 @@ public:
 		return registration;
 	}
 
-
 	/**
 	 * \brief Fires an event
 	 *
@@ -151,7 +145,6 @@ public:
 		// matches the source or if the sender is not specified
 		for (auto & reg : *registrations) {
 			if ((reg->getSender() == nullptr) || (reg->getSender() == &e.getSender())) {
-
 				// This is where some magic happens. The void * handler is statically cast to an event handler
 				// of generic type Event and dispatched. The dispatch function will then do a dynamic
 				// cast to the correct event type so the matching onEvent method can be called
@@ -160,11 +153,9 @@ public:
 		}
 	}
 
-
 private:
 	// Singleton class instance
 	static EventBus* instance;
-
 
 	/**
 	 * \brief Registration class private to EventBus for registered event handlers
@@ -173,7 +164,6 @@ private:
 	{
 	public:
 		typedef std::list<EventRegistration*> Registrations;
-
 
 		/**
 		 * \brief Represents a registration object for a registered event handler
@@ -184,19 +174,17 @@ private:
 		 * @param registrations The handler collection for this event type
 		 * @param sender The registered sender object
 		 */
-		EventRegistration(void * const handler, Registrations * const registrations, Object * const sender ) :
+		EventRegistration(void * const handler, Registrations * const registrations, Object * const sender) :
 			handler(handler),
 			registrations(registrations),
 			sender(sender),
 			registered(true)
 		{ }
 
-
 		/**
 		 * \brief Empty virtual destructor
 		 */
 		virtual ~EventRegistration() { }
-
 
 		/**
 		 * \brief Gets the event handler for this registration
@@ -207,7 +195,6 @@ private:
 			return handler;
 		}
 
-
 		/**
 		 * \brief Gets the sender object for this registration
 		 *
@@ -216,7 +203,6 @@ private:
 		Object* const getSender() {
 			return sender;
 		}
-
 
 		/**
 		 * \brief Removes an event handler from the registration collection
@@ -242,7 +228,6 @@ private:
 	typedef std::unordered_map<std::type_index, std::list<EventRegistration*>*> TypeMap;
 
 	TypeMap handlers;
-
 };
 
 #endif /* _SRC_EVENT_EVENT_BUS_HPP_ */

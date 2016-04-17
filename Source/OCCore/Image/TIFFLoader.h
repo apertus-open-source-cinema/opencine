@@ -44,6 +44,8 @@ namespace OC
 			uint16_t _ifdEntries;
 			TIFFTag* tags;
 
+			unsigned int _imageDataOffset;
+
 			TIFFHeader ProcessHeader(char* buffer);
 
 			inline void SwapEndian(uint16_t& val)
@@ -66,12 +68,12 @@ namespace OC
 
 				if (tag.DataType == 3)
 				{
-                    tag.DataOffset = tag.DataOffset >> 16;
-                    SwapEndian(reinterpret_cast<uint16_t&>(tag.DataOffset));
+					tag.DataOffset = tag.DataOffset >> 16;
+					SwapEndian(reinterpret_cast<uint16_t&>(tag.DataOffset));
 				}
 				else if (tag.DataType == 4)
 				{
-                    SwapEndian(tag.DataOffset);
+					SwapEndian(tag.DataOffset);
 				}
 			}
 

@@ -12,5 +12,5 @@ void main()
    vec4 textureRed = uvec4(1.0,0.0,0.0,1.0) * texture(texture1, vTexCoord).r;
    vec4 textureGreen = uvec4(0.0,1.0,0.0,1.0) * texture(texture2, vTexCoord).r;
    vec4 textureBlue = uvec4(0.0,0.0,1.0,1.0) * texture(texture3, vTexCoord).r;
-   fColor = pow((textureRed + textureGreen + textureBlue) / 3, vec4(1.0 / 2.2, 1.0 / 2.2, 1.0 / 2.2, 1.0));
+   fColor = pow((textureRed + textureGreen + textureBlue) / (3 * 4096), vec4(1.0 / 2.2, 1.0 / 2.2, 1.0 / 2.2, 1.0));
 }

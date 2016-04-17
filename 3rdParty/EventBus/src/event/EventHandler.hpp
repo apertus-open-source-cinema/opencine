@@ -28,7 +28,7 @@
 #include <typeinfo>
 #include <type_traits>
 
-// Forward declare the Event class
+ // Forward declare the Event class
 class Event;
 
 /**
@@ -50,12 +50,10 @@ public:
 		static_assert(std::is_base_of<Event, T>::value, "EventHandler<T>: T must be a class derived from Event");
 	}
 
-
 	/**
 	 * \brief Empty virtual destructor
 	 */
 	virtual ~EventHandler() { }
-
 
 	/**
 	 * \brief Pure virtual method for implementing the body of the listener
@@ -63,7 +61,6 @@ public:
 	 * @param The event instance
 	 */
 	virtual void onEvent(T &) = 0;
-
 
 	/**
 	 * \brief Dispatches a generic event to the appropriate listener method

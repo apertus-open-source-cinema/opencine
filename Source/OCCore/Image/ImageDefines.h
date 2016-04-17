@@ -14,8 +14,8 @@ namespace OC
 		enum class ImageFormat
 		{
 			Unknown,
-			Integer12,
-			Integer16
+			Integer12 = 12,
+			Integer16 = 16
 		};
 
 		enum class ImageType

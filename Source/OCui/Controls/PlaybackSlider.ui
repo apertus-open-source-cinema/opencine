@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>846</width>
-    <height>86</height>
+    <height>150</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,11 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">QPushButton
+{
+	min-width: 1em
+}
+</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -91,6 +95,12 @@
         <iconset>
          <normaloff>Resources/Icons/marker_start.png</normaloff>Resources/Icons/marker_start.png</iconset>
        </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
       </widget>
      </item>
      <item>
@@ -124,6 +134,12 @@
         <iconset>
          <normaloff>Resources/Icons/jump_rev.png</normaloff>Resources/Icons/jump_rev.png</iconset>
        </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
       </widget>
      </item>
      <item>
@@ -143,6 +159,12 @@
          <normalon>Resources/Icons/frame_rev.png</normalon>
          <disabledon>Resources/Icons/frame_rev.png</disabledon>
          <activeon>Resources/Icons/pause.png</activeon>Resources/Icons/frame_rev.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -164,6 +186,12 @@
         <iconset>
          <normaloff>Resources/Icons/play_rev.png</normaloff>Resources/Icons/play_rev.png</iconset>
        </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
       </widget>
      </item>
      <item>
@@ -184,6 +212,12 @@
         <iconset>
          <normaloff>Resources/Icons/stop.png</normaloff>Resources/Icons/stop.png</iconset>
        </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
       </widget>
      </item>
      <item>
@@ -200,6 +234,12 @@
        <property name="icon">
         <iconset>
          <normaloff>Resources/Icons/play_fwd.png</normaloff>Resources/Icons/play_fwd.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
        </property>
        <property name="checkable">
         <bool>false</bool>
@@ -224,6 +264,12 @@
          <disabledon>Resources/Icons/frame_fwd.png</disabledon>
          <activeon>Resources/Icons/pause.png</activeon>Resources/Icons/frame_fwd.png</iconset>
        </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
        <property name="checkable">
         <bool>true</bool>
        </property>
@@ -243,6 +289,12 @@
        <property name="icon">
         <iconset>
          <normaloff>Resources/Icons/jump_fwd.png</normaloff>Resources/Icons/jump_fwd.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -276,6 +328,12 @@
        <property name="icon">
         <iconset>
          <normaloff>Resources/Icons/marker_end.png</normaloff>Resources/Icons/marker_end.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
        </property>
       </widget>
      </item>

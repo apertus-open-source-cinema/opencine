@@ -11,6 +11,8 @@
 #include "Views/ProcessingView.h"
 #include "Presenters/ProcessingPresenter.h"
 
+#include "Controls\ProgressDialog.h"
+
 class ProcessingTest : public OCui::GUIApplication
 {
 	std::shared_ptr<IProcessingView> _view;
@@ -23,6 +25,10 @@ public:
 	{
 		SetLayout(*static_cast<QWidget*>(_view.get()));
 		ShowMaximized();
+
+		ProgressDialog* progressDialog = new ProgressDialog();
+		progressDialog->setModal(true);
+		progressDialog->show();
 
 		QtConcurrent::run(_presenter.get(), &IProcessingPresenter::Test);
 	}
