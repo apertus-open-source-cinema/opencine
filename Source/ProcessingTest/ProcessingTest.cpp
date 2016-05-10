@@ -13,6 +13,8 @@
 
 #include "Controls\ProgressDialog.h"
 
+#include "Task\TransferTask.h"
+
 class ProcessingTest : public OCui::GUIApplication
 {
 	std::shared_ptr<IProcessingView> _view;
@@ -37,6 +39,11 @@ public:
 int main(int argc, char** argv)
 {
 	//std::shared_ptr<ProcessingTest> application = std::make_shared<ProcessingTest>(argc, argv);
+
+	TransferTask* task = new TransferTask();
+
+	delete task;
+
 	ProcessingTest* app = new ProcessingTest(argc, argv);
 	app->Run();
 

@@ -125,7 +125,7 @@
     </layout>
    </item>
    <item row="1" column="0">
-    <widget class="QListWidget" name="listWidget"/>
+    <widget class="QListView" name="listView"/>
    </item>
   </layout>
  </widget>

@@ -3,6 +3,8 @@ project(ApertusOpenCine)
 
 CMAKE_POLICY(SET CMP0020 NEW)
 
+set_property( GLOBAL PROPERTY USE_FOLDERS ON)
+
 #TODO: Enable C++11 support for all projects. Adjust when porting to windows (e.g. for Visual Studio compatibility)
 if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")

@@ -113,6 +113,7 @@ void BackupView::SetupDestinationsView()
 
 void BackupView::TransferButtonClicked()
 {
+	//TODO: Rework create a task directly, later it can be pushed through an event bus
 	emit StartTransfer();
 }
 
