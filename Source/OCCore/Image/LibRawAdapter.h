@@ -3,9 +3,16 @@
 
 #include <libraw.h>
 
-class LibRawAdapter : public IImageLoader
+#include "IImageLoader.h"
+
+namespace OC
 {
-public:
-};
+	namespace DataProvider 
+	{
+		class LibRawAdapter : public IImageLoader
+		{
+		};
+	}
+}
 
 #endif //LIBRAWADAPTER_H

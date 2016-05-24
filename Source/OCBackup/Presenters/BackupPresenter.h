@@ -32,8 +32,8 @@ signals:
 class BackupPresenter : public IBackupPresenter
 {
 	Q_OBJECT
-
-		IBackupView* _view;
+	
+	IBackupView* _view;
 	IDriveManager* _driveManager;
 
 	std::vector<DriveInfo> _driveList;

@@ -40,6 +40,7 @@ int GUIApplication::Run()
 	return _application->exec();
 }
 
+//TODO: Maybe the parameter is not necessary, as there is only one application available, consider to remove later
 void GUIApplication::SetStyle(QApplication& app)
 {
 	QString currentWD = QDir::currentPath();

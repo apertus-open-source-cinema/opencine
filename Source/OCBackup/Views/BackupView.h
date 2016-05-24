@@ -31,6 +31,8 @@ class BackupView : public IBackupView
 	std::shared_ptr<QFileSystemModel> _folderTreeModel;
 
 	QList<QObject*>* dataList;
+	QList<QObject*>*  _fileList;
+	QList<QString>*  _destinationList;
 
 	void SetupDriveView();
 	void SetupFolderView();
@@ -50,6 +52,7 @@ public:
 	void SetCurrentFolder(QString folderPath);
 	void SetDriveList(std::vector<DriveInfo> driveList);
 	void SetItemList(std::vector<QString> fileList);
+	void SetDestinationList(std::vector<QString> destinationList);
 };
 
 #endif // OCBACKUPLAYOUT_H

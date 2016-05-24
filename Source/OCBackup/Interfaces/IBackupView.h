@@ -13,6 +13,7 @@ public:
 	virtual void SetDriveList(std::vector<DriveInfo> driveList) = 0;
 	virtual void SetCurrentFolder(QString folderPath) = 0;
 	virtual void SetItemList(std::vector<QString> fileList) = 0;
+	virtual void SetDestinationList(std::vector<QString> destinationList) = 0;
 
 signals:
 	void StartTransfer();

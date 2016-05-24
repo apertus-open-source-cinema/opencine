@@ -4,16 +4,10 @@
 #include <fstream>
 #include <thread>
 
-#include <xmmintrin.h>
-#include <emmintrin.h>
-
 #include <QFile>
 #include <QPainter>
 #include <QImage>
-#include <QDebug>
-#include <QTime>
 #include <QTimer>
-#include <QLabel>
 
 #include "Controls/PreviewPane.h"
 
@@ -33,9 +27,7 @@ ProcessingView::~ProcessingView()
 	delete ui;
 }
 
-char bayerMatrixRGGB[2][2] = { {0, 1},
-							  {1, 2}
-};
+char bayerMatrixRGGB[2][2] = { {0, 1}, {1, 2} };
 
 bool init = false;
 

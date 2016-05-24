@@ -91,7 +91,7 @@ void BackupView::SetupFolderView()
 }
 
 QQmlContext*  qmlContext2;
-QList<QObject*>*  _fileList;
+//QList<QObject*>*  _fileList;
 void BackupView::SetupThumbnailView()
 {
 	QQmlEngine *engine = ui->thumbnailViewControl->engine();
@@ -148,11 +148,16 @@ void BackupView::SetItemList(std::vector<QString> fileList)
 
 	for (auto& file : fileList)
 	{
-		_fileList->append(new ThumbnailViewItem("./Shot 1/" + file, "./Shot 1/" + file, 640, 480, 30));
+		_fileList->append(new ThumbnailViewItem(file, file, 640, 480, 30));
 		//_fileList->append(new ThumbnailViewItem("Test1", "Test2", 640, 480, 30));
 	}
 
 	qmlContext2->setContextProperty("fileList", QVariant::fromValue(*_fileList));
+}
+
+void BackupView::SetDestinationList(std::vector<QString> destinationList)
+{
+	ui->destinationsControl->SetDestinationList(destinationList);
 }
 
 void BackupView::SetCurrentFolder(QString folderPath)

@@ -11,11 +11,14 @@ class DestinationsControl : public QWidget
 {
 	Q_OBJECT
 
-		void SetupSignals();
+		std::vector<QString> _destinationList;
+
+	void SetupSignals();
 
 public:
 	explicit DestinationsControl(QWidget *parent = 0);
 	~DestinationsControl();
+	void SetDestinationList(std::vector<QString> destinationList);
 
 signals:
 	void AddDestinationClicked();

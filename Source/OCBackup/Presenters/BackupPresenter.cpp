@@ -4,6 +4,7 @@
 #include <QTreeView>
 #include <QDebug>
 #include <QFileInfoList>
+#include <QQmlContext>
 
 BackupPresenter::BackupPresenter(IBackupView &view) :
 	_view(&view)
@@ -63,6 +64,8 @@ void BackupPresenter::DriveSelectionChanged(int driveIndex)
 	_view->SetCurrentFolder(folderPath);
 }
 
+std::vector<QString> _destinationList;
+
 void BackupPresenter::AddDestination()
 {
 	QFileDialog dialog;
@@ -75,6 +78,9 @@ void BackupPresenter::AddDestination()
 	if (result)
 	{
 		directory = dialog.selectedFiles()[0];
+		_destinationList.push_back(directory);
+		
+		_view->SetDestinationList(_destinationList);
 		qDebug() << directory;
 	}
 }

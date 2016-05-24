@@ -11,7 +11,7 @@ class OCBackup : public OCui::GUIApplication
 {
 	Q_OBJECT
 
-		std::shared_ptr<IBackupView> _view;
+	std::shared_ptr<IBackupView> _view;
 	std::shared_ptr<IBackupPresenter> _presenter;
 
 public:
