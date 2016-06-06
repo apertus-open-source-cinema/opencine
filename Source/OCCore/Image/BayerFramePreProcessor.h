@@ -23,8 +23,8 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor
 	unsigned short* _dataGreen;
 	unsigned short* _dataBlue;
 
-	unsigned int _width;
-	unsigned int _height;
+	int _width;
+	int _height;
 
 	void MapPatternToData();
 
@@ -40,6 +40,8 @@ public:
 	virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat) override;
 
 	virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat, BayerPattern pattern);
+
+    void SetData(unsigned char& data, OCImage& image);
 
 	void Process() override;
 

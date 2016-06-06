@@ -3,7 +3,6 @@
 
 #include <memory>
 
-#include <QWidget>
 #include <QQmlContext>
 #include <QStringListModel>
 #include <QFileSystemModel>

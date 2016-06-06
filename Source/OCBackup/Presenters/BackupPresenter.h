@@ -7,10 +7,7 @@
 #include <QFileSystemModel>
 #include <QObject>
 #include <QStringListModel>
-#include <QFileSystemWatcher>
 #include <QItemSelection>
-
-#include <DriveManager.h>
 
 #include "../Interfaces/IBackupView.h"
 

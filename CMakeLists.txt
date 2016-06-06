@@ -35,6 +35,7 @@ SET(ENABLE_EXAMPLES OFF CACHE BOOL "LibRaw: Build shared library (without exampl
 #add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/LibRaw)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/xxHash)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/EventBus)
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/MemoryPool)
 
 #Projects
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OpenCine/)

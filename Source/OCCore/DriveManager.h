@@ -1,7 +1,6 @@
 #ifndef DRIVEMANAGER_H
 #define DRIVEMANAGER_H
 
-#include <string>
 #include <vector>
 
 #include "Interfaces/IDriveManager.h"

@@ -1,5 +1,7 @@
 #include "BayerFramePreProcessor.h"
 
+#include <Log/Logger.h>
+
 void BayerFramePreProcessor::MapPatternToData()
 {
 	switch (_pattern)
@@ -33,13 +35,10 @@ void BayerFramePreProcessor::MapPatternToData()
 
 void BayerFramePreProcessor::ExtractOddRows() const
 {
-	unsigned int rowIndex;
-	unsigned int columnIndex;
-
-	//#pragma omp parallel for
-	for (rowIndex = 0; rowIndex < _height; rowIndex += 2)
+	#pragma omp parallel for
+	for (int rowIndex = 0; rowIndex < _height; rowIndex += 2)
 	{
-		for (columnIndex = 0; columnIndex < _width; columnIndex++)
+		for (int columnIndex = 0; columnIndex < _width; columnIndex++)
 		{
 			if (columnIndex % 2)
 			{
@@ -55,13 +54,10 @@ void BayerFramePreProcessor::ExtractOddRows() const
 
 void BayerFramePreProcessor::ExtractEvenRows() const
 {
-	unsigned int rowIndex;
-	unsigned int columnIndex;
-
-	//#pragma omp parallel for
-	for (rowIndex = 1; rowIndex < _height; rowIndex += 2)
+	#pragma omp parallel for
+	for (int rowIndex = 1; rowIndex < _height; rowIndex += 2)
 	{
-		for (columnIndex = 0; columnIndex < _width; columnIndex++)
+		for (int columnIndex = 0; columnIndex < _width; columnIndex++)
 		{
 			if (columnIndex % 2)
 			{
@@ -111,9 +107,9 @@ void BayerFramePreProcessor::SetData(unsigned char& data, unsigned int width, un
 
 	_outputData = new unsigned short[_size];
 
-	_dataRed = new unsigned short[_size * 2];
-	_dataGreen = new unsigned short[_size * 2];
-	_dataBlue = new unsigned short[_size * 2];
+    //_dataRed = new unsigned short[_size * 2];
+    //_dataGreen = new unsigned short[_size * 2];
+    //_dataBlue = new unsigned short[_size * 2];
 
 	MapPatternToData();
 }
@@ -129,21 +125,41 @@ void BayerFramePreProcessor::SetData(unsigned char& data, unsigned int width, un
 
 	_outputData = new unsigned short[_size];
 
-	_dataRed = new unsigned short[_size];
-	_dataGreen = new unsigned short[_size];
-	_dataBlue = new unsigned short[_size];
+    //_dataRed = new unsigned short[_size];
+    //_dataGreen = new unsigned short[_size];
+    //_dataBlue = new unsigned short[_size];
 
 	_pattern = pattern;
 
 	MapPatternToData();
 }
 
+void BayerFramePreProcessor::SetData(unsigned char& data, OCImage& image)
+{
+    _data = &data;
+
+    _width = image.Width();
+    _height = image.Height();
+
+    _size = _width * _height;
+
+    _outputData = new unsigned short[_size];
+
+    _dataRed = (unsigned short*)image.RedChannel();
+    _dataGreen = (unsigned short*)image.GreenChannel();
+    _dataBlue = (unsigned short*)image.BlueChannel();
+
+    _pattern = image.GetBayerPattern();
+
+    MapPatternToData();
+}
+
 void BayerFramePreProcessor::Process()
 {
-	//OC_LOG_INFO("12->16bit conversion");
+	OC_LOG_INFO("12->16bit conversion");
 	Convert12To16Bit();
 
-	//OC_LOG_INFO("Extract rows");
+	OC_LOG_INFO("Extract rows");
 	std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
 	std::thread t2(&BayerFramePreProcessor::ExtractEvenRows, this);
 
@@ -231,7 +247,7 @@ void BayerFramePreProcessor::SetData(unsigned char& data, int width, int height,
 
 	_outputData = new unsigned short[_size];
 
-	_dataRed = new unsigned short[_size];
-	_dataGreen = new unsigned short[_size];
-	_dataBlue = new unsigned short[_size];
+    //_dataRed = new unsigned short[_size];
+    //_dataGreen = new unsigned short[_size];
+    //_dataBlue = new unsigned short[_size];
 }

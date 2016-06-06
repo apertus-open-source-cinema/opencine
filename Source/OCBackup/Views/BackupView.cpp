@@ -1,12 +1,9 @@
 #include "BackupView.h"
 #include "ui_BackupView.h"
 
-#include <QStringListModel>
 #include <QFileSystemModel>
-#include <QHeaderView>
 #include <QtQuick/QQuickItem>
 #include <QDebug>
-#include <QtQml/QQmlEngine>
 
 #include "Presenters/BackupPresenter.h"
 

@@ -34,20 +34,17 @@ namespace OC
 
 			void BilinearFilterGreen() const
 			{
-				unsigned int rowIndex = 0;
-				unsigned int columnIndex = 0;
-
-				for (rowIndex = colorOffsets[2]; rowIndex < _height; rowIndex += 2)
+				for (unsigned int rowIndex = colorOffsets[2]; rowIndex < _height; rowIndex += 2)
 				{
-					for (columnIndex = colorOffsets[3]; columnIndex < _width - 2; columnIndex += 2)
+					for (unsigned int columnIndex = colorOffsets[3]; columnIndex < _width - 2; columnIndex += 2)
 					{
 						greenChannel[rowIndex * _width + columnIndex] = ((greenChannel[rowIndex * _width + columnIndex - 1] + greenChannel[rowIndex * _width + columnIndex + 1]) + (greenChannel[(rowIndex - 1) * _width + columnIndex] + greenChannel[(rowIndex + 1) * _width + columnIndex])) / 4;
 					}
 				}
 
-				for (rowIndex = colorOffsets[4]; rowIndex < _height; rowIndex += 2)
+				for (int rowIndex = colorOffsets[4]; rowIndex < _height; rowIndex += 2)
 				{
-					for (columnIndex = colorOffsets[5]; columnIndex < _width - 2; columnIndex += 2)
+					for (int columnIndex = colorOffsets[5]; columnIndex < _width - 2; columnIndex += 2)
 					{
 						greenChannel[rowIndex * _width + columnIndex] = ((greenChannel[rowIndex * _width + columnIndex - 1] + greenChannel[rowIndex * _width + columnIndex + 1]) + (greenChannel[(rowIndex - 1) * _width + columnIndex] + greenChannel[(rowIndex + 1) * _width + columnIndex])) / 4;
 					}
@@ -56,12 +53,9 @@ namespace OC
 
 			void BilinearFilterRed() const
 			{
-				unsigned int rowIndex = 0;
-				unsigned int columnIndex = 0;
-
-				for (rowIndex = colorOffsets[0]; rowIndex < _height; rowIndex += 2)
+				for (unsigned int rowIndex = colorOffsets[0]; rowIndex < _height; rowIndex += 2)
 				{
-					for (columnIndex = colorOffsets[1]; columnIndex < _width - 2; columnIndex += 2)
+					for (unsigned int columnIndex = colorOffsets[1]; columnIndex < _width - 2; columnIndex += 2)
 					{
 						redChannel[rowIndex * _width + columnIndex] = ((redChannel[(rowIndex - 1) * _width + columnIndex - 1] + redChannel[(rowIndex - 1) * _width + columnIndex + 1]) +
 							(redChannel[(rowIndex + 1) * _width + columnIndex - 1] + redChannel[(rowIndex + 1) * _width + columnIndex + 1])) / 4;
@@ -74,12 +68,9 @@ namespace OC
 
 			void BilinearFilterBlue() const
 			{
-				unsigned int rowIndex = 0;
-				unsigned int columnIndex = 0;
-
-				for (rowIndex = colorOffsets[6]; rowIndex < _height; rowIndex += 2)
+				for (unsigned int rowIndex = colorOffsets[6]; rowIndex < _height; rowIndex += 2)
 				{
-					for (columnIndex = colorOffsets[7]; columnIndex < _width - 2; columnIndex += 2)
+					for (unsigned int columnIndex = colorOffsets[7]; columnIndex < _width - 2; columnIndex += 2)
 					{
 						blueChannel[rowIndex * _width + columnIndex] = ((blueChannel[(rowIndex - 1) * _width + columnIndex - 1] + blueChannel[(rowIndex - 1) * _width + columnIndex + 1]) +
 							(blueChannel[(rowIndex + 1) * _width + columnIndex - 1] + blueChannel[(rowIndex + 1) * _width + columnIndex + 1])) / 4;
@@ -92,22 +83,11 @@ namespace OC
 
 			void SetColorOffsets(BayerPattern pattern)
 			{
-				int i = 0;
 				switch (pattern)
 				{
 				case BayerPattern::RGGB:
-					i = 1;
-//					dataUL = _dataRed;
-//					dataUR = _dataGreen;
-//					dataLL = _dataGreen;
-//					dataLR = _dataBlue;
 					break;
 				case BayerPattern::BGGR:
-					i = 2;
-//					dataUL = _dataBlue;
-//					dataUR = _dataGreen;
-//					dataLL = _dataGreen;
-//					dataLR = _dataRed;
 					break;
 				case BayerPattern::GRBG:
 					colorOffsets[0] = 1;

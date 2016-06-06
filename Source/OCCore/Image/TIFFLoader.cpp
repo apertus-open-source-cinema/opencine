@@ -13,11 +13,14 @@ unsigned char* imageData;
 unsigned short* linearizationTable;
 unsigned int linearizationLength;
 
-TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image) :
+IAllocator* _allocator = nullptr;
+
+TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image, IAllocator& allocator) :
 	_swapEndianess(false),
 	_imageDataOffset(0)
 {
-	LoadImage(data, size, image);
+    _allocator = &allocator;
+	LoadImage(data, size, image, allocator);
 }
 
 void TIFFLoader::Cleanup() const
@@ -51,31 +54,22 @@ TIFFHeader TIFFLoader::ProcessHeader(char* buffer)
 	return header;
 }
 
-void TIFFLoader::LoadImage(unsigned char* data, unsigned size, OCImage& image)
+//Check first tag (TIFF are usually sorted ascending) of IFD for image SubFile type
+//if value != 0 then search for SUbIFD tag (0x14a) and use the offset to next IFD, go there and repeat the procedure
+//Caution: "NextIFD" entry is not used in DNG
+void TIFFLoader::FindMainImage(unsigned char* data, unsigned int& ifdOffset, uint16_t& ifdCount)
 {
-	if ((data[0] << 8 | data[1]) == 0x4d4d && !IsBigEndianMachine())
-	{
-		_swapEndianess = true;
-	}
+	ifdCount = 0;
 
-	TIFFHeader header = ProcessHeader(reinterpret_cast<char*>(data));
-
-	unsigned int ifdOffset = header.IFDOffset;
-
-	uint16_t ifdCount = 0;
-
-	//Check first tag (TIFF are usually sorted ascending) of IFD for image SubFile type
-	//if value != 0 then search for SUbIFD tag (0x14a) and use the offset to next IFD, go there and repeat the procedure
-	//Caution: "NextIFD" entry is not used in DNG
 	auto imageFound = false;
-	while(imageFound != true)
+	while (imageFound != true)
 	{
 		memcpy(&ifdCount, data + ifdOffset, sizeof(uint16_t));
 		if (_swapEndianess)
 		{
 			SwapEndian(ifdCount);
 		}
-		
+
 		tags = new TIFFTag[ifdCount];
 		memcpy(tags, data + ifdOffset + sizeof(ifdCount), sizeof(TIFFTag) * ifdCount);
 
@@ -84,30 +78,44 @@ void TIFFLoader::LoadImage(unsigned char* data, unsigned size, OCImage& image)
 			SwapTagEndianess(tags[0]);
 		}
 
-		if(tags[0].ID == 254 && tags[0].DataOffset == 0) //TODO: Replace tiff tag ID by enum
+		if (tags[0].ID == 254 && tags[0].DataOffset == 0) //TODO: Replace tiff tag ID by enum
 		{
 			imageFound = true;
 		}
 		else
 		{
-			for(int tagIndex = 0; tagIndex < ifdCount; tagIndex++)
+			for (int tagIndex = 0; tagIndex < ifdCount; tagIndex++)
 			{
 				if (_swapEndianess)
 				{
 					SwapTagEndianess(tags[tagIndex]);
 				}
 
-				if(tags[tagIndex].ID == 0x14a)
+				if (tags[tagIndex].ID == 0x14a)
 				{
-					ifdOffset = tags[tagIndex].DataOffset; //12 bytes per tag		
+					ifdOffset = tags[tagIndex].DataOffset; //12 bytes per tag
 					break;
-				}				
-			}			
+				}
+			}
 		}
 	}
+}
+
+void TIFFLoader::LoadImage(unsigned char* data, unsigned size, OCImage& image, IAllocator& allocator)
+{
+	if ((data[0] << 8 | data[1]) == 0x4d4d && !IsBigEndianMachine())
+	{
+		_swapEndianess = true;
+	}
+
+	TIFFHeader header = ProcessHeader(reinterpret_cast<char*>(data));
+
+	uint16_t ifdCount = 0;
+	unsigned int ifdOffset = header.IFDOffset;
+
+	FindMainImage(data, ifdOffset, ifdCount);
 
 	//ProcessIFDBlock(ifdOffset);
-
 
 	//tags = new TIFFTag[_ifdEntries];
 	//memcpy(tags, data + header.IFDOffset + sizeof(_ifdEntries), sizeof(TIFFTag) * _ifdEntries);
@@ -133,18 +141,18 @@ void TIFFLoader::LoadImage(unsigned char* data, unsigned size, OCImage& image)
 		}
 	}
 
-	PreProcess(data, image);
+    PreProcess(data, image);
 
 	Cleanup();
 }
 
-void TIFFLoader::SwapEndian(uint16_t& val)
+void TIFFLoader::SwapEndian(uint16_t& val) const
 {
 	val = (val << 8) | // left-shift always fills with zeros
 		(static_cast<uint16_t>(val) >> 8); // right-shift sign-extends, so force to zero
 }
 
-void TIFFLoader::SwapEndian(uint32_t& val)
+void TIFFLoader::SwapEndian(uint32_t& val) const
 {
 	val = (val << 24) | ((val << 8) & 0x00ff0000) |
 		((val >> 8) & 0x0000ff00) | (val >> 24);
@@ -204,12 +212,16 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image) const
 {
 	std::unique_ptr<BayerFramePreProcessor> frameProcessor(new BayerFramePreProcessor());
 
-	//for (unsigned int j = 0; j < linearizationLength - 1; j++)
+    unsigned int dataSize = image.Width() * image.Height();
+    image.SetRedChannel(_allocator->Allocate(dataSize));
+    image.SetGreenChannel(_allocator->Allocate(dataSize));
+    image.SetBlueChannel(_allocator->Allocate(dataSize));
+    //for (unsigned int j = 0; j < linearizationLength - 1; j++)
 	//{
 	//	SwapEndian(linearizationTable[j]);
 	//}
 
-	frameProcessor->SetData(data[_imageDataOffset], image.Width(), image.Height(), SourceFormat::Integer12, image.GetBayerPattern());
+    frameProcessor->SetData(data[_imageDataOffset], image);
 	//frameProcessor->SetLinearizationData(linearizationTable, linearizationLength);
 	frameProcessor->Process();
 

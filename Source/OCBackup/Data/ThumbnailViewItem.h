@@ -1,8 +1,6 @@
 #ifndef THUMBNAILVIEWITEM_H
 #define THUMBNAILVIEWITEM_H
 
-#include <inttypes.h>
-
 #include <QObject>
 
 class ThumbnailViewItem : public QObject

@@ -8,6 +8,8 @@
 #include <Log/ILogger.h>
 
 #include "TIFFLoader.h"
+#include <Log/Logger.h>
+#include <Memory/StaticAllocator.h>
 
 namespace OC
 {
@@ -16,10 +18,10 @@ namespace OC
 		class ImageProvider
 		{
 		public:
-			void Load(std::string fileName, FileFormat format, OCImage& image) const;
+			void Load(std::string fileName, FileFormat format, OCImage& image, IAllocator& allocator) const;
 		};
 
-		inline void ImageProvider::Load(std::string fileName, FileFormat format, OCImage& image) const
+		inline void ImageProvider::Load(std::string fileName, FileFormat format, OCImage& image, IAllocator& allocator) const
 		{
 			int length;
 			auto start = std::chrono::high_resolution_clock::now();
@@ -49,20 +51,20 @@ namespace OC
 			auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(diffTime).count();
 
 			auto log = "File loading: " + std::to_string(frameTime) + "ms";
-			//OC_LOG_INFO(log);
+			OC_LOG_INFO(log);
 
 			start = std::chrono::high_resolution_clock::now();
 			IImageLoader* imageLoader = nullptr;
 			if (format == FileFormat::DNG)
 			{
-				imageLoader = new TIFFLoader(imageData, length, image);
+				imageLoader = new TIFFLoader(imageData, length, image, allocator);
 			}
 
 			diffTime = std::chrono::high_resolution_clock::now() - start;
 			frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(diffTime).count();
 
 			log = "File processing: " + std::to_string(frameTime) + "ms";
-			//OC_LOG_INFO(log);
+			OC_LOG_INFO(log);
 
 			delete imageLoader;
 

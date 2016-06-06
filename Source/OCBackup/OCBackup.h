@@ -2,7 +2,6 @@
 #define OCBACKUP_H
 
 #include <OCui.h>
-#include <QMessageBox>
 
 #include "Presenters/BackupPresenter.h"
 #include "Views/BackupView.h"

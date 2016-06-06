@@ -30,11 +30,6 @@ public:
 
 	bool IsInitialized();
 
-signals:
-
-	public slots :
-
-		// QOpenGLWidget interface
 protected:
 	void initializeGL() override;
 	void resizeGL(int w, int h) override;

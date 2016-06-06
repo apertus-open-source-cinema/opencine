@@ -75,7 +75,8 @@ QImage QMLThumbnailProvider::requestImage(const QString &id, QSize *size, const 
 
 	_image.reset(new OCImage());
 
-	provider->Load(id.toStdString(), FileFormat::DNG, *_image.get());
+	IAllocator* allocator = new RawPoolAllocator(1);
+	provider->Load(id.toStdString(), FileFormat::DNG, *_image.get(), *allocator);
 
 	BilinearDebayer* debayer = new BilinearDebayer(*_image.get());
 	debayer->Process();
@@ -87,9 +88,9 @@ QImage QMLThumbnailProvider::requestImage(const QString &id, QSize *size, const 
 
 	for (; i < dataLength; i++)
 	{
-		interleavedArray[i * 3] = ((unsigned short*)_image->RedChannel())[i] >> 8;
-		interleavedArray[i * 3 + 1] = ((unsigned short*)_image->GreenChannel())[i] >> 8;
-		interleavedArray[i * 3 + 2] = ((unsigned short*)_image->BlueChannel())[i] >> 8;
+		interleavedArray[i * 3] = static_cast<unsigned short*>(_image->RedChannel())[i] >> 4;
+		interleavedArray[i * 3 + 1] = static_cast<unsigned short*>(_image->GreenChannel())[i] >> 4;
+		interleavedArray[i * 3 + 2] = static_cast<unsigned short*>(_image->BlueChannel())[i] >> 4;
 	}
 
 	image = QImage(interleavedArray, _image->Width(), _image->Height(), QImage::Format_RGB888);

@@ -11,6 +11,8 @@ set(CMAKE_AUTOMOC ON)
 FIND_PACKAGE(Qt5Core REQUIRED)
 FIND_PACKAGE(Qt5Widgets REQUIRED)
 
+INCLUDE_DIRECTORIES("${MemoryPool_SOURCE_DIR}/C-11")
+
 file(GLOB SOURCE_FILES "*.cpp" "*.h"
                        "Transfer/*.cpp" "Transfer/*.h"
                        "MVP/*.cpp" "MVP/*.h"
@@ -18,7 +20,8 @@ file(GLOB SOURCE_FILES "*.cpp" "*.h"
                        "Image/*.cpp" "Image/*.h"
                        "Interfaces/*.cpp" "Interfaces/*.h"
                        "Log/*.cpp" "Log/*.h"
-						"Task/*.cpp" "Task/*.h")
+						"Task/*.cpp" "Task/*.h"
+						"Memory/*.cpp" "Memory/*.h")
 
 #file(GLOB HEADER_FILES "*.h")
 
@@ -40,6 +43,8 @@ endif()
 #list(REMOVE_DUPLICATES INCLUDE_DIRS)
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${PLATFORM_FILES})
+
+#TARGET_LINK_LIBRARIES(${PROJECT_NAME} xxHash MemoryPool)
 
 #set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER "OCCore")
 

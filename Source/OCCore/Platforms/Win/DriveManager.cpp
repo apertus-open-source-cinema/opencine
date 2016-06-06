@@ -1,13 +1,11 @@
 #include "DriveManager.h"
 
-#include <string>
 #include <vector>
 #include <memory>
 
 #include <windows.h>
 #include <dbt.h>
 
-#include <QWidget>
 #include <QDebug>
 #include <QAbstractEventDispatcher>
 

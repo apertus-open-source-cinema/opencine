@@ -9,6 +9,8 @@
 
 #include "OCCore_export.h"
 
+#include "Memory/StaticAllocator.h"
+
 namespace OC
 {
 	namespace DataProvider
@@ -44,9 +46,11 @@ namespace OC
 
 			TIFFHeader ProcessHeader(char* buffer);
 
-			inline void SwapEndian(uint16_t& val);
+			void FindMainImage(unsigned char* data, unsigned int& ifdOffset, uint16_t& ifdCount);
 
-			inline void SwapEndian(uint32_t& val);
+			inline void SwapEndian(uint16_t& val) const;
+
+			inline void SwapEndian(uint32_t& val) const;
 
 			inline void SwapTagEndianess(TIFFTag& tag)
 			{
@@ -73,8 +77,8 @@ namespace OC
 
 		public:
 			void ProcessIFDBlock();
-			void LoadImage(unsigned char* data, unsigned size, OCImage& image);
-			TIFFLoader(unsigned char* data, unsigned int size, OCImage& image);
+			void LoadImage(unsigned char* data, unsigned size, OCImage& image, IAllocator& allocator);
+			TIFFLoader(unsigned char* data, unsigned int size, OCImage& image, IAllocator& allocator);
 		};
 	}
 }

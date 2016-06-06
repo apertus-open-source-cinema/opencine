@@ -1,8 +1,6 @@
 #ifndef DRIVELISTITEM_H
 #define DRIVELISTITEM_H
 
-#include <inttypes.h>
-
 #include <QObject>
 
 class DriveListItem : public QObject

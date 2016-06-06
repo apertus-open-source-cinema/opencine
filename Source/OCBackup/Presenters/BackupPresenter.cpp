@@ -6,6 +6,8 @@
 #include <QFileInfoList>
 #include <QQmlContext>
 
+#include <DriveManager.h>
+
 BackupPresenter::BackupPresenter(IBackupView &view) :
 	_view(&view)
 {
@@ -94,7 +96,7 @@ void BackupPresenter::FolderSelectionChanged(QString folderPath)
 
 	for (QFileInfo fileInfo : fileList)
 	{
-		fileNameList.push_back(fileInfo.fileName());
+		fileNameList.push_back(fileInfo.filePath());
 	}
 
 	_view->SetItemList(fileNameList);
