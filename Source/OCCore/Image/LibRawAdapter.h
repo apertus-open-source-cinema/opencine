@@ -1,7 +1,7 @@
 #ifndef LIBRAWADAPTER_H
 #define LIBRAWADAPTER_H
 
-#include <libraw.h>
+//#include <libraw.h>
 
 #include "IImageLoader.h"
 

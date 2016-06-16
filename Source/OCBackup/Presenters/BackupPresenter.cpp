@@ -18,7 +18,7 @@ BackupPresenter::BackupPresenter(IBackupView &view) :
 	_driveManager->RequestDriveList();
 }
 
-void BackupPresenter::SetupSignals()
+void BackupPresenter::SetupSignals() const
 {
 	connect(_driveManager, SIGNAL(DriveListChanged(std::vector<DriveInfo>)), this, SLOT(DriveListChanged(std::vector<DriveInfo>)));
 	connect(_view, SIGNAL(DriveSelectionChanged(int)), this, SLOT(DriveSelectionChanged(int)));
@@ -30,7 +30,7 @@ void BackupPresenter::SetupSignals()
 	connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
 }
 
-void BackupPresenter::StartTransfer()
+void BackupPresenter::StartTransfer() const
 {
 	//emit StartTransferSig("/media/andi/OC_TEST_MSD");
 }
@@ -68,7 +68,7 @@ void BackupPresenter::DriveSelectionChanged(int driveIndex)
 
 std::vector<QString> _destinationList;
 
-void BackupPresenter::AddDestination()
+void BackupPresenter::AddDestination() const
 {
 	QFileDialog dialog;
 	dialog.setFileMode(QFileDialog::Directory);
@@ -87,7 +87,7 @@ void BackupPresenter::AddDestination()
 	}
 }
 
-void BackupPresenter::FolderSelectionChanged(QString folderPath)
+void BackupPresenter::FolderSelectionChanged(QString folderPath) const
 {
 	QDir dir(folderPath);
 	QFileInfoList fileList = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Files);

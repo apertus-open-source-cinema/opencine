@@ -1,8 +1,9 @@
 #ifndef STATICALLOCATOR_H
 #define STATICALLOCATOR_H
 
-#include "OCCore_export.h"
 #include <unordered_map>
+
+#include "OCCore_export.h"
 
 //Reference: http://bitsquid.blogspot.de/2010/09/custom-memory-allocation-in-c.html
 class OCCORE_EXPORT IAllocator
@@ -26,6 +27,7 @@ class OCCORE_EXPORT RawPoolAllocator : public IAllocator
 
 public:
 	RawPoolAllocator(size_t pageSize);
+	~RawPoolAllocator();
 
 	void* Allocate(size_t size/*, size_t align*/) override;
 	void Deallocate(void* p) override;

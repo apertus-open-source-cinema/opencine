@@ -44,7 +44,7 @@ namespace OC
 
 			unsigned int _imageDataOffset;
 
-			TIFFHeader ProcessHeader(char* buffer);
+			TIFFHeader ProcessHeader(char* buffer) const;
 
 			void FindMainImage(unsigned char* data, unsigned int& ifdOffset, uint16_t& ifdCount);
 
@@ -52,7 +52,7 @@ namespace OC
 
 			inline void SwapEndian(uint32_t& val) const;
 
-			inline void SwapTagEndianess(TIFFTag& tag)
+			inline void SwapTagEndianess(TIFFTag& tag) const
 			{
 				SwapEndian(tag.ID);
 				SwapEndian(tag.DataType);
@@ -76,7 +76,7 @@ namespace OC
 			void Cleanup() const;
 
 		public:
-			void ProcessIFDBlock();
+			void ProcessIFDBlock() const;
 			void LoadImage(unsigned char* data, unsigned size, OCImage& image, IAllocator& allocator);
 			TIFFLoader(unsigned char* data, unsigned int size, OCImage& image, IAllocator& allocator);
 		};

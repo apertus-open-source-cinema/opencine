@@ -36,11 +36,11 @@ void TIFFLoader::Cleanup() const
 	}
 }
 
-void TIFFLoader::ProcessIFDBlock()
+void TIFFLoader::ProcessIFDBlock() const
 {
 }
 
-TIFFHeader TIFFLoader::ProcessHeader(char* buffer)
+TIFFHeader TIFFLoader::ProcessHeader(char* buffer) const
 {
 	TIFFHeader header;
 	memcpy(&header, buffer, sizeof(TIFFHeader));

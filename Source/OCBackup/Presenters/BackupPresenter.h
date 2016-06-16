@@ -35,9 +35,9 @@ class BackupPresenter : public IBackupPresenter
 
 	std::vector<DriveInfo> _driveList;
 
-	void SetupSignals();
+	void SetupSignals() const;
 
-	void StartTransfer();
+	void StartTransfer() const;
 
 	//signals:
 		//void StartTransferSig(std::string drivePath);
@@ -45,8 +45,8 @@ class BackupPresenter : public IBackupPresenter
 	private slots:
 	void DriveListChanged(std::vector<DriveInfo> driveList);
 	void DriveSelectionChanged(int driveIndex);
-	void AddDestination();
-	void FolderSelectionChanged(QString folderPath);
+	void AddDestination() const;
+	void FolderSelectionChanged(QString folderPath) const;
 
 public:
 	explicit BackupPresenter(IBackupView& view);

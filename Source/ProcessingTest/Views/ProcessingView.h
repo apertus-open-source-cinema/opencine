@@ -17,14 +17,14 @@ class ProcessingView : public IProcessingView
 	QImage* thumbnailImage;
 
 public:
-	explicit ProcessingView(QWidget *parent = 0);
+	explicit ProcessingView(QWidget *parent = nullptr);
 	~ProcessingView();
 
 	virtual void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
 
-	virtual void SetFrame(OCImage& image);
+	void SetFrame(OCImage& image) override;
 
-	void SetThumbnail(unsigned int width, unsigned int height, unsigned char* data);
+	void SetThumbnail(unsigned int width, unsigned int height, unsigned char* data) override;
 
 	private slots:
 	void on_pushButton_toggled(bool checked);
@@ -40,7 +40,7 @@ private:
 
 	// QObject interface
 public:
-	bool eventFilter(QObject *, QEvent *);
+	bool eventFilter(QObject *, QEvent *) override;
 };
 
 #endif // PROCESSINGVIEW_H

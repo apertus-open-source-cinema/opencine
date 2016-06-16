@@ -35,7 +35,7 @@ void BayerFramePreProcessor::MapPatternToData()
 
 void BayerFramePreProcessor::ExtractOddRows() const
 {
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (int rowIndex = 0; rowIndex < _height; rowIndex += 2)
 	{
 		for (int columnIndex = 0; columnIndex < _width; columnIndex++)
@@ -54,7 +54,7 @@ void BayerFramePreProcessor::ExtractOddRows() const
 
 void BayerFramePreProcessor::ExtractEvenRows() const
 {
-	#pragma omp parallel for
+#pragma omp parallel for
 	for (int rowIndex = 1; rowIndex < _height; rowIndex += 2)
 	{
 		for (int columnIndex = 0; columnIndex < _width; columnIndex++)
@@ -96,62 +96,63 @@ BayerFramePreProcessor::~BayerFramePreProcessor()
 	//	delete [] _outputData;
 }
 
-void BayerFramePreProcessor::SetData(unsigned char& data, unsigned int width, unsigned int height, SourceFormat sourceFormat)
-{
-	_data = &data;
+//void BayerFramePreProcessor::SetData(unsigned char& data, unsigned int width, unsigned int height, SourceFormat sourceFormat)
+//{
+//	_data = &data;
+//
+//	_width = width;
+//	_height = height;
+//
+//	_size = _width * _height;
+//
+//	_outputData = new unsigned short[_size];
+//
+//	//_dataRed = new unsigned short[_size * 2];
+//	//_dataGreen = new unsigned short[_size * 2];
+//	//_dataBlue = new unsigned short[_size * 2];
+//
+//	MapPatternToData();
+//}
 
-	_width = width;
-	_height = height;
-
-	_size = _width * _height;
-
-	_outputData = new unsigned short[_size];
-
-    //_dataRed = new unsigned short[_size * 2];
-    //_dataGreen = new unsigned short[_size * 2];
-    //_dataBlue = new unsigned short[_size * 2];
-
-	MapPatternToData();
-}
-
-void BayerFramePreProcessor::SetData(unsigned char& data, unsigned int width, unsigned int height, SourceFormat sourceFormat, BayerPattern pattern)
-{
-	_data = &data;
-
-	_width = width;
-	_height = height;
-
-	_size = _width * _height;
-
-	_outputData = new unsigned short[_size];
-
-    //_dataRed = new unsigned short[_size];
-    //_dataGreen = new unsigned short[_size];
-    //_dataBlue = new unsigned short[_size];
-
-	_pattern = pattern;
-
-	MapPatternToData();
-}
+// TODO: Uncomment when it's required again
+//void BayerFramePreProcessor::SetData(unsigned char& data, unsigned int width, unsigned int height, SourceFormat sourceFormat, BayerPattern pattern)
+//{
+//	_data = &data;
+//
+//	_width = width;
+//	_height = height;
+//
+//	_size = _width * _height;
+//
+//	_outputData = new unsigned short[_size];
+//
+//    //_dataRed = new unsigned short[_size];
+//    //_dataGreen = new unsigned short[_size];
+//    //_dataBlue = new unsigned short[_size];
+//
+//	_pattern = pattern;
+//
+//	MapPatternToData();
+//}
 
 void BayerFramePreProcessor::SetData(unsigned char& data, OCImage& image)
 {
-    _data = &data;
+	_data = &data;
 
-    _width = image.Width();
-    _height = image.Height();
+	_width = image.Width();
+	_height = image.Height();
 
-    _size = _width * _height;
+	_size = _width * _height;
 
-    _outputData = new unsigned short[_size];
+	_outputData = new unsigned short[_size];
 
-    _dataRed = (unsigned short*)image.RedChannel();
-    _dataGreen = (unsigned short*)image.GreenChannel();
-    _dataBlue = (unsigned short*)image.BlueChannel();
+	_dataRed = static_cast<unsigned short*>(image.RedChannel());
+	_dataGreen = static_cast<unsigned short*>(image.GreenChannel());
+	_dataBlue = static_cast<unsigned short*>(image.BlueChannel());
 
-    _pattern = image.GetBayerPattern();
+	_pattern = image.GetBayerPattern();
 
-    MapPatternToData();
+	MapPatternToData();
 }
 
 void BayerFramePreProcessor::Process()
@@ -236,18 +237,19 @@ void BayerFramePreProcessor::SetLinearizationData(unsigned short* linearizationT
 	_linearizationLength = linearizationLength;
 }
 
-void BayerFramePreProcessor::SetData(unsigned char& data, int width, int height, SourceFormat sourceFormat)
-{
-	_data = &data;
-
-	_width = width;
-	_height = height;
-
-	_size = _width * _height;
-
-	_outputData = new unsigned short[_size];
-
-    //_dataRed = new unsigned short[_size];
-    //_dataGreen = new unsigned short[_size];
-    //_dataBlue = new unsigned short[_size];
-}
+// TODO: Uncomment when it's required again
+//void BayerFramePreProcessor::SetData(unsigned char& data, int width, int height, SourceFormat sourceFormat)
+//{
+//	_data = &data;
+//
+//	_width = width;
+//	_height = height;
+//
+//	_size = _width * _height;
+//
+//	_outputData = new unsigned short[_size];
+//
+//    //_dataRed = new unsigned short[_size];
+//    //_dataGreen = new unsigned short[_size];
+//    //_dataBlue = new unsigned short[_size];
+//}

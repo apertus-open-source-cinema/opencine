@@ -40,3 +40,19 @@ QT5_USE_MODULES(${PROJECT_NAME} Widgets OpenGL QuickWidgets)
 #FILE(COPY "Widgets" DESTINATION ${CMAKE_BINARY_DIR}/bin)
 FILE(COPY "Shaders" DESTINATION ${CMAKE_BINARY_DIR}/bin)
 FILE(COPY axiom.raw12 DESTINATION ${CMAKE_BINARY_DIR}/bin)
+
+set(_src_root_path ${CMAKE_CURRENT_SOURCE_DIR})
+
+file(
+    GLOB_RECURSE _source_list 
+    LIST_DIRECTORIES false
+    "${_src_root_path}/*.c*"
+    "${_src_root_path}/*.h*"
+)
+
+foreach(_source IN ITEMS ${_source_list})
+    get_filename_component(_source_path "${_source}" PATH)
+    file(RELATIVE_PATH _source_path_rel "${_src_root_path}" "${_source_path}")
+    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
+    source_group("${_group_path}" FILES "${_source}")
+endforeach()

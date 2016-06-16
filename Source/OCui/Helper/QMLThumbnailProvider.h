@@ -3,11 +3,14 @@
 
 #include <QQuickImageProvider>
 
+#include <memory>
+
 #include <Image/ImageProvider.h>
 #include <Image/OCImage.h>
 #include <Image/ThumbnailProvider.h>
 
 #include "OCui_export.h"
+
 
 class OCUI_EXPORT QMLThumbnailProvider : public QQuickImageProvider
 {
@@ -24,7 +27,7 @@ public:
 
 		// QQuickImageProvider interface
 public:
-	QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
+	QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize) override;
 };
 
 #endif //QMLTHUMBNAILPROVIDER_H

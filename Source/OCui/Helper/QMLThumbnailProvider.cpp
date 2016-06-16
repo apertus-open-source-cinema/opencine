@@ -3,6 +3,7 @@
 #include <memory>
 
 #include <Image/BilinearDebayer.h>
+#include "Memory/StaticAllocator.h"
 
 using namespace OC::DataProvider;
 
@@ -75,7 +76,7 @@ QImage QMLThumbnailProvider::requestImage(const QString &id, QSize *size, const 
 
 	_image.reset(new OCImage());
 
-	IAllocator* allocator = new RawPoolAllocator(1);
+	IAllocator* allocator = new RawPoolAllocator(50 * 1024 * 1024);
 	provider->Load(id.toStdString(), FileFormat::DNG, *_image.get(), *allocator);
 
 	BilinearDebayer* debayer = new BilinearDebayer(*_image.get());

@@ -48,10 +48,10 @@ public:
 	void CurrentFolderChanged(const QItemSelection& selected, const QItemSelection& deselected);
 
 public:
-	void SetCurrentFolder(QString folderPath);
-	void SetDriveList(std::vector<DriveInfo> driveList);
-	void SetItemList(std::vector<QString> fileList);
-	void SetDestinationList(std::vector<QString> destinationList);
+	void SetCurrentFolder(QString folderPath) override;
+	void SetDriveList(std::vector<DriveInfo> driveList) override;
+	void SetItemList(std::vector<QString> fileList) override;
+	void SetDestinationList(std::vector<QString> destinationList) override;
 };
 
 #endif // OCBACKUPLAYOUT_H

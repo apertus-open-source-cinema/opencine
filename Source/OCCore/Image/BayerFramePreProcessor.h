@@ -12,7 +12,7 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor
 	unsigned short* _outputData;
 	unsigned int _size;
 
-	OC::DataProvider::BayerPattern _pattern = BayerPattern::RGGB;
+	BayerPattern _pattern = BayerPattern::RGGB;
 
 	unsigned short* dataUL; //upper-left data
 	unsigned short* dataUR; //upper-right data
@@ -37,9 +37,11 @@ public:
 
 	~BayerFramePreProcessor();
 
-	virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat) override;
+	//void SetData(unsigned char &data, int width, int height, OC::DataProvider::SourceFormat sourceFormat);
 
-	virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat, BayerPattern pattern);
+	//virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat) override;
+
+	//virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat, BayerPattern pattern);
 
     void SetData(unsigned char& data, OCImage& image);
 
@@ -61,8 +63,6 @@ public:
 	unsigned int _linearizationLength = 0;
 
 	void SetLinearizationData(unsigned short* linearizationTable, unsigned int linearizationLength);
-
-	void SetData(unsigned char &data, int width, int height, OC::DataProvider::SourceFormat sourceFormat);
 };
 
 #endif // IFRAMEPROCESSOR_H
