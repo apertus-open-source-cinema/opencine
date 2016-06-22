@@ -10,6 +10,7 @@
 #include "Presenters/ProcessingPresenter.h"
 
 #include <Image/FramePool.h>
+#include "Log/Logger.h"
 
 class ProcessingTest : public OCui::GUIApplication
 {
@@ -31,6 +32,9 @@ public:
 
 int main(int argc, char** argv)
 {
+	OC_LOG_INFO("-----");
+	OC_LOG_INFO("ProcessingTest started");
+
 	ProcessingTest* app = new ProcessingTest(argc, argv);
 	app->Run();
 
@@ -39,5 +43,7 @@ int main(int argc, char** argv)
 		delete app;
 	}
 
+	OC_LOG_INFO("ProcessingTest exited");
+	OC_LOG_INFO("-----");
 	return 0;
 }

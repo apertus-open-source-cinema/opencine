@@ -64,7 +64,7 @@ void DriveManager::EnumerateRemovableDrives(std::vector<std::string> availableDr
 	for (auto& drive : availableDrives)
 	{
 		int driveType = GetDriveType(drive.c_str());
-		bool validVolume = GetVolumeInformation(drive.c_str(), NULL, 0, 0, 0, 0, NULL, 0);
+		bool validVolume = GetVolumeInformation(drive.c_str(), nullptr, 0, nullptr, nullptr, nullptr, nullptr, 0);
 
 		//        if(driveType == DRIVE_REMOVABLE && validVolume)
 		//        {
@@ -83,7 +83,7 @@ void DriveManager::RetrieveDriveInfo(DriveInfo &driveInfo)
 	unsigned __int64 freeBytesAvailable = 0;
 	unsigned __int64 totalNumberOfBytes = 0;
 	unsigned __int64 totalNumberOfFreeBytes = 0;
-	GetDiskFreeSpaceEx(driveInfo.DrivePath.c_str(), (PULARGE_INTEGER)&freeBytesAvailable, (PULARGE_INTEGER)&totalNumberOfBytes, (PULARGE_INTEGER)&totalNumberOfFreeBytes);
+	GetDiskFreeSpaceEx(driveInfo.DrivePath.c_str(), reinterpret_cast<PULARGE_INTEGER>(&freeBytesAvailable), reinterpret_cast<PULARGE_INTEGER>(&totalNumberOfBytes), (PULARGE_INTEGER)&totalNumberOfFreeBytes);
 
 	driveInfo.TotalSpace = totalNumberOfBytes / 1024 / 1024;
 	driveInfo.UsedSpace = (totalNumberOfBytes - totalNumberOfFreeBytes) / 1024 / 1024;
@@ -91,6 +91,6 @@ void DriveManager::RetrieveDriveInfo(DriveInfo &driveInfo)
 	driveInfo.SpaceUnit = "MB";
 
 	char volumeName[MAX_PATH];
-	GetVolumeInformation(driveInfo.DrivePath.c_str(), volumeName, MAX_PATH, NULL, NULL, NULL, { 0 }, 0);
+	GetVolumeInformation(driveInfo.DrivePath.c_str(), volumeName, MAX_PATH, nullptr, nullptr, nullptr, { nullptr }, 0);
 	driveInfo.DriveName = volumeName;
 }

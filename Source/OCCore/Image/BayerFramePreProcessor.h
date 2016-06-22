@@ -43,7 +43,7 @@ public:
 
 	//virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat, BayerPattern pattern);
 
-    void SetData(unsigned char& data, OCImage& image);
+    void SetData(unsigned char& data, OCImage& image) override;
 
 	void Process() override;
 

@@ -21,7 +21,7 @@ namespace OC
 
 			unsigned int colorOffsets[8] = { 1, 1, 1, 1, 1, 1, 1, 1 }; //R G1 G2 B, first: row, second: column
 
-			//Caution: Experimental values for now, X and Y, possibly that 4 values are required to describe both offsets
+			//Caution: Experimental values, XYXY, right angle, 1st relative to origin, 2nd to 1st one
 			//Offset example:
 			//	B -> currently processed blue pixel
 			//	G, R -> pixel pair selected by random offset pair
@@ -30,11 +30,27 @@ namespace OC
 			//	g B g
 			//  r g r
 			//
-			//TODO: Expand the list, investigate better solutions later, e.g. convolution kernels
-			int randomOffsets [] = { -1, -1,	//top-left
-									  1,  1,	//top-right
-									 -1,  1,	//bottom-left
-									  1, -1 };	//bottom-right
+			//TODO: Investigate better solutions later, e.g. convolution kernels
+			int randomOffsets[32] = { 0, -1, -1,  0, //top, top-left
+									  0, -1,  1,  0, //top, top-right
+									  1,  0,  0, -1, //right, top-right
+									  1,  0,  0,  1, //right, bottom-right
+									  0,  1, -1,  0, //bottom, bottom-left
+									  0,  1,  1,  0, //bottom, bottom-right
+									 -1,  0,  0, -1, //left, top-left
+									 -1,  0,  0,  1 //left, bottom-left
+			};
+
+			// Maybe absolute values would save performance
+			int randomAbsoluteOffsets[32] = { 0, -1, -1, -1, //top, top-left
+											  0, -1,  1, -1, //top, top-right
+											  1,  0,  1, -1, //right, top-right
+											  1,  0,  1,  1, //right, bottom-right
+											  0,  1, -1,  1, //bottom, bottom-left
+											  0,  1,  1,  1, //bottom, bottom-right
+											 -1,  0, -1, -1, //left, top-left
+											 -1,  0, -1,  1 //left, bottom-left
+			};
 
 		public:
 			SHOODAKDebayer(OCImage& image);
@@ -49,6 +65,8 @@ namespace OC
 			void BilinearFilterBlue() const;
 
 			void SetColorOffsets(BayerPattern pattern);
+
+			void SelectRandomPixels();
 		};
 	}
 }

@@ -1,5 +1,7 @@
 #include "SHOODAKDebayer.h"
 
+#include <random>
+
 using namespace OC::DataProvider;
 
 SHOODAKDebayer::SHOODAKDebayer(OCImage& image)
@@ -12,6 +14,8 @@ SHOODAKDebayer::SHOODAKDebayer(OCImage& image)
 	_height = image.Height();
 
 	SetColorOffsets(image.GetBayerPattern());
+
+	SelectRandomPixels();
 }
 
 void SHOODAKDebayer::Process()
@@ -114,5 +118,20 @@ void SHOODAKDebayer::SetColorOffsets(BayerPattern pattern)
 		colorOffsets[6] = 1;
 		colorOffsets[7] = 2;
 		break;
+	}
+}
+
+void SHOODAKDebayer::SelectRandomPixels()
+{
+	unsigned int randomPixelCount = _width * _height * 0.25; //25% percent for now, later it will be configurable
+	unsigned int* randomPixelPos = new unsigned int[randomPixelCount];
+
+	std::random_device rd;
+	std::mt19937_64 gen(rd());
+	std::uniform_int_distribution<> dis(0, randomPixelCount);
+
+	for (int index = 0; index < randomPixelCount; ++index)
+	{
+		randomPixelPos[index] = dis(gen);
 	}
 }

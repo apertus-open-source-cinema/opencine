@@ -119,6 +119,8 @@ void TIFFLoader::LoadImage(unsigned char* data, unsigned size, OCImage& image, I
 
 	//tags = new TIFFTag[_ifdEntries];
 	//memcpy(tags, data + header.IFDOffset + sizeof(_ifdEntries), sizeof(TIFFTag) * _ifdEntries);
+	
+	std::unordered_map<int, std::string> tagNames = CreateTIFFTagMap();
 
 	ImageFormat bitsPerPixel = ImageFormat::Integer12;
 	std::unordered_map<int, std::function<void(TIFFTag&)>> varMap;
@@ -132,6 +134,7 @@ void TIFFLoader::LoadImage(unsigned char* data, unsigned size, OCImage& image, I
 		}
 
 		std::cout << "Tag ID: " << tags[i].ID << std::endl;
+		//OC_LOG_INFO("Tag ID: " + tagNames.find(tags[i].ID));// << std::to_string(tags[i].ID));
 		OC_LOG_INFO("Tag ID: " + std::to_string(tags[i].ID));// << std::to_string(tags[i].ID));
 
 		auto it = varMap.find(tags[i].ID);
@@ -210,6 +213,8 @@ void TIFFLoader::ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&
 
 void TIFFLoader::PreProcess(unsigned char* data, OCImage& image) const
 {
+	auto start = std::chrono::high_resolution_clock::now();
+
 	std::unique_ptr<BayerFramePreProcessor> frameProcessor(new BayerFramePreProcessor());
 
     unsigned int dataSize = image.Width() * image.Height();
@@ -224,6 +229,13 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image) const
     frameProcessor->SetData(data[_imageDataOffset], image);
 	//frameProcessor->SetLinearizationData(linearizationTable, linearizationLength);
 	frameProcessor->Process();
+
+	auto diffTime = std::chrono::high_resolution_clock::now() - start;
+	auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(diffTime).count();
+
+	std::string log = "BayerFramePreProcessor: " + std::to_string(frameTime) + "ms";
+	OC_LOG_WARNING(log);
+
 
 	image.SetRedChannel(frameProcessor->GetDataRed());
 	image.SetGreenChannel(frameProcessor->GetDataGreen());

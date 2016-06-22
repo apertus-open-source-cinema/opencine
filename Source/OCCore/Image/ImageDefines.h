@@ -1,6 +1,8 @@
 #ifndef IMAGEDEFINES_H
 #define IMAGEDEFINES_H
 
+#include <unordered_map>
+
 namespace OC
 {
 	namespace DataProvider
@@ -31,6 +33,14 @@ namespace OC
 			DNG,
 			CinemaDNG
 		};
+
+		inline std::unordered_map<int, std::string> CreateTIFFTagMap()
+		{
+			std::unordered_map<int, std::string> tagNames;
+			tagNames.insert(std::pair<int, std::string>(256, "ImageWidth"));
+
+			return tagNames;
+		}
 	}
 }
 #endif //IMAGEDEFINES_H

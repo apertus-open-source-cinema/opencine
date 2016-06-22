@@ -1,5 +1,7 @@
 #include "BayerFramePreProcessor.h"
 
+#include <omp.h>
+
 #include <Log/Logger.h>
 
 void BayerFramePreProcessor::MapPatternToData()
@@ -35,7 +37,7 @@ void BayerFramePreProcessor::MapPatternToData()
 
 void BayerFramePreProcessor::ExtractOddRows() const
 {
-#pragma omp parallel for
+//#pragma omp parallel for schedule(dynamic,1)
 	for (int rowIndex = 0; rowIndex < _height; rowIndex += 2)
 	{
 		for (int columnIndex = 0; columnIndex < _width; columnIndex++)
@@ -50,11 +52,13 @@ void BayerFramePreProcessor::ExtractOddRows() const
 			}
 		}
 	}
+
+	OC_LOG_INFO("OddRows threads: " + std::to_string(omp_get_num_threads()));
 }
 
 void BayerFramePreProcessor::ExtractEvenRows() const
 {
-#pragma omp parallel for
+//#pragma omp parallel for schedule(dynamic,1)
 	for (int rowIndex = 1; rowIndex < _height; rowIndex += 2)
 	{
 		for (int columnIndex = 0; columnIndex < _width; columnIndex++)
@@ -69,6 +73,8 @@ void BayerFramePreProcessor::ExtractEvenRows() const
 			}
 		}
 	}
+
+	OC_LOG_INFO("EvenRows threads: " + std::to_string(omp_get_num_threads()));
 }
 
 BayerFramePreProcessor::BayerFramePreProcessor() :
@@ -158,7 +164,8 @@ void BayerFramePreProcessor::SetData(unsigned char& data, OCImage& image)
 void BayerFramePreProcessor::Process()
 {
 	OC_LOG_INFO("12->16bit conversion");
-	Convert12To16Bit();
+	std::thread t0(&BayerFramePreProcessor::Convert12To16Bit, this);
+	t0.join();
 
 	OC_LOG_INFO("Extract rows");
 	std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
