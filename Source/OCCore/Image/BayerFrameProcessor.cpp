@@ -1,6 +1,7 @@
 #include "BayerFramePreProcessor.h"
 
 #include <omp.h>
+#include <thread>
 
 #include <Log/Logger.h>
 
@@ -53,7 +54,7 @@ void BayerFramePreProcessor::ExtractOddRows() const
 		}
 	}
 
-	OC_LOG_INFO("OddRows threads: " + std::to_string(omp_get_num_threads()));
+    OC_LOG_INFO("OddRows threads: " + std::to_string(omp_get_num_threads()));
 }
 
 void BayerFramePreProcessor::ExtractEvenRows() const
@@ -74,7 +75,7 @@ void BayerFramePreProcessor::ExtractEvenRows() const
 		}
 	}
 
-	OC_LOG_INFO("EvenRows threads: " + std::to_string(omp_get_num_threads()));
+    OC_LOG_INFO("EvenRows threads: " + std::to_string(omp_get_num_threads()));
 }
 
 BayerFramePreProcessor::BayerFramePreProcessor() :
@@ -167,10 +168,11 @@ void BayerFramePreProcessor::Process()
 	std::thread t0(&BayerFramePreProcessor::Convert12To16Bit, this);
 	t0.join();
 
-	OC_LOG_INFO("Extract rows");
+
 	std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
 	std::thread t2(&BayerFramePreProcessor::ExtractEvenRows, this);
 
+    OC_LOG_INFO("Extract rows");
 	t1.join();
 	t2.join();
 

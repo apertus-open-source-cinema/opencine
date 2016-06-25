@@ -57,17 +57,17 @@ namespace OC
 			std::string FormatMessage(Level level, std::string message, std::string file, int lineNumber);
 		};
 
-#ifdef _DEBUG
+//#if defined(_DEBUG) || defined(DEBUG) || defined(NDEBUG)
 #define OC_LOG_INFO(message) OC::Log::Logger::GetInstance().LogInfo(message, __FILE__, __LINE__)
 #define OC_LOG_WARNING(message) OC::Log::Logger::GetInstance().LogWarning(message, __FILE__, __LINE__)
 #define OC_LOG_ERROR(message) OC::Log::Logger::GetInstance().LogError(message, __FILE__, __LINE__)
 #define OC_LOG_FATAL(message) OC::Log::Logger::GetInstance().LogFatal(message, __FILE__, __LINE__)
-#else 
-#define OC_LOG_INFO(message) void(0)
-#define OC_LOG_WARNING(message) void(0)
-#define OC_LOG_ERROR(message) void(0)
-#define OC_LOG_FATAL(message) void(0)
-#endif
+//#else
+//#define OC_LOG_INFO(message) void(0)
+//#define OC_LOG_WARNING(message) void(0)
+//#define OC_LOG_ERROR(message) void(0)
+//#define OC_LOG_FATAL(message) void(0)
+//#endif
 	} // namespace Log
 } // namespace OC
 

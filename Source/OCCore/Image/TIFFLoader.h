@@ -48,9 +48,9 @@ namespace OC
 
 			void FindMainImage(unsigned char* data, unsigned int& ifdOffset, uint16_t& ifdCount);
 
-			inline void SwapEndian(uint16_t& val) const;
+            void SwapEndian(uint16_t& val) const;
 
-			inline void SwapEndian(uint32_t& val) const;
+            void SwapEndian(uint32_t& val) const;
 
 			inline void SwapTagEndianess(TIFFTag& tag) const
 			{

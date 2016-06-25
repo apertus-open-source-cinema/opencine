@@ -4,6 +4,8 @@
 #include "IFrameProcessor.h"
 #include "OCImage.h"
 
+#include <thread>
+
 namespace OC
 {
 	namespace DataProvider
@@ -18,7 +20,6 @@ namespace OC
 			unsigned int _height;
 
 			unsigned int colorOffsets[8] = { 1, 1, 1, 1, 1, 1, 1, 1 }; //R G1 G2 B, first: row, second: column
-			int randomOffsets = {};
 
 		public:
 			explicit BilinearDebayer(OCImage& image)
@@ -116,9 +117,13 @@ namespace OC
 
 			void Process() override
 			{
-				BilinearFilterRed();
-				BilinearFilterGreen();
-				BilinearFilterBlue();
+                std::thread redThread(&BilinearDebayer::BilinearFilterRed, this);
+                std::thread greenThread(&BilinearDebayer::BilinearFilterGreen, this);
+                std::thread blueThread(&BilinearDebayer::BilinearFilterBlue, this);
+
+                redThread.join();
+                greenThread.join();
+                blueThread.join();
 			}
 
 			unsigned short* GetDataRed() override

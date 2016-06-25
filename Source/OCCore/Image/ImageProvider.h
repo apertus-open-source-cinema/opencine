@@ -13,7 +13,6 @@ namespace OC
 {
 	namespace DataProvider
 	{
-
 		class OCImage;
 
 		class OCCORE_EXPORT ImageProvider

@@ -34,7 +34,7 @@ bool ImageProvider::ReadBinaryFile(std::string fileName, int& length, unsigned c
 	return false;
 }
 
-inline void ImageProvider::Load(std::string fileName, FileFormat format, OCImage& image, IAllocator& allocator) const
+void ImageProvider::Load(std::string fileName, FileFormat format, OCImage& image, IAllocator& allocator) const
 {
 	int length = -1;
 	unsigned char* fileData = nullptr;
