@@ -1,0 +1,14 @@
+{
+	"Applications": [
+	{
+		"Name": "OCBackup",
+		"Executable": "OCBackup",
+		"Image": "OCBackup_icon.png"
+	},
+	{
+		"Name": "OCManager",
+		"Executable": "OCManager",
+		"Image": "Test_icon.png"
+	}
+	]
+}

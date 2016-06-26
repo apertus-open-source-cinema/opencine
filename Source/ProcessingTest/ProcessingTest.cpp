@@ -20,13 +20,15 @@ class ProcessingTest : public OCui::GUIApplication
 public:
 	ProcessingTest(int& argc, char** argv) : OCui::GUIApplication(argc, argv, "ProcessingTest")
 	{
-		_view = std::make_shared<ProcessingView>();
+        _view = std::make_shared<ProcessingView>();
 		_presenter = std::make_shared<ProcessingPresenter>(*_view);
 
 		SetLayout(*static_cast<QWidget*>(_view.get()));
 		ShowMaximized();
 
-		QtConcurrent::run(_presenter.get(), &IProcessingPresenter::Test);
+        //QtConcurrent::run(_presenter.get(), &IProcessingPresenter::Test);
+
+        _presenter->Test();
 	}
 };
 
