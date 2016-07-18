@@ -92,7 +92,7 @@ QQmlContext*  qmlContext2;
 void BackupView::SetupThumbnailView()
 {
 	QQmlEngine *engine = ui->thumbnailViewControl->engine();
-	engine->addImageProvider(QLatin1String("colors"), new QMLThumbnailProvider());
+    engine->addImageProvider(QLatin1String("OCthumb"), new QMLThumbnailProvider());
 
 	_fileList = new QList<QObject*>();
 	qmlContext2 = ui->thumbnailViewControl->rootContext();
@@ -145,8 +145,8 @@ void BackupView::SetItemList(std::vector<QString> fileList)
 
 	for (auto& file : fileList)
 	{
-		_fileList->append(new ThumbnailViewItem(file, file, 640, 480, 30));
-		//_fileList->append(new ThumbnailViewItem("Test1", "Test2", 640, 480, 30));
+        // TODO: supply path as first parameter, so it and file name are distinct values
+        _fileList->append(new ThumbnailViewItem(file, file, 640, 480, 30));
 	}
 
 	qmlContext2->setContextProperty("fileList", QVariant::fromValue(*_fileList));

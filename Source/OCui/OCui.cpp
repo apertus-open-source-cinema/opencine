@@ -8,6 +8,10 @@
 #include "OCui.h"
 #include "Layouts/MainWindow.h"
 
+// For QML debugging
+#include <QQmlDebuggingEnabler>
+QQmlDebuggingEnabler enabler;
+
 using namespace OCui;
 
 GUIApplication::GUIApplication(int& argc, char** argv, QString moduleName) :

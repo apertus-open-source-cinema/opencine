@@ -23,9 +23,6 @@ public:
 	QMLThumbnailProvider();
 	~QMLThumbnailProvider();
 
-	//    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
-
-		// QQuickImageProvider interface
 public:
 	QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize) override;
 };

@@ -9,95 +9,98 @@
 #include <DriveManager.h>
 
 BackupPresenter::BackupPresenter(IBackupView &view) :
-	_view(&view)
+    _view(&view)
 {
-	_driveManager = new DriveManager();
+    _driveManager = new DriveManager();
 
-	SetupSignals();
+    SetupSignals();
 
-	_driveManager->RequestDriveList();
+    _driveManager->RequestDriveList();
 }
 
 void BackupPresenter::SetupSignals() const
 {
-	connect(_driveManager, SIGNAL(DriveListChanged(std::vector<DriveInfo>)), this, SLOT(DriveListChanged(std::vector<DriveInfo>)));
-	connect(_view, SIGNAL(DriveSelectionChanged(int)), this, SLOT(DriveSelectionChanged(int)));
+    connect(_driveManager, SIGNAL(DriveListChanged(std::vector<DriveInfo>)), this, SLOT(DriveListChanged(std::vector<DriveInfo>)));
+    connect(_view, SIGNAL(DriveSelectionChanged(int)), this, SLOT(DriveSelectionChanged(int)));
 
-	connect(_view, &IBackupView::AddDestinationClicked, this, &BackupPresenter::AddDestination);
+    connect(_view, &IBackupView::AddDestinationClicked, this, &BackupPresenter::AddDestination);
 
-	connect(_view, &IBackupView::FolderSelectionChanged, this, &BackupPresenter::FolderSelectionChanged);
+    connect(_view, &IBackupView::FolderSelectionChanged, this, &BackupPresenter::FolderSelectionChanged);
 
-	connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
+    connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
 }
 
 void BackupPresenter::StartTransfer() const
 {
-	//emit StartTransferSig("/media/andi/OC_TEST_MSD");
+    //emit StartTransferSig("/media/andi/OC_TEST_MSD");
 }
 
 void BackupPresenter::DriveListChanged(std::vector<DriveInfo> driveList)
 {
-	_driveList = driveList;
-	_view->SetDriveList(driveList);
+    _driveList = driveList;
+    _view->SetDriveList(driveList);
 
-	if (!_driveList.empty())
-	{
-		QString drive = QString::fromStdString(driveList.at(0).DrivePath);
-		_view->SetCurrentFolder(drive);
+    if (!_driveList.empty())
+    {
+        QString drive = QString::fromStdString(driveList.at(0).DrivePath);
+        _view->SetCurrentFolder(drive);
 
-		/*std::vector<std::string> flist;
-		flist.push_back("C:/Temp/test.jpg");
-		_view->SetItemList(flist);*/
-	}
-	else
-	{
-		_view->SetCurrentFolder("");
-	}
+        FolderSelectionChanged(drive);
+        /*std::vector<std::string> flist;
+        flist.push_back("C:/Temp/test.jpg");
+        _view->SetItemList(flist);*/
+    }
+    else
+    {
+        _view->SetCurrentFolder("");
+    }
 }
 
 void BackupPresenter::DriveSelectionChanged(int driveIndex)
 {
-	if (_driveList.empty())
-	{
-		return;
-	}
+    if (_driveList.empty())
+    {
+        return;
+    }
 
-	QString folderPath = QString::fromStdString(_driveList.at(driveIndex).DrivePath);
-	_view->SetCurrentFolder(folderPath);
+    QString folderPath = QString::fromStdString(_driveList.at(driveIndex).DrivePath);
+    _view->SetCurrentFolder(folderPath);
+
+    FolderSelectionChanged(folderPath);
 }
 
 std::vector<QString> _destinationList;
 
 void BackupPresenter::AddDestination() const
 {
-	QFileDialog dialog;
-	dialog.setFileMode(QFileDialog::Directory);
-	dialog.setOption(QFileDialog::ShowDirsOnly);
-	dialog.setViewMode(QFileDialog::Detail);
-	int result = dialog.exec();
+    QFileDialog dialog;
+    dialog.setFileMode(QFileDialog::Directory);
+    dialog.setOption(QFileDialog::ShowDirsOnly);
+    dialog.setViewMode(QFileDialog::Detail);
+    int result = dialog.exec();
 
-	QString directory;
-	if (result)
-	{
-		directory = dialog.selectedFiles()[0];
-		_destinationList.push_back(directory);
-		
-		_view->SetDestinationList(_destinationList);
-		qDebug() << directory;
-	}
+    QString directory;
+    if (result)
+    {
+        directory = dialog.selectedFiles()[0];
+        _destinationList.push_back(directory);
+
+        _view->SetDestinationList(_destinationList);
+        qDebug() << directory;
+    }
 }
 
 void BackupPresenter::FolderSelectionChanged(QString folderPath) const
 {
-	QDir dir(folderPath);
-	QFileInfoList fileList = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Files);
+    QDir dir(folderPath);
+    QFileInfoList fileList = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Files);
 
-	std::vector<QString> fileNameList;
+    std::vector<QString> fileNameList;
 
-	for (QFileInfo fileInfo : fileList)
-	{
-		fileNameList.push_back(fileInfo.filePath());
-	}
+    for (QFileInfo fileInfo : fileList)
+    {
+        fileNameList.push_back(fileInfo.filePath());
+    }
 
-	_view->SetItemList(fileNameList);
+    _view->SetItemList(fileNameList);
 }
