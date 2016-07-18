@@ -4,24 +4,27 @@
 #include <QWidget>
 
 namespace Ui {
-class DestinationsControl;
+	class DestinationsControl;
 }
 
 class DestinationsControl : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    void SetupSignals();
+		std::vector<QString> _destinationList;
+
+	void SetupSignals();
 
 public:
-    explicit DestinationsControl(QWidget *parent = 0);
-    ~DestinationsControl();
+	explicit DestinationsControl(QWidget *parent = 0);
+	~DestinationsControl();
+	void SetDestinationList(std::vector<QString> destinationList);
 
 signals:
-    void AddDestinationClicked();
+	void AddDestinationClicked();
 
 private:
-    Ui::DestinationsControl *ui;
+	Ui::DestinationsControl *ui;
 };
 
 #endif // DESTINATIONSCONTROL_H

@@ -12,15 +12,20 @@ float yOffset = 0.5f / 3072.0f;
 
 float wheelValue = 1.0;
 
+GLuint textureRed = 0;
+GLuint textureGreen = 0;
+GLuint textureBlue = 0;
+
 // Create a colored triangle
 static const float vertices[] = {
-    -0.90f,  0.90f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 0.0,
-    -0.90f, -0.90f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 1.0,
-    0.90f,  0.90f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 0.0,
-    0.90f, -0.90f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 1.0
+    -1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 0.0,
+    -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 1.0,
+    1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 0.0,
+    1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 1.0
 };
 
-PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent)
+PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent),
+    _initialized(false)
 {
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
@@ -36,13 +41,18 @@ PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent)
     //QSurfaceFormat::setDefaultFormat(format);
 }
 
+PreviewPane::~PreviewPane()
+{
+    delete program;
+}
+
 void PreviewPane::initializeGL()
 {
     initializeOpenGLFunctions();
 
     printVersionInformation();
 
-    glClearColor(0.18f, 0.18f, 0.18f, 1.0f);
+    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 
     SetupShaders();
     SetupVertexBuffer();
@@ -52,10 +62,23 @@ void PreviewPane::initializeGL()
     object.release();
     vertex.release();
     program->release();
+
+    _initialized = true;
+
+    glGenTextures(1, &textureRed);
+    glGenTextures(1, &textureGreen);
+    glGenTextures(1, &textureBlue);
 }
+
+float viewWidth = 1;
+float viewHeight = 1;
+int imageWidth = 1;
+int imageHeight = 1;
 
 void PreviewPane::resizeGL(int w, int h)
 {
+    viewWidth = (float)w / (float)h;
+    //viewHeight = 1.0;
     //    QMatrix4x4 projection;
     //    projection.ortho(-1.0 - wheelValue, 1.0 + wheelValue, -0.1, 0.1, 0.01f, 1000.0f);
     //    QMatrix4x4 view;
@@ -67,10 +90,6 @@ void PreviewPane::resizeGL(int w, int h)
     //glLoadMatrixf(m_projection.data());
 }
 
-GLuint textureRed  = 0;
-GLuint textureGreen = 0;
-GLuint textureBlue = 0;
-
 void PreviewPane::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -78,11 +97,12 @@ void PreviewPane::paintGL()
     program->bind();
     {
         QMatrix4x4 projection;
-        projection.ortho(-1.0 * wheelValue, 1.0 * wheelValue, -1.0 * wheelValue, 1.0 * wheelValue, 0.01f, 1000.0f);
+        projection.ortho(-viewWidth / 2.0 * wheelValue, viewWidth / 2.0 * wheelValue, -viewHeight / 2.0 * wheelValue, viewHeight / 2.0 * wheelValue, 0.01f, 1000.0f);
         QMatrix4x4 view;
         view.lookAt(QVector3D(0.0, 0.0, 1.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
         QMatrix4x4 model;
         model.setToIdentity();
+        model.scale(float(imageWidth) / (float)imageHeight, 1.0f, 1.0f);
 
         mvp = projection * view * model;
 
@@ -90,31 +110,21 @@ void PreviewPane::paintGL()
 
         object.bind();
 
-        if(redChannel)
-        {
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, textureRed);
-            program->setUniformValue("texture1", 0);
-        }
-        else
-            program->setUniformValue("texture1", -1);
-        if(greenChannel)
-        {
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, textureGreen);
-            program->setUniformValue("texture2", 1);
-        }
-        else
-            program->setUniformValue("texture2", -1);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, textureRed);
+        program->setUniformValue("texture1", 0);
 
-        if(blueChannel)
-        {
-            glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, textureBlue);
-            program->setUniformValue("texture3", 2);
-        }
-        else
-            program->setUniformValue("texture3", -1);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, textureGreen);
+        program->setUniformValue("texture2", 1);
+
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, textureBlue);
+        program->setUniformValue("texture3", 2);
+
+        program->setUniformValue("redEnabled", (float)redChannel);
+        program->setUniformValue("greenEnabled", (float)greenChannel);
+        program->setUniformValue("blueEnabled", (float)blueChannel);
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -204,40 +214,36 @@ float zoomFactor = 1.1f;
 
 void PreviewPane::wheelEvent(QWheelEvent* event)
 {
-    if(event->delta() < 0)
+    if (event->delta() < 0)
     {
         wheelValue *= zoomFactor;
 
-        if(wheelValue > 100.0)
+        if (wheelValue > 100.0f)
         {
-            wheelValue = 100.0;
+            wheelValue = 100.0f;
         }
     }
     else
     {
         wheelValue *= (1.0f / zoomFactor);
-        if(wheelValue < 0.01)
+        if (wheelValue < 0.01f)
         {
-            wheelValue = 0.01;
+            wheelValue = 0.01f;
         }
     }
 
     //wheelValue += event->pixelDelta().y() / 100.0f;
-
-
-
-
-
 }
 
 void PreviewPane::SetTextureRed(int width, int height, unsigned short* imageData)
 {
-    if(textureRed != 0)
-    {
-        return;
-    }
+    //    if(textureRed != 0)
+    //    {
+    //        return;
+    //    }
 
-    glGenTextures(1, &textureRed);
+    imageWidth = width;
+    imageHeight = height;
 
     glBindTexture(GL_TEXTURE_2D, textureRed);
 
@@ -254,8 +260,8 @@ void PreviewPane::SetTextureRed(int width, int height, unsigned short* imageData
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,  GL_LINEAR); //GL_LINEAR_MIPMAP_NEAREST
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_LINEAR_MIPMAP_NEAREST
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     //glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -269,13 +275,6 @@ void PreviewPane::SetTextureRed(int width, int height, unsigned short* imageData
 
 void PreviewPane::SetTextureBlue(int width, int height, unsigned short* imageData)
 {
-    if(textureBlue != 0)
-    {
-        return;
-    }
-
-    glGenTextures(1, &textureBlue);
-
     glBindTexture(GL_TEXTURE_2D, textureBlue);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
@@ -321,13 +320,6 @@ void PreviewPane::SwitchBlueChannel(bool enabled)
 
 void PreviewPane::SetTextureGreen(int width, int height, unsigned short* imageData)
 {
-    if(textureBlue != 0)
-    {
-        return;
-    }
-
-    glGenTextures(1, &textureGreen);
-
     glBindTexture(GL_TEXTURE_2D, textureGreen);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
@@ -343,7 +335,7 @@ void PreviewPane::SetTextureGreen(int width, int height, unsigned short* imageDa
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR ); //GL_LINEAR_MIPMAP_NEAREST
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //GL_LINEAR_MIPMAP_NEAREST
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     //glGenerateMipmap(GL_TEXTURE_2D);
@@ -354,4 +346,9 @@ void PreviewPane::SetTextureGreen(int width, int height, unsigned short* imageDa
     {
         qDebug() << "3 OpenGL error: " << err;
     }
+}
+
+bool PreviewPane::IsInitialized()
+{
+    return isValid();
 }

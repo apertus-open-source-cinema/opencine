@@ -18,6 +18,8 @@ Rectangle
     property string spaceUnit: model.spaceUnit ? model.spaceUnit : "?";
     property alias backgroundColor: rectangle1.color;
 
+	ExclusiveGroup { id: tabPositionGroup }
+
     Text {
         id: driveInfo
         y: 3
@@ -87,4 +89,5 @@ Rectangle
         anchors.top: parent.top
         anchors.topMargin: 5
     }
+
 }

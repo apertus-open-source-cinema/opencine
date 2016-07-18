@@ -1,91 +1,86 @@
 #ifndef TIFFLOADER_H
 #define TIFFLOADER_H
 
-#include <cstring>
-#include <fstream>
 #include <functional>
-#include <iostream> //TODO: Remove when tests are finished
 #include <unordered_map>
 
 #include "OCImage.h"
+#include "IImageLoader.h"
 
 #include "OCCore_export.h"
 
+#include "Memory/StaticAllocator.h"
+
 namespace OC
 {
-    namespace DataProvider
-    {
-        // Source: http://esr.ibiblio.org/?p=5095
-        static inline uint8_t IsBigEndianMachine()
-        {
-            const uint16_t endianness = 256;
-            return *(const uint8_t *)&endianness;
-        }
+	namespace DataProvider
+	{
+		// Source: http://esr.ibiblio.org/?p=5095
+		static inline uint8_t IsBigEndianMachine()
+		{
+			const uint16_t endianness = 256;
+			return *reinterpret_cast<const uint8_t *>(&endianness);
+		}
 
-        class IImageLoader
-        {
+		struct TIFFHeader
+		{
+			uint16_t Identifier;
+			uint16_t Version;
+			uint32_t IFDOffset;
+		};
 
-        };
+		struct TIFFTag
+		{
+			uint16_t ID;
+			uint16_t DataType;
+			uint32_t DataCount;
+			uint32_t DataOffset;
+		};
 
-        struct TIFFHeader
-        {
-            uint16_t Identifier;
-            uint16_t Version;
-            uint32_t IFDOffset;
-        };
+		class OCCORE_EXPORT TIFFLoader : public IImageLoader
+		{
+			bool _swapEndianess;
+			TIFFTag* tags;
 
-        struct TIFFTag
-        {
-            uint16_t ID;
-            uint16_t DataType;
-            uint32_t DataCount;
-            uint32_t DataOffset;
-        };
+			unsigned int _imageDataOffset;
 
-        class EXPORT_API TIFFLoader : public IImageLoader
-        {
-            bool _swapEndianess;
-            uint16_t _ifdEntries;
+			TIFFHeader ProcessHeader(char* buffer) const;
 
-        public:
-            TIFFLoader(unsigned char* data, unsigned int size, OCImage& image);
+			void FindMainImage(unsigned char* data, unsigned int& ifdOffset, uint16_t& ifdCount);
 
-            TIFFHeader ProcessHeader(char* buffer);
+            void SwapEndian(uint16_t& val) const;
 
-            inline void SwapEndian(uint16_t& val)
-            {
-                val = (val << 8) |         // left-shift always fills with zeros
-                        ((uint16_t)val >> 8); // right-shift sign-extends, so force to zero
-            }
+            void SwapEndian(uint32_t& val) const;
 
-            inline void SwapEndian(uint32_t& val)
-            {
-                val = (val<<24) | ((val<<8) & 0x00ff0000) |
-                        ((val>>8) & 0x0000ff00) | (val>>24);
-            }
+			inline void SwapTagEndianess(TIFFTag& tag) const
+			{
+				SwapEndian(tag.ID);
+				SwapEndian(tag.DataType);
+				SwapEndian(tag.DataCount);
 
-            inline void SwapTagEndianess(TIFFTag& tag)
-            {
-                SwapEndian(tag.ID);
-                SwapEndian(tag.DataType);
-                SwapEndian(tag.DataCount);
+				if (tag.DataType == 3)
+				{
+					tag.DataOffset = tag.DataOffset >> 16;
+					SwapEndian(reinterpret_cast<uint16_t&>(tag.DataOffset));
+				}
+				else if (tag.DataType == 4)
+				{
+					SwapEndian(tag.DataOffset);
+				}
+			}
 
-                if(tag.DataType == 3)
-                {
-                    SwapEndian(reinterpret_cast<uint16_t&>(tag.DataOffset));
-                }
-                else if(tag.DataType == 4)
-                {
-                    SwapEndian(static_cast<uint32_t&>(tag.DataOffset));
-                }
-            }
+			void ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&)>>& varMap, ImageFormat& bitsPerPixel, unsigned int size, OC::DataProvider::OCImage& image, unsigned char* data);
 
-            void ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&)>>& varMap, ImageFormat& bitsPerPixel, unsigned int size, OC::DataProvider::OCImage& image, unsigned char* data);
+			void PreProcess(unsigned char* data, OC::DataProvider::OCImage& image) const;
 
-            void PreProcess(unsigned char* data, OC::DataProvider::OCImage& image);
-        };
-    }
+			void Cleanup() const;
+
+		public:
+			void ProcessIFDBlock() const;
+			void LoadImage(unsigned char* data, unsigned size, OCImage& image, IAllocator& allocator);
+			TIFFLoader(unsigned char* data, unsigned int size, OCImage& image, IAllocator& allocator);
+		};
+	}
 }
 
 #endif //TIFFLOADER_H
-

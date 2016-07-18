@@ -3,12 +3,12 @@
 
 #include <memory>
 
-#include <QWidget>
 #include <QQmlContext>
 #include <QStringListModel>
 #include <QFileSystemModel>
 #include <QStandardItemModel>
 #include <QtQml/QQmlComponent>
+#include <QItemSelection>
 
 #include "../Interfaces/IBackupView.h"
 
@@ -16,40 +16,42 @@ class IBackupPresenter;
 
 namespace Ui
 {
-class BackupView;
+	class BackupView;
 }
 
 class BackupView : public IBackupView
 {
-    Q_OBJECT
+	Q_OBJECT
 
-    Ui::BackupView *ui;
-    QQmlContext* _qmlContext;
+		Ui::BackupView *ui;
+	QQmlContext* _qmlContext;
 
-    QStringListModel* _driveListModel;
-    std::shared_ptr<QFileSystemModel> _folderTreeModel;
+	QStringListModel* _driveListModel;
+	std::shared_ptr<QFileSystemModel> _folderTreeModel;
 
-    //std::shared_ptr<QQmlComponent> _driveListDelegate;
+	QList<QObject*>* dataList;
+	QList<QObject*>*  _fileList;
+	QList<QString>*  _destinationList;
 
-    QList<QObject*>* dataList;
-
-    void SetupDriveView();
-    void SetupFolderView();
-    void SetupThumbnailView();
-    void SetupDestinationsView();
-
-public:
-    explicit BackupView(IBackupPresenter* presenter = nullptr);
-    ~BackupView();
-
-private slots:
-    void TransferButtonClicked();
-    void CurrentDriveChanged(int currentDrive);
+	void SetupDriveView();
+	void SetupFolderView();
+	void SetupThumbnailView();
+	void SetupDestinationsView();
 
 public:
-    void SetCurrentFolder(std::string folderPath);
-    void SetDriveList(std::vector<DriveInfo> driveList);
-    void SetItemList(std::vector<std::string> fileList);
+	explicit BackupView(IBackupPresenter* presenter = nullptr);
+	~BackupView();
+
+	private slots:
+	void TransferButtonClicked();
+	void CurrentDriveChanged(int currentDrive);
+	void CurrentFolderChanged(const QItemSelection& selected, const QItemSelection& deselected);
+
+public:
+	void SetCurrentFolder(QString folderPath) override;
+	void SetDriveList(std::vector<DriveInfo> driveList) override;
+	void SetItemList(std::vector<QString> fileList) override;
+	void SetDestinationList(std::vector<QString> destinationList) override;
 };
 
 #endif // OCBACKUPLAYOUT_H

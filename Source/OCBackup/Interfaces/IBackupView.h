@@ -7,20 +7,21 @@
 
 class IBackupView : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    virtual void SetDriveList(std::vector<DriveInfo> driveList) = 0;
-    virtual void SetCurrentFolder(std::string folderPath) = 0;
-     virtual void SetItemList(std::vector<std::string> fileList) = 0;
+	virtual void SetDriveList(std::vector<DriveInfo> driveList) = 0;
+	virtual void SetCurrentFolder(QString folderPath) = 0;
+	virtual void SetItemList(std::vector<QString> fileList) = 0;
+	virtual void SetDestinationList(std::vector<QString> destinationList) = 0;
 
 signals:
-    void StartTransfer();
+	void StartTransfer();
 
-    void DriveSelectionChanged(int driveIndex);
-    void FolderSelectionChanged();
+	void DriveSelectionChanged(int driveIndex);
+	void FolderSelectionChanged(QString folderPath);
 
-    void AddDestinationClicked();
+	void AddDestinationClicked();
 };
 
 #endif //IBACKUPVIEW_H

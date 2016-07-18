@@ -13,25 +13,25 @@ class QWidget;
 
 namespace OCui
 {
-    class EXPORT_API GUIApplication : public QObject
-    {
-        std::shared_ptr<QApplication> _application;
-        std::shared_ptr<MainWindow> _mainWindow;
+	class OCUI_EXPORT GUIApplication : public QObject
+	{
+		std::shared_ptr<QApplication> _application;
+		std::shared_ptr<MainWindow> _mainWindow;
 
-        void SetStyle(QApplication &app);
+		void SetStyle(QApplication &app);
 
-    public:
-        GUIApplication(int& argc, char** argv, std::string moduleName);
+	public:
+		GUIApplication(int& argc, char** argv, QString moduleName);
 
-        void Show();
-        void ShowMaximized();
+		void Show();
+		void ShowMaximized();
 
-        void SetWindowOptions(bool resizeable);
+		void SetWindowOptions(bool resizeable);
 
-        void SetLayout(QWidget& widget);
+		void SetLayout(QWidget& widget);
 
-        int Run();
-    };
+		int Run();
+	};
 }
 
 #endif //OCUI_H

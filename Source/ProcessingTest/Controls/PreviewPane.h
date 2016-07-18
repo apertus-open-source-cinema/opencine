@@ -10,47 +10,47 @@
 
 class PreviewPane : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
-    QMatrix4x4 mvp;
+	QMatrix4x4 mvp;
 
-    bool redChannel = true;
-    bool greenChannel = true;
-    bool blueChannel = true;
+	bool redChannel = true;
+	bool greenChannel = true;
+	bool blueChannel = true;
 
 public:
-    PreviewPane(QWidget *parent = 0);
+	PreviewPane(QWidget *parent = 0);
+	~PreviewPane();
 
-    void SetTextureRed(int width, int height, unsigned short* imageData);
-    void SetTextureGreen(int width, int height, unsigned short* imageData);
-    void SetTextureBlue(int width, int height, unsigned short* imageData);
+	void SetTextureRed(int width, int height, unsigned short* imageData);
+	void SetTextureGreen(int width, int height, unsigned short* imageData);
+	void SetTextureBlue(int width, int height, unsigned short* imageData);
 
-    void SwitchRedChannel(bool enabled);
-    void SwitchGreenChannel(bool enabled);
-    void SwitchBlueChannel(bool enabled);
+	void SwitchRedChannel(bool enabled);
+	void SwitchGreenChannel(bool enabled);
+	void SwitchBlueChannel(bool enabled);
 
-signals:
+	bool IsInitialized();
 
-public slots:
-
-    // QOpenGLWidget interface
 protected:
-    void initializeGL() override;
-    void resizeGL(int w, int h) override;
-    void paintGL() override;
+	void initializeGL() override;
+	void resizeGL(int w, int h) override;
+	void paintGL() override;
 
-    void printVersionInformation();
+	void printVersionInformation();
 private:
-    void SetupShaders();
-    void SetupVertexBuffer();
-    void SetupObject();
-    void SetupTexture();
+	void SetupShaders();
+	void SetupVertexBuffer();
+	void SetupObject();
+	void SetupTexture();
 
-    QOpenGLShaderProgram* program;
-    QOpenGLBuffer vertex;
-    QOpenGLVertexArrayObject object;
+	QOpenGLShaderProgram* program;
+	QOpenGLBuffer vertex;
+	QOpenGLVertexArrayObject object;
 
-    // QWidget interface
+	bool _initialized;
+
+	// QWidget interface
 protected:
-    void wheelEvent(QWheelEvent* event);
+	void wheelEvent(QWheelEvent* event);
 };
 
 #endif // PREVIEWPANE_H

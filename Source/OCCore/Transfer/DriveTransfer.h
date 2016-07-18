@@ -6,7 +6,7 @@
 class DriveTransfer : public IDataTransfer
 {
 public:
-    DriveTransfer();
+	DriveTransfer();
 };
 
 #endif // DRIVETRANSFER_H
