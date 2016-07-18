@@ -2,25 +2,23 @@
 
 namespace OC
 {
-    namespace DataProvider
-    {
-//        class Image
-//        {
-//            unsigned int _width;
-//            unsigned int _height;
+	namespace DataProvider
+	{
+		//        class Image
+		//        {
+		//            unsigned int _width;
+		//            unsigned int _height;
 
-//        public:
-//            unsigned int Width() const
-//            {
+		//        public:
+		//            unsigned int Width() const
+		//            {
+		//            }
 
-//            }
-
-//            unsigned int Height() const
-//            {
-
-//            }
-//        };
-    }
+		//            unsigned int Height() const
+		//            {
+		//            }
+		//        };
+	}
 }
 
 //        class IDataFilter

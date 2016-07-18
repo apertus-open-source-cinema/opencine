@@ -1,0 +1,5 @@
+Source: https://github.com/danquist/EventBus
+
+Changes:
+- Removed example code
+- Added CMake script to build as static lib

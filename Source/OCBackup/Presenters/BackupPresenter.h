@@ -7,51 +7,49 @@
 #include <QFileSystemModel>
 #include <QObject>
 #include <QStringListModel>
-#include <QFileSystemWatcher>
 #include <QItemSelection>
-
-#include <DriveManager.h>
 
 #include "../Interfaces/IBackupView.h"
 
 class IBackupPresenter : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    //virtual void RefreshDriveList() = 0;
-    //virtual void SelectDrive(std::string drivePath) = 0;
+	//virtual void RefreshDriveList() = 0;
+	//virtual void SelectDrive(std::string drivePath) = 0;
 
-    virtual void StartTransfer() = 0;
+	//virtual void StartTransfer() = 0;
 
 signals:
-    void DriveListChanged(std::vector<DriveInfo> driveList);
-    void DriveSelectionChanged(std::vector<std::string> driveList);
+	//void DriveListChanged(std::vector<DriveInfo> driveList);
+	//void DriveSelectionChanged(std::vector<std::string> driveList);
 };
 
 class BackupPresenter : public IBackupPresenter
 {
-    Q_OBJECT
+	Q_OBJECT
+	
+	IBackupView* _view;
+	IDriveManager* _driveManager;
 
-    IBackupView* _view;
-    IDriveManager* _driveManager;
+	std::vector<DriveInfo> _driveList;
 
-    std::vector<DriveInfo> _driveList;
+	void SetupSignals() const;
 
-    void SetupSignals();
+	void StartTransfer() const;
 
-    void StartTransfer();
+	//signals:
+		//void StartTransferSig(std::string drivePath);
 
-signals:
-    void StartTransferSig(std::string drivePath);
-
-private slots:
-    void DriveListChanged(std::vector<DriveInfo> driveList);
-    void DriveSelectionChanged(int driveIndex);
-    void AddDestination();
+	private slots:
+	void DriveListChanged(std::vector<DriveInfo> driveList);
+	void DriveSelectionChanged(int driveIndex);
+	void AddDestination() const;
+	void FolderSelectionChanged(QString folderPath) const;
 
 public:
-    explicit BackupPresenter(IBackupView& view);
+	explicit BackupPresenter(IBackupView& view);
 };
 
 #endif // BACKUPPRESENTER_H

@@ -2,6 +2,4 @@
 
 DriveTransfer::DriveTransfer()
 {
-
 }
-
