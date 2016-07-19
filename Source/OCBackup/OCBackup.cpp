@@ -3,18 +3,19 @@
 #include "OCBackup.h"
 
 OCBackup::OCBackup(int &argc, char **argv) : OCui::GUIApplication(argc, argv, "OCBackup"),
-_view(std::make_shared<BackupView>()),
-_presenter(std::make_shared<BackupPresenter>(*_view))
+    _view(std::make_shared<BackupView>())
 {
-	SetLayout(*_view);
+    _presenter = new BackupPresenter(*_view); //std::make_shared<BackupPresenter>(*_view);
 
-	ShowMaximized();
+    SetLayout(*_view);
+
+    ShowMaximized();
 }
 
 int main(int argc, char** argv)
 {
-	std::shared_ptr<OCBackup> backup = std::make_shared<OCBackup>(argc, argv);
-	backup->Run();
+    std::shared_ptr<OCBackup> backup = std::make_shared<OCBackup>(argc, argv);
+    backup->Run();
 
-	return 0;
+    return 0;
 }

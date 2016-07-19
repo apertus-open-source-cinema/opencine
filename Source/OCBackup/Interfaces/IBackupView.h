@@ -5,7 +5,9 @@
 
 #include <Interfaces/IDriveManager.h>
 
-class IBackupView : public QWidget
+#include <MVP/IView.h>
+
+class IBackupView : public IView
 {
 	Q_OBJECT
 

@@ -8,7 +8,7 @@
 
 #include <DriveManager.h>
 
-BackupPresenter::BackupPresenter(IBackupView &view) :
+BackupPresenter::BackupPresenter(IBackupView &view) : BasePresenter(),
     _view(&view)
 {
     _driveManager = new DriveManager();

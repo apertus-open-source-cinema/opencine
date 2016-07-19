@@ -51,6 +51,7 @@ Rectangle {
 
                 if (thumbnailImage.status == Image.Error || thumbnailImage.status == Image.Null)
                 {
+                    thumbnailImage.source = "";
                     thumbnailImage.source = altSource;
                 }
             }
