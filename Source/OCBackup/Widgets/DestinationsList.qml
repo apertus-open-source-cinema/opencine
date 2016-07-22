@@ -5,7 +5,7 @@ import "OCWidgets"
 
 Rectangle
 {
-    id: driveList
+    //id: driveList
     width: 276
     height: 300
     color: "#191919"
@@ -57,7 +57,7 @@ Rectangle
     {
         id: listView
 
-        model: testList
+        model: fileList2
         delegate: listDelegate
 
         highlight: null

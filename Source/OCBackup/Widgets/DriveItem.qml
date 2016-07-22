@@ -21,7 +21,7 @@ Rectangle
 	ExclusiveGroup { id: tabPositionGroup }
 
     Text {
-        id: driveInfo
+        id: pathInfo
         y: 3
         color: "#ffffff"
         text: driveName + " (" + driveLetter + ")"

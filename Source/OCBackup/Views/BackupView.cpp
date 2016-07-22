@@ -87,7 +87,6 @@ void BackupView::SetupFolderView()
 	connect(ui->folderTreeControl->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(CurrentFolderChanged(const QItemSelection&, const QItemSelection&)));
 }
 
-QQmlContext*  qmlContext2;
 //QList<QObject*>*  _fileList;
 void BackupView::SetupThumbnailView()
 {
@@ -95,8 +94,8 @@ void BackupView::SetupThumbnailView()
     engine->addImageProvider(QLatin1String("OCthumb"), new QMLThumbnailProvider());
 
 	_fileList = new QList<QObject*>();
-	qmlContext2 = ui->thumbnailViewControl->rootContext();
-	qmlContext2->setContextProperty("fileList", QVariant::fromValue(*_fileList));
+    _qmlContext = ui->thumbnailViewControl->rootContext();
+    _qmlContext->setContextProperty("fileList", QVariant::fromValue(*_fileList));
 
 	ui->thumbnailViewControl->setSource(QUrl("./Widgets/ThumbnailView.qml"));
 }
@@ -127,7 +126,7 @@ void BackupView::CurrentFolderChanged(const QItemSelection& selected, const QIte
 	emit FolderSelectionChanged(path);
 }
 
-void BackupView::SetDriveList(std::vector<DriveInfo> driveList)
+void BackupView::SetDriveList(std::vector<PathInfo> driveList)
 {
 	dataList->clear();
 
@@ -139,22 +138,22 @@ void BackupView::SetDriveList(std::vector<DriveInfo> driveList)
 	_qmlContext->setContextProperty("listModel", QVariant::fromValue(*dataList));
 }
 
-void BackupView::SetItemList(std::vector<QString> fileList)
+void BackupView::SetItemList(std::vector<FileInfo> fileList)
 {
 	_fileList->clear();
 
-	for (auto& file : fileList)
-	{
+    for (auto& fileInfo : fileList)
+    {
         // TODO: supply path as first parameter, so it and file name are distinct values
-        _fileList->append(new ThumbnailViewItem(file, file, 640, 480, 30));
-	}
+        _fileList->append(new ThumbnailViewItem(fileInfo.GetFolderPath(), fileInfo.GetFileName(), 640, 480, 30));
+    }
 
-	qmlContext2->setContextProperty("fileList", QVariant::fromValue(*_fileList));
+    _qmlContext->setContextProperty("fileList", QVariant::fromValue(*_fileList));
 }
 
-void BackupView::SetDestinationList(std::vector<QString> destinationList)
+void BackupView::SetDestinationList(std::vector<PathInfo> destinationList)
 {
-	ui->destinationsControl->SetDestinationList(destinationList);
+    //ui->destinationsControl->SetDestinationList(destinationList);
 }
 
 void BackupView::SetCurrentFolder(QString folderPath)

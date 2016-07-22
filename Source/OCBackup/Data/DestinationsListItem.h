@@ -1,11 +1,12 @@
-#ifndef DRIVELISTITEM_H
-#define DRIVELISTITEM_H
+#ifndef DESTINATIONSLISTITEM_H
+#define DESTINATIONSLISTITEM_H
 
 #include <QObject>
 
-class DriveListItem : public QObject
+class DestinationsListItem : public QObject
 {
     Q_OBJECT
+    //Q_DISABLE_COPY(DestinationsListItem)
 
     Q_PROPERTY(QString driveName READ driveName CONSTANT)
     Q_PROPERTY(QString driveLetter READ driveLetter CONSTANT)
@@ -22,7 +23,7 @@ class DriveListItem : public QObject
     QString _spaceUnit;
 
 public:
-    DriveListItem(QString driveName, QString driveLetter, unsigned int usedSpace, unsigned int totalSpace, QString spaceUnit)
+    DestinationsListItem(QString driveName, QString driveLetter, unsigned int usedSpace, unsigned int totalSpace, QString spaceUnit)
     {
         _driveName = driveName;
         _driveLetter = driveLetter;
@@ -58,4 +59,4 @@ public:
     }
 };
 
-#endif //DRIVELISTITEM_H
+#endif //DESTINATIONSLISTITEM_H

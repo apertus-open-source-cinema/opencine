@@ -24,7 +24,7 @@
 //	//virtual void StartTransfer() = 0;
 
 //signals:
-//	//void DriveListChanged(std::vector<DriveInfo> driveList);
+//	//void DriveListChanged(std::vector<PathInfo> driveList);
 //	//void DriveSelectionChanged(std::vector<std::string> driveList);
 //};
 
@@ -35,7 +35,7 @@ class BackupPresenter : public OC::UI::BasePresenter
     IBackupView* _view;
     IDriveManager* _driveManager;
 
-    std::vector<DriveInfo> _driveList;
+    std::vector<PathInfo> _driveList;
 
     void SetupSignals() const;
 
@@ -45,7 +45,7 @@ class BackupPresenter : public OC::UI::BasePresenter
     //void StartTransferSig(std::string drivePath);
 
 private slots:
-    void DriveListChanged(std::vector<DriveInfo> driveList);
+    void DriveListChanged(std::vector<PathInfo> driveList);
     void DriveSelectionChanged(int driveIndex);
     void AddDestination() const;
     void FolderSelectionChanged(QString folderPath) const;

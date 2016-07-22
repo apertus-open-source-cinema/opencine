@@ -32,7 +32,7 @@ Rectangle
         //height: 49
 
         Text {
-            id: driveInfo
+            id: pathInfo
             width: 1
             color: "#ffffff"
             text: driveName + " (" + driveLetter + ")"

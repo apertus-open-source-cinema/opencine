@@ -4,7 +4,6 @@
 #include <QTreeView>
 #include <QDebug>
 #include <QFileInfoList>
-#include <QQmlContext>
 
 #include <DriveManager.h>
 
@@ -20,13 +19,11 @@ BackupPresenter::BackupPresenter(IBackupView &view) : BasePresenter(),
 
 void BackupPresenter::SetupSignals() const
 {
-    connect(_driveManager, SIGNAL(DriveListChanged(std::vector<DriveInfo>)), this, SLOT(DriveListChanged(std::vector<DriveInfo>)));
+    connect(_driveManager, SIGNAL(DriveListChanged(std::vector<PathInfo>)), this, SLOT(DriveListChanged(std::vector<PathInfo>)));
     connect(_view, SIGNAL(DriveSelectionChanged(int)), this, SLOT(DriveSelectionChanged(int)));
 
     connect(_view, &IBackupView::AddDestinationClicked, this, &BackupPresenter::AddDestination);
-
     connect(_view, &IBackupView::FolderSelectionChanged, this, &BackupPresenter::FolderSelectionChanged);
-
     connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
 }
 
@@ -35,7 +32,7 @@ void BackupPresenter::StartTransfer() const
     //emit StartTransferSig("/media/andi/OC_TEST_MSD");
 }
 
-void BackupPresenter::DriveListChanged(std::vector<DriveInfo> driveList)
+void BackupPresenter::DriveListChanged(std::vector<PathInfo> driveList)
 {
     _driveList = driveList;
     _view->SetDriveList(driveList);
@@ -69,7 +66,7 @@ void BackupPresenter::DriveSelectionChanged(int driveIndex)
     FolderSelectionChanged(folderPath);
 }
 
-std::vector<QString> _destinationList;
+//std::vector<DestinationsListItem> _destinationList;
 
 void BackupPresenter::AddDestination() const
 {
@@ -83,9 +80,11 @@ void BackupPresenter::AddDestination() const
     if (result)
     {
         directory = dialog.selectedFiles()[0];
-        _destinationList.push_back(directory);
+        //_destinationList.push_back(directory);
+        //DestinationsListItem destination(directory, "", 0, 0, "Test");
+        //_destinationList.push_back(destination);
 
-        _view->SetDestinationList(_destinationList);
+        //_view->SetDestinationList(_destinationList);
         qDebug() << directory;
     }
 }
@@ -95,12 +94,13 @@ void BackupPresenter::FolderSelectionChanged(QString folderPath) const
     QDir dir(folderPath);
     QFileInfoList fileList = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Files);
 
-    std::vector<QString> fileNameList;
+    std::vector<FileInfo> fileInfoList;
 
     for (QFileInfo fileInfo : fileList)
     {
-        fileNameList.push_back(fileInfo.filePath());
+        FileInfo info(fileInfo.path(), fileInfo.fileName(), fileInfo.size());
+        fileInfoList.push_back(info);
     }
 
-    _view->SetItemList(fileNameList);
+    _view->SetItemList(fileInfoList);
 }
