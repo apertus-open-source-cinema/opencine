@@ -6,7 +6,6 @@
 class DestinationsListItem : public QObject
 {
     Q_OBJECT
-    //Q_DISABLE_COPY(DestinationsListItem)
 
     Q_PROPERTY(QString driveName READ driveName CONSTANT)
     Q_PROPERTY(QString driveLetter READ driveLetter CONSTANT)

@@ -66,7 +66,7 @@ void BackupPresenter::DriveSelectionChanged(int driveIndex)
     FolderSelectionChanged(folderPath);
 }
 
-//std::vector<DestinationsListItem> _destinationList;
+std::vector<PathInfo> _destinationList;
 
 void BackupPresenter::AddDestination() const
 {
@@ -84,7 +84,11 @@ void BackupPresenter::AddDestination() const
         //DestinationsListItem destination(directory, "", 0, 0, "Test");
         //_destinationList.push_back(destination);
 
-        //_view->SetDestinationList(_destinationList);
+        PathInfo pathInfo;
+        pathInfo.DriveName = "Test123";
+        pathInfo.DrivePath = "Test456";
+        _destinationList.push_back(pathInfo);
+        _view->SetDestinationList(_destinationList);
         qDebug() << directory;
     }
 }

@@ -10,7 +10,9 @@ public:
 	std::string DrivePath = "?";
 	unsigned long long UsedSpace = 0;
 	unsigned long long TotalSpace = 0;
-	std::string SpaceUnit = "?";
+
+    //OBSOLETE: UI should handle it
+    std::string SpaceUnit = "?";
 };
 
 #endif //PATHINFO_H

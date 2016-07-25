@@ -8,8 +8,8 @@ DestinationsControl::DestinationsControl(QWidget *parent) :
 	ui->setupUi(this);
 
     _qmlContext = ui->destinationsListControl->rootContext();
-    _destinationList = new QList<QObject*>();
-    _qmlContext->setContextProperty("fileList2", QVariant::fromValue(*_destinationList));
+    //_destinationList = new QList<QObject*>();
+    _qmlContext->setContextProperty("destinationsList", QVariant::fromValue(QList<QObject*>()));
 	ui->destinationsListControl->setSource(QUrl("./Widgets/DestinationsList.qml"));
 
 	SetupSignals();
@@ -20,16 +20,17 @@ DestinationsControl::~DestinationsControl()
 	delete ui;
 }
 
-void DestinationsControl::SetDestinationList(std::vector<DestinationsListItem>& destinationList)
+void DestinationsControl::SetDestinationList(QList<QObject*> destinationList)
 {
-    _destinationList->clear();
+//    _destinationList->clear();
 
-    for (auto& destination : destinationList)
-    {
-        _destinationList->push_back(&destination);
-    }
+//    for (auto& destination : destinationList)
+//    {
+        //_destinationList.push_back(new DestinationsListItem("Test123", "456", 1, 2, "GB"));
+//    }
 
-    _qmlContext->setContextProperty("fileList2", QVariant::fromValue(*_destinationList));
+    //_qmlContext = ui->destinationsListControl->rootContext();
+    _qmlContext->setContextProperty("destinationsList", QVariant::fromValue(destinationList));
 }
 
 void DestinationsControl::SetupSignals()

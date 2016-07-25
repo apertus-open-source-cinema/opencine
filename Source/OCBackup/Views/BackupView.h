@@ -10,7 +10,8 @@
 #include <QtQml/QQmlComponent>
 #include <QItemSelection>
 
-#include "../Interfaces/IBackupView.h"
+#include "Data/DestinationsListItem.h"
+#include "Interfaces/IBackupView.h"
 
 class IBackupPresenter;
 
@@ -29,9 +30,9 @@ class BackupView : public IBackupView
     QStringListModel* _driveListModel;
     std::shared_ptr<QFileSystemModel> _folderTreeModel;
 
-    QList<QObject*>* dataList;
+    QList<QObject*> dataList;
     QList<QObject*>* _fileList;
-    QList<QString>* _destinationList;
+    QList<QObject*> _destinationList;
 
     void SetupDriveView();
     void SetupFolderView();

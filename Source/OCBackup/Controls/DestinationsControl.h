@@ -14,7 +14,7 @@ class DestinationsControl : public QWidget
 {
     Q_OBJECT
 
-    QList<QObject*>* _destinationList;
+    QList<QObject*> _destinationList;
     QQmlContext* _qmlContext = nullptr;
 
     void SetupSignals();
@@ -22,7 +22,7 @@ class DestinationsControl : public QWidget
 public:
     explicit DestinationsControl(QWidget *parent = 0);
     ~DestinationsControl();
-    void SetDestinationList(std::vector<DestinationsListItem>& destinationList);
+    void SetDestinationList(QList<QObject *> destinationList);
 
 signals:
     void AddDestinationClicked();

@@ -13,134 +13,108 @@
 #include "../Data/ThumbnailViewItem.h"
 
 BackupView::BackupView(/*QWidget *parent,*/ IBackupPresenter* presenter) :
-	//QWidget(parent),
-	//_presenter(presenter),
-	ui(new Ui::BackupView)
+    //QWidget(parent),
+    //_presenter(presenter),
+    ui(new Ui::BackupView)
 {
-	ui->setupUi(this);
+    ui->setupUi(this);
 
-	//    _folderTreeControlModel = std::make_shared<QFileSystemModel>();
-	//    QString rootPath = "C:\\Temp\\";//_driveListModel->index(0).data().toString();
-	//    _folderTreeControlModel->setRootPath(QDir::currentPath());
-	//    _folderTreeControlModel->setFilter(QDir::Dirs | QDir::NoDotAndDotDot | QDir::AllDirs);
+    //    _folderTreeControlModel = std::make_shared<QFileSystemModel>();
+    //    QString rootPath = "C:\\Temp\\";//_driveListModel->index(0).data().toString();
+    //    _folderTreeControlModel->setRootPath(QDir::currentPath());
+    //    _folderTreeControlModel->setFilter(QDir::Dirs | QDir::NoDotAndDotDot | QDir::AllDirs);
 
-	SetupDriveView();
-	SetupFolderView();
-	SetupThumbnailView();
-	SetupDestinationsView();
+    SetupDriveView();
+    SetupFolderView();
+    SetupThumbnailView();
+    SetupDestinationsView();
 
-	connect(ui->destinationsControl, SIGNAL(AddDestinationClicked()), this, SIGNAL(AddDestinationClicked()));
-	//ui->folderTreeControl->setModel(_folderTreeControlModel.get());
-	//ui->folderTreeControl->setRootIndex(_folderTreeControlModel->index("E:"));
+    connect(ui->destinationsControl, SIGNAL(AddDestinationClicked()), this, SIGNAL(AddDestinationClicked()));
+    //ui->folderTreeControl->setModel(_folderTreeControlModel.get());
+    //ui->folderTreeControl->setRootIndex(_folderTreeControlModel->index("E:"));
 }
 
 BackupView::~BackupView()
 {
-	delete ui;
+    delete ui;
 }
 
 void BackupView::SetupDriveView()
 {
-	dataList = new QList<QObject*>();
+    //dataList = new QList<QObject*>();
 
-	_qmlContext = ui->driveListControl->rootContext();
-	_qmlContext->setContextProperty("listModel", QVariant::fromValue(*dataList));
+    _qmlContext = ui->driveListControl->rootContext();
+    _qmlContext->setContextProperty("listModel", QVariant::fromValue(dataList));
 
-	//ui->driveListControl->setAttribute(Qt::WA_NoSystemBackground);
+    ui->driveListControl->setSource(QUrl("./Widgets/DriveList.qml"));
 
-	//    _driveListDelegate = std::make_shared<QQmlComponent>(ui->driveListControl->engine(), QUrl::fromLocalFile("Widgets/DriveItem.qml"));
-
-	//    if(_driveListDelegate != nullptr)
-	//    {
-	//        _qmlContext->setContextProperty("listDelegate", QVariant::fromValue(_driveListDelegate.get()));
-
-	//        if(_driveListDelegate->isError())
-	//        {
-	//            qDebug() << "Error: " <<_driveListDelegate->errorString();
-	//        }
-
-	//        //        if( _driveListDelegate->status != QQmlComponent::Status::Ready )
-	//        //        {
-	//        //            if( _driveListDelegate->status == QQmlComponent::Error )
-	//        //            {
-	//        //                qDebug() << "Error: " <<_driveListDelegate->errorString();
-	//        //            }
-	//        //            return; // or maybe throw
-	//        //        }
-
-	//        _driveListDelegate->create(_qmlContext);
-	//        ui->driveListControl->engine()->setObjectOwnership(_driveListDelegate.get(), QQmlEngine::CppOwnership);
-
-	//    }
-
-	ui->driveListControl->setSource(QUrl("./Widgets/DriveList.qml"));
-
-	QQuickItem * item = ui->driveListControl->rootObject();
-	connect(item, SIGNAL(itemSelectionChanged(int)), this, SLOT(CurrentDriveChanged(int)));
+    QQuickItem* item = ui->driveListControl->rootObject();
+    connect(item, SIGNAL(itemSelectionChanged(int)), this, SLOT(CurrentDriveChanged(int)));
 }
 
 void BackupView::SetupFolderView()
 {
-	_folderTreeModel = std::make_shared<QFileSystemModel>();
-	ui->folderTreeControl->setModel(_folderTreeModel.get());
+    _folderTreeModel = std::make_shared<QFileSystemModel>();
+    ui->folderTreeControl->setModel(_folderTreeModel.get());
 
-	connect(ui->folderTreeControl->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(CurrentFolderChanged(const QItemSelection&, const QItemSelection&)));
+    connect(ui->folderTreeControl->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(CurrentFolderChanged(const QItemSelection&, const QItemSelection&)));
 }
 
 //QList<QObject*>*  _fileList;
 void BackupView::SetupThumbnailView()
 {
-	QQmlEngine *engine = ui->thumbnailViewControl->engine();
+    QQmlEngine *engine = ui->thumbnailViewControl->engine();
     engine->addImageProvider(QLatin1String("OCthumb"), new QMLThumbnailProvider());
 
-	_fileList = new QList<QObject*>();
+    _fileList = new QList<QObject*>();
     _qmlContext = ui->thumbnailViewControl->rootContext();
     _qmlContext->setContextProperty("fileList", QVariant::fromValue(*_fileList));
 
-	ui->thumbnailViewControl->setSource(QUrl("./Widgets/ThumbnailView.qml"));
+    ui->thumbnailViewControl->setSource(QUrl("./Widgets/ThumbnailView.qml"));
 }
 
 void BackupView::SetupDestinationsView()
 {
-	//_fileList = new QList<QObject*>();
-	//qmlContext2 = ui->thumbnailViewControl->rootContext();
-	//qmlContext2->setContextProperty("fileList", QVariant::fromValue(*_fileList));
+    //_fileList = new QList<QObject*>();
+    //qmlContext2 = ui->thumbnailViewControl->rootContext();
+    //qmlContext2->setContextProperty("fileList", QVariant::fromValue(*_fileList));
 }
 
 void BackupView::TransferButtonClicked()
 {
-	//TODO: Rework create a task directly, later it can be pushed through an event bus
-	emit StartTransfer();
+    //TODO: Rework create a task directly, later it can be pushed through an event bus
+    emit StartTransfer();
 }
 
 void BackupView::CurrentDriveChanged(int currentDrive)
 {
-	emit DriveSelectionChanged(currentDrive);
+    emit DriveSelectionChanged(currentDrive);
 }
 
 void BackupView::CurrentFolderChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
-	QModelIndex itemIndex = ui->folderTreeControl->selectionModel()->currentIndex();
-	QString path = _folderTreeModel->filePath(itemIndex);
+    QModelIndex itemIndex = ui->folderTreeControl->selectionModel()->currentIndex();
+    QString path = _folderTreeModel->filePath(itemIndex);
 
-	emit FolderSelectionChanged(path);
+    emit FolderSelectionChanged(path);
 }
 
 void BackupView::SetDriveList(std::vector<PathInfo> driveList)
 {
-	dataList->clear();
+    dataList.clear();
 
-	for (auto& drive : driveList)
-	{
-		dataList->append(new DriveListItem(QString::fromStdString(drive.DriveName), QString::fromStdString(drive.DrivePath), drive.UsedSpace, drive.TotalSpace, QString::fromStdString(drive.SpaceUnit)));
-	}
+    for (auto& drive : driveList)
+    {
+        dataList.append(new DriveListItem(QString::fromStdString(drive.DriveName), QString::fromStdString(drive.DrivePath), drive.UsedSpace, drive.TotalSpace, QString::fromStdString(drive.SpaceUnit)));
+    }
 
-	_qmlContext->setContextProperty("listModel", QVariant::fromValue(*dataList));
+    _qmlContext = ui->driveListControl->rootContext();
+    _qmlContext->setContextProperty("listModel", QVariant::fromValue(dataList));
 }
 
 void BackupView::SetItemList(std::vector<FileInfo> fileList)
 {
-	_fileList->clear();
+    _fileList->clear();
 
     for (auto& fileInfo : fileList)
     {
@@ -148,25 +122,34 @@ void BackupView::SetItemList(std::vector<FileInfo> fileList)
         _fileList->append(new ThumbnailViewItem(fileInfo.GetFolderPath(), fileInfo.GetFileName(), 640, 480, 30));
     }
 
+    _qmlContext = ui->thumbnailViewControl->rootContext();
     _qmlContext->setContextProperty("fileList", QVariant::fromValue(*_fileList));
 }
 
 void BackupView::SetDestinationList(std::vector<PathInfo> destinationList)
 {
-    //ui->destinationsControl->SetDestinationList(destinationList);
+    _destinationList.clear();
+
+    for (auto& destination : destinationList)
+    {
+        // TODO: supply path as first parameter, so it and file name are distinct values
+        _destinationList.push_back(new DestinationsListItem(QString::fromStdString(destination.DriveName), QString::fromStdString(destination.DrivePath), 640, 480, "30"));
+    }
+
+    ui->destinationsControl->SetDestinationList(_destinationList);
 }
 
 void BackupView::SetCurrentFolder(QString folderPath)
 {
-	if (folderPath == "")
-	{
-		ui->folderTreeControl->setModel(nullptr);
-		return;
-	}
+    if (folderPath == "")
+    {
+        ui->folderTreeControl->setModel(nullptr);
+        return;
+    }
 
-	ui->folderTreeControl->setModel(_folderTreeModel.get());
-	_folderTreeModel->setRootPath(QDir::currentPath());
-	_folderTreeModel->setFilter(QDir::Dirs | QDir::NoDotAndDotDot | QDir::AllDirs);
+    ui->folderTreeControl->setModel(_folderTreeModel.get());
+    _folderTreeModel->setRootPath(QDir::currentPath());
+    _folderTreeModel->setFilter(QDir::Dirs | QDir::NoDotAndDotDot | QDir::AllDirs);
 
-	ui->folderTreeControl->setRootIndex(_folderTreeModel->index(folderPath));
+    ui->folderTreeControl->setRootIndex(_folderTreeModel->index(folderPath));
 }
