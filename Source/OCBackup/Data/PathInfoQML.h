@@ -1,9 +1,9 @@
-#ifndef DESTINATIONSLISTITEM_H
-#define DESTINATIONSLISTITEM_H
+#ifndef DRIVELISTITEM_H
+#define DRIVELISTITEM_H
 
 #include <QObject>
 
-class DestinationsListItem : public QObject
+class PathInfoQML : public QObject
 {
     Q_OBJECT
 
@@ -22,7 +22,7 @@ class DestinationsListItem : public QObject
     QString _spaceUnit;
 
 public:
-    DestinationsListItem(QString driveName, QString driveLetter, unsigned int usedSpace, unsigned int totalSpace, QString spaceUnit)
+    PathInfoQML(QString driveName, QString driveLetter, unsigned int usedSpace, unsigned int totalSpace, QString spaceUnit)
     {
         _driveName = driveName;
         _driveLetter = driveLetter;
@@ -58,4 +58,4 @@ public:
     }
 };
 
-#endif //DESTINATIONSLISTITEM_H
+#endif //DRIVELISTITEM_H

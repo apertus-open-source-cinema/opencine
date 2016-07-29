@@ -9,8 +9,8 @@
 
 #include <Helper/QMLThumbnailProvider.h>
 
-#include "../Data/DriveListItem.h"
-#include "../Data/ThumbnailViewItem.h"
+#include "../Data/PathInfoQML.h"
+#include "../Data/ItemInfoQML.h"
 
 BackupView::BackupView(/*QWidget *parent,*/ IBackupPresenter* presenter) :
     //QWidget(parent),
@@ -75,7 +75,7 @@ void BackupView::SetupThumbnailView()
 
 void BackupView::SetupDestinationsView()
 {
-    //_fileList = new QList<QObject*>();
+    _fileList = new QList<QObject*>();
     //qmlContext2 = ui->thumbnailViewControl->rootContext();
     //qmlContext2->setContextProperty("fileList", QVariant::fromValue(*_fileList));
 }
@@ -105,7 +105,7 @@ void BackupView::SetDriveList(std::vector<PathInfo> driveList)
 
     for (auto& drive : driveList)
     {
-        dataList.append(new DriveListItem(QString::fromStdString(drive.DriveName), QString::fromStdString(drive.DrivePath), drive.UsedSpace, drive.TotalSpace, QString::fromStdString(drive.SpaceUnit)));
+        dataList.append(new PathInfoQML(QString::fromStdString(drive.DriveName), QString::fromStdString(drive.DrivePath), drive.UsedSpace, drive.TotalSpace, QString::fromStdString(drive.SpaceUnit)));
     }
 
     _qmlContext = ui->driveListControl->rootContext();
@@ -119,7 +119,7 @@ void BackupView::SetItemList(std::vector<FileInfo> fileList)
     for (auto& fileInfo : fileList)
     {
         // TODO: supply path as first parameter, so it and file name are distinct values
-        _fileList->append(new ThumbnailViewItem(fileInfo.GetFolderPath(), fileInfo.GetFileName(), 640, 480, 30));
+        _fileList->append(new ItemInfoQML(fileInfo.GetFolderPath(), fileInfo.GetFileName(), 640, 480, 30));
     }
 
     _qmlContext = ui->thumbnailViewControl->rootContext();
@@ -133,7 +133,7 @@ void BackupView::SetDestinationList(std::vector<PathInfo> destinationList)
     for (auto& destination : destinationList)
     {
         // TODO: supply path as first parameter, so it and file name are distinct values
-        _destinationList.push_back(new DestinationsListItem(QString::fromStdString(destination.DriveName), QString::fromStdString(destination.DrivePath), 640, 480, "30"));
+        _destinationList.push_back(new PathInfoQML(QString::fromStdString(destination.DriveName), QString::fromStdString(destination.DrivePath), 640, 480, "30"));
     }
 
     ui->destinationsControl->SetDestinationList(_destinationList);

@@ -7,7 +7,7 @@
 
 #include <MVP/IView.h>
 
-#include <Transfer/FileInfo.h>
+#include <Transfer/ItemInfo.h>
 
 class IBackupView : public IView
 {

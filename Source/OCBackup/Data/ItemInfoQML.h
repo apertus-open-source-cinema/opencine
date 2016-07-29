@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class ThumbnailViewItem : public QObject
+class ItemInfoQML : public QObject
 {
     Q_OBJECT
 
@@ -20,7 +20,7 @@ class ThumbnailViewItem : public QObject
     unsigned int _fps;
 
 public:
-    ThumbnailViewItem(const QString &path, const QString &name, const unsigned int& width, const unsigned int& height, const unsigned int& fps) :
+    ItemInfoQML(const QString &path, const QString &name, const unsigned int& width, const unsigned int& height, const unsigned int& fps) :
         _path(path),
         _name(name),
         _width(width),
