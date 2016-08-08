@@ -105,7 +105,7 @@ void BackupView::SetDriveList(std::vector<PathInfo> driveList)
 
     for (auto& drive : driveList)
     {
-        dataList.append(new PathInfoQML(QString::fromStdString(drive.DriveName), QString::fromStdString(drive.DrivePath), drive.UsedSpace, drive.TotalSpace, QString::fromStdString(drive.SpaceUnit)));
+        dataList.append(new PathInfoQML("", QString::fromStdString(drive.DrivePath), QString::fromStdString(drive.DriveName), drive.UsedSpace, drive.TotalSpace, QString::fromStdString(drive.SpaceUnit)));
     }
 
     _qmlContext = ui->driveListControl->rootContext();
@@ -132,8 +132,7 @@ void BackupView::SetDestinationList(std::vector<PathInfo> destinationList)
 
     for (auto& destination : destinationList)
     {
-        // TODO: supply path as first parameter, so it and file name are distinct values
-        _destinationList.push_back(new PathInfoQML(QString::fromStdString(destination.DriveName), QString::fromStdString(destination.DrivePath), 640, 480, "30"));
+        _destinationList.push_back(new PathInfoQML(QString::fromStdString(destination.RelativePath), QString::fromStdString(destination.DrivePath), QString::fromStdString(destination.DriveName), 640, 480, "30"));
     }
 
     ui->destinationsControl->SetDestinationList(_destinationList);

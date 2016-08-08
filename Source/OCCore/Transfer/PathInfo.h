@@ -6,8 +6,11 @@
 class OCCORE_EXPORT PathInfo
 {
 public:
+    std::string Path = "?";
+    std::string RelativePath = "?";
 	std::string DriveName = "?";
 	std::string DrivePath = "?";
+
 	unsigned long long UsedSpace = 0;
 	unsigned long long TotalSpace = 0;
 

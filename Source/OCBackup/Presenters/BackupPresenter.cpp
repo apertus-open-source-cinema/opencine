@@ -4,6 +4,7 @@
 #include <QTreeView>
 #include <QDebug>
 #include <QFileInfoList>
+#include <QStorageInfo>
 
 #include <DriveManager.h>
 
@@ -76,20 +77,23 @@ void BackupPresenter::AddDestination() const
     dialog.setViewMode(QFileDialog::Detail);
     int result = dialog.exec();
 
-    QString directory;
     if (result)
     {
-        directory = dialog.selectedFiles()[0];
-        //_destinationList.push_back(directory);
-        //DestinationsListItem destination(directory, "", 0, 0, "Test");
-        //_destinationList.push_back(destination);
+        QStorageInfo storage(dialog.selectedFiles()[0]);
 
         PathInfo pathInfo;
-        pathInfo.DriveName = "Test123";
-        pathInfo.DrivePath = "Test456";
+
+        QString path = dialog.directory().path();
+        path = path.right(path.length() - storage.rootPath().length());
+
+        path == "" ? pathInfo.RelativePath = "/" : pathInfo.RelativePath = path.toStdString();
+
+        pathInfo.Path = path.toStdString();
+        pathInfo.DriveName = storage.displayName().toStdString();
+        pathInfo.DrivePath = storage.rootPath().toStdString();
+
         _destinationList.push_back(pathInfo);
         _view->SetDestinationList(_destinationList);
-        qDebug() << directory;
     }
 }
 
