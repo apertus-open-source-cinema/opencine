@@ -8,6 +8,8 @@
 
 #include <DriveManager.h>
 
+#include "Services/DriveTransferService.h"
+
 BackupPresenter::BackupPresenter(IBackupView &view) : BasePresenter(),
     _view(&view)
 {
@@ -31,6 +33,14 @@ void BackupPresenter::SetupSignals() const
 void BackupPresenter::StartTransfer() const
 {
     //emit StartTransferSig("/media/andi/OC_TEST_MSD");
+    // Service is called manually for now, later a message/event bus will be used to push data around and to call services
+    IDriveTransferService* transferService = new DriveTransferService();
+
+    // TODO: Set source drive
+    // TODO: Set destination paths
+
+    bool result = transferService->Execute();
+    delete transferService;
 }
 
 void BackupPresenter::DriveListChanged(std::vector<PathInfo> driveList)
