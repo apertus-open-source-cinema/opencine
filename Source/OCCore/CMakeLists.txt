@@ -27,7 +27,8 @@ file(GLOB SOURCE_FILES "*.cpp" "*.h"
     "Interfaces/*.cpp" "Interfaces/*.h"
     "Log/*.cpp" "Log/*.h"
     "Task/*.cpp" "Task/*.h"
-    "Memory/*.cpp" "Memory/*.h")
+    "Memory/*.cpp" "Memory/*.h"
+	"Events/*.cpp" "Events/*.h")
 
 #file(GLOB HEADER_FILES "*.h")
 

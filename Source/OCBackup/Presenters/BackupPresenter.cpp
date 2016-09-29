@@ -10,6 +10,10 @@
 
 #include "Services/DriveTransferService.h"
 
+#include <Controls/ProgressDialog.h>
+
+#include <Events/EventBus.h>
+
 BackupPresenter::BackupPresenter(IBackupView &view) : BasePresenter(),
     _view(&view)
 {
@@ -30,14 +34,40 @@ void BackupPresenter::SetupSignals() const
     connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
 }
 
-void BackupPresenter::StartTransfer() const
+void BackupPresenter::receive(const EventA &)
 {
+    int j = 0;
+
+    j++;
+
+    int c = j;
+
+    std::cout << "BackupPresenter received EventA" << std::endl;
+}
+
+OCEventBus* eventBus = new OCEventBus();
+
+void BackupPresenter::StartTransfer()
+{
+    //eventManager->RegisterListener(this);
+    eventBus->AddEventHandler<EventA, BackupPresenter, &BackupPresenter::receive>(this);
+    eventBus->FireEvent<OCEvent>();
+    eventBus->FireTestEventA();
+
+
+    ProgressDialog* progressDialog = new ProgressDialog();
+    progressDialog->show();
+
     //emit StartTransferSig("/media/andi/OC_TEST_MSD");
     // Service is called manually for now, later a message/event bus will be used to push data around and to call services
     IDriveTransferService* transferService = new DriveTransferService();
 
     // TODO: Set source drive
+    transferService->SetSourceDrive("");
+
     // TODO: Set destination paths
+    std::vector<std::string> destinationDrives;
+    transferService->SetDestinationDrives(destinationDrives);
 
     bool result = transferService->Execute();
     delete transferService;
@@ -74,12 +104,12 @@ void BackupPresenter::DriveSelectionChanged(int driveIndex)
     QString folderPath = QString::fromStdString(_driveList.at(driveIndex).DrivePath);
     _view->SetCurrentFolder(folderPath);
 
+    _currentDrive = driveIndex;
+
     FolderSelectionChanged(folderPath);
 }
 
-std::vector<PathInfo> _destinationList;
-
-void BackupPresenter::AddDestination() const
+void BackupPresenter::AddDestination()
 {
     QFileDialog dialog;
     dialog.setFileMode(QFileDialog::Directory);

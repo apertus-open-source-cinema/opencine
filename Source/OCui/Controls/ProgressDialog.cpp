@@ -42,5 +42,5 @@ ProgressDialog::~ProgressDialog()
 void ProgressDialog::ProgressChanged(int currentProgress)
 {
     ui->progressBar->setValue(currentProgress);
-    ui->label->setText(QString("File ") + std::to_string(currentProgress).c_str());
+    //ui->label->setText(QString("File ") + std::to_string(currentProgress).c_str());
 }

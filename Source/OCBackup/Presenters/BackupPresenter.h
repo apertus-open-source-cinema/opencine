@@ -11,6 +11,8 @@
 
 #include <MVP/BasePresenter.h>
 
+#include <Events/EventBus.h>
+
 #include "../Interfaces/IBackupView.h"
 
 //class IBackupPresenter : public QObject
@@ -35,11 +37,14 @@ class BackupPresenter : public OC::UI::BasePresenter
     IBackupView* _view;
     IDriveManager* _driveManager;
 
+    unsigned int _currentDrive;
+
     std::vector<PathInfo> _driveList;
+    std::vector<PathInfo> _destinationList;
 
     void SetupSignals() const;
 
-    void StartTransfer() const;
+    void StartTransfer();
 
     //signals:
     //void StartTransferSig(std::string drivePath);
@@ -47,11 +52,12 @@ class BackupPresenter : public OC::UI::BasePresenter
 private slots:
     void DriveListChanged(std::vector<PathInfo> driveList);
     void DriveSelectionChanged(int driveIndex);
-    void AddDestination() const;
+    void AddDestination();
     void FolderSelectionChanged(QString folderPath) const;
 
 public:
     explicit BackupPresenter(IBackupView& view);
+    void receive(const EventA &);
 };
 
 #endif // BACKUPPRESENTER_H
