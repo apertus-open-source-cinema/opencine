@@ -34,7 +34,7 @@ void BackupPresenter::SetupSignals() const
     connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
 }
 
-void BackupPresenter::receive(const EventA &)
+void BackupPresenter::receive(const StartDriveTransferEvent& event)
 {
     int j = 0;
 
@@ -50,9 +50,11 @@ OCEventBus* eventBus = new OCEventBus();
 void BackupPresenter::StartTransfer()
 {
     //eventManager->RegisterListener(this);
-    eventBus->AddEventHandler<EventA, BackupPresenter, &BackupPresenter::receive>(this);
-    eventBus->FireEvent<OCEvent>();
-    eventBus->FireTestEventA();
+
+    StartDriveTransferEvent testEvent;
+    eventBus->AddEventHandler<StartDriveTransferEvent>(std::bind(&BackupPresenter::receive, this, testEvent));
+    eventBus->FireEvent<StartDriveTransferEvent>(testEvent);
+    //eventBus->FireTestEventA();
 
 
     ProgressDialog* progressDialog = new ProgressDialog();

@@ -4,51 +4,44 @@
 #include <iostream>
 #include <functional>
 
+#include "OCEvent.h"
 #include "eventppImpl.h"
 
-class OCEvent
-{
+//class TestEvent : public OCEvent<TestEvent>
+//{
+//    std::string _testMemeber = "456";
 
+//private:
+//    void DummyMethod() override {}
+//};
+
+class StartDriveTransferEvent : public OCEvent<StartDriveTransferEvent>
+{
+    std::string _testMemeber = "123";
+
+private:
+    void DummyMethod() override {}
 };
 
-class OCSignal
-{
+//class StartDriveTransferEvent2 : public OCEvent<TestEvent>
+//{
+//    std::string _testMemeber = "123";
 
-};
+//private:
+//    void DummyMethod() override {}
+//};
 
-// Empty base implementation
-class IEventBus
-{
-public:
-    virtual void RegisterEvent(OCEvent event) {}
-
-    template<typename E, typename... A>
-    void FireEvent(A&&... args)
-    {
-        int i = 0;
-    }
-};
-
-class eventppImpl : public IEventBus
-{
-
-};
-
+// E: event, C: receiver class
 class OCEventBus
 {
-    IEventBus* _busImpl;
+    //EventBusBase* _busImpl;
+    eventpp::Bus<StartDriveTransferEvent> _bus;
     std::shared_ptr<TestListener> _listener;
     std::shared_ptr<TestListener2> _listener2;
 
 public:
     OCEventBus()
     {
-        std::cout << "EventManager constructor" << std::endl;
-
-        _busImpl = new eventppImpl();
-
-
-        _busImpl->FireEvent<OCEvent>(32);
     }
 
     //    template<class C>
@@ -59,23 +52,46 @@ public:
     //        bus.reg(ptr);
     //    }
 
-    //E: event, C: receiver class
-    template<typename E, typename C, void (C::*func)(const E&)>
-    void AddEventHandler(C* presenter)
-    {
-        std::shared_ptr<C> ptr = std::shared_ptr<C>(presenter);
+//    template<typename E, typename C, void (C::*func)(const E&)>
+//    void AddEventHandler(C* presenter)
+//    {
+//        std::shared_ptr<C> ptr = std::shared_ptr<C>(presenter);
 
-        //_bus.add<E, C, func>(ptr);
+//        //_bus.add<E, C, func>(ptr);
+//    }
+
+    std::function<void(const OCEventBase&)> _testFunc = nullptr;
+    void* funcPtr = nullptr;
+
+    template<typename E, typename F>
+    void AddEventHandler(F func)
+    {
+        //_testFunc = func;
+
+        //funcPtr = _testFunc.target<std::function<void(const OCEventBase&)>>();
+        //std::bind(func, C);
+        //std::shared_ptr<C> ptr = std::shared_ptr<C>(presenter);
+
+        _bus.add<E, func>();
+    }
+
+
+    // TODO: Implementation
+    void RemoveEventHandler()
+    {
     }
 
     template<typename E>
-    void FireEvent()
+    void FireEvent(E& event)
     {
-        _busImpl->FireEvent<E>();
+        _bus.publish<E>();
+        //_busImpl->FireEvent(event);
     }
 
     void FireTestEventA()
     {
+        //StartDriveTransferEvent event;
+        //_testFunc(event);
         //_bus.publish<EventA>(78);
     }
 };
