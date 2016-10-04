@@ -14,7 +14,7 @@
 
 #include <Events/EventBus.h>
 
-BackupPresenter::BackupPresenter(IBackupView &view) : BasePresenter(),
+BackupPresenter::BackupPresenter(IBackupView &view, OCEventBus& eventBus) : BasePresenter(eventBus),
     _view(&view)
 {
     _driveManager = new DriveManager();
@@ -45,15 +45,16 @@ void BackupPresenter::receive(const StartDriveTransferEvent& event)
     std::cout << "BackupPresenter received EventA" << std::endl;
 }
 
-OCEventBus* eventBus = new OCEventBus();
-
 void BackupPresenter::StartTransfer()
 {
+    StartDriveTransferEvent testEvent;
+    GetEventBus().RegisterEventHandler<StartDriveTransferEvent>(std::bind(&BackupPresenter::receive, this, std::placeholders::_1));
+    GetEventBus().FireEvent<StartDriveTransferEvent>(testEvent);
     //eventManager->RegisterListener(this);
 
-    StartDriveTransferEvent testEvent;
-    eventBus->AddEventHandler<StartDriveTransferEvent>(std::bind(&BackupPresenter::receive, this, testEvent));
-    eventBus->FireEvent<StartDriveTransferEvent>(testEvent);
+
+    //eventBus->AddEventHandler<StartDriveTransferEvent>(std::bind(&BackupPresenter::receive, this, testEvent));
+    //eventBus->FireEvent<StartDriveTransferEvent>(testEvent);
     //eventBus->FireTestEventA();
 
 

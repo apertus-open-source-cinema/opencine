@@ -5,11 +5,20 @@
 OCBackup::OCBackup(int &argc, char **argv) : OCui::GUIApplication(argc, argv, "OCBackup"),
     _view(std::make_shared<BackupView>())
 {
-    _presenter = new BackupPresenter(*_view); //std::make_shared<BackupPresenter>(*_view);
+    _bus = new OCEventBus();
+    _presenter = new BackupPresenter(*_view, *_bus); //std::make_shared<BackupPresenter>(*_view);
 
     SetLayout(*_view);
 
     ShowMaximized();
+}
+
+OCBackup::~OCBackup()
+{
+    if(_bus)
+    {
+        delete _bus;
+    }
 }
 
 int main(int argc, char** argv)

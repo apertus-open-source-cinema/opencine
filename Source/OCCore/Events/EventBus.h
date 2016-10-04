@@ -3,17 +3,10 @@
 
 #include <iostream>
 #include <functional>
+#include <memory>
+#include <unordered_map>
 
 #include "OCEvent.h"
-#include "eventppImpl.h"
-
-//class TestEvent : public OCEvent<TestEvent>
-//{
-//    std::string _testMemeber = "456";
-
-//private:
-//    void DummyMethod() override {}
-//};
 
 class StartDriveTransferEvent : public OCEvent<StartDriveTransferEvent>
 {
@@ -23,21 +16,46 @@ private:
     void DummyMethod() override {}
 };
 
-//class StartDriveTransferEvent2 : public OCEvent<TestEvent>
-//{
-//    std::string _testMemeber = "123";
-
-//private:
-//    void DummyMethod() override {}
-//};
-
 // E: event, C: receiver class
 class OCEventBus
 {
-    //EventBusBase* _busImpl;
-    eventpp::Bus<StartDriveTransferEvent> _bus;
-    std::shared_ptr<TestListener> _listener;
-    std::shared_ptr<TestListener2> _listener2;
+    typedef std::function<void(OCEventBase&)> funcDef;
+    std::unordered_map<size_t, int> eventMap;
+
+    std::vector<std::shared_ptr<funcDef>> handlerList;
+
+    // Private for now as events should be registered automatically (if not already done) on handler registration, just for simplicity
+    template<typename E>
+    std::vector<int>& RegisterEvent()
+    {
+        std::string name = typeid(E).name();
+        std::size_t hash = std::hash<std::string>()(name);
+
+        eventMap.insert(std::make_pair(hash, 0));
+    }
+
+    template<typename E>
+    std::vector<int> FindEvent()
+    {
+        size_t hash = typeid(E).hash_code();
+        std::unordered_map<size_t, int>::const_iterator it = eventMap.find(hash);
+
+        // TODO: Improve error handling
+        if ( it == eventMap.end() )
+        {
+            // Create event
+        }
+        else
+        {
+
+        }
+    }
+
+    template <class Functor>
+    funcDef CreateDelegate(Functor f)
+    {
+        return funcDef(new std::function<void(OCEventBase&)>(f));
+    }
 
 public:
     OCEventBus()
@@ -52,13 +70,13 @@ public:
     //        bus.reg(ptr);
     //    }
 
-//    template<typename E, typename C, void (C::*func)(const E&)>
-//    void AddEventHandler(C* presenter)
-//    {
-//        std::shared_ptr<C> ptr = std::shared_ptr<C>(presenter);
+    //    template<typename E, typename C, void (C::*func)(const E&)>
+    //    void AddEventHandler(C* presenter)
+    //    {
+    //        std::shared_ptr<C> ptr = std::shared_ptr<C>(presenter);
 
-//        //_bus.add<E, C, func>(ptr);
-//    }
+    //        //_bus.add<E, C, func>(ptr);
+    //    }
 
     std::function<void(const OCEventBase&)> _testFunc = nullptr;
     void* funcPtr = nullptr;
@@ -72,7 +90,7 @@ public:
         //std::bind(func, C);
         //std::shared_ptr<C> ptr = std::shared_ptr<C>(presenter);
 
-        _bus.add<E, func>();
+        //_bus.add<E, func>();
     }
 
 
@@ -84,7 +102,10 @@ public:
     template<typename E>
     void FireEvent(E& event)
     {
-        _bus.publish<E>();
+        size_t hash = typeid(E).hash_code();
+
+
+        //_bus.publish<E>();
         //_busImpl->FireEvent(event);
     }
 
@@ -93,6 +114,25 @@ public:
         //StartDriveTransferEvent event;
         //_testFunc(event);
         //_bus.publish<EventA>(78);
+    }
+
+    template<typename E>
+    void RegisterEventHandler(funcDef& func)
+    {
+        // Look up if event already exists, oterwise register it
+        //FindEvent();
+
+        // Push handler to handlerList and store index in std::vector of evetn handlers
+        funcDef f = CreateDelegate(func);
+        //handlerList.push_back(func);
+
+        std::string name = typeid(E).name();
+        std::size_t hash = std::hash<std::string>()(name);
+        std::cout << "Hash:" << hash << std::endl;
+
+        std::cout << "Hash2:" << typeid(E).hash_code() << std::endl;
+
+        eventMap.insert(std::make_pair(hash, 0));
     }
 };
 

@@ -14,8 +14,11 @@ class OCBackup : public OCui::GUIApplication
     //std::shared_ptr<IBackupPresenter> _presenter;
     BackupPresenter* _presenter;
 
+    OCEventBus* _bus;
+
 public:
-	OCBackup(int& argc, char** argv);
+    OCBackup(int& argc, char** argv);
+    ~OCBackup();
 };
 
 #endif //OCBACKUP_H
