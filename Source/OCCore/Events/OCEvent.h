@@ -3,7 +3,6 @@ class OCEventBase
 
 };
 
-template<typename T>
 class OCEvent : public OCEventBase
 {
 public:

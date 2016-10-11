@@ -8,7 +8,7 @@
 
 #include "OCEvent.h"
 
-class StartDriveTransferEvent : public OCEvent<StartDriveTransferEvent>
+class StartDriveTransferEvent : public OCEvent
 {
     std::string _testMemeber = "123";
 
@@ -19,10 +19,11 @@ private:
 // E: event, C: receiver class
 class OCEventBus
 {
-    typedef std::function<void(OCEventBase&)> funcDef;
+    //typedef void(*FuncDef)(const OCEvent &);
+    typedef std::function<void(const OCEvent&)> FuncDef;
     std::unordered_map<size_t, int> eventMap;
 
-    std::vector<std::shared_ptr<funcDef>> handlerList;
+    std::vector<FuncDef> handlerList;
 
     // Private for now as events should be registered automatically (if not already done) on handler registration, just for simplicity
     template<typename E>
@@ -52,9 +53,9 @@ class OCEventBus
     }
 
     template <class Functor>
-    funcDef CreateDelegate(Functor f)
+    FuncDef CreateDelegate(Functor f)
     {
-        return funcDef(new std::function<void(OCEventBase&)>(f));
+        return FuncDef(new std::function<void(const OCEvent&)>(f));
     }
 
 public:
@@ -116,15 +117,15 @@ public:
         //_bus.publish<EventA>(78);
     }
 
-    template<typename E>
-    void RegisterEventHandler(funcDef& func)
+    template<typename E, typename C>
+    void RegisterEventHandler(FuncDef&& event)
     {
         // Look up if event already exists, oterwise register it
         //FindEvent();
 
         // Push handler to handlerList and store index in std::vector of evetn handlers
-        funcDef f = CreateDelegate(func);
-        //handlerList.push_back(func);
+        //funcDef f = CreateDelegate(func);
+        handlerList.emplace_back(event);
 
         std::string name = typeid(E).name();
         std::size_t hash = std::hash<std::string>()(name);

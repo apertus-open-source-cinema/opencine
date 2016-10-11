@@ -34,7 +34,19 @@ void BackupPresenter::SetupSignals() const
     connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
 }
 
-void BackupPresenter::receive(const StartDriveTransferEvent& event)
+void BackupPresenter::receive(const OCEvent& event)
+{
+    int j = 0;
+
+    j++;
+
+    int c = j;
+
+    std::cout << "BackupPresenter received EventA" << std::endl;
+}
+
+
+void receive2(const OCEvent& event)
 {
     int j = 0;
 
@@ -48,12 +60,8 @@ void BackupPresenter::receive(const StartDriveTransferEvent& event)
 void BackupPresenter::StartTransfer()
 {
     StartDriveTransferEvent testEvent;
-    GetEventBus().RegisterEventHandler<StartDriveTransferEvent>(std::bind(&BackupPresenter::receive, this, std::placeholders::_1));
-    GetEventBus().FireEvent<StartDriveTransferEvent>(testEvent);
-    //eventManager->RegisterListener(this);
-
-
-    //eventBus->AddEventHandler<StartDriveTransferEvent>(std::bind(&BackupPresenter::receive, this, testEvent));
+    GetEventBus().RegisterEventHandler<StartDriveTransferEvent, BackupPresenter>(std::bind(&BackupPresenter::receive, this, std::placeholders::_1));
+    //GetEventBus().RegisterEventHandler<StartDriveTransferEvent, receive2>();
     //eventBus->FireEvent<StartDriveTransferEvent>(testEvent);
     //eventBus->FireTestEventA();
 

@@ -57,7 +57,7 @@ private slots:
 
 public:
     explicit BackupPresenter(IBackupView& view, OCEventBus& eventBus);
-    void receive(const StartDriveTransferEvent& event);
+    void receive(const OCEvent& event);
 };
 
 #endif // BACKUPPRESENTER_H
