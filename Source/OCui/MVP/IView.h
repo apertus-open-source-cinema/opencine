@@ -6,8 +6,6 @@
 
 class IView : public QWidget
 {
-    Q_OBJECT
-
 public:
     virtual ~IView() {}
 };

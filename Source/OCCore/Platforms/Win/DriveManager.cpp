@@ -27,13 +27,13 @@ void DriveManager::RequestDriveList()
 	UpdateDriveList();
 }
 
-std::vector<DriveInfo> DriveManager::GetRemovableDrives()
+std::vector<PathInfo> DriveManager::GetRemovableDrives()
 {
 	std::vector<std::string> availableDrives;
-	std::vector<DriveInfo> removableDrives;
+	std::vector<PathInfo> removableDrives;
 
 	DWORD dwSize = MAX_PATH;
-	char szLogicalDrives[MAX_PATH] = { 0 };
+	char szLogicalDrives[MAX_PATH] = {0};
 	GetLogicalDriveStrings(dwSize, szLogicalDrives);
 
 	char* disk = szLogicalDrives;
@@ -48,7 +48,7 @@ std::vector<DriveInfo> DriveManager::GetRemovableDrives()
 
 	for (auto& drive : removableDrives)
 	{
-		RetrieveDriveInfo(drive);
+		RetrievePathInfo(drive);
 	}
 
 	return removableDrives;
@@ -59,7 +59,7 @@ void DriveManager::UpdateDriveList()
 	emit DriveListChanged(GetRemovableDrives());
 }
 
-void DriveManager::EnumerateRemovableDrives(std::vector<std::string> availableDrives, std::vector<DriveInfo>& removableDrives)
+void DriveManager::EnumerateRemovableDrives(std::vector<std::string> availableDrives, std::vector<PathInfo>& removableDrives)
 {
 	for (auto& drive : availableDrives)
 	{
@@ -68,17 +68,17 @@ void DriveManager::EnumerateRemovableDrives(std::vector<std::string> availableDr
 
 		//        if(driveType == DRIVE_REMOVABLE && validVolume)
 		//        {
-		DriveInfo driveInfo;
+		PathInfo driveInfo;
 		driveInfo.DrivePath = drive;
 
-		RetrieveDriveInfo(driveInfo);
+		RetrievePathInfo(driveInfo);
 
 		removableDrives.push_back(driveInfo);
 		//}
 	}
 }
 
-void DriveManager::RetrieveDriveInfo(DriveInfo &driveInfo)
+void DriveManager::RetrievePathInfo(PathInfo& driveInfo)
 {
 	unsigned __int64 freeBytesAvailable = 0;
 	unsigned __int64 totalNumberOfBytes = 0;
@@ -91,6 +91,6 @@ void DriveManager::RetrieveDriveInfo(DriveInfo &driveInfo)
 	driveInfo.SpaceUnit = "MB";
 
 	char volumeName[MAX_PATH];
-	GetVolumeInformation(driveInfo.DrivePath.c_str(), volumeName, MAX_PATH, nullptr, nullptr, nullptr, { nullptr }, 0);
+	GetVolumeInformation(driveInfo.DrivePath.c_str(), volumeName, MAX_PATH, nullptr, nullptr, nullptr, {nullptr}, 0);
 	driveInfo.DriveName = volumeName;
 }

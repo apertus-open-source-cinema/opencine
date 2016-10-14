@@ -29,13 +29,11 @@ SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 #include_directories("${PROJECT_SOURCE_DIR}/3rdParty/Catch")
 #include_directories("${PROJECT_SOURCE_DIR}/3rdParty/RawSpeed/include")
 include_directories("${PROJECT_SOURCE_DIR}/3rdParty/xxHash")
-include_directories("${PROJECT_SOURCE_DIR}/3rdParty/eventpp/src")
 
 #Dependencies
 SET(ENABLE_EXAMPLES OFF CACHE BOOL "LibRaw: Build shared library (without examples)")
 #add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/LibRaw)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/xxHash)
-add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/EventBus)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/MemoryPool)
 
 #Projects

@@ -7,26 +7,24 @@
 
 namespace OC
 {
-    namespace UI
-    {
-        class BasePresenter : public QObject
-        {
-            Q_OBJECT
+	namespace UI
+	{
+		class BasePresenter : public QObject
+		{
+			// TODO: Evaluate use of some general interface, as C++ isn't allowing virtual templates, PIMPL should be considered.
+			OCEventBus _eventBus;
 
-            // TODO: Evaluate use of some general interface, as C++ isn't allowing virtual templates, PIMPL should be considered.
-            OCEventBus _eventBus;
+		protected:
+			OCEventBus& GetEventBus()
+			{
+				return _eventBus;
+			}
 
-        protected:
-            OCEventBus& GetEventBus()
-            {
-                return _eventBus;
-            }
-
-        public:
-            BasePresenter(OCEventBus& bus)
-            {
-            }
-        };
-    }
+		public:
+			explicit BasePresenter(OCEventBus& bus)
+			{
+			}
+		};
+	}
 }
 #endif //BASEPRESENTER_H

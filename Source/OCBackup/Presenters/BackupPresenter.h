@@ -32,32 +32,30 @@
 
 class BackupPresenter : public OC::UI::BasePresenter
 {
-    Q_OBJECT
+	IBackupView* _view;
+	IDriveManager* _driveManager;
 
-    IBackupView* _view;
-    IDriveManager* _driveManager;
+	unsigned int _currentDrive;
 
-    unsigned int _currentDrive;
+	std::vector<PathInfo> _driveList;
+	std::vector<PathInfo> _destinationList;
 
-    std::vector<PathInfo> _driveList;
-    std::vector<PathInfo> _destinationList;
+	void SetupSignals() const;
 
-    void SetupSignals() const;
+	void StartTransfer();
 
-    void StartTransfer();
-
-    //signals:
-    //void StartTransferSig(std::string drivePath);
+	//signals:
+	//void StartTransferSig(std::string drivePath);
 
 private slots:
-    void DriveListChanged(std::vector<PathInfo> driveList);
-    void DriveSelectionChanged(int driveIndex);
-    void AddDestination();
-    void FolderSelectionChanged(QString folderPath) const;
+	void DriveListChanged(std::vector<PathInfo> driveList);
+	void DriveSelectionChanged(int driveIndex);
+	void AddDestination();
+	void FolderSelectionChanged(QString folderPath) const;
 
 public:
-    explicit BackupPresenter(IBackupView& view, OCEventBus& eventBus);
-    void receive(const OCEvent& event);
+	explicit BackupPresenter(IBackupView& view, OCEventBus& eventBus);
+	void receive(const OCEvent& event);
 };
 
 #endif // BACKUPPRESENTER_H
