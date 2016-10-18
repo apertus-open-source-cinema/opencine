@@ -62,9 +62,8 @@ void BackupPresenter::StartTransfer()
 {
 	StartDriveTransferEvent testEvent;
 	GetEventBus().RegisterEventHandler<StartDriveTransferEvent, BackupPresenter>(std::bind(&BackupPresenter::receive, this, std::placeholders::_1));
-	//GetEventBus().RegisterEventHandler<StartDriveTransferEvent, receive2>();
+	GetEventBus().RegisterEventHandler<StartDriveTransferEvent, BackupPresenter>(std::bind(receive2, std::placeholders::_1));
 	GetEventBus().FireEvent<StartDriveTransferEvent>(testEvent);
-	//eventBus->FireTestEventA();
 
 
 	ProgressDialog* progressDialog = new ProgressDialog();

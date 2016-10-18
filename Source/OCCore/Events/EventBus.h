@@ -19,13 +19,14 @@ private:
 	}
 };
 
+// TODO: Implement better error handling
 // E: event, C: receiver class
 class OCEventBus
 {
 	//typedef void(*FuncDef)(const OCEvent &);
 	typedef std::function<void(const OCEvent&)> FuncDef;
-	
-	std::unordered_map<size_t, std::vector<int>*> eventMap;
+
+	std::unordered_map<size_t, std::shared_ptr<std::vector<int>>> eventMap;
 	std::vector<FuncDef> handlerList;
 
 	// Private for now as events should be registered automatically (if not already done) on handler registration, just for simplicity
@@ -35,43 +36,38 @@ class OCEventBus
 		std::string name = typeid(E).name();
 		std::size_t hash = std::hash<std::string>()(name);
 
-		std::vector<int>* eventHandlers = new std::vector<int>();
+		std::shared_ptr<std::vector<int>> eventHandlers = std::make_shared<std::vector<int>>();
 		eventMap.insert(std::make_pair(hash, eventHandlers));
 
-		return eventHandlers;
+		return eventHandlers.get();
 	}
 
 	template <typename E>
-	bool FindEvent(std::vector<int>& handlers)
+	std::vector<int>* FindEvent()
 	{
-		bool eventFound = false;
+		std::vector<int>* handlers = nullptr;
+
 		std::string name = typeid(E).name();
 		std::size_t hash = std::hash<std::string>()(name);
-		std::unordered_map<size_t, std::vector<int>*>::const_iterator it = eventMap.find(hash);
+		std::unordered_map<size_t, std::shared_ptr<std::vector<int>>>::const_iterator it = eventMap.find(hash);
 
 		// TODO: Improve error handling
-		if (it != eventMap.end())
+		if (it == eventMap.end())
 		{
-			handlers = *(*it).second;
-			eventFound = true;
+			//Not Found
+		}
+		else
+		{
+			handlers = (it->second).get();
 		}
 
-		return eventFound;
+		return handlers;
 	}
 
 public:
 	OCEventBus()
 	{
 	}
-
-	std::function<void(const OCEventBase&)> _testFunc = nullptr;
-	void* funcPtr = nullptr;
-
-	template <typename E, typename F>
-	void AddEventHandler(F func)
-	{
-	}
-
 
 	// TODO: Implementation
 	void RemoveEventHandler()
@@ -81,15 +77,14 @@ public:
 	template <typename E>
 	void FireEvent(E& event)
 	{
-		std::vector<int> eventHandlers;
-		bool eventFound = FindEvent<E>(eventHandlers);
+		std::vector<int>* eventHandlers = FindEvent<E>();
 
-		if(!eventFound)
+		if (eventHandlers == nullptr)
 		{
 			return;
 		}
 
-		for(int handlerIndex : eventHandlers)
+		for (int handlerIndex : *eventHandlers)
 		{
 			handlerList.at(handlerIndex)(event);
 		}
@@ -99,10 +94,9 @@ public:
 	void RegisterEventHandler(FuncDef&& event)
 	{
 		// Look up if event already exists, oterwise register it
-		std::vector<int>* eventHandlers = nullptr;
-		bool eventFound = FindEvent<E>(*eventHandlers);
+		std::vector<int>* eventHandlers = FindEvent<E>();
 
-		if(!eventFound)
+		if (eventHandlers == nullptr)
 		{
 			eventHandlers = RegisterEvent<E>();
 		}
