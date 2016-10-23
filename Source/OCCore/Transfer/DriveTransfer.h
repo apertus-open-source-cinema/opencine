@@ -3,10 +3,16 @@
 
 #include "../API/IDataTransfer.h"
 
-class DriveTransfer : public IDataTransfer
+#include "OCCore_export.h"
+
+class OCCORE_EXPORT DriveTransfer : public IDataTransfer
 {
+	void ReplicateFolderStructure(std::string rootPath, std::string targetPath) const;
+
 public:
 	DriveTransfer();
+	
+	void StartTransfer() override;
 };
 
 #endif // DRIVETRANSFER_H

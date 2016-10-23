@@ -32,6 +32,8 @@
 
 class BackupPresenter : public OC::UI::BasePresenter
 {
+	Q_OBJECT
+
 	IBackupView* _view;
 	IDriveManager* _driveManager;
 

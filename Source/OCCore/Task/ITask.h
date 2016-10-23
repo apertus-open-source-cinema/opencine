@@ -5,7 +5,10 @@
 
 class OCCORE_EXPORT ITask
 {
+public:
+	virtual ~ITask() {}
+
 	virtual void Run() = 0;
 };
 
-#endif //ITAASK_H
+#endif //ITASK_H

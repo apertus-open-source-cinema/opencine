@@ -10,6 +10,10 @@ protected:
 	std::string _targetPath;
 
 public:
+	virtual ~IDataTransfer()
+	{
+	}
+
 	IDataTransfer(std::string sourcePath = "", std::string targetPath = "") :
 		_sourcePath(sourcePath),
 		_targetPath(targetPath)

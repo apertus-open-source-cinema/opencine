@@ -14,6 +14,8 @@
 
 #include <Events/EventBus.h>
 #include "Log/Logger.h"
+#include "Task/TaskManager.h"
+#include "Transfer/DriveTransfer.h"
 
 BackupPresenter::BackupPresenter(IBackupView &view, OCEventBus& eventBus) : BasePresenter(eventBus),
 	_view(&view)
@@ -64,6 +66,13 @@ void BackupPresenter::StartTransfer()
 	GetEventBus().RegisterEventHandler<StartDriveTransferEvent, BackupPresenter>(std::bind(&BackupPresenter::receive, this, std::placeholders::_1));
 	GetEventBus().RegisterEventHandler<StartDriveTransferEvent, BackupPresenter>(std::bind(receive2, std::placeholders::_1));
 	GetEventBus().FireEvent<StartDriveTransferEvent>(testEvent);
+
+	DriveTransfer driveTransfer;
+	// TODO: Add right paths which were retrieved from UI
+	driveTransfer.StartTransfer();
+
+	TaskManager taskManager;
+	taskManager.ProcessTasks();
 
 
 	ProgressDialog* progressDialog = new ProgressDialog();

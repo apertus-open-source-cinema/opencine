@@ -2,11 +2,12 @@
 #define DRIVETRANSFERSERVICE_H
 
 #include "OCService.h"
+#include <Task/ITaskProgress.h>
 
 
 // TODO: Refactor by moving to more suitable location and possibly renaming, possible location OCCore
 // Note: std::string is used instead of QString, see previous note
-class IDriveTransferService : public OCService
+class IDriveTransferService : public OCService, public ITaskProgress
 {
 public:
     virtual ~IDriveTransferService() {}
@@ -34,6 +35,10 @@ public:
 
         return finished;
     }
+
+	int GetProgressPercentage() override { return 0; }
+	std::string GetTaskDescription() override { return ""; }
+	std::string GetSubTaskDescription() override { return ""; }
 };
 
 #endif //DRIVETRANSFERSERVICE_H
