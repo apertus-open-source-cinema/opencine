@@ -5,8 +5,23 @@
 
 class OCService
 {
+	OCEventBus* _eventBus;
+
+
 public:
-    virtual bool Execute() = 0;
+	OCService(OCEventBus* bus)
+	{
+		_eventBus = bus;
+	}
+
+	OCService() = delete;
+
+	OCEventBus* GetEventBus()
+	{
+		return _eventBus;
+	}
+
+	virtual bool Execute() = 0;
 };
 
 #endif //OCSERVICE_H

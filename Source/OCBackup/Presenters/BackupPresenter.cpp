@@ -17,7 +17,7 @@
 #include "Task/TaskManager.h"
 #include "Transfer/DriveTransfer.h"
 
-BackupPresenter::BackupPresenter(IBackupView &view, OCEventBus& eventBus) : BasePresenter(eventBus),
+BackupPresenter::BackupPresenter(IBackupView &view, OCEventBus* eventBus) : BasePresenter(eventBus),
 	_view(&view)
 {
 	_driveManager = new DriveManager();
@@ -63,9 +63,9 @@ void receive2(const OCEvent& event)
 void BackupPresenter::StartTransfer()
 {
 	StartDriveTransferEvent testEvent;
-	GetEventBus().RegisterEventHandler<StartDriveTransferEvent, BackupPresenter>(std::bind(&BackupPresenter::receive, this, std::placeholders::_1));
-	GetEventBus().RegisterEventHandler<StartDriveTransferEvent, BackupPresenter>(std::bind(receive2, std::placeholders::_1));
-	GetEventBus().FireEvent<StartDriveTransferEvent>(testEvent);
+	//GetEventBus().RegisterEventHandler<StartDriveTransferEvent, BackupPresenter>(std::bind(&BackupPresenter::receive, this, std::placeholders::_1));
+	//GetEventBus().RegisterEventHandler<StartDriveTransferEvent, BackupPresenter>(std::bind(receive2, std::placeholders::_1));
+	GetEventBus()->FireEvent<StartDriveTransferEvent>(testEvent);
 
 	DriveTransfer driveTransfer;
 	// TODO: Add right paths which were retrieved from UI
@@ -78,19 +78,20 @@ void BackupPresenter::StartTransfer()
 	ProgressDialog* progressDialog = new ProgressDialog();
 	progressDialog->show();
 
+	/* DFEPRECATED OBSOLETE */
 	//emit StartTransferSig("/media/andi/OC_TEST_MSD");
 	// Service is called manually for now, later a message/event bus will be used to push data around and to call services
-	IDriveTransferService* transferService = new DriveTransferService();
+	//IDriveTransferService* transferService = new DriveTransferService();
 
 	// TODO: Set source drive
-	transferService->SetSourceDrive("");
+	//transferService->SetSourceDrive("");
 
 	// TODO: Set destination paths
-	std::vector<std::string> destinationDrives;
-	transferService->SetDestinationDrives(destinationDrives);
+	//std::vector<std::string> destinationDrives;
+	//transferService->SetDestinationDrives(destinationDrives);
 
-	bool result = transferService->Execute();
-	delete transferService;
+	//bool result = transferService->Execute();
+	//delete transferService;
 }
 
 void BackupPresenter::DriveListChanged(std::vector<PathInfo> driveList)

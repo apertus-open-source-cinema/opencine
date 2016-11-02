@@ -76,7 +76,7 @@ public:
 
 //class eventppImpl : public IEventBus<eventppImpl>
 //{
-//    eventpp::Bus<> _bus;
+//    eventpp::Bus<> _eventBus;
 
 //public:
 //    template<typename E>
@@ -87,7 +87,7 @@ public:
 
 //    void RegisterEvent(OCEvent &event)
 //    {
-//        //_bus.add<event>()
+//        //_eventBus.add<event>()
 //    }
 //};
 

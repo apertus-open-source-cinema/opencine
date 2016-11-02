@@ -12,16 +12,17 @@ namespace OC
 		class BasePresenter : public QObject
 		{
 			// TODO: Evaluate use of some general interface, as C++ isn't allowing virtual templates, PIMPL should be considered.
-			OCEventBus _eventBus;
+			OCEventBus* _eventBus;
 
 		protected:
-			OCEventBus& GetEventBus()
+			OCEventBus* GetEventBus()
 			{
 				return _eventBus;
 			}
 
 		public:
-			explicit BasePresenter(OCEventBus& bus)
+			explicit BasePresenter(OCEventBus* bus) :
+			_eventBus(bus)
 			{
 			}
 		};

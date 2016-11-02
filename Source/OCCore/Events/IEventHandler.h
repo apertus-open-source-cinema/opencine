@@ -1,0 +1,4 @@
+#ifndef IEVENTHANDLER_H
+#define IEVENTHANDLER_H
+
+#endif //IEVENTHANDLER_H

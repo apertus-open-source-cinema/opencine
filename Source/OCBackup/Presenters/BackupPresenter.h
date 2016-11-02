@@ -56,7 +56,7 @@ private slots:
 	void FolderSelectionChanged(QString folderPath) const;
 
 public:
-	explicit BackupPresenter(IBackupView& view, OCEventBus& eventBus);
+	explicit BackupPresenter(IBackupView& view, OCEventBus* eventBus);
 	void receive(const OCEvent& event) const;
 };
 

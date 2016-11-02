@@ -5,40 +5,55 @@
 #include <Task/ITaskProgress.h>
 
 
-// TODO: Refactor by moving to more suitable location and possibly renaming, possible location OCCore
+// TODO: Refactor by moving to more suitable location and possibly renaming, possible location OCCore/Service
 // Note: std::string is used instead of QString, see previous note
 class IDriveTransferService : public OCService, public ITaskProgress
 {
 public:
-    virtual ~IDriveTransferService() {}
+	IDriveTransferService(OCEventBus* bus) : OCService(bus)
+	{
+	}
 
-    virtual void SetSourceDrive(std::string sourceDrive) = 0;
-    virtual void SetDestinationDrives(std::vector<std::string> destinationDrives) = 0;
+	virtual ~IDriveTransferService()
+	{
+	}
+
+	virtual void SetSourceDrive(std::string sourceDrive) = 0;
+	virtual void SetDestinationDrives(std::vector<std::string> destinationDrives) = 0;
 };
 
 class DriveTransferService : public IDriveTransferService
 {
 public:
-    virtual void SetSourceDrive(std::string sourceDrive) override
-    {
+	DriveTransferService(OCEventBus* bus) : IDriveTransferService(bus)
+	{
+		GetEventBus()->RegisterEventHandler<StartDriveTransferEvent, DriveTransferService>(std::bind(&DriveTransferService::EventHandler, this, std::placeholders::_1));
+	}
 
-    }
+	virtual void SetSourceDrive(std::string sourceDrive) override
+	{
+	}
 
-    virtual void SetDestinationDrives(std::vector<std::string> destinationDrives) override
-    {
+	virtual void SetDestinationDrives(std::vector<std::string> destinationDrives) override
+	{
+	}
 
-    }
+	bool Execute()
+	{
+		bool finished = false;
 
-    bool Execute()
-    {
-        bool finished = false;
-
-        return finished;
-    }
+		return finished;
+	}
 
 	int GetProgressPercentage() override { return 0; }
 	std::string GetTaskDescription() override { return ""; }
 	std::string GetSubTaskDescription() override { return ""; }
+
+	void EventHandler(const OCEvent& event)
+	{
+		// TODO: Conversion is necessary at the moment, as arguments are not polymorphic yet
+		const StartDriveTransferEvent transferEvent = dynamic_cast<const StartDriveTransferEvent&>(event);
+	}
 };
 
 #endif //DRIVETRANSFERSERVICE_H
