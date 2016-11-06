@@ -17,8 +17,9 @@
 #include "Task/TaskManager.h"
 #include "Transfer/DriveTransfer.h"
 
-BackupPresenter::BackupPresenter(IBackupView &view, OCEventBus* eventBus) : BasePresenter(eventBus),
-	_view(&view)
+BackupPresenter::BackupPresenter(IBackupView& view, OCEventBus* eventBus) : BasePresenter(eventBus),
+                                                                            _view(&view),
+                                                                            _currentDrive(0)
 {
 	_driveManager = new DriveManager();
 
@@ -62,36 +63,20 @@ void receive2(const OCEvent& event)
 
 void BackupPresenter::StartTransfer()
 {
-	StartDriveTransferEvent testEvent;
-	//GetEventBus().RegisterEventHandler<StartDriveTransferEvent, BackupPresenter>(std::bind(&BackupPresenter::receive, this, std::placeholders::_1));
-	//GetEventBus().RegisterEventHandler<StartDriveTransferEvent, BackupPresenter>(std::bind(receive2, std::placeholders::_1));
-	GetEventBus()->FireEvent<StartDriveTransferEvent>(testEvent);
+	StartDriveTransferEvent transferEvent;
+	transferEvent.SetSourcePath(_driveList[_currentDrive].DrivePath);
+	std::vector<std::string> destinationPaths;
 
-	DriveTransfer driveTransfer;
-	// TODO: Add right paths which were retrieved from UI
-	driveTransfer.StartTransfer();
+	for (PathInfo destination : _destinationList)
+	{
+		destinationPaths.push_back(destination.Path);
+	}
 
-	TaskManager taskManager;
-	taskManager.ProcessTasks();
-
+	transferEvent.SetDestinationsPaths(destinationPaths);
+	GetEventBus()->FireEvent<StartDriveTransferEvent>(transferEvent);
 
 	ProgressDialog* progressDialog = new ProgressDialog();
 	progressDialog->show();
-
-	/* DFEPRECATED OBSOLETE */
-	//emit StartTransferSig("/media/andi/OC_TEST_MSD");
-	// Service is called manually for now, later a message/event bus will be used to push data around and to call services
-	//IDriveTransferService* transferService = new DriveTransferService();
-
-	// TODO: Set source drive
-	//transferService->SetSourceDrive("");
-
-	// TODO: Set destination paths
-	//std::vector<std::string> destinationDrives;
-	//transferService->SetDestinationDrives(destinationDrives);
-
-	//bool result = transferService->Execute();
-	//delete transferService;
 }
 
 void BackupPresenter::DriveListChanged(std::vector<PathInfo> driveList)
@@ -145,9 +130,12 @@ void BackupPresenter::AddDestination()
 		PathInfo pathInfo;
 
 		QString path = dialog.directory().path();
-		path = path.right(path.length() - storage.rootPath().length());
-
-		path == "" ? pathInfo.RelativePath = "/" : pathInfo.RelativePath = path.toStdString();
+		
+		pathInfo.RelativePath = path.right(path.length() - storage.rootPath().length()).toStdString();
+		if (pathInfo.RelativePath == "")
+		{
+			pathInfo.RelativePath = "/";
+		}
 
 		pathInfo.Path = path.toStdString();
 		pathInfo.DriveName = storage.displayName().toStdString();

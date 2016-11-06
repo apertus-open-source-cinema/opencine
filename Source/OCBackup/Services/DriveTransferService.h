@@ -3,6 +3,7 @@
 
 #include "OCService.h"
 #include <Task/ITaskProgress.h>
+#include "Transfer/DriveTransfer.h"
 
 
 // TODO: Refactor by moving to more suitable location and possibly renaming, possible location OCCore/Service
@@ -27,7 +28,7 @@ class DriveTransferService : public IDriveTransferService
 public:
 	DriveTransferService(OCEventBus* bus) : IDriveTransferService(bus)
 	{
-		GetEventBus()->RegisterEventHandler<StartDriveTransferEvent, DriveTransferService>(std::bind(&DriveTransferService::EventHandler, this, std::placeholders::_1));
+		GetEventBus()->RegisterEventHandler<StartDriveTransferEvent, DriveTransferService>(std::bind(&DriveTransferService::StartDriveTransferEventHandler, this, std::placeholders::_1));
 	}
 
 	virtual void SetSourceDrive(std::string sourceDrive) override
@@ -49,10 +50,13 @@ public:
 	std::string GetTaskDescription() override { return ""; }
 	std::string GetSubTaskDescription() override { return ""; }
 
-	void EventHandler(const OCEvent& event)
+	void StartDriveTransferEventHandler(const OCEvent& event)
 	{
 		// TODO: Conversion is necessary at the moment, as arguments are not polymorphic yet
 		const StartDriveTransferEvent transferEvent = dynamic_cast<const StartDriveTransferEvent&>(event);
+
+		DriveTransfer driveTransfer(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths());
+		driveTransfer.StartTransfer();
 	}
 };
 

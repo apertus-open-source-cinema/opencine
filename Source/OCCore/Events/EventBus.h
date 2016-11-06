@@ -11,11 +11,35 @@
 
 class StartDriveTransferEvent : public OCEvent
 {
+	std::string _sourcePath;
+	std::vector<std::string> _destinationPaths;
+
 	std::string _testMemeber = "123";
 
-private:
 	void DummyMethod() override
 	{
+	}
+
+public:
+	void SetSourcePath(const std::string sourcePath)
+	{
+		_sourcePath = sourcePath;
+	}
+
+	std::string GetSourcePath() const
+	{
+		return _sourcePath;
+	}
+
+
+	void SetDestinationsPaths(const std::vector<std::string> destinationsList)
+	{
+		_destinationPaths = destinationsList;
+	}
+
+	std::vector<std::string> GetDestinationPaths() const
+	{
+		return _destinationPaths;
 	}
 };
 

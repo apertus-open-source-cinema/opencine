@@ -2,10 +2,6 @@
 #include <QDirIterator>
 #include "Log/Logger.h"
 
-DriveTransfer::DriveTransfer()
-{
-}
-
 void DriveTransfer::ReplicateFolderStructure(std::string rootPath, std::string targetPath) const
 {
 	QDir().mkdir(QString::fromStdString(targetPath));
@@ -19,43 +15,51 @@ void DriveTransfer::ReplicateFolderStructure(std::string rootPath, std::string t
 
 		QString relativePath = directories.filePath();
 		relativePath = relativePath.mid(rootPath.length());
-		QDir().mkdir(QString::fromStdString(targetPath) + relativePath);
+		QDir().mkdir(QString::fromStdString(targetPath) + "/" + relativePath);
 	}
+}
+
+DriveTransfer::DriveTransfer(std::string sourcePath, std::vector<std::string> destinationPaths)
+{
+	_sourcePath = sourcePath;
+	_destinationPaths = destinationPaths;
 }
 
 void DriveTransfer::StartTransfer()
 {
 	OC_LOG_INFO("Copying started");
 
-	std::string rootPath = "D:/Temp/Test_Folder";
-	std::string targetPath = "D:/Temp/Test_Folder_TARGET";
+	std::string destination = _destinationPaths[0];
 
-	ReplicateFolderStructure(rootPath, targetPath);
+	// TODO: Add handling of multiple destinations
+	ReplicateFolderStructure(_sourcePath, destination);
 
 
 	QStringList fileList;
 
-	QDirIterator it(QString::fromStdString(rootPath), QDir::Files, QDirIterator::Subdirectories);
+	QDirIterator it(QString::fromStdString(_sourcePath), QDir::Files, QDirIterator::Subdirectories);
 	while (it.hasNext())
 	{
 		it.next();
 		// TODO: Implement
 		fileList << it.filePath();
 
-
-
-		//connect(&to, SIGNAL(bytesWritten(qint64)), this, SLOT(onWrite(qint64)));
 		QString relativePath = it.filePath();
-		relativePath = relativePath.mid(rootPath.length());
+		relativePath = relativePath.mid(_sourcePath.length());
 		QFile source(it.filePath());
 
-		if(QFile::exists(QString::fromStdString(targetPath) + relativePath))
-		{
-			//QFile::remove(QString::fromStdString(targetPath) + relativePath);
+		// TODO: Ensure trailing slash to remove need of appending it in multiple places
+		if(QFile::exists(QString::fromStdString(destination) + relativePath))
+		{			
+			QFile::remove(QString::fromStdString(destination) + "/" + relativePath);
 		}
 
-		QFile to(QString::fromStdString(targetPath) + relativePath);
-		//source.copy(to.fileName());
+		QFile to(QString::fromStdString(destination) + "/" + relativePath);
+		OC_LOG_INFO("From: " + source.fileName().toStdString() + " To: " + to.fileName().toStdString());
+		if(!source.copy(to.fileName()));
+		{
+			OC_LOG_INFO("Copying failed. Error: " + to.errorString().toStdString());
+		}
 	}
 
 	OC_LOG_INFO("Copying finished");
