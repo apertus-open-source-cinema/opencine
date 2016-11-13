@@ -14,6 +14,9 @@ class OCBackup : public OCui::GUIApplication
 	//std::shared_ptr<IBackupPresenter> _presenter;
 	BackupPresenter* _presenter;
 
+	std::shared_ptr<ProgressDialog> _progressDialog;
+	std::shared_ptr<ProgressDialogPresenter> _progressDialogPresenter;
+
 	OCEventBus* _bus;
 
 public:

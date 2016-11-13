@@ -14,7 +14,7 @@ void DriveTransfer::ReplicateFolderStructure(std::string rootPath, std::string t
 		
 
 		QString relativePath = directories.filePath();
-		relativePath = relativePath.mid(rootPath.length());
+		relativePath = relativePath.mid(static_cast<int>(rootPath.length()));
 		QDir().mkdir(QString::fromStdString(targetPath) + "/" + relativePath);
 	}
 }
@@ -25,7 +25,7 @@ DriveTransfer::DriveTransfer(std::string sourcePath, std::vector<std::string> de
 	_destinationPaths = destinationPaths;
 }
 
-void DriveTransfer::StartTransfer()
+void DriveTransfer::Execute()
 {
 	OC_LOG_INFO("Copying started");
 
@@ -45,18 +45,18 @@ void DriveTransfer::StartTransfer()
 		fileList << it.filePath();
 
 		QString relativePath = it.filePath();
-		relativePath = relativePath.mid(_sourcePath.length());
+		relativePath = relativePath.mid(static_cast<int>(_sourcePath.length()));
 		QFile source(it.filePath());
 
 		// TODO: Ensure trailing slash to remove need of appending it in multiple places
-		if(QFile::exists(QString::fromStdString(destination) + relativePath))
-		{			
+		if (QFile::exists(QString::fromStdString(destination) + relativePath))
+		{
 			QFile::remove(QString::fromStdString(destination) + "/" + relativePath);
 		}
 
 		QFile to(QString::fromStdString(destination) + "/" + relativePath);
 		OC_LOG_INFO("From: " + source.fileName().toStdString() + " To: " + to.fileName().toStdString());
-		if(!source.copy(to.fileName()));
+		if (!QFile::copy(source.fileName(), to.fileName()))
 		{
 			OC_LOG_INFO("Copying failed. Error: " + to.errorString().toStdString());
 		}

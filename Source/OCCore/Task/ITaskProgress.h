@@ -3,7 +3,6 @@
 
 #include <string>
 
-
 // Used for progress and status reporting, which will be used in ProgressDialog (see OCui)
 class ITaskProgress
 {
@@ -15,7 +14,6 @@ public:
 
 	virtual std::string GetTaskDescription() = 0;
 	virtual std::string GetSubTaskDescription() = 0;
-
 };
 
 #endif //ITASKPROGRESS_H

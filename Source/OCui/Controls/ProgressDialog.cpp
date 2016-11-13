@@ -22,9 +22,12 @@ ProgressDialog::ProgressDialog(QWidget *parent/*, IDataTransfer* dataTransfer*/)
 	item->setData("Inbox");
 	QStandardItem *item2 = new QStandardItem();
 	item2->setData("Sent");
+	QStandardItem *item3 = new QStandardItem();
+	item2->setData("Sent");
 	
 	model->appendRow(item);
 	model->appendRow(item2);
+	model->appendRow(item3);
     
 	//ui->SourcePathLabel->setText("Source: " + dataTransfer->GetSourcePath());
     //ui->TargetPathLabel->setText("Target: " + dataTransfer->GetTargetPath());

@@ -31,21 +31,21 @@ GUIApplication::GUIApplication(int& argc, char** argv, QString moduleName) :
 	QApplication::setFont(f);
 	delete fontDatabase;
 
-	SetStyle(*_application.get());
+	SetStyle();
 }
 
-void GUIApplication::SetLayout(QWidget& widget)
+void GUIApplication::SetLayout(QWidget& widget) const
 {
 	_mainWindow->SetLayout(widget);
 }
 
-int GUIApplication::Run()
+int GUIApplication::Run() const
 {
 	return _application->exec();
 }
 
 //TODO: Maybe the parameter is not necessary, as there is only one application available, consider to remove later
-void GUIApplication::SetStyle(QApplication& app)
+void GUIApplication::SetStyle() const
 {
 	QString currentWD = QDir::currentPath();
 	QFile mainStyleFile("./Themes/DarkTheme.qss");
@@ -54,21 +54,21 @@ void GUIApplication::SetStyle(QApplication& app)
 	if (themeFound)
 	{
 		QString mainStyle(mainStyleFile.readAll());
-		app.setStyleSheet(mainStyle);
+		_application.get()->setStyleSheet(mainStyle);
 	}
 }
 
-void GUIApplication::Show()
+void GUIApplication::Show() const
 {
 	_mainWindow->show();
 }
 
-void GUIApplication::ShowMaximized()
+void GUIApplication::ShowMaximized() const
 {
 	_mainWindow->showMaximized();
 }
 
-void GUIApplication::SetWindowOptions(bool fixedSize)
+void GUIApplication::SetWindowOptions(bool fixedSize) const
 {
 	if (fixedSize)
 	{

@@ -8,7 +8,7 @@
 
 // TODO: Refactor by moving to more suitable location and possibly renaming, possible location OCCore/Service
 // Note: std::string is used instead of QString, see previous note
-class IDriveTransferService : public OCService, public ITaskProgress
+class IDriveTransferService : public OCService
 {
 public:
 	IDriveTransferService(OCEventBus* bus) : OCService(bus)
@@ -46,17 +46,13 @@ public:
 		return finished;
 	}
 
-	int GetProgressPercentage() override { return 0; }
-	std::string GetTaskDescription() override { return ""; }
-	std::string GetSubTaskDescription() override { return ""; }
-
 	void StartDriveTransferEventHandler(const OCEvent& event)
 	{
 		// TODO: Conversion is necessary at the moment, as arguments are not polymorphic yet
 		const StartDriveTransferEvent transferEvent = dynamic_cast<const StartDriveTransferEvent&>(event);
 
 		DriveTransfer driveTransfer(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths());
-		driveTransfer.StartTransfer();
+		driveTransfer.Execute();
 	}
 };
 

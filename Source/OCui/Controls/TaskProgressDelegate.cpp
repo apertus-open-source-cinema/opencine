@@ -70,9 +70,13 @@ void TaskProgressDelegate::paint(QPainter * painter, const QStyleOptionViewItem 
 
 	painter->save();
 	painter->translate(option.rect.width() / 5, option.rect.y() + option.rect.height() / 2);
+
+	// TODO: Replace by a new progress bar, which supports custom animations, e.g. for indeterminate state
 	QProgressBar renderer;
 	renderer.resize(option.rect.size().width() / 5 * 4 - 10, option.rect.size().height());
-	renderer.setValue(35);
+	//renderer.setValue(35);
+	renderer.setRange(0, 0);
+	renderer.setValue(0);
 	
 	renderer.render(painter);
 

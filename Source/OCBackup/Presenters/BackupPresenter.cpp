@@ -64,6 +64,12 @@ void receive2(const OCEvent& event)
 void BackupPresenter::StartTransfer()
 {
 	StartDriveTransferEvent transferEvent;
+	
+	if(_driveList.empty())
+	{
+		return;
+	}
+
 	transferEvent.SetSourcePath(_driveList[_currentDrive].DrivePath);
 	std::vector<std::string> destinationPaths;
 
@@ -73,7 +79,7 @@ void BackupPresenter::StartTransfer()
 	}
 
 	transferEvent.SetDestinationsPaths(destinationPaths);
-	GetEventBus()->FireEvent<StartDriveTransferEvent>(transferEvent);
+	//GetEventBus()->FireEvent<StartDriveTransferEvent>(transferEvent);
 
 	ProgressDialog* progressDialog = new ProgressDialog();
 	progressDialog->show();

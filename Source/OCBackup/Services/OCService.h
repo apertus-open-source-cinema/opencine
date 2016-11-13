@@ -16,6 +16,10 @@ public:
 
 	OCService() = delete;
 
+	virtual ~OCService()
+	{
+	}
+
 	OCEventBus* GetEventBus()
 	{
 		return _eventBus;

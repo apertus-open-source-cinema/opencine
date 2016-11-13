@@ -12,6 +12,9 @@ OCBackup::OCBackup(int &argc, char **argv) : OCui::GUIApplication(argc, argv, "O
 	// TODO: Service is initialized manually for now, this has to be changed in the future when a service manager is present
 	DriveTransferService* _transferService = new DriveTransferService(_bus);
 
+	_progressDialog = std::make_shared<ProgressDialog>();
+	_progressDialogPresenter = std::make_shared<ProgressDialogPresenter>(*_progressDialog.get(), _bus);
+
 	SetLayout(*_view);
 
 	ShowMaximized();

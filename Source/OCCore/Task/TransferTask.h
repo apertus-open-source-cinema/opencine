@@ -5,15 +5,15 @@
 
 #include "OCCore_export.h"
 
-class OCCORE_EXPORT TransferTask : public ITask
-{
-public:
-	TransferTask();
-
-	virtual void Run() override
-	{
-
-	}
-};
+//class OCCORE_EXPORT TransferTask : public ITask
+//{
+//public:
+//	TransferTask();
+//
+//	virtual void Execute() override
+//	{
+//
+//	}
+//};
 
 #endif //TRANSFERTASK_H

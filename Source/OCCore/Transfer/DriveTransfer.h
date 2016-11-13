@@ -17,7 +17,11 @@ public:
 	// TODO: Add setters for source and destination paths to be able to reuse DriveTransfer
 	DriveTransfer(std::string sourcePath, std::vector<std::string> destinationPaths);
 	
-	void StartTransfer() override;
+	int GetProgressPercentage() override { return 0; }
+	std::string GetTaskDescription() override { return ""; }
+	std::string GetSubTaskDescription() override { return ""; }
+
+	void Execute() override;
 };
 
 #endif // DRIVETRANSFER_H
