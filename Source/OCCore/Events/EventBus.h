@@ -22,6 +22,11 @@ public:
 	~RegisterNewTaskEvent() override 
 	{
 	}
+
+	ITask* GetTask() const
+	{
+		return _task;
+	}
 };
 
 class StartDriveTransferEvent : public OCEvent

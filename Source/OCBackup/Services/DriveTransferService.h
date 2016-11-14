@@ -52,7 +52,11 @@ public:
 		const StartDriveTransferEvent transferEvent = dynamic_cast<const StartDriveTransferEvent&>(event);
 
 		DriveTransfer driveTransfer(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths());
-		driveTransfer.Execute();
+
+		RegisterNewTaskEvent newTaskEvent(&driveTransfer);
+		GetEventBus()->FireEvent<RegisterNewTaskEvent>(newTaskEvent);
+
+		//driveTransfer.Execute();
 	}
 };
 

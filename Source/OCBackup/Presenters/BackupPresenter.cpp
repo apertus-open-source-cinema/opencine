@@ -79,10 +79,10 @@ void BackupPresenter::StartTransfer()
 	}
 
 	transferEvent.SetDestinationsPaths(destinationPaths);
-	//GetEventBus()->FireEvent<StartDriveTransferEvent>(transferEvent);
+	GetEventBus()->FireEvent<StartDriveTransferEvent>(transferEvent);
 
-	ProgressDialog* progressDialog = new ProgressDialog();
-	progressDialog->show();
+	//ProgressDialog* progressDialog = new ProgressDialog();
+	//progressDialog->show();
 }
 
 void BackupPresenter::DriveListChanged(std::vector<PathInfo> driveList)
