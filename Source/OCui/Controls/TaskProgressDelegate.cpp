@@ -4,7 +4,7 @@
 #include <QPainter>
 #include <QProgressBar>
 
-TaskProgressDelegate::TaskProgressDelegate(QWidget * parent) : QStyledItemDelegate(parent)
+TaskProgressDelegate::TaskProgressDelegate(QWidget* parent) : QStyledItemDelegate(parent)
 {
 }
 
@@ -12,7 +12,7 @@ TaskProgressDelegate::~TaskProgressDelegate()
 {
 }
 
-QSize TaskProgressDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
+QSize TaskProgressDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
 	//QIcon icon = qvariant_cast<QIcon>(index.data(IconRole));
 	//QSize iconsize = icon.actualSize(option.decorationSize);
@@ -20,10 +20,9 @@ QSize TaskProgressDelegate::sizeHint(const QStyleOptionViewItem & option, const 
 	QFontMetrics fm(font);
 
 	return QSize(200, 70);// (QSize(iconsize.width(), iconsize.height() + fm.height() + 8));
-
 }
 
-void TaskProgressDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
+void TaskProgressDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
 	QStyledItemDelegate::paint(painter, option, index);
 
@@ -35,12 +34,23 @@ void TaskProgressDelegate::paint(QPainter * painter, const QStyleOptionViewItem 
 	font.setBold(true);
 	subFont.setWeight(subFont.weight() - 5);
 	subFont.setPointSize(8);
+	font.setCapitalization(QFont::AllUppercase);
 	QFontMetrics fm(font);
 
+	QString headerText = "";
+	QString subText = "";
 	//QIcon icon = qvariant_cast<QIcon>(index.data(IconRole));
-	QString headerText = qvariant_cast<QString>("Test123");
-	QString subText = qvariant_cast<QString>("SubText123");
-
+	QVariant variant = index.model()->data(index);
+	//QStandardItemModel *sModel = qobject_cast<QStandardItemModel *>(model);
+	QVariant item = index.data(Qt::DisplayRole);// sModel->itemFromIndex(index.model()->index(0, 0));
+	QStringList test2 = item.toStringList();
+	QStringList test = variant.toStringList();
+	QStringList values = index.model()->data(index).toStringList();
+	if (!values.empty())
+	{
+		headerText = values.at(0); //_taskDescription; // qvariant_cast<QString>("Test123");
+		subText = values.at(1);
+	}
 	//QSize iconsize = icon.actualSize(option.decorationSize);
 
 	QRect headerRect = option.rect;
@@ -77,8 +87,34 @@ void TaskProgressDelegate::paint(QPainter * painter, const QStyleOptionViewItem 
 	//renderer.setValue(35);
 	renderer.setRange(0, 0);
 	renderer.setValue(0);
-	
+
 	renderer.render(painter);
 
 	painter->restore();
+}
+
+QString TaskProgressDelegate::GetTaskDescription() const
+{
+	return _taskDescription;
+}
+
+void TaskProgressDelegate::SetTaskDescription(QString description)
+{
+	_taskDescription = description;
+}
+
+void TaskProgressDelegate::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
+{
+	QString str = index.model()->data(index).toString();
+	_taskDescription = str;
+	//SetTaskDescription("Test");
+}
+
+void TaskProgressDelegate::setEditorData(QWidget* editor, const QModelIndex& index) const
+{
+	//_taskDescription = index.model()->data(index).toString();
+	QString str = index.model()->data(index).toString();
+	_taskDescription = str;
+	//SetTaskDescription(taskDescription);
+	//_taskDescription = taskDescription;
 }

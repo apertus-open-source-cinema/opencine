@@ -46,4 +46,4 @@ private:
 	//void OnStopClicked();
 };
 
-#endif // PLAYBACKSLIDER_H
+#endif //PLAYBACKSLIDER_H

@@ -16,10 +16,10 @@ class OCCORE_EXPORT DriveTransfer : public IDataTransfer
 public:
 	// TODO: Add setters for source and destination paths to be able to reuse DriveTransfer
 	DriveTransfer(std::string sourcePath, std::vector<std::string> destinationPaths);
-	
-	int GetProgressPercentage() override { return 0; }
-	std::string GetTaskDescription() override { return ""; }
-	std::string GetSubTaskDescription() override { return ""; }
+
+	int GetProgressPercentage() override;
+	std::string GetTaskDescription() override;
+	std::string GetSubTaskDescription() override;
 
 	void Execute() override;
 };

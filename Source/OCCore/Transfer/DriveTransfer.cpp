@@ -25,6 +25,21 @@ DriveTransfer::DriveTransfer(std::string sourcePath, std::vector<std::string> de
 	_destinationPaths = destinationPaths;
 }
 
+int DriveTransfer::GetProgressPercentage()
+{
+	return 0;
+}
+
+std::string DriveTransfer::GetTaskDescription()
+{
+	return "Drive Transfer";
+}
+
+std::string DriveTransfer::GetSubTaskDescription()
+{
+	return "Copying X";
+}
+
 void DriveTransfer::Execute()
 {
 	OC_LOG_INFO("Copying started");
