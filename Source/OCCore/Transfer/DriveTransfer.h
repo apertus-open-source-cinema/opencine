@@ -3,11 +3,15 @@
 
 #include <vector>
 
+#include <QObject>
+
 #include "API/IDataTransfer.h"
 #include "OCCore_export.h"
 
-class OCCORE_EXPORT DriveTransfer : public IDataTransfer
+class OCCORE_EXPORT DriveTransfer : public QObject, public IDataTransfer
 {
+	Q_OBJECT
+
 	std::string _sourcePath;
 	std::vector<std::string> _destinationPaths;
 
@@ -22,6 +26,12 @@ public:
 	std::string GetSubTaskDescription() override;
 
 	void Execute() override;
+
+private slots:
+	void progressChanged(qint64 progress);
+
+signals:
+	void copyProgressChanged(int progress);
 };
 
 #endif // DRIVETRANSFER_H

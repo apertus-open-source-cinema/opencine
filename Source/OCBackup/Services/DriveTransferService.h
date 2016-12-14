@@ -56,7 +56,7 @@ public:
 		RegisterNewTaskEvent newTaskEvent(&driveTransfer);
 		GetEventBus()->FireEvent<RegisterNewTaskEvent>(newTaskEvent);
 
-		//driveTransfer.Execute();
+		driveTransfer.Execute();
 	}
 };
 
