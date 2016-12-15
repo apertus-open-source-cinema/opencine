@@ -6,8 +6,12 @@
 
 class OCCORE_EXPORT ITask : public ITaskProgress
 {
+	Q_OBJECT
+
 public:
-	virtual ~ITask() {}
+	virtual ~ITask()
+	{
+	}
 
 	virtual void Execute() = 0;
 };

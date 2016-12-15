@@ -3,12 +3,10 @@
 
 #include <vector>
 
-#include <QObject>
-
 #include "API/IDataTransfer.h"
 #include "OCCore_export.h"
 
-class OCCORE_EXPORT DriveTransfer : public QObject, public IDataTransfer
+class OCCORE_EXPORT DriveTransfer : public IDataTransfer
 {
 	Q_OBJECT
 
@@ -28,10 +26,10 @@ public:
 	void Execute() override;
 
 private slots:
-	void progressChanged(qint64 progress);
+	void ProgressChanged(qint64 progress);
 
-signals:
-	void copyProgressChanged(int progress);
+signals :
+	void CopyProgressChanged(int progress);
 };
 
 #endif // DRIVETRANSFER_H

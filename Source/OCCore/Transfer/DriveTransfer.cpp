@@ -85,7 +85,7 @@ void DriveTransfer::Execute()
 		int TRANSFER_BLOCK_SIZE = 1024 * 1024; // 1MB
 		
 		int progressBlock = source.size() / 100;
-		int progressCount = 0;
+		int totalRead = 0;
 		int progress = 0;
 
 		// TODO: Error handling
@@ -95,12 +95,12 @@ void DriveTransfer::Execute()
 			buffer = source.read(TRANSFER_BLOCK_SIZE);
 			to.write(buffer, buffer.size());
 
-			progressCount += buffer.size();
-			if(progressCount > progressBlock + (progressBlock * progress))
+			totalRead += buffer.size();
+			if(totalRead > progressBlock + (progressBlock * progress))
 			{
 				progress++;
 
-				emit copyProgressChanged(progress);
+				emit CopyProgressChanged(progress);
 			}
 		}
 
@@ -113,9 +113,9 @@ void DriveTransfer::Execute()
 	OC_LOG_INFO("Copying finished");
 }
 
-void DriveTransfer::progressChanged(qint64 progress)
+void DriveTransfer::ProgressChanged(qint64 progress)
 {
 	int i = 0;
 
-	emit copyProgressChanged(progress);
+	emit CopyProgressChanged(progress);
 }

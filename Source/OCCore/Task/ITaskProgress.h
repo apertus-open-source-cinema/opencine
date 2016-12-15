@@ -2,12 +2,15 @@
 #define ITASKPROGRESS_H
 
 #include <string>
+#include <QObject>
 
 // Used for progress and status reporting, which will be used in ProgressDialog (see OCui)
-class ITaskProgress
+class ITaskProgress : public QObject
 {
 public:
-	virtual ~ITaskProgress() {}
+	virtual ~ITaskProgress()
+	{
+	}
 
 	// TODO: Evaluate if float value is required
 	virtual int GetProgressPercentage() = 0;

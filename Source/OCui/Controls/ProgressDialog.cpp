@@ -32,9 +32,24 @@ void ProgressDialog::AddTask(ITaskProgress* taskProgress) const
 	QStringList values;
 	values.push_back(taskDescription);
 	values.push_back(subTaskDescription);
+	values.push_back("0");
 
 	item->setData(values, Qt::DisplayRole);
 	_model->appendRow(item);
+}
+
+void ProgressDialog::SetTaskProgress(int taskIndex, int progress)
+{
+	QStandardItem* item = _model->item(0, 0);//new QStandardItem();
+	//QString taskDescription = "";// QString::fromStdString(taskProgress->GetTaskDescription());
+	//QString subTaskDescription = ""; //QString::fromStdString(taskProgress->GetSubTaskDescription());
+	QStringList values = item->model()->data(item->index()).toStringList();
+	//values.push_back(taskDescription);
+	//values.push_back(subTaskDescription);
+	values.replace(2, QString::number(progress));
+
+	item->setData(values, Qt::DisplayRole);
+//	_model->appendRow(item);
 }
 
 void ProgressDialog::ProgressChanged(int currentProgress) const

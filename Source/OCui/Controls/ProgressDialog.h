@@ -26,6 +26,8 @@ public:
 	// TODO: Create interface for class and also consider to use some sort of proxy for tasks
 	void AddTask(ITaskProgress* taskProgress) const;
 
+	void SetTaskProgress(int taskIndex, int progress);
+
 private:
     Ui::ProgressDialog *ui;
 
