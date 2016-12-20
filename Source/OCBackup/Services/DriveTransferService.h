@@ -1,10 +1,10 @@
 #ifndef DRIVETRANSFERSERVICE_H
 #define DRIVETRANSFERSERVICE_H
 
-#include "OCService.h"
-#include <Task/ITaskProgress.h>
-#include "Transfer/DriveTransfer.h"
+#include <thread>
 
+#include "OCService.h"
+#include "Transfer/DriveTransfer.h"
 
 // TODO: Refactor by moving to more suitable location and possibly renaming, possible location OCCore/Service
 // Note: std::string is used instead of QString, see previous note
@@ -31,11 +31,11 @@ public:
 		GetEventBus()->RegisterEventHandler<StartDriveTransferEvent, DriveTransferService>(std::bind(&DriveTransferService::StartDriveTransferEventHandler, this, std::placeholders::_1));
 	}
 
-	virtual void SetSourceDrive(std::string sourceDrive) override
+	void SetSourceDrive(std::string sourceDrive) override
 	{
 	}
 
-	virtual void SetDestinationDrives(std::vector<std::string> destinationDrives) override
+	void SetDestinationDrives(std::vector<std::string> destinationDrives) override
 	{
 	}
 
@@ -56,8 +56,19 @@ public:
 		RegisterNewTaskEvent newTaskEvent(&driveTransfer);
 		GetEventBus()->FireEvent<RegisterNewTaskEvent>(newTaskEvent);
 
-		driveTransfer.Execute();
+		std::thread transferThread(&DriveTransfer::Execute, &driveTransfer, transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths());
+		std::thread::id threadID = transferThread.get_id();
+		//transferThread.join();
+		//std::thread transferThread([this] { TransferFile(*source, *target) });
+		transferThread.detach();
 	}
+
+	//void TestThread(DriveTransfer& driveTransfer) const;
 };
+
+//inline void DriveTransferService::TestThread(DriveTransfer& driveTransfer) const
+//{
+//	driveTransfer.Execute();
+//}
 
 #endif //DRIVETRANSFERSERVICE_H

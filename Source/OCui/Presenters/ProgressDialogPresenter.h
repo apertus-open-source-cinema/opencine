@@ -27,7 +27,7 @@ protected:
 	}
 
 private slots:
-	void ProgressChanged(int progress);
+	void ProgressChanged(int& progress);
 };
 
 #endif //PROGRESSDIALOGPRESENTER_H

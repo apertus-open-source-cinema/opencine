@@ -7,17 +7,17 @@
 class IDataTransfer : public ITask
 {
 protected:
-	std::string _sourcePath;
-	std::string _targetPath;
+	//std::string _sourcePath;
+	//std::string _targetPath;
 
 public:
 	virtual ~IDataTransfer()
 	{
 	}
 
-	IDataTransfer(std::string sourcePath = "", std::string targetPath = "") :
-		_sourcePath(sourcePath),
-		_targetPath(targetPath)
+	IDataTransfer(std::string sourcePath = "", std::string targetPath = "") //:
+		//_sourcePath(sourcePath),
+		//_targetPath(targetPath)
 	{
 	}
 
