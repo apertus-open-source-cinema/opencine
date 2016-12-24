@@ -3,8 +3,10 @@
 
 // TODO: Refactor by moving to more suitable location and possibly renaming
 
-class OCService
+class OCService : public QObject
 {
+	Q_OBJECT
+
 	OCEventBus* _eventBus;
 
 

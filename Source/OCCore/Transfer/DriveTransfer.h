@@ -5,14 +5,13 @@
 
 #include "API/IDataTransfer.h"
 #include "OCCore_export.h"
-#include <qfile.h>
 
 class OCCORE_EXPORT DriveTransfer : public IDataTransfer
 {
 	Q_OBJECT
 
-	//std::string _sourcePath;
-	//std::vector<std::string> _destinationPaths;
+	std::string _sourcePath;
+	std::vector<std::string> _destinationPaths;
 
 	void ReplicateFolderStructure(std::string& rootPath, std::string& targetPath) const;
 
@@ -25,13 +24,15 @@ public:
 	std::string GetSubTaskDescription() override;
 	void TransferFile(QString sourcePath, QString targetPath);
 
-	void Execute(std::string sourcePath, std::vector<std::string> destinationPaths) override;
+public slots:
+	void Execute();
 
-private slots:
-	//void ProgressChanged(qint64 progress);
+	//private slots:
+	void ProgressChanged(int progress);
 
-signals :
-	void CopyProgressChanged(int& progress);
+	signals :
+	void CopyProgressChanged(int progress);
+	//void Execute(std::string sourcePath, std::vector<std::string> destinationPaths) override;
 };
 
 #endif // DRIVETRANSFER_H

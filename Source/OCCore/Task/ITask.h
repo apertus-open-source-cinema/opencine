@@ -13,7 +13,7 @@ public:
 	{
 	}
 
-	virtual void Execute(std::string sourcePath, std::vector<std::string> destinationPaths) = 0;
+	//virtual void Execute(std::string sourcePath, std::vector<std::string> destinationPaths) = 0;
 };
 
 #endif //ITASK_H

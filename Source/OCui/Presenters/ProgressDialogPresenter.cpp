@@ -15,7 +15,8 @@ void ProgressDialogPresenter::NewTaskHandler(const OCEvent& event)
 	ITask* task = taskEvent.GetTask();
 	_taskList.push_back(task);
 
-	connect(task, SIGNAL(CopyProgressChanged(int&)), this, SLOT(ProgressChanged(int&)));
+	connect(task, SIGNAL(CopyProgressChanged(int)), this, SLOT(ProgressChanged(int)), Qt::QueuedConnection);
+
 	// 2. Connect to progress events of task directly, event bus not needed here as it's rather specific (at least for now)
 	//std::bind / std::function
 	_view->AddTask(task);
@@ -23,7 +24,7 @@ void ProgressDialogPresenter::NewTaskHandler(const OCEvent& event)
 	_view->show();
 }
 
-void ProgressDialogPresenter::ProgressChanged(int& progress)
+void ProgressDialogPresenter::ProgressChanged(int progress) const
 {
 	QString progressString = QString("Progress: %1%").arg(progress);
 	qDebug(progressString.toLatin1());

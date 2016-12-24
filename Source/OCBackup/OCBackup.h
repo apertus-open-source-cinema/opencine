@@ -5,6 +5,7 @@
 
 #include "Presenters/BackupPresenter.h"
 #include "Views/BackupView.h"
+#include "Services/DriveTransferService.h"
 
 class OCBackup : public OCui::GUIApplication
 {
@@ -18,6 +19,8 @@ class OCBackup : public OCui::GUIApplication
 	std::shared_ptr<ProgressDialogPresenter> _progressDialogPresenter;
 
 	OCEventBus* _bus;
+
+	DriveTransferService* _transferService;
 
 public:
 	OCBackup(int& argc, char** argv);
