@@ -6,7 +6,9 @@ project(xxhash)
 set(XXHASH_LIB_VERSION "0.42.0")
 set(XXHASH_LIB_SOVERSION "0")
 
-option(BUILD_XXHSUM "Build the xxhsum binary" ON)
+option(BUILD_XXHSUM "Build the xxhsum binary" OFF)
+
+# Modified xxHash CMake script to reduce unnecessary builds
 option(INSTALL_XXHASH_XXHSUM "Install xxhsum binary and xxhash library" OFF)
 
 # Make CMake's RPATH handling not be insane. This suff has cmake set rpaths appropriately for

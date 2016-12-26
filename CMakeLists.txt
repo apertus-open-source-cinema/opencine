@@ -3,7 +3,7 @@ project(ApertusOpenCine)
 
 CMAKE_POLICY(SET CMP0020 NEW)
 
-set_property( GLOBAL PROPERTY USE_FOLDERS ON)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 #TODO: Enable C++11 support for all projects. Adjust when porting to windows (e.g. for Visual Studio compatibility)
 if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
@@ -33,7 +33,7 @@ include_directories("${PROJECT_SOURCE_DIR}/3rdParty/xxHash")
 #Dependencies
 SET(ENABLE_EXAMPLES OFF CACHE BOOL "LibRaw: Build shared library (without examples)")
 #add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/LibRaw)
-add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/xxHash)
+add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/xxHash/cmake_unofficial)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/MemoryPool)
 
 #Projects
