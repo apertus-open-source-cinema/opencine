@@ -4,14 +4,16 @@
 #include <QPainter>
 #include <QProgressBar>
 #include <QHBoxLayout>
-#include <QLabel>
 
 TaskProgressDelegate::TaskProgressDelegate(QWidget* parent) : QStyledItemDelegate(parent),
                                                               font(QApplication::font()),
                                                               subFont(QApplication::font())
 {
+	_progressBar = new QProgressBar();
+
 	font.setBold(true);
 	subFont.setPointSize(font.pointSize() - 2);
+	_fontMetrics = new QFontMetrics(font);
 }
 
 TaskProgressDelegate::~TaskProgressDelegate()
@@ -30,8 +32,6 @@ void TaskProgressDelegate::paint(QPainter* painter, const QStyleOptionViewItem& 
 
 	painter->save();
 
-	QFontMetrics fm(font);
-
 	QString headerText = "?";
 	QString subText = "?";
 
@@ -45,11 +45,11 @@ void TaskProgressDelegate::paint(QPainter* painter, const QStyleOptionViewItem& 
 	QRect headerRect = option.rect;
 	headerRect.setLeft(10);
 	headerRect.setTop(headerRect.top() + 10);
-	headerRect.setWidth(fm.width(headerText + " | "));
-	headerRect.setBottom(headerRect.top() + fm.height() + 5);
+	headerRect.setWidth(_fontMetrics->width(headerText + " | "));
+	headerRect.setBottom(headerRect.top() + _fontMetrics->height() + 5);
 
 	QRect subheaderRect = option.rect;
-	subheaderRect.setTop(subheaderRect.top() + fm.height() / 2);
+	subheaderRect.setTop(subheaderRect.top() + _fontMetrics->height() / 2);
 	subheaderRect.setLeft(headerRect.width() + 10);
 
 	painter->setFont(font);
@@ -57,21 +57,12 @@ void TaskProgressDelegate::paint(QPainter* painter, const QStyleOptionViewItem& 
 	painter->setFont(subFont);
 	painter->drawText(subheaderRect, subText);
 
-	// Automatic layout, just for test atm
-	//QWidget widgetTest;
-	//QHBoxLayout layout;
-	//layout.addWidget(new QLabel("Test1"));
-	//layout.addWidget(new QLabel("Test2"));
-	//widgetTest.setLayout(&layout);
-	//widgetTest.render(painter, option.rect.topLeft());
-
-	painter->translate(10, headerRect.bottom());
+	painter->translate(10, headerRect.bottom() + 10);
 
 	// TODO: Replace by a new progress bar, which supports custom animations, e.g. for indeterminate state
-	QProgressBar progressBar;
-	progressBar.resize(option.rect.size().width() - 10, option.rect.size().height());
-	progressBar.setValue(values.at(2).toInt());
-	progressBar.render(painter);
+	_progressBar->resize(option.rect.size().width() - 20, option.rect.size().height());
+	_progressBar->setValue(values.at(2).toInt());
+	_progressBar->render(painter);
 
 	painter->restore();
 }

@@ -28,7 +28,8 @@ file(GLOB SOURCE_FILES "*.cpp" "*.h"
     "Log/*.cpp" "Log/*.h"
     "Task/*.cpp" "Task/*.h"
     "Memory/*.cpp" "Memory/*.h"
-	"Events/*.cpp" "Events/*.h")
+	"Events/*.cpp" "Events/*.h"
+	"Hash/*.cpp" "Hash/*.h")
 
 #file(GLOB HEADER_FILES "*.h")
 
@@ -51,7 +52,7 @@ endif()
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${PLATFORM_FILES})
 
-#TARGET_LINK_LIBRARIES(${PROJECT_NAME} xxHash MemoryPool)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} xxhash) # MemoryPool)
 
 #set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER "OCCore")
 

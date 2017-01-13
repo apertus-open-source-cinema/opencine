@@ -13,7 +13,7 @@ class OCCORE_EXPORT DriveTransfer : public IDataTransfer
 	std::string _sourcePath;
 	std::vector<std::string> _destinationPaths;
 
-	void ReplicateFolderStructure(std::string& rootPath, std::string& targetPath) const;
+    //void ReplicateFolderStructure(std::string& rootPath, std::string& targetPath) const;
 
 public:
 	// TODO: Add setters for source and destination paths to be able to reuse DriveTransfer
@@ -26,13 +26,12 @@ public:
 
 public slots:
 	void Execute();
-
-	//private slots:
 	void ProgressChanged(int progress);
 
-	signals :
+signals:
 	void CopyProgressChanged(int progress);
-	//void Execute(std::string sourcePath, std::vector<std::string> destinationPaths) override;
+
+	// TODO: Add signal to notify about finished copying of a file, e.g. to start hash verification process
 };
 
-#endif // DRIVETRANSFER_H
+#endif //DRIVETRANSFER_H

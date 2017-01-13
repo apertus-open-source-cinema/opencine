@@ -41,8 +41,6 @@ BackupView::~BackupView()
 
 void BackupView::SetupDriveView()
 {
-	//dataList = new QList<QObject*>();
-
 	_qmlContext = ui->driveListControl->rootContext();
 	_qmlContext->setContextProperty("listModel", QVariant::fromValue(dataList));
 

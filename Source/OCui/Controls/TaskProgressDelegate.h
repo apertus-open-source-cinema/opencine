@@ -1,12 +1,16 @@
 ﻿#pragma once
 #include <QStyledItemDelegate>
+#include <qprogressbar.h>
 
 class TaskProgressDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
 
 	QFont font;
-	QFont subFont ;
+	QFont subFont;
+	QFontMetrics* _fontMetrics;
+
+	QProgressBar* _progressBar;	
 
 public:
 	TaskProgressDelegate(QWidget* parent = Q_NULLPTR);
