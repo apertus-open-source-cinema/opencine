@@ -22,7 +22,7 @@ int HashCheckTask::GetFileSize(std::ifstream& fin) const
 	return fileSize;
 }
 
-void HashCheckTask::Execute() const
+void HashCheckTask::Execute()
 {
 	//std::string targetFile = "E:/Temp/OC_COPY/ARRI/C001C005_140702_R3VJ.mov"; //QString::fromStdString(transferEvent.GetDestinationPaths().at(0));
 	//std::streamsize s;
@@ -41,8 +41,8 @@ void HashCheckTask::Execute() const
 		}
 
 		int fileSize = GetFileSize(fin);
-
-		unsigned int bufferSize = 1024 * 1024;
+		
+		unsigned int bufferSize = 1024 * 1024; // 1MB
 		std::vector<char> buffer(fileSize, 0); //reads only the first 1024 bytes
 
 		unsigned int totalChunks = fileSize / bufferSize;
@@ -66,6 +66,7 @@ void HashCheckTask::Execute() const
 		}
 
 		int64_t fileHash = _hashGenerator->Retrieve();
+		emit HashChecked(fileHash);
 	}
 	catch (const std::ios_base::failure& e)
 	{

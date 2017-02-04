@@ -1,7 +1,9 @@
- #include "DriveTransfer.h"
+#include "DriveTransfer.h"
 #include <QDirIterator>
 #include "Log/Logger.h"
 #include <QStorageInfo>
+
+#include <Hash\xxHashAdapter.h>
 
 //void DriveTransfer::ReplicateFolderStructure(std::string& rootPath, std::string& targetPath) const
 //{
@@ -19,10 +21,12 @@
 //	}
 //}
 
-DriveTransfer::DriveTransfer(std::string sourcePath, std::vector<std::string> destinationPaths) :
+DriveTransfer::DriveTransfer(std::string sourcePath, std::vector<std::string> destinationPaths, std::vector<FileTransferInfo> fileList) :
 	_sourcePath(sourcePath),
-	_destinationPaths(destinationPaths)
+	_destinationPaths(destinationPaths),
+	_fileList(fileList)
 {
+	int i = 0;
 }
 
 int DriveTransfer::GetProgressPercentage()
@@ -40,7 +44,7 @@ std::string DriveTransfer::GetSubTaskDescription()
 	return "Copying X";
 }
 
-void DriveTransfer::TransferFile(QString sourcePath, QString targetPath)
+void DriveTransfer::TransferFile(QString sourcePath, QString targetPath, int64_t& checksum)
 {
 	// TODO: Fix relative path retrieval for Windows and Linux
 	QString relativePath = sourcePath;
@@ -59,7 +63,7 @@ void DriveTransfer::TransferFile(QString sourcePath, QString targetPath)
 	OC_LOG_INFO("From: " + source.fileName().toStdString() + " To: " + target.fileName().toStdString());
 	source.open(QIODevice::ReadOnly);
 	target.open(QIODevice::WriteOnly);
-	
+
 	if (source.error() || target.error())
 	{
 		OC_LOG_ERROR("DriveTransfer failed.");
@@ -72,12 +76,17 @@ void DriveTransfer::TransferFile(QString sourcePath, QString targetPath)
 	int totalRead = 0;
 	int progress = 0;
 
+	const std::unique_ptr<IHashGenerator> hashGenerator = std::make_unique<xxHashAdapter>();
+	hashGenerator->Initialize();
+
 	// TODO: Error handling
 	char* buffer = new char[TRANSFER_BLOCK_SIZE];
 	while (!source.atEnd())
 	{
 		qint64 readSize = source.read(buffer, TRANSFER_BLOCK_SIZE);
 		target.write(buffer, readSize);
+
+		hashGenerator->Update(buffer, readSize);
 
 		totalRead += readSize;
 		if (totalRead > progressBlock + (progressBlock * progress))
@@ -87,41 +96,57 @@ void DriveTransfer::TransferFile(QString sourcePath, QString targetPath)
 			ProgressChanged(progress);
 		}
 	}
+
+	checksum = hashGenerator->Retrieve();
 }
 
 void DriveTransfer::Execute(/*std::string sourcePath, std::vector<std::string> destinationPaths*/)
 {
 	OC_LOG_INFO("Copying started");
 
-//	std::ostringstream threadID;
-//	threadID << std::this_thread::get_id();
-//	QString t = QString("Transfer thread ID: %1").arg(QString::fromStdString(threadID.str()));
-//	qDebug(t.toLatin1());
+	//	std::ostringstream threadID;
+	//	threadID << std::this_thread::get_id();
+	//	QString t = QString("Transfer thread ID: %1").arg(QString::fromStdString(threadID.str()));
+	//	qDebug(t.toLatin1());
 
-	// TODO: Remove this code block after transfer tests are completed
-	// -----
-	QStorageInfo storageInfo("G:\\");
-	if (storageInfo.isValid() && storageInfo.isReady())
-	{
-		QString path = storageInfo.rootPath();
-		qint64 freeSpace = storageInfo.bytesFree();
-		qint64 blockSize = storageInfo.blockSize();
-	}
-	// -----
+		// TODO: Remove this code block after transfer tests are completed
+		// -----
+		//QStorageInfo storageInfo("G:\\");
+		//if (storageInfo.isValid() && storageInfo.isReady())
+		//{
+		//	QString path = storageInfo.rootPath();
+		//	qint64 freeSpace = storageInfo.bytesFree();
+		//	qint64 blockSize = storageInfo.blockSize();
+		//}
+		// -----
 
-	// TODO: Add handling of multiple destinations
+		// TODO: Add handling of multiple destinations
 	std::string destination = _destinationPaths[0];
-//	ReplicateFolderStructure(_sourcePath, destination);
+	//	ReplicateFolderStructure(_sourcePath, destination);
 
-	QStringList fileList;
+		//QStringList fileList;
 
-	QDirIterator it(QString::fromStdString(_sourcePath), QDir::Files, QDirIterator::Subdirectories);
-	while (it.hasNext())
-	{
-		it.next();
+		//QDirIterator it(QString::fromStdString(_sourcePath), QDir::Files, QDirIterator::Subdirectories);
+		//while (it.hasNext())
+		//{
+		//	it.next();
 
-		//TransferFile(it.filePath(), QString::fromStdString(destination));
-	}
+		//	//TransferFile(it.filePath(), QString::fromStdString(destination));
+		//}
+
+	int index = 0;
+	//for (FileTransferInfo& info : _fileList)
+	//{
+	//	QString fileDestination = QString::fromStdString(_sourcePath + info.RelativeFolderPath + info.FileName);
+	//	int64_t checksum = 0;
+	//	TransferFile(fileDestination, QString::fromStdString(destination), checksum);
+
+	//	emit FileTransfered(index, checksum);
+	//	index++;
+	//}
+
+	// NOTE: Workaround, as QThread::finished() wasn't emitted
+	emit TransferFinished();
 
 	OC_LOG_INFO("Copying finished");
 }
@@ -130,10 +155,10 @@ void DriveTransfer::ProgressChanged(int progress)
 {
 	int i = 0;
 
-//	std::ostringstream threadID;
-//	threadID << std::this_thread::get_id();
-//	QString t = QString("Transfer thread ID: %1").arg(QString::fromStdString(threadID.str()));
-//	qDebug(t.toLatin1());
+	//	std::ostringstream threadID;
+	//	threadID << std::this_thread::get_id();
+	//	QString t = QString("Transfer thread ID: %1").arg(QString::fromStdString(threadID.str()));
+	//	qDebug(t.toLatin1());
 
 	emit CopyProgressChanged(progress);
 }

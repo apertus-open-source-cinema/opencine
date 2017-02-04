@@ -6,3 +6,7 @@
 *.user
 Source/WidgetsTest/
 /.project
+
+\.vs/
+
+CMakeSettings\.json

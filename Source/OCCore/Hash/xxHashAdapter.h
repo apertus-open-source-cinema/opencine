@@ -18,7 +18,7 @@ public:
 	{
 		if (_hashState != nullptr)
 		{
-			delete _hashState;
+			XXH64_freeState(_hashState);
 		}
 
 		_hashState = XXH64_createState();

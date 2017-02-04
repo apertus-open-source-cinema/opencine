@@ -13,27 +13,12 @@
 #include <Hash/xxHashAdapter.h>
 #include "Task/HashCheckTask.h"
 
-
-// TODO: Consider further states, like "Aborted" to be able to resume transfer, e.g. after user intervention
-enum class TransferState
-{
-	Failed,
-	Successful
-};
-
-// TODO:
-struct FileTransferInfo
-{
-	TransferState state;
-};
-
 // TODO: Refactor by moving to more suitable location and possibly renaming, possible location OCCore/Service
 // Note: std::string is used instead of QString, see previous note
 class IDriveTransferService : public OCService
 {
 	Q_OBJECT
 
-	std::queue<FileTransferInfo> _fileList;
 
 public:
 	IDriveTransferService(OCEventBus* bus) : OCService(bus)
@@ -50,6 +35,10 @@ public:
 
 class DriveTransferService : public IDriveTransferService
 {
+	Q_OBJECT
+	
+	std::vector<FileTransferInfo> fileList;
+
 public:
 	DriveTransferService(OCEventBus* bus) : IDriveTransferService(bus)
 	{
@@ -76,10 +65,25 @@ public:
 		// TODO: Conversion is necessary at the moment, as arguments are not polymorphic yet
 		const StartDriveTransferEvent transferEvent = dynamic_cast<const StartDriveTransferEvent&>(event);
 
-		DriveTransfer* driveTransfer = new DriveTransfer(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths());
+
+		EnumerateFiles(QString::fromStdString(transferEvent.GetSourcePath()), &fileList);
+
+		ReplicateFolderStructure(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths().at(0));
+
+		DriveTransfer* driveTransfer = new DriveTransfer(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths(), fileList);
 
 		RegisterNewTaskEvent newTaskEvent(driveTransfer);
 		GetEventBus()->FireEvent<RegisterNewTaskEvent>(newTaskEvent);
+
+		QThread* thread = thread = new QThread();
+		driveTransfer->moveToThread(thread);
+		connect(thread, SIGNAL(started()), driveTransfer, SLOT(Execute()));
+		connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));		
+		qRegisterMetaType<int64_t>("int64_t");
+		connect(driveTransfer, SIGNAL(FileTransfered(int, int64_t)), this, SLOT(FileTransfered(int, int64_t)));
+		connect(driveTransfer, SIGNAL(TransferFinished()), this, SLOT(TransferFinished()));
+		thread->start();
+
 
 		//TODO: Implement steps
 		//Step 1: Connect to FileCopied() signal of the transfer task
@@ -108,11 +112,8 @@ public:
 
 
 		//std::shared_ptr<ITask> hashCheckTask = std::make_shared<HashCheckTask>();
-		ITask* hashCheckTask = new HashCheckTask("E:/Temp/OC_COPY/ARRI/C001C005_140702_R3VJ.mov");
-		QThread* thread = new QThread();
-		hashCheckTask->moveToThread(thread);
-		connect(thread, SIGNAL(started()), hashCheckTask, SLOT(Execute()));
-		thread->start();
+
+
 
 
 		//driveTransfer.Execute(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths());
@@ -143,8 +144,63 @@ public:
 	}
 
 	// Used to enumerate files in source folder, usually source drive
-	void EnumerateFiles(QString path)
+	void EnumerateFiles(QString path, std::vector<FileTransferInfo>* fileList)
 	{
+		QDir dir(path);
+		QDirIterator files(path, QDir::NoDotAndDotDot | QDir::System | QDir::Hidden | QDir::Files, QDirIterator::Subdirectories);
+
+		while (files.hasNext())
+		{
+			files.next();
+
+			FileTransferInfo fileInfo;
+			fileInfo.FileName = files.fileName().toLatin1();
+			QString relativeFolder = dir.relativeFilePath(files.filePath());
+			int relativePathLength = relativeFolder.length() - fileInfo.FileName.length();
+			relativeFolder = relativeFolder.left(relativePathLength);
+			fileInfo.RelativeFolderPath = relativeFolder.toStdString(); //files.fileInfo().path().toLatin1();
+			fileList->push_back(fileInfo);
+
+			//int i = 0;
+			//std::string fileName = files.fileName().toStdString();
+			qDebug(files.fileName().toLatin1());// std::cout << fileName << std::endl;
+			qDebug(files.filePath().toLatin1());
+			qDebug(files.fileInfo().path().toLatin1());
+			qDebug(dir.relativeFilePath(files.filePath()).toLatin1());
+
+
+			//QString relativePath = directories.filePath();
+			//relativePath = relativePath.mid(static_cast<int>(rootPath.length()));
+			//QDir().mkdir(QString::fromStdString(targetPath) + "/" + relativePath);
+		}
+	}
+
+	private slots:
+	void FileTransfered(int index, int64_t checksum)
+	{
+		fileList.at(index).Checksum = checksum;
+	}
+
+	void TransferFinished()
+	{
+		for (FileTransferInfo transferInfo : fileList)
+		{
+			// CHECKSUM!!!
+			std::string filePath = "E:/Temp/OC_COPY/" + transferInfo.RelativeFolderPath + transferInfo.FileName;
+			HashCheckTask* hashCheckTask = new HashCheckTask(/*transferEvent.GetDestinationPaths().at(0)*/ filePath);
+			RegisterNewTaskEvent hashTaskEvent(hashCheckTask);
+			GetEventBus()->FireEvent<RegisterNewTaskEvent>(hashTaskEvent);
+			QThread* thread = new QThread();
+			hashCheckTask->moveToThread(thread);
+			connect(thread, SIGNAL(started()), hashCheckTask, SLOT(Execute()));
+			connect(hashCheckTask, SIGNAL(HashChecked(int64_t)), this, SLOT(HashChecked(int64_t)));
+			thread->start();
+		}
+	}
+
+	void HashChecked(int64_t checksum)
+	{
+		int i = 0;
 	}
 };
 
