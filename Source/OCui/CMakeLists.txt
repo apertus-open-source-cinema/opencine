@@ -21,7 +21,14 @@ INCLUDE_DIRECTORIES("${OCCore_SOURCE_DIR}")
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES} ${UI_FILES_MOC} ${QML_FILES})
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCCore)
+FIND_LIBRARY(QTAV_LIB  NAMES QtAV HINTS "${CMAKE_BINARY_DIR}/3rdParty/QtAV/src/QtAV-build/lib/" NO_DEFAULT_PATH)
+FIND_LIBRARY(QTAVWIDGETS_LIB NAMES QtAVWidgets HINTS "${CMAKE_BINARY_DIR}/3rdParty/QtAV/src/QtAV-build/lib/")
+message(STATUS "QtAV: ${QTAV_LIB}")
+message(STATUS "QtAVWidgets: ${QTAVWIDGETS_LIB}")
+
+LINK_DIRECTORIES("../../3rdParty/QtAV/src/QtAV-build/lib/")
+
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCCore ${QTAV_LIB} ${QTAVWIDGETS_LIB})
 
 include(GenerateExportHeader)
 string(TOUPPER "${PROJECT_NAME}_EXPORT" EXPORT_NAME)
@@ -35,22 +42,21 @@ FILE(COPY "Themes" DESTINATION ${CMAKE_BINARY_DIR}/bin)
 FILE(COPY "Resources" DESTINATION ${CMAKE_BINARY_DIR}/bin)
 FILE(COPY "Fonts" DESTINATION ${CMAKE_BINARY_DIR}/bin)
 
-
 #set_property( GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(_src_root_path ${CMAKE_CURRENT_SOURCE_DIR})
 
 file(
-	GLOB_RECURSE _source_list 
-	LIST_DIRECTORIES false
-	"${_src_root_path}/*.c*"
-	"${_src_root_path}/*.h*"
-	"${_src_root_path}/*.ui*"
-)
+    GLOB_RECURSE _source_list
+    LIST_DIRECTORIES false
+    "${_src_root_path}/*.c*"
+    "${_src_root_path}/*.h*"
+    "${_src_root_path}/*.ui*"
+    )
 
 foreach(_source IN ITEMS ${_source_list})
-	get_filename_component(_source_path "${_source}" PATH)
-	file(RELATIVE_PATH _source_path_rel "${_src_root_path}" "${_source_path}")
-	string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-	source_group("${_group_path}" FILES "${_source}")
+    get_filename_component(_source_path "${_source}" PATH)
+    file(RELATIVE_PATH _source_path_rel "${_src_root_path}" "${_source_path}")
+    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
+    source_group("${_group_path}" FILES "${_source}")
 endforeach()

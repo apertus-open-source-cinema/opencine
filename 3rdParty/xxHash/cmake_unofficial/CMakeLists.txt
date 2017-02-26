@@ -6,6 +6,9 @@ project(xxhash)
 set(XXHASH_LIB_VERSION "0.42.0")
 set(XXHASH_LIB_SOVERSION "0")
 
+# Workaround for compiler request for "-fPIC"
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 option(BUILD_XXHSUM "Build the xxhsum binary" OFF)
 
 # Modified xxHash CMake script to reduce unnecessary builds

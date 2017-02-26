@@ -1,5 +1,7 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.5)
 project(ApertusOpenCine)
+
+include(ExternalProject)
 
 CMAKE_POLICY(SET CMP0020 NEW)
 
@@ -11,8 +13,13 @@ if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 endif()
 
 #if(WIN32)
-        #ADD_DEFINITIONS(-DWIN32)
+#ADD_DEFINITIONS(-DWIN32)
 #endif()
+
+# Simplifies configuration under Windows, have to be checked in Linux, if something similar is required when not using QtCreator
+IF(WIN32)
+SET( CMAKE_PREFIX_PATH "C:/Qt/5.7/msvc2015_64/" CACHE FILEPATH "Qt path, e.g. C:/Qt/5.7/msvc2015_64/" )
+ENDIF()
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -23,6 +30,8 @@ SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 SET( CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+
+
 
 #Includes
 #include_directories("${PROJECT_SOURCE_DIR}/3rdParty/LibRaw")
@@ -35,6 +44,38 @@ SET(ENABLE_EXAMPLES OFF CACHE BOOL "LibRaw: Build shared library (without exampl
 #add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/LibRaw)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/xxHash/cmake_unofficial)
 add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/MemoryPool)
+
+#ExternalProject_Add(FFMPEG
+#PREFIX 3rdParty/FFMPEG
+#GIT_REPOSITORY "https://github.com/FFmpeg/FFmpeg.git"
+#GIT_TAG "master"
+#INSTALL_COMMAND ""
+#CONFIGURE_COMMAND ""
+#BUILD_COMMAND ""
+#GIT_SHALLOW 1 )
+
+#ExternalProject_Add(QtAV
+#                   PREFIX 3rdParty/QtAV
+#                  GIT_REPOSITORY "https://github.com/wang-bin/QtAV.git"
+#                 GIT_TAG "master"
+#                INSTALL_COMMAND ""
+#               UPDATE_COMMAND "")
+#GIT_SHALLOW 1
+#CMAKE_ARGS -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH} -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/bin)
+
+#INCLUDE_DIRECTORIES({$QtAV_INCLUDE})
+#message(STATUS $QtAV_SOURCE_DIR)
+
+ExternalProject_Add(QtAV
+    PREFIX 3rdParty/QtAV
+    GIT_REPOSITORY "https://github.com/wang-bin/QtAV.git"
+    GIT_TAG "master"
+    INSTALL_COMMAND ""
+    UPDATE_COMMAND "")
+
+include_directories(${PROJECT_BINARY_DIR}/3rdParty/QtAV/src/QtAV/src/)
+include_directories(${PROJECT_BINARY_DIR}/3rdParty/QtAV/src/QtAV/widgets/)
+message(STATUS ${PROJECT_BINARY_DIR}/3rdParty/QtAV/src/QtAV/src/)
 
 #Projects
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OpenCine/)

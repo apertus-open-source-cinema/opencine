@@ -12,7 +12,7 @@ Rectangle {
 
     //property alias clipResolution: text3.text
     property string clipName: "" //text3.text
-    //property string clipPath: "" //thumbnailImage.source
+    property string clipPath: "" //thumbnailImage.source
     property string altSource: "thumbnail_placeholder.png"
 
     FontLoader {
@@ -38,7 +38,7 @@ Rectangle {
         Image {
             id: thumbnailImage
             anchors.fill: parent
-            source: "image://OCthumb/" + clipName
+            source: "image://OCthumb/" + clipPath + clipName
             sourceSize.width: 200
             sourceSize.height: 150
             enabled: true

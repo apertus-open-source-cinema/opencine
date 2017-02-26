@@ -4,7 +4,7 @@
 #include <iostream>
 
 HashCheckTask::HashCheckTask(std::string fileName) :
-	_hashGenerator(std::make_unique<xxHashAdapter>()),
+    _hashGenerator(new xxHashAdapter()),
 	_fileName(fileName)
 {
 }

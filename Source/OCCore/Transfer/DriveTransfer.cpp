@@ -3,7 +3,7 @@
 #include "Log/Logger.h"
 #include <QStorageInfo>
 
-#include <Hash\xxHashAdapter.h>
+#include "Hash/xxHashAdapter.h"
 
 //void DriveTransfer::ReplicateFolderStructure(std::string& rootPath, std::string& targetPath) const
 //{
@@ -76,7 +76,7 @@ void DriveTransfer::TransferFile(QString sourcePath, QString targetPath, int64_t
 	int totalRead = 0;
 	int progress = 0;
 
-	const std::unique_ptr<IHashGenerator> hashGenerator = std::make_unique<xxHashAdapter>();
+    const std::unique_ptr<IHashGenerator> hashGenerator(new xxHashAdapter());
 	hashGenerator->Initialize();
 
 	// TODO: Error handling

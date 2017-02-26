@@ -3,6 +3,9 @@
 
 #include <QWidget>
 
+#include <QtAV/QtAV>
+#include <QtAVWidgets/QtAVWidgets>
+
 #include "OCui_export.h"
 
 namespace Ui {
@@ -35,15 +38,30 @@ private:
 	Ui::PlaybackSlider *ui;
 	bool _advancedMode;
 
+    QtAV::AVPlayer* player;
+
+    void SetupPlayer();
+
 	private slots:
 	//void OnSessionChanged(OCSession* session);
 	//void OnFrameChanged(unsigned int frameNumber, OCFrame* frame);
 	//void OnSliderMoved(int frameNumber);
 
-	//void OnPlayButtonToggled(bool toggled);
+    void OnPlayButtonToggled(bool toggled);
 	//void OnPlayRevButtonToggled(bool toggled);
 
-	//void OnStopClicked();
+    void OnStopClicked();
+
+    void PrevFrame();
+    void NextFrame();
+
+private slots:
+    void PauseAfterLoad();
+    void UpdateSlider(qint64 currentPos);
+
+    void OnJumpStartClicked();
+    void OnJumpEndClicked();
 };
 
 #endif //PLAYBACKSLIDER_H
+

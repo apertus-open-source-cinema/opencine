@@ -127,7 +127,7 @@ public:
 
 	//void TestThread(DriveTransfer& driveTransfer) const;
 
-	void ReplicateFolderStructure(std::string& rootPath, std::string& targetPath) const
+    void ReplicateFolderStructure(std::string rootPath, std::string targetPath) const
 	{
 		QDir().mkdir(QString::fromStdString(targetPath));
 
@@ -154,7 +154,7 @@ public:
 			files.next();
 
 			FileTransferInfo fileInfo;
-			fileInfo.FileName = files.fileName().toLatin1();
+            fileInfo.FileName = files.fileName().toStdString();//.toLatin1();
 			QString relativeFolder = dir.relativeFilePath(files.filePath());
 			int relativePathLength = relativeFolder.length() - fileInfo.FileName.length();
 			relativeFolder = relativeFolder.left(relativePathLength);
