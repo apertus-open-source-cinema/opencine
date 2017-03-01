@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.5)
 PROJECT(OCBackup)
 
 CMAKE_POLICY(SET CMP0020 NEW)

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.5)
 PROJECT(OCui)
 
 CMAKE_POLICY(SET CMP0020 NEW)
@@ -21,14 +21,16 @@ INCLUDE_DIRECTORIES("${OCCore_SOURCE_DIR}")
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES} ${UI_FILES_MOC} ${QML_FILES})
 
-FIND_LIBRARY(QTAV_LIB  NAMES QtAV HINTS "${CMAKE_BINARY_DIR}/3rdParty/QtAV/src/QtAV-build/lib/" NO_DEFAULT_PATH)
-FIND_LIBRARY(QTAVWIDGETS_LIB NAMES QtAVWidgets HINTS "${CMAKE_BINARY_DIR}/3rdParty/QtAV/src/QtAV-build/lib/")
-message(STATUS "QtAV: ${QTAV_LIB}")
-message(STATUS "QtAVWidgets: ${QTAVWIDGETS_LIB}")
+ExternalProject_Get_Property(QtAV_project BINARY_DIR)
 
-LINK_DIRECTORIES("../../3rdParty/QtAV/src/QtAV-build/lib/")
+#message(STATUS "QtAV: ${QTAV_LIB}")
+#message(STATUS "QtAVWidgets: ${QTAVWIDGETS_LIB}")
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCCore ${QTAV_LIB} ${QTAVWIDGETS_LIB})
+message(WARNING "QtAV BINARY_DIR: ${BINARY_DIR}")
+LINK_DIRECTORIES(${BINARY_DIR}/lib/)
+
+add_dependencies(${PROJECT_NAME} QtAV_project)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCCore ${BINARY_DIR}/lib/libQtAV.so ${BINARY_DIR}/lib/libQtAVWidgets.so)
 
 include(GenerateExportHeader)
 string(TOUPPER "${PROJECT_NAME}_EXPORT" EXPORT_NAME)

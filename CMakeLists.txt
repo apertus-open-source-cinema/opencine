@@ -17,9 +17,11 @@ endif()
 #endif()
 
 # Simplifies configuration under Windows, have to be checked in Linux, if something similar is required when not using QtCreator
-IF(WIN32)
-SET( CMAKE_PREFIX_PATH "C:/Qt/5.7/msvc2015_64/" CACHE FILEPATH "Qt path, e.g. C:/Qt/5.7/msvc2015_64/" )
-ENDIF()
+#IF(WIN32)
+#    SET( CMAKE_PREFIX_PATH "C:/Qt/5.7/msvc2015_64/" CACHE FILEPATH "Qt path, e.g. C:/Qt/5.7/msvc2015_64/" )
+#ELSE(UNIX)
+#    SET( CMAKE_PREFIX_PATH "$HOME/Qt/5.8/gcc_64/lib/cmake" CACHE FILEPATH "Qt path, e.g. $HOME/Qt/5.8/gcc_64/lib/cmake/Qt5" )
+#ENDIF()
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -66,16 +68,22 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/MemoryPool)
 #INCLUDE_DIRECTORIES({$QtAV_INCLUDE})
 #message(STATUS $QtAV_SOURCE_DIR)
 
-ExternalProject_Add(QtAV
-    PREFIX 3rdParty/QtAV
-    GIT_REPOSITORY "https://github.com/wang-bin/QtAV.git"
-    GIT_TAG "master"
-    INSTALL_COMMAND ""
-    UPDATE_COMMAND "")
+SET(QTDIR ${CMAKE_PREFIX_PATH})
 
-include_directories(${PROJECT_BINARY_DIR}/3rdParty/QtAV/src/QtAV/src/)
-include_directories(${PROJECT_BINARY_DIR}/3rdParty/QtAV/src/QtAV/widgets/)
-message(STATUS ${PROJECT_BINARY_DIR}/3rdParty/QtAV/src/QtAV/src/)
+message(WARNING "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+ExternalProject_Add(QtAV_project
+                    PREFIX 3rdParty/QtAV
+                    GIT_REPOSITORY "https://github.com/wang-bin/QtAV.git"
+                    GIT_TAG "master"
+                    UPDATE_COMMAND ""
+                    INSTALL_COMMAND ""
+                    CMAKE_ARGS -DQTDIR=${QTDIR} -DBUILD_EXAMPLES=OFF)
+
+
+ExternalProject_Get_Property(QtAV_project INSTALL_DIR)
+include_directories(${INSTALL_DIR}/src/QtAV/src/)
+message(WARNING "QTAV_DIR: ${INSTALL_DIR}/src/QtAV/src/")
+include_directories(${INSTALL_DIR}/src/QtAV/widgets/)
 
 #Projects
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OpenCine/)
