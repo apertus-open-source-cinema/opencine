@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.5)
 PROJECT(OCui)
 
 CMAKE_POLICY(SET CMP0020 NEW)
@@ -21,7 +21,16 @@ INCLUDE_DIRECTORIES("${OCCore_SOURCE_DIR}")
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES} ${UI_FILES_MOC} ${QML_FILES})
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCCore)
+ExternalProject_Get_Property(QtAV_project BINARY_DIR)
+
+#message(STATUS "QtAV: ${QTAV_LIB}")
+#message(STATUS "QtAVWidgets: ${QTAVWIDGETS_LIB}")
+
+message(WARNING "QtAV BINARY_DIR: ${BINARY_DIR}")
+LINK_DIRECTORIES(${BINARY_DIR}/lib/)
+
+add_dependencies(${PROJECT_NAME} QtAV_project)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCCore ${BINARY_DIR}/lib/libQtAV.so ${BINARY_DIR}/lib/libQtAVWidgets.so)
 
 include(GenerateExportHeader)
 string(TOUPPER "${PROJECT_NAME}_EXPORT" EXPORT_NAME)
@@ -35,18 +44,17 @@ FILE(COPY "Themes" DESTINATION ${CMAKE_BINARY_DIR}/bin)
 FILE(COPY "Resources" DESTINATION ${CMAKE_BINARY_DIR}/bin)
 FILE(COPY "Fonts" DESTINATION ${CMAKE_BINARY_DIR}/bin)
 
-
 #set_property( GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(_src_root_path ${CMAKE_CURRENT_SOURCE_DIR})
 
 file(
-    GLOB_RECURSE _source_list 
+    GLOB_RECURSE _source_list
     LIST_DIRECTORIES false
     "${_src_root_path}/*.c*"
     "${_src_root_path}/*.h*"
-	"${_src_root_path}/*.ui*"
-)
+    "${_src_root_path}/*.ui*"
+    )
 
 foreach(_source IN ITEMS ${_source_list})
     get_filename_component(_source_path "${_source}" PATH)

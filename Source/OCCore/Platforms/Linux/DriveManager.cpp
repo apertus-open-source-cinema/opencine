@@ -23,9 +23,9 @@ void DriveManager::RequestDriveList()
     UpdateDriveList();
 }
 
-std::vector<DriveInfo> DriveManager::GetRemovableDrives()
+std::vector<PathInfo> DriveManager::GetRemovableDrives()
 {
-    std::vector<DriveInfo> availableDrives;
+    std::vector<PathInfo> availableDrives;
 
     QDirIterator directories(mediaFolder, QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::NoIteratorFlags);
 
@@ -33,14 +33,14 @@ std::vector<DriveInfo> DriveManager::GetRemovableDrives()
     {
         directories.next();
 
-        DriveInfo driveInfo;
-        driveInfo.DriveName = directories.fileName().toStdString();
+        PathInfo PathInfo;
+        PathInfo.DriveName = directories.fileName().toStdString();
 
-        driveInfo.DrivePath = QString(mediaFolder + directories.fileName()).toStdString();
+        PathInfo.DrivePath = QString(mediaFolder + directories.fileName()).toStdString();
 
-        RetrieveDriveInfo(driveInfo);
+        RetrievePathInfo(PathInfo);
 
-        availableDrives.push_back(driveInfo);
+        availableDrives.push_back(PathInfo);
     }
 
     return availableDrives;
@@ -51,19 +51,19 @@ void DriveManager::UpdateDriveList()
     emit DriveListChanged(GetRemovableDrives());
 }
 
-void DriveManager::RetrieveDriveInfo(DriveInfo& driveInfo)
+void DriveManager::RetrievePathInfo(PathInfo& PathInfo)
 {
     //HACK: Used to to give Linux some time while mounting new drives is in progress
     usleep(500000);
 
     struct statvfs64 fiData;
 
-    if(statvfs64(driveInfo.DrivePath.c_str(), &fiData) < 0)
+    if(statvfs64(PathInfo.DrivePath.c_str(), &fiData) < 0)
     {
         return;
     }
 
-    driveInfo.TotalSpace = (fiData.f_blocks * fiData.f_frsize) / 1024 / 1024;
-    driveInfo.UsedSpace = driveInfo.TotalSpace - ((fiData.f_bfree * fiData.f_frsize) / 1024 / 1024);
-    driveInfo.SpaceUnit = "MB";
+    PathInfo.TotalSpace = (fiData.f_blocks * fiData.f_frsize) / 1024 / 1024;
+    PathInfo.UsedSpace = PathInfo.TotalSpace - ((fiData.f_bfree * fiData.f_frsize) / 1024 / 1024);
+    PathInfo.SpaceUnit = "MB";
 }

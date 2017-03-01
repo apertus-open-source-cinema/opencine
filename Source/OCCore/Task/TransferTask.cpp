@@ -1,6 +1,6 @@
 #include "TransferTask.h"
 
-inline TransferTask::TransferTask()
-{
-
-}
+//inline TransferTask::TransferTask()
+//{
+//
+//}

@@ -2,17 +2,22 @@
 #define IDATATRANSFER_H
 
 #include <string>
+#include "Task/ITask.h"
 
-class IDataTransfer
+class IDataTransfer : public ITask
 {
 protected:
-	std::string _sourcePath;
-	std::string _targetPath;
+	//std::string _sourcePath;
+	//std::string _targetPath;
 
 public:
-	IDataTransfer(std::string sourcePath = "", std::string targetPath = "") :
-		_sourcePath(sourcePath),
-		_targetPath(targetPath)
+	virtual ~IDataTransfer()
+	{
+	}
+
+	IDataTransfer(std::string sourcePath = "", std::string targetPath = "") //:
+		//_sourcePath(sourcePath),
+		//_targetPath(targetPath)
 	{
 	}
 
@@ -26,7 +31,7 @@ public:
 	//        return _targetPath;
 	//    }
 
-	virtual void StartTransfer() = 0;
+	//virtual void StartTransfer() = 0;
 	//virtual int GetCount() = 0;
 
 //signals:

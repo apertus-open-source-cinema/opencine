@@ -1,30 +1,34 @@
 #ifndef DESTINATIONSCONTROL_H
 #define DESTINATIONSCONTROL_H
 
+#include <QQmlContext>
 #include <QWidget>
 
+//#include "../Data/DestinationsListItem.h"
+
 namespace Ui {
-	class DestinationsControl;
+    class DestinationsControl;
 }
 
 class DestinationsControl : public QWidget
 {
-	Q_OBJECT
+    Q_OBJECT
 
-		std::vector<QString> _destinationList;
+    QList<QObject*> _destinationList;
+    QQmlContext* _qmlContext = nullptr;
 
-	void SetupSignals();
+    void SetupSignals();
 
 public:
-	explicit DestinationsControl(QWidget *parent = 0);
-	~DestinationsControl();
-	void SetDestinationList(std::vector<QString> destinationList);
+    explicit DestinationsControl(QWidget *parent = 0);
+    ~DestinationsControl();
+    void SetDestinationList(QList<QObject *> destinationList);
 
 signals:
-	void AddDestinationClicked();
+    void AddDestinationClicked();
 
 private:
-	Ui::DestinationsControl *ui;
+    Ui::DestinationsControl *ui;
 };
 
 #endif // DESTINATIONSCONTROL_H

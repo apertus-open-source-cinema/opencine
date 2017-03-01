@@ -4,12 +4,22 @@
 #include <QTreeView>
 #include <QDebug>
 #include <QFileInfoList>
-#include <QQmlContext>
+#include <QStorageInfo>
 
 #include <DriveManager.h>
 
-BackupPresenter::BackupPresenter(IBackupView &view) :
-    _view(&view)
+#include "Services/DriveTransferService.h"
+
+#include <Controls/ProgressDialog.h>
+
+#include <Events/EventBus.h>
+#include "Log/Logger.h"
+#include "Task/TaskManager.h"
+#include "Transfer/DriveTransfer.h"
+
+BackupPresenter::BackupPresenter(IBackupView& view, OCEventBus* eventBus) : BasePresenter(eventBus),
+    _view(&view),
+    _currentDrive(0)
 {
     _driveManager = new DriveManager();
 
@@ -20,22 +30,62 @@ BackupPresenter::BackupPresenter(IBackupView &view) :
 
 void BackupPresenter::SetupSignals() const
 {
-    connect(_driveManager, SIGNAL(DriveListChanged(std::vector<DriveInfo>)), this, SLOT(DriveListChanged(std::vector<DriveInfo>)));
+    connect(_driveManager, SIGNAL(DriveListChanged(std::vector<PathInfo>)), this, SLOT(DriveListChanged(std::vector<PathInfo>)));
     connect(_view, SIGNAL(DriveSelectionChanged(int)), this, SLOT(DriveSelectionChanged(int)));
 
     connect(_view, &IBackupView::AddDestinationClicked, this, &BackupPresenter::AddDestination);
-
     connect(_view, &IBackupView::FolderSelectionChanged, this, &BackupPresenter::FolderSelectionChanged);
-
     connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
 }
 
-void BackupPresenter::StartTransfer() const
+void BackupPresenter::receive(const OCEvent& event) const
 {
-    //emit StartTransferSig("/media/andi/OC_TEST_MSD");
+    int j = 0;
+
+    j++;
+
+    int c = j;
+
+    OC_LOG_INFO("BackupPresenter received EventA -> 1");
 }
 
-void BackupPresenter::DriveListChanged(std::vector<DriveInfo> driveList)
+
+void receive2(const OCEvent& event)
+{
+    int j = 0;
+
+    j++;
+
+    int c = j;
+
+    OC_LOG_INFO("BackupPresenter received EventA -> 2");
+}
+
+void BackupPresenter::StartTransfer()
+{
+    StartDriveTransferEvent transferEvent;
+
+    if(_driveList.empty())
+    {
+        return;
+    }
+
+    transferEvent.SetSourcePath(_driveList[_currentDrive].DrivePath);
+    std::vector<std::string> destinationPaths;
+
+    for (PathInfo destination : _destinationList)
+    {
+        destinationPaths.push_back(destination.Path);
+    }
+
+    transferEvent.SetDestinationsPaths(destinationPaths);
+    GetEventBus()->FireEvent<StartDriveTransferEvent>(transferEvent);
+
+    //ProgressDialog* progressDialog = new ProgressDialog();
+    //progressDialog->show();
+}
+
+void BackupPresenter::DriveListChanged(std::vector<PathInfo> driveList)
 {
     _driveList = driveList;
     _view->SetDriveList(driveList);
@@ -66,12 +116,12 @@ void BackupPresenter::DriveSelectionChanged(int driveIndex)
     QString folderPath = QString::fromStdString(_driveList.at(driveIndex).DrivePath);
     _view->SetCurrentFolder(folderPath);
 
+    _currentDrive = driveIndex;
+
     FolderSelectionChanged(folderPath);
 }
 
-std::vector<QString> _destinationList;
-
-void BackupPresenter::AddDestination() const
+void BackupPresenter::AddDestination()
 {
     QFileDialog dialog;
     dialog.setFileMode(QFileDialog::Directory);
@@ -79,15 +129,29 @@ void BackupPresenter::AddDestination() const
     dialog.setViewMode(QFileDialog::Detail);
     int result = dialog.exec();
 
-    QString directory;
-    if (result)
+    if (!result)
     {
-        directory = dialog.selectedFiles()[0];
-        _destinationList.push_back(directory);
-
-        _view->SetDestinationList(_destinationList);
-        qDebug() << directory;
+        return;
     }
+
+    QStorageInfo storage(dialog.selectedFiles()[0]);
+
+    PathInfo pathInfo;
+
+    QString path = dialog.directory().path();
+
+    pathInfo.RelativePath = path.right(path.length() - storage.rootPath().length()).toStdString();
+    if (pathInfo.RelativePath == "")
+    {
+        pathInfo.RelativePath = "/";
+    }
+
+    pathInfo.Path = path.toStdString();
+    pathInfo.DriveName = storage.displayName().toStdString();
+    pathInfo.DrivePath = storage.rootPath().toStdString();
+
+    _destinationList.push_back(pathInfo);
+    _view->SetDestinationList(_destinationList);
 }
 
 void BackupPresenter::FolderSelectionChanged(QString folderPath) const
@@ -95,12 +159,13 @@ void BackupPresenter::FolderSelectionChanged(QString folderPath) const
     QDir dir(folderPath);
     QFileInfoList fileList = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Files);
 
-    std::vector<QString> fileNameList;
+    std::vector<FileInfo> fileInfoList;
 
     for (QFileInfo fileInfo : fileList)
     {
-        fileNameList.push_back(fileInfo.filePath());
+        FileInfo info(fileInfo.path(), fileInfo.fileName(), fileInfo.size());
+        fileInfoList.push_back(info);
     }
 
-    _view->SetItemList(fileNameList);
+    _view->SetItemList(fileInfoList);
 }

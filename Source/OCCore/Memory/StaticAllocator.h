@@ -26,7 +26,7 @@ class OCCORE_EXPORT RawPoolAllocator : public IAllocator
 	std::unordered_map<size_t, size_t> _pointerMap;	//pointer, size
 
 public:
-	RawPoolAllocator(size_t pageSize);
+	explicit RawPoolAllocator(size_t pageSize);
 	~RawPoolAllocator();
 
 	void* Allocate(size_t size/*, size_t align*/) override;

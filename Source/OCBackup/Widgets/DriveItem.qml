@@ -12,7 +12,7 @@ Rectangle
     width: 220
 
     property string driveName: model.driveName ? model.driveName : "?";
-    property string driveLetter: model.driveLetter ? model.driveLetter : "?";
+    property string drive: model.drive ? model.drive : "?";
     property real usedSpace: model.usedSpace ? model.usedSpace : -1;
     property real totalSpace: model.totalSpace ? model.totalSpace : -1;
     property string spaceUnit: model.spaceUnit ? model.spaceUnit : "?";
@@ -21,10 +21,10 @@ Rectangle
 	ExclusiveGroup { id: tabPositionGroup }
 
     Text {
-        id: driveInfo
+        id: pathInfo
         y: 3
         color: "#ffffff"
-        text: driveName + " (" + driveLetter + ")"
+        text: driveName + " (" + drive + ")"
         anchors.right: driveSize.left
         anchors.rightMargin: 10
         clip: false

@@ -10,7 +10,8 @@
 #include <QtQml/QQmlComponent>
 #include <QItemSelection>
 
-#include "../Interfaces/IBackupView.h"
+//#include "Data/DestinationsListItem.h"
+#include "Interfaces/IBackupView.h"
 
 class IBackupPresenter;
 
@@ -23,15 +24,15 @@ class BackupView : public IBackupView
 {
 	Q_OBJECT
 
-		Ui::BackupView *ui;
+	Ui::BackupView *ui;
 	QQmlContext* _qmlContext;
 
 	QStringListModel* _driveListModel;
 	std::shared_ptr<QFileSystemModel> _folderTreeModel;
 
-	QList<QObject*>* dataList;
-	QList<QObject*>*  _fileList;
-	QList<QString>*  _destinationList;
+	QList<QObject*> dataList;
+	QList<QObject*>* _fileList;
+	QList<QObject*> _destinationList;
 
 	void SetupDriveView();
 	void SetupFolderView();
@@ -42,16 +43,16 @@ public:
 	explicit BackupView(IBackupPresenter* presenter = nullptr);
 	~BackupView();
 
-	private slots:
+private slots:
 	void TransferButtonClicked();
 	void CurrentDriveChanged(int currentDrive);
 	void CurrentFolderChanged(const QItemSelection& selected, const QItemSelection& deselected);
 
 public:
 	void SetCurrentFolder(QString folderPath) override;
-	void SetDriveList(std::vector<DriveInfo> driveList) override;
-	void SetItemList(std::vector<QString> fileList) override;
-	void SetDestinationList(std::vector<QString> destinationList) override;
+	void SetDriveList(std::vector<PathInfo> driveList) override;
+	void SetItemList(std::vector<FileInfo> fileList) override;
+	void SetDestinationList(std::vector<PathInfo> destinationList) override;
 };
 
 #endif // OCBACKUPLAYOUT_H

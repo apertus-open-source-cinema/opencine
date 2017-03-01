@@ -6,6 +6,8 @@
 #include <QObject>
 
 #include "OCui_export.h"
+#include "Controls/ProgressDialog.h"
+#include "Presenters/ProgressDialogPresenter.h"
 
 class QApplication;
 class MainWindow;
@@ -18,19 +20,19 @@ namespace OCui
 		std::shared_ptr<QApplication> _application;
 		std::shared_ptr<MainWindow> _mainWindow;
 
-		void SetStyle(QApplication &app);
+		void SetStyle() const;
 
 	public:
 		GUIApplication(int& argc, char** argv, QString moduleName);
 
-		void Show();
-		void ShowMaximized();
+		void Show() const;
+		void ShowMaximized() const;
 
-		void SetWindowOptions(bool resizeable);
+		void SetWindowOptions(bool resizeable) const;
 
-		void SetLayout(QWidget& widget);
+		void SetLayout(QWidget& widget) const;
 
-		int Run();
+		int Run() const;
 	};
 }
 

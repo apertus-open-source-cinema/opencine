@@ -1,9 +1,0 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
-PROJECT(EventBus)
-
-CMAKE_POLICY(SET CMP0020 NEW)
-
-file(GLOB SRC_FILES "src/event/*.hpp" "src/event/*.cpp"
-)
-
-add_library(${PROJECT_NAME} STATIC ${SRC_FILES})

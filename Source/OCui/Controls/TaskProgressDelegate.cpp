@@ -3,78 +3,71 @@
 #include <QApplication>
 #include <QPainter>
 #include <QProgressBar>
+#include <QHBoxLayout>
 
-TaskProgressDelegate::TaskProgressDelegate(QWidget * parent) : QStyledItemDelegate(parent)
+TaskProgressDelegate::TaskProgressDelegate(QWidget* parent) : QStyledItemDelegate(parent),
+                                                              font(QApplication::font()),
+                                                              subFont(QApplication::font())
 {
+	_progressBar = new QProgressBar();
+
+	font.setBold(true);
+	subFont.setPointSize(font.pointSize() - 2);
+	_fontMetrics = new QFontMetrics(font);
 }
 
 TaskProgressDelegate::~TaskProgressDelegate()
 {
 }
 
-QSize TaskProgressDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const
+QSize TaskProgressDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-	//QIcon icon = qvariant_cast<QIcon>(index.data(IconRole));
-	//QSize iconsize = icon.actualSize(option.decorationSize);
-	QFont font = QApplication::font();
-	QFontMetrics fm(font);
-
-	return QSize(200, 70);// (QSize(iconsize.width(), iconsize.height() + fm.height() + 8));
-
+	return QSize(option.rect.width(), 70);
 }
 
-void TaskProgressDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
+void TaskProgressDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
+	// Draws default things, like focus rectangle
 	QStyledItemDelegate::paint(painter, option, index);
 
 	painter->save();
 
-	QFont font = QApplication::font();
-	QFont subFont = QApplication::font();
-	//font.setPixelSize(font.weight()+);
-	font.setBold(true);
-	subFont.setWeight(subFont.weight() - 5);
-	subFont.setPointSize(8);
-	QFontMetrics fm(font);
+	QString headerText = "?";
+	QString subText = "?";
 
-	//QIcon icon = qvariant_cast<QIcon>(index.data(IconRole));
-	QString headerText = qvariant_cast<QString>("Test123");
-	QString subText = qvariant_cast<QString>("SubText123");
-
-	//QSize iconsize = icon.actualSize(option.decorationSize);
+	QStringList values = index.model()->data(index).toStringList();
+	if (!values.empty())
+	{
+		headerText = values.at(0);
+		subText = values.at(1);
+	}
 
 	QRect headerRect = option.rect;
-	headerRect.setBottom(headerRect.bottom() / 2);
-	QRect subheaderRect = option.rect;
-	QRect iconRect = subheaderRect;
-
-	//iconRect.setRight(iconsize.width() + 30);
-	//iconRect.setTop(iconRect.top() + 5);
 	headerRect.setLeft(10);
-	subheaderRect.setLeft(10);
-	subheaderRect.setTop(headerRect.bottom() + 10);
 	headerRect.setTop(headerRect.top() + 10);
-	headerRect.setBottom(headerRect.top() + fm.height());
+	headerRect.setWidth(_fontMetrics->width(headerText + " | "));
+	headerRect.setBottom(headerRect.top() + _fontMetrics->height() + 5);
 
-	subheaderRect.setTop(headerRect.bottom() + 2);
-
-	//painter->drawPixmap(QPoint(iconRect.right()/2,iconRect.top()/2),icon.pixmap(iconsize.width(),iconsize.height()));
-	//painter->drawPixmap(QPoint(iconRect.left() + iconsize.width() / 2 + 2, iconRect.top() + iconsize.height() / 2 + 3), icon.pixmap(iconsize.width(), iconsize.height()));
+	QRect subheaderRect = option.rect;
+	subheaderRect.setTop(subheaderRect.top() + _fontMetrics->height() / 2);
+	subheaderRect.setLeft(headerRect.width() + 10);
 
 	painter->setFont(font);
-	painter->drawText(headerRect, headerText);
-
-
+	painter->drawText(headerRect, headerText + " | ");
 	painter->setFont(subFont);
-	painter->drawText(subheaderRect.left(), subheaderRect.top() + 17, subText);
+	painter->drawText(subheaderRect, subText);
 
-	painter->save();
-	painter->translate(option.rect.width() / 5, option.rect.y() + option.rect.height() / 2);
-	QProgressBar renderer;
-	renderer.resize(option.rect.size().width() / 5 * 4 - 10, option.rect.size().height());
-	renderer.setValue(35);
-	
-	renderer.render(painter);
+	painter->translate(10, headerRect.bottom() + 10);
+
+	// TODO: Replace by a new progress bar, which supports custom animations, e.g. for indeterminate state
+	_progressBar->resize(option.rect.size().width() - 20, option.rect.size().height());
+	_progressBar->setValue(values.at(2).toInt());
+	_progressBar->render(painter);
 
 	painter->restore();
+}
+
+QWidget* TaskProgressDelegate::createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+	return nullptr;
 }

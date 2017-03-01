@@ -7,20 +7,20 @@
 
 class OCCORE_EXPORT DriveManager : public IDriveManager
 {
-	Q_OBJECT
+    Q_OBJECT
 
-		std::vector<DriveInfo> GetRemovableDrives() override;
-	void EnumerateRemovableDrives(std::vector<std::string> availableDrives, std::vector<DriveInfo>& removableDrives);
+    std::vector<PathInfo> GetRemovableDrives() override;
+    void EnumerateRemovableDrives(std::vector<std::string> availableDrives, std::vector<PathInfo>& removableDrives);
 
-	public slots:
-	void UpdateDriveList();
+public slots:
+    void UpdateDriveList();
 
 public:
-	DriveManager();
-	~DriveManager() {}
+    DriveManager();
+    ~DriveManager() {}
 
-	void RequestDriveList() override;
-	void RetrieveDriveInfo(DriveInfo &driveInfo) override;
+    void RequestDriveList() override;
+    void RetrievePathInfo(PathInfo &PathInfo) override;
 };
 
 #endif //DRIVEMANAGER_H

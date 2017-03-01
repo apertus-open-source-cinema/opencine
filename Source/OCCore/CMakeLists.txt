@@ -20,14 +20,16 @@ endif()
 INCLUDE_DIRECTORIES("${MemoryPool_SOURCE_DIR}/C-11")
 
 file(GLOB SOURCE_FILES "*.cpp" "*.h"
-                       "Transfer/*.cpp" "Transfer/*.h"
-                       "MVP/*.cpp" "MVP/*.h"
-                       "API/*.cpp" "API/*.h"
-                       "Image/*.cpp" "Image/*.h"
-                       "Interfaces/*.cpp" "Interfaces/*.h"
-                       "Log/*.cpp" "Log/*.h"
-						"Task/*.cpp" "Task/*.h"
-						"Memory/*.cpp" "Memory/*.h")
+    "Transfer/*.cpp" "Transfer/*.h"
+    "MVP/*.cpp" "MVP/*.h"
+    "API/*.cpp" "API/*.h"
+    "Image/*.cpp" "Image/*.h"
+    "Interfaces/*.cpp" "Interfaces/*.h"
+    "Log/*.cpp" "Log/*.h"
+    "Task/*.cpp" "Task/*.h"
+    "Memory/*.cpp" "Memory/*.h"
+	"Events/*.cpp" "Events/*.h"
+	"Hash/*.cpp" "Hash/*.h")
 
 #file(GLOB HEADER_FILES "*.h")
 
@@ -43,14 +45,14 @@ endif()
 
 #SET(INCLUDE_DIRS "")
 #foreach (_headerFile ${HEADER_FILES})
-    #get_filename_component(_dir ${_headerFile} PATH)
-    #list (APPEND INCLUDE_DIRS ${_dir})
+#get_filename_component(_dir ${_headerFile} PATH)
+#list (APPEND INCLUDE_DIRS ${_dir})
 #endforeach()
 #list(REMOVE_DUPLICATES INCLUDE_DIRS)
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${PLATFORM_FILES})
 
-#TARGET_LINK_LIBRARIES(${PROJECT_NAME} xxHash MemoryPool)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} xxhash) # MemoryPool)
 
 #set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER "OCCore")
 
@@ -67,11 +69,11 @@ QT5_USE_MODULES(${PROJECT_NAME} Core Widgets)
 set(_src_root_path ${CMAKE_CURRENT_SOURCE_DIR})
 
 file(
-    GLOB_RECURSE _source_list 
+    GLOB_RECURSE _source_list
     LIST_DIRECTORIES false
     "${_src_root_path}/*.c*"
     "${_src_root_path}/*.h*"
-)
+    )
 
 foreach(_source IN ITEMS ${_source_list})
     get_filename_component(_source_path "${_source}" PATH)

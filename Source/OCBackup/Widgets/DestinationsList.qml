@@ -5,7 +5,7 @@ import "OCWidgets"
 
 Rectangle
 {
-    id: driveList
+    //id: driveList
     width: 276
     height: 300
     color: "#191919"
@@ -17,16 +17,11 @@ Rectangle
 
     ListModel {
         id: testList
-        ListElement { clipWidth: 1920
-                clipHeight: 1080
-                driveName: "TestDrive"
-                            driveLetter: "E:"
-                            usedSpace: "1.2"
-                            totalSpace: "1.5"
-                            spaceUnit: "GB"
-                            }
-        ListElement { clipName: "44" }
-        ListElement { clipName: "78" }
+        ListElement {
+            driveName: "TestDrive"
+        }
+        ListElement { driveName: "44" }
+        ListElement { driveName: "78" }
         ListElement { }
     }
 
@@ -38,18 +33,6 @@ Rectangle
         {
             height: 36
             width: parent.width
-
-//            MouseArea
-//            {
-//                id: itemMouseArea
-//                anchors.fill: parent
-
-//                onClicked:
-//                {
-//                    listView.currentIndex = index
-//                    driveList.itemSelectionChanged(index)
-//                }
-//            }
         }
     }
 
@@ -57,8 +40,12 @@ Rectangle
     {
         id: listView
 
-        model: testList
+        model: destinationsList
         delegate: listDelegate
+
+        /*delegate: Text {
+                text: model.driveName
+        }*/
 
         highlight: null
     }

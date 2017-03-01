@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>846</width>
-    <height>150</height>
+    <height>322</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,20 +29,14 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>63</height>
+       <height>240</height>
       </size>
      </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::Panel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(252, 175, 62);</string>
      </property>
      <property name="lineWidth">
-      <number>3</number>
+      <number>0</number>
      </property>
     </widget>
    </item>
@@ -66,6 +60,9 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
       <number>0</number>
+     </property>
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMinimumSize</enum>
      </property>
      <item>
       <spacer name="horizontalSpacer">

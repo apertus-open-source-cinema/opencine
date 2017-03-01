@@ -3,7 +3,7 @@ import QtGraphicalEffects 1.0
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 
-Rectangle
+Item
 {
     id: row1
     width: 270
@@ -23,19 +23,20 @@ Rectangle
         anchors.topMargin: 0
 
 
+        property string path: model.path ? model.path : "?";
         property string driveName: model.driveName ? model.driveName : "?";
-        property string driveLetter: model.driveLetter ? model.driveLetter : "?";
-        property real usedSpace: model.usedSpace ? model.usedSpace : -1;
-        property real totalSpace: model.totalSpace ? model.totalSpace : -1;
-        property string spaceUnit: model.spaceUnit ? model.spaceUnit : "?";
+        property string drive: model.driveLetter ? model.driveLetter : "?";
+//        property real usedSpace: model.usedSpace ? model.usedSpace : -1;
+//        property real totalSpace: model.totalSpace ? model.totalSpace : -1;
+//        property string spaceUnit: model.spaceUnit ? model.spaceUnit : "?";
         property alias backgroundColor: rectangle1.color;
         //height: 49
 
         Text {
-            id: driveInfo
+            id: pathInfo
             width: 1
             color: "#ffffff"
-            text: driveName + " (" + driveLetter + ")"
+            text: path //driveName// + " (" + driveLetter + ")"
             anchors.right: driveSize.left
             anchors.rightMargin: 10
             clip: false
@@ -90,7 +91,7 @@ Rectangle
         Text {
             id: driveSize
             color: "#ffffff"
-            text: usedSpace + "/" + totalSpace + " " + spaceUnit
+            text: drive //usedSpace + "/" + totalSpace + " " + spaceUnit
             clip: true
 
             styleColor: "#db0000"
