@@ -32,14 +32,14 @@ void ProcessingPresenter::Test()
     IAllocator* poolAllocator = new RawPoolAllocator(50 * 1024 * 1024);
 
     OC_LOG_INFO("Loading image");
-    provider->Load("darklab-frame00004.dng", FileFormat::DNG, *_image.get(), *poolAllocator);
+    provider->Load("greenscreen-frame00003.dng", FileFormat::DNG, *_image.get(), *poolAllocator);
     //provider->Load("greenscreen-frame00003.dng", FileFormat::DNG, *_image.get(), *poolAllocator);
     //provider->Load("Shot 1/Frame000320.dng", FileFormat::DNG, *_image.get(), *poolAllocator);
     OC_LOG_INFO("Loading finished");
 
     OC_LOG_INFO("Demosaicing");
-    //BilinearDebayer* debayer = new BilinearDebayer(*_image.get());
-    SHOODAKDebayer* debayer = new SHOODAKDebayer(*_image.get());
+    BilinearDebayer* debayer = new BilinearDebayer(*_image.get());
+    //SHOODAKDebayer* debayer = new SHOODAKDebayer(*_image.get());
     debayer->Process();
     OC_LOG_INFO("Demosaicing finished");
 
