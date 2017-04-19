@@ -5,6 +5,7 @@
 
 #include "OCCore_export.h"
 
+// TODO: Move to separate file
 //Reference: http://bitsquid.blogspot.de/2010/09/custom-memory-allocation-in-c.html
 class OCCORE_EXPORT IAllocator
 {

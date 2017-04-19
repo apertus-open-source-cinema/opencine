@@ -4,8 +4,9 @@
 #include <string>
 
 #include "Log/Logger.h"
-#include "IImageLoader.h"
+
 #include "TIFFLoader.h"
+#include "MLVLoader.h"
 
 using namespace OC::DataProvider;
 
@@ -26,7 +27,7 @@ bool ImageProvider::ReadBinaryFile(std::string fileName, int& length, unsigned c
 	is.seekg(0, std::ios::beg);
 
 	// allocate memory:
-	fileData = new unsigned char[length];
+    fileData = new uint8_t[length];
 
 	// read data as a block:
 	is.read(reinterpret_cast<char*>(fileData), length);
@@ -51,10 +52,15 @@ void ImageProvider::Load(std::string fileName, FileFormat format, OCImage& image
 
 	start = std::chrono::high_resolution_clock::now();
 	IImageLoader* imageLoader = nullptr;
-	if (format == FileFormat::DNG)
+    // TODO: Rework this hacky implementation
+    if (format == FileFormat::DNG)
 	{
 		imageLoader = new TIFFLoader(fileData, length, image, allocator);
 	}
+    else if(format == FileFormat::MLV)
+    {
+        imageLoader = new MLVLoader(fileData, length, image, allocator);
+    }
 
 	diffTime = std::chrono::high_resolution_clock::now() - start;
 	frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(diffTime).count();

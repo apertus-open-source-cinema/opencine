@@ -27,6 +27,8 @@ static const float vertices[] = {
 PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent),
     _initialized(false)
 {
+    setMouseTracking(true);
+
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
     format.setVersion(3, 3);
@@ -52,7 +54,7 @@ void PreviewPane::initializeGL()
 
     printVersionInformation();
 
-    glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+    glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
 
     SetupShaders();
     SetupVertexBuffer();
@@ -74,6 +76,9 @@ float viewWidth = 1;
 float viewHeight = 1;
 int imageWidth = 1;
 int imageHeight = 1;
+
+float panX = 0.0;
+float panY = 0.0;
 
 void PreviewPane::resizeGL(int w, int h)
 {
@@ -99,7 +104,7 @@ void PreviewPane::paintGL()
         QMatrix4x4 projection;
         projection.ortho(-viewWidth / 2.0 * wheelValue, viewWidth / 2.0 * wheelValue, -viewHeight / 2.0 * wheelValue, viewHeight / 2.0 * wheelValue, 0.01f, 1000.0f);
         QMatrix4x4 view;
-        view.lookAt(QVector3D(0.0, 0.0, 1.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
+        view.lookAt(QVector3D(panX, panY, 1.0), QVector3D(panX, panY, 0.0), QVector3D(0.0, 1.0, 0.0));
         QMatrix4x4 model;
         model.setToIdentity();
         model.scale(float(imageWidth) / (float)imageHeight, 1.0f, 1.0f);
@@ -233,6 +238,21 @@ void PreviewPane::wheelEvent(QWheelEvent* event)
     }
 
     //wheelValue += event->pixelDelta().y() / 100.0f;
+}
+
+int oldX = 0;
+int oldY = 0;
+
+void PreviewPane::mouseMoveEvent(QMouseEvent *event)
+{
+    if(event->buttons() == Qt::LeftButton)
+    {
+        panX -= static_cast<float>(event->globalX() - oldX) / 1000.0f;
+        panY += static_cast<float>(event->globalY() - oldY) / 1000.0f;
+    }
+
+    oldX = event->globalX();
+    oldY = event->globalY();
 }
 
 void PreviewPane::SetTextureRed(int width, int height, unsigned short* imageData)

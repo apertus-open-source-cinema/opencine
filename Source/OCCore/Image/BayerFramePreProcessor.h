@@ -8,61 +8,64 @@ using namespace OC::DataProvider;
 
 class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor
 {
-	unsigned char* _data;
-	unsigned short* _outputData;
-	unsigned int _size;
+    uint8_t* _data;
+    uint16_t* _outputData;
+    unsigned int _size;
 
-	BayerPattern _pattern = BayerPattern::RGGB;
+    BayerPattern _pattern = BayerPattern::RGGB;
 
-	unsigned short* dataUL; //upper-left data
-	unsigned short* dataUR; //upper-right data
-	unsigned short* dataLL; //lower-left data
-	unsigned short* dataLR; //lower-right data
+    uint16_t* dataUL; //upper-left data
+    uint16_t* dataUR; //upper-right data
+    uint16_t* dataLL; //lower-left data
+    uint16_t* dataLR; //lower-right data
 
-	unsigned short* _dataRed;
-	unsigned short* _dataGreen;
-	unsigned short* _dataBlue;
+    uint16_t* _dataRed;
+    uint16_t* _dataGreen;
+    uint16_t* _dataBlue;
 
-	int _width;
-	int _height;
+    unsigned int _width;
+    unsigned int _height;
 
-	void MapPatternToData();
+    ImageFormat _imageFormat;
 
-	void ExtractOddRows() const;
+    void MapPatternToData();
 
-	void ExtractEvenRows() const;
+    void ExtractOddRows() const;
+
+    void ExtractEvenRows() const;
 
 public:
-	BayerFramePreProcessor();
+    BayerFramePreProcessor();
 
-	~BayerFramePreProcessor();
+    ~BayerFramePreProcessor();
 
-	//void SetData(unsigned char &data, int width, int height, OC::DataProvider::SourceFormat sourceFormat);
+    //void SetData(unsigned char &data, int width, int height, OC::DataProvider::SourceFormat sourceFormat);
 
-	//virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat) override;
+    //virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat) override;
 
-	//virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat, BayerPattern pattern);
+    //virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat, BayerPattern pattern);
 
-    void SetData(unsigned char& data, OCImage& image) override;
+    void SetData(uint8_t* data, OCImage& image, ImageFormat imageFormat) override;
 
-	void Process() override;
+    void Process() override;
 
-	void Convert12To16Bit() const;
+    void Convert12To16Bit() const;
+    void Convert14To16Bit() const;
 
-	/*void Convert14To16Bit()
-	{
-	}*/
+    /*void Convert14To16Bit()
+    {
+    }*/
 
-	unsigned short* GetDataRed() override;
+    unsigned short* GetDataRed() override;
 
-	unsigned short* GetDataGreen() override;
+    unsigned short* GetDataGreen() override;
 
-	unsigned short* GetDataBlue() override;
+    unsigned short* GetDataBlue() override;
 
-	unsigned short* _linearizationTable = nullptr;
-	unsigned int _linearizationLength = 0;
+    unsigned short* _linearizationTable = nullptr;
+    unsigned int _linearizationLength = 0;
 
-	void SetLinearizationData(unsigned short* linearizationTable, unsigned int linearizationLength);
+    void SetLinearizationData(unsigned short* linearizationTable, unsigned int linearizationLength);
 };
 
 #endif // IFRAMEPROCESSOR_H

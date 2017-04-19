@@ -10,3 +10,7 @@ Source/WidgetsTest/
 \.vs/
 
 CMakeSettings\.json
+
+cmake-build-debug/
+
+\.idea/

@@ -12,9 +12,9 @@ class PreviewPane : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
 	QMatrix4x4 mvp;
 
-	bool redChannel = true;
-	bool greenChannel = true;
-	bool blueChannel = true;
+    bool redChannel = true;
+    bool greenChannel = true;
+    bool blueChannel = true;
 
 public:
 	PreviewPane(QWidget *parent = 0);
@@ -50,7 +50,8 @@ private:
 
 	// QWidget interface
 protected:
-	void wheelEvent(QWheelEvent* event);
+    void wheelEvent(QWheelEvent* event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
 };
 
 #endif // PREVIEWPANE_H
