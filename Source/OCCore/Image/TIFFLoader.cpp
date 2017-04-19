@@ -149,13 +149,13 @@ void TIFFLoader::LoadImage(unsigned char* data, unsigned size, OCImage& image, I
 	Cleanup();
 }
 
-void TIFFLoader::SwapEndian(uint16_t& val) const
+inline void TIFFLoader::SwapEndian(uint16_t& val) const
 {
-	val = (val << 8) | // left-shift always fills with zeros
+    val = (val << 8) | // left-shift always fills with zeros
 		(static_cast<uint16_t>(val) >> 8); // right-shift sign-extends, so force to zero
 }
 
-void TIFFLoader::SwapEndian(uint32_t& val) const
+inline void TIFFLoader::SwapEndian(uint32_t& val) const
 {
 	val = (val << 24) | ((val << 8) & 0x00ff0000) |
 		((val >> 8) & 0x0000ff00) | (val >> 24);
@@ -226,7 +226,8 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image) const
 	//	SwapEndian(linearizationTable[j]);
 	//}
 
-    frameProcessor->SetData(data[_imageDataOffset], image);
+    // TODO: Replace hardcoded image format value
+    frameProcessor->SetData(&data[_imageDataOffset], image, ImageFormat::Integer12);
 	//frameProcessor->SetLinearizationData(linearizationTable, linearizationLength);
 	frameProcessor->Process();
 

@@ -17,6 +17,7 @@ namespace OC
 		{
 			Unknown,
 			Integer12 = 12,
+            Integer14 = 14,
 			Integer16 = 16
 		};
 
@@ -31,7 +32,8 @@ namespace OC
 			Unknown,
 			TIFF,
 			DNG,
-			CinemaDNG
+            CinemaDNG,
+            MLV
 		};
 
 		inline std::unordered_map<int, std::string> CreateTIFFTagMap()

@@ -81,9 +81,9 @@ ExternalProject_Add(QtAV_project
 
 
 ExternalProject_Get_Property(QtAV_project INSTALL_DIR)
-include_directories(${INSTALL_DIR}/src/QtAV/src/)
-message(WARNING "QTAV_DIR: ${INSTALL_DIR}/src/QtAV/src/")
-include_directories(${INSTALL_DIR}/src/QtAV/widgets/)
+include_directories(${INSTALL_DIR}/src/QtAV_project/src/)
+message(WARNING "QTAV_DIR: ${INSTALL_DIR}/src/QtAV_project/src/")
+include_directories(${INSTALL_DIR}/src/QtAV_project/widgets/)
 
 #Projects
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OpenCine/)

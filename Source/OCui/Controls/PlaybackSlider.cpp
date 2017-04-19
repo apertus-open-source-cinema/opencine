@@ -71,7 +71,7 @@ void PlaybackSlider::SetupPlayer()
     //videoOutput->widget()->showFullScreen();
 
     player->setSeekType(QtAV::AccurateSeek);
-    player->setFile("/media/andi/OC_TEST_DISK2/darklab.mov");
+    player->setFile("/media/dev/OC_TEST_DISK2/darklab.mov");
     player->load();
 
     connect(player, &QtAV::AVPlayer::positionChanged, this, &PlaybackSlider::UpdateSlider);
@@ -81,7 +81,7 @@ void PlaybackSlider::SetupPlayer()
         player->setPosition(0);
         ui->horizontalSlider->setRange(0, player->duration());
     });
-    player->setRelativeTimeMode(false);
+    //player->setRelativeTimeMode(false);
     //player->setStopPosition(player->duration());
     player->play();
 }

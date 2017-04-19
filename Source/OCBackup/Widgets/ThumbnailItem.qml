@@ -55,20 +55,20 @@ Rectangle {
                     thumbnailImage.source = altSource;
                 }
             }
-
-            DropShadow {
-                anchors.fill: parent
-                horizontalOffset: 3
-                verticalOffset: 3
-                radius: 8
-                transparentBorder: true
-                samples: 16
-                color: "#40000000"
-                source: thumbnailImage
-            }
         }
 
+        DropShadow {
+            anchors.fill: thumbnailImage
+            horizontalOffset: 3
+            verticalOffset: 3
+            radius: 8
+            transparentBorder: true
+            samples: 16
+            color: "#40000000"
+            source: thumbnailImage
+        }
     }
+
 
     Text {
         id: text1

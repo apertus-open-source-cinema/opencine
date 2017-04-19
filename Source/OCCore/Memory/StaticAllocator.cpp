@@ -28,6 +28,7 @@ void* RawPoolAllocator::Allocate(size_t size/*, size_t align*/)
 void RawPoolAllocator::Deallocate(void* p)
 {
 }
+
 size_t RawPoolAllocator::allocated_size(void* p)
 {
 	return 0;
