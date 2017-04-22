@@ -36,7 +36,9 @@ namespace OC
             void Convert14To16Bit(uint8_t* source, uint16_t* target, long length);
 
         public:
-            MLVLoader(uint8_t* data, unsigned size, OC::DataProvider::OCImage& image, IAllocator& allocator);
+            MLVLoader();
+
+            void Load(uint8_t* data, unsigned size, OCImage &image, IAllocator &allocator) override;
         };
     }
 }

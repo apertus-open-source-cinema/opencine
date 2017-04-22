@@ -15,9 +15,11 @@
 class OCUI_EXPORT QMLThumbnailProvider : public QQuickImageProvider
 {
 	OC::DataProvider::ThumbnailProvider* _thumbnailProvider;
-	const std::unique_ptr<OC::DataProvider::ImageProvider> provider;
+    std::shared_ptr<OC::DataProvider::ImageProvider> _provider;
 
 	std::unique_ptr<OC::DataProvider::OCImage> _image;
+
+    IAllocator* _allocator;
 
 public:
 	QMLThumbnailProvider();

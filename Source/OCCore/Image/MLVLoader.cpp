@@ -113,9 +113,16 @@ mlv_vidf_hdr_t MLVLoader::ReadVIDF(uint8_t* buffer, unsigned int& bufferPosition
     return block;
 }
 
-MLVLoader::MLVLoader(uint8_t *data, unsigned size, OCImage& image, IAllocator& allocator)
+MLVLoader::MLVLoader()
+{
+
+}
+
+void MLVLoader::Load(uint8_t *data, unsigned size, OCImage& image, IAllocator& allocator)
 {
     // TODO: Add handlng of endianess
+
+    processed = false;
 
     unsigned int bufferPosition = 0;
     mlv_file_hdr_t mlvHeader = ReadHeader(data, bufferPosition);
@@ -157,9 +164,9 @@ MLVLoader::MLVLoader(uint8_t *data, unsigned size, OCImage& image, IAllocator& a
         }
     }
 
+    // TODO: Move to ImageProvider, so it's not instantiated several times
     std::unique_ptr<BayerFramePreProcessor> frameProcessor(new BayerFramePreProcessor());
 
-    // TODO: Add crop processing, currently full frame is taken
     unsigned int dataSize = blockRAWI.xRes * blockRAWI.yRes;
     image.SetWidth(blockRAWI.xRes);
     image.SetHeight(blockRAWI.yRes);

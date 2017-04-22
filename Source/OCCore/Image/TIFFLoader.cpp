@@ -15,12 +15,10 @@ unsigned int linearizationLength;
 
 IAllocator* _allocator = nullptr;
 
-TIFFLoader::TIFFLoader(unsigned char* data, unsigned int size, OCImage& image, IAllocator& allocator) :
+TIFFLoader::TIFFLoader() :
 	_swapEndianess(false),
 	_imageDataOffset(0)
 {
-    _allocator = &allocator;
-	LoadImage(data, size, image, allocator);
 }
 
 void TIFFLoader::Cleanup() const
@@ -101,7 +99,7 @@ void TIFFLoader::FindMainImage(unsigned char* data, unsigned int& ifdOffset, uin
 	}
 }
 
-void TIFFLoader::LoadImage(unsigned char* data, unsigned size, OCImage& image, IAllocator& allocator)
+void TIFFLoader::Load(unsigned char* data, unsigned size, OCImage& image, IAllocator& allocator)
 {
 	if ((data[0] << 8 | data[1]) == 0x4d4d && !IsBigEndianMachine())
 	{

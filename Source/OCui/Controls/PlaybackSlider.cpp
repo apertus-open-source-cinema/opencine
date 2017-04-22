@@ -45,10 +45,7 @@ void PlaybackSlider::SetupEvents()
 
 void PlaybackSlider::SetupPlayer()
 {
-    qputenv("QTAV_LOG", "all");
-    qputenv("QTAV_LOG_LEVEL", "all");
-    qputenv("QTAV_FFMPEG_LOG", "debug");
-    QtAV::setLogLevel(QtAV::LogAll);
+    QtAV::setLogLevel(QtAV::LogWarning);
 
     QVBoxLayout *vl = new QVBoxLayout(ui->frame);
     vl->setMargin(0);
