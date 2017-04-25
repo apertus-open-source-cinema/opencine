@@ -19,7 +19,7 @@ ImageProvider::ImageProvider()
     //_imageProviders[FileFormat::MLV] = std::make_shared<MLVLoader>();
 }
 
-bool ImageProvider::ReadBinaryFile(std::string fileName, int& length, unsigned char*& fileData) const
+bool ImageProvider::ReadBinaryFile(std::string fileName, int& length, uint8_t*& fileData) const
 {
     std::ifstream is;
     is.open(fileName, std::ios::binary);
@@ -47,7 +47,7 @@ bool ImageProvider::ReadBinaryFile(std::string fileName, int& length, unsigned c
 void ImageProvider::Load(std::string fileName, FileFormat format, OCImage& image, IAllocator& allocator) const
 {
     int length = -1;
-    unsigned char* fileData = nullptr;
+    uint8_t* fileData = nullptr;
 
     auto start = std::chrono::high_resolution_clock::now();
 

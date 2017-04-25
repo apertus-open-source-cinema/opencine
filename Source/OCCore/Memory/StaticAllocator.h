@@ -21,7 +21,7 @@ public:
 
 class OCCORE_EXPORT RawPoolAllocator : public IAllocator
 {
-	unsigned char* _mem;
+    uint8_t* _mem;
 	size_t _currentOffset;
 
 	std::unordered_map<size_t, size_t> _pointerMap;	//pointer, size

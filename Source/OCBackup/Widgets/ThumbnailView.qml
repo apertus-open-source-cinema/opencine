@@ -12,14 +12,14 @@ Rectangle {
 
     MouseArea {
         id: rootMouseArea
-        anchors.rightMargin: -700
-        anchors.bottomMargin: -780
-        anchors.leftMargin: 700
-        anchors.topMargin: 780
+        //        anchors.rightMargin: -700
+        //        anchors.bottomMargin: -780
+        //        anchors.leftMargin: 700
+        //        anchors.topMargin: 780
         anchors.fill: parent
         hoverEnabled: true
 
-        propagateComposedEvents: true
+        //propagateComposedEvents: true
     }
 
     GridView {
@@ -27,12 +27,13 @@ Rectangle {
         cacheBuffer: 20
         anchors.fill: parent
         boundsBehavior: Flickable.StopAtBounds
-        cellWidth: 210
+        cellWidth: 210 * (scaleSlider.value / 3)
         scale: 1
-        cellHeight: (cellWidth / 4 * 3) + 10
+        cellHeight: (cellWidth / 4 * 3)
         highlightRangeMode: GridView.NoHighlightRange
         snapMode: GridView.NoSnap
 
+        //* (scaleSlider.value / 5)
         //keyNavigationWraps: false
 
         model: fileList
@@ -43,7 +44,7 @@ Rectangle {
             //clipResolution: model.clipWidth + "x" + model.clipHeight
             clipName: model.clipName
             clipPath: model.clipPath
-            width: 200
+            width: 210 * (scaleSlider.value / 3)
             //height: 200
         }
 
@@ -56,35 +57,59 @@ Rectangle {
 
         ScrollBar
         {
-                flickable: gridView1;
+            flickable: gridView1;
         }
     }
 
     Rectangle {
         id: rectangle1
+        y: 0
+        width: 0
+        height: 40
         color: "#00000000"
-        anchors.topMargin: 447
-        anchors.fill: parent
-        visible: rootMouseArea.containsMouse
-        opacity: controlMouseArea.containsMouse ? 1.0 : 0.3
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
 
-        MouseArea {
-            id: controlMouseArea
-            anchors.fill: parent
-            hoverEnabled: true
-
-            propagateComposedEvents: true
-        }
 
         Slider {
             id: scaleSlider
             width: 250
-            stepSize: 0.1
+            stepSize: 0.5
             tickmarksEnabled: true
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 6
             anchors.horizontalCenter: parent.horizontalCenter
-            value: 0.5
+            minimumValue: 1
+            maximumValue: 7
+            value: 3
+            opacity: 0.3
+
+            states: State {
+                name: "hovered"; when: controlMouseArea.containsMouse
+                PropertyChanges { target: scaleSlider; opacity: 1.0 }
+            }
+
+            transitions: Transition {
+                NumberAnimation { properties: "opacity"; easing.type: Easing.Linear }
+            }
+
+            // Reference: http://stackoverflow.com/questions/16183408/mousearea-stole-qml-elements-mouse-events
+            MouseArea {
+                id: controlMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+
+                propagateComposedEvents: true
+
+                onClicked: mouse.accepted = false;
+                onPressed: mouse.accepted = false;
+                onReleased: mouse.accepted = false;
+                onDoubleClicked: mouse.accepted = false;
+                onPositionChanged: mouse.accepted = false;
+                onPressAndHold: mouse.accepted = false;
+            }
         }
+    }
 }
-}
+

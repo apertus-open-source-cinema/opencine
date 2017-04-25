@@ -4,7 +4,7 @@ RawPoolAllocator::RawPoolAllocator(size_t pageSize) :
 	_mem(nullptr),
 	_currentOffset(0)
 {
-	_mem = new unsigned char[pageSize];
+    _mem = new uint8_t[pageSize];
 }
 
 RawPoolAllocator::~RawPoolAllocator()
