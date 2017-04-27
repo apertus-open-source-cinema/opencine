@@ -36,7 +36,7 @@ public:
 		XXH64_update(_hashState, data, length);
 	}
 
-	int64_t Retrieve()
+    uint64_t Retrieve()
 	{
 		return XXH64_digest(_hashState);
 	}

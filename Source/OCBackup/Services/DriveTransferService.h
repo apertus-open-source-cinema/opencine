@@ -38,6 +38,7 @@ class DriveTransferService : public IDriveTransferService
 	Q_OBJECT
 	
 	std::vector<FileTransferInfo> fileList;
+    std::vector<std::string> _destinationPaths;
 
 public:
 	DriveTransferService(OCEventBus* bus) : IDriveTransferService(bus)
@@ -69,6 +70,8 @@ public:
 		EnumerateFiles(QString::fromStdString(transferEvent.GetSourcePath()), &fileList);
 
 		ReplicateFolderStructure(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths().at(0));
+
+        _destinationPaths = transferEvent.GetDestinationPaths();
 
 		DriveTransfer* driveTransfer = new DriveTransfer(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths(), fileList);
 
@@ -186,8 +189,8 @@ public:
 		for (FileTransferInfo transferInfo : fileList)
 		{
 			// CHECKSUM!!!
-			std::string filePath = "E:/Temp/OC_COPY/" + transferInfo.RelativeFolderPath + transferInfo.FileName;
-			HashCheckTask* hashCheckTask = new HashCheckTask(/*transferEvent.GetDestinationPaths().at(0)*/ filePath);
+            std::string filePath = _destinationPaths.at(0) + "/" + transferInfo.RelativeFolderPath + transferInfo.FileName;
+            HashCheckTask* hashCheckTask = new HashCheckTask(/*transferEvent.GetDestinationPaths().at(0)*/ filePath, transferInfo.Checksum);
 			RegisterNewTaskEvent hashTaskEvent(hashCheckTask);
 			GetEventBus()->FireEvent<RegisterNewTaskEvent>(hashTaskEvent);
 			QThread* thread = new QThread();

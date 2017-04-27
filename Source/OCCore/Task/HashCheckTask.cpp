@@ -3,9 +3,12 @@
 #include <fstream>
 #include <iostream>
 
-HashCheckTask::HashCheckTask(std::string fileName) :
+#include "Log/Logger.h"
+
+HashCheckTask::HashCheckTask(std::string fileName, uint64_t checkSum) :
     _hashGenerator(new xxHashAdapter()),
-	_fileName(fileName)
+    _fileName(fileName),
+    _checkSum(checkSum)
 {
 }
 
@@ -43,7 +46,7 @@ void HashCheckTask::Execute()
 		int fileSize = GetFileSize(fin);
 		
 		unsigned int bufferSize = 1024 * 1024; // 1MB
-		std::vector<char> buffer(fileSize, 0); //reads only the first 1024 bytes
+        std::vector<char> buffer(fileSize, 0);
 
 		unsigned int totalChunks = fileSize / bufferSize;
 		unsigned int lastChunkSize = fileSize - (totalChunks * bufferSize);
@@ -65,7 +68,17 @@ void HashCheckTask::Execute()
 			//fout.write(buffer.data(), bufferSize);
 		}
 
-		int64_t fileHash = _hashGenerator->Retrieve();
+        uint64_t fileHash = _hashGenerator->Retrieve();
+        OC_LOG_INFO("File: " + _fileName + " Hash: " + std::to_string(fileHash));
+        if(fileHash != _checkSum)
+        {
+            OC_LOG_ERROR("Checksum not equal");
+        }
+        else
+        {
+            OC_LOG_INFO("Checksum OK");
+        }
+
 		emit HashChecked(fileHash);
 	}
 	catch (const std::ios_base::failure& e)

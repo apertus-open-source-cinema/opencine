@@ -15,11 +15,12 @@ class OCCORE_EXPORT HashCheckTask : public ITask
 	std::unique_ptr<IHashGenerator> _hashGenerator = nullptr;
 
 	std::string _fileName;
+    uint64_t _checkSum;
 
 	int GetFileSize(std::ifstream& fin) const;
 	
 public:
-	HashCheckTask(std::string fileName);
+    HashCheckTask(std::string fileName, uint64_t checkSum);
 	virtual ~HashCheckTask();
 
 	int GetProgressPercentage() override { return 0; }
@@ -30,7 +31,7 @@ public slots:
 	void Execute();
 
 signals:
-	void HashChecked(int64_t checksum);
+    void HashChecked(uint64_t checksum);
 };
 
 #endif //HASHCHECKTASK_H

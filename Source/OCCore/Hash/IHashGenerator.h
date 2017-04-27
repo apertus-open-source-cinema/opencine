@@ -10,5 +10,5 @@ public:
 
 	virtual void Initialize() = 0;
 	virtual void Update(void* data, unsigned int length) = 0;
-	virtual int64_t Retrieve() = 0;
+    virtual uint64_t Retrieve() = 0;
 };
