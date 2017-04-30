@@ -18,17 +18,20 @@ class OCCORE_EXPORT HashCheckTask : public ITask
     uint64_t _checkSum;
 
 	int GetFileSize(std::ifstream& fin) const;
-	
+
 public:
     HashCheckTask(std::string fileName, uint64_t checkSum);
 	virtual ~HashCheckTask();
 
-	int GetProgressPercentage() override { return 0; }
-	std::string GetTaskDescription() override { return "Checksum verification"; }
-	std::string GetSubTaskDescription() override { return "CO_test_???.mov"; }
+    unsigned int GetProgressPercentage() override;
+    std::string GetTaskDescription() override;
+    std::string GetSubTaskDescription() override;
 
 public slots:
 	void Execute();
+
+private slots:
+    void ProgressChanged(unsigned int progress);
 
 signals:
     void HashChecked(uint64_t checksum);

@@ -3,57 +3,73 @@
 
 #include "TaskProgressDelegate.h"
 
+#include "Log/Logger.h"
+
 ProgressDialog::ProgressDialog(QWidget* parent/*, IDataTransfer* dataTransfer*/) :
-	QDialog(parent),
-	ui(new Ui::ProgressDialog)
+    QDialog(parent),
+    ui(new Ui::ProgressDialog),
+    _indexCount(0)
 {
-	ui->setupUi(this);
+    ui->setupUi(this);
 
-	setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-	//setWindowFlags(Qt::WindowTitleHint | Qt::CustomizeWindowHint);
-	setModal(true);
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    //setWindowFlags(Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+    setModal(true);
 
-	ui->listView->setItemDelegate(new TaskProgressDelegate());
-	_model = new QStandardItemModel();
-	ui->listView->setModel(_model); //connect the model to view.
+    ui->listView->setItemDelegate(new TaskProgressDelegate());
+    _model = new QStandardItemModel();
+    ui->listView->setModel(_model); //connect the model to view.
 }
 
 ProgressDialog::~ProgressDialog()
 {
-	delete ui;
+    delete ui;
 }
 
-void ProgressDialog::AddTask(ITaskProgress* taskProgress) const
+void ProgressDialog::AddTask(ITask *task)
 {
-	// TODO: Replace by adequate data struct, so the data is compact and intuitive to use in delegate
-	QStandardItem* item = new QStandardItem();
-	QString taskDescription = QString::fromStdString(taskProgress->GetTaskDescription());
-	QString subTaskDescription = QString::fromStdString(taskProgress->GetSubTaskDescription());
-	QStringList values;
-	values.push_back(taskDescription);
-	values.push_back(subTaskDescription);
-	values.push_back("0");
+    // TODO: Replace by adequate data struct, so the data is compact and intuitive to use in delegate
+    QStandardItem* item = new QStandardItem();
+    QString taskDescription = QString::fromStdString(task->GetTaskDescription());
+    QString subTaskDescription = QString::fromStdString(task->GetSubTaskDescription());
+    QStringList values;
+    values.push_back(taskDescription);
+    values.push_back(subTaskDescription);
+    values.push_back("0");
 
-	item->setData(values, Qt::DisplayRole);
-	_model->appendRow(item);
+    item->setData(values, Qt::DisplayRole);
+    _model->appendRow(item);
+
+    _taskMap.insert(std::make_pair(task->GetID(), _indexCount));
+    _indexCount++;
 }
 
-void ProgressDialog::SetTaskProgress(int taskIndex, int progress)
+void ProgressDialog::SetTaskProgress(ITask* task)
 {
-	QStandardItem* item = _model->item(0, 0);//new QStandardItem();
-	//QString taskDescription = "";// QString::fromStdString(taskProgress->GetTaskDescription());
-	//QString subTaskDescription = ""; //QString::fromStdString(taskProgress->GetSubTaskDescription());
-	QStringList values = item->model()->data(item->index()).toStringList();
-	//values.push_back(taskDescription);
-	//values.push_back(subTaskDescription);
-	values.replace(2, QString::number(progress));
+    auto it = _taskMap.find (task->GetID());
 
-	item->setData(values, Qt::DisplayRole);
-//	_model->appendRow(item);
+    if ( it == _taskMap.end() )
+    {
+        OC_LOG_WARNING("Task " + std::to_string(task->GetID()) + "not found");
+        return;
+    }
+
+
+    QStandardItem* item = _model->item(static_cast<int>((*it).second), 0);//new QStandardItem();
+    qDebug("Task row: " + QString::number(static_cast<int>((*it).second)).toLatin1());
+    QString taskDescription = QString::fromStdString(task->GetTaskDescription());
+    QString subTaskDescription = QString::fromStdString(task->GetSubTaskDescription());
+    QStringList values = item->model()->data(item->index()).toStringList();
+    values.replace(0, taskDescription);
+    values.replace(1, subTaskDescription);
+    values.replace(2, QString::number(task->GetProgressPercentage()));
+
+    item->setData(values, Qt::DisplayRole);
+    //	_model->appendRow(item);
 }
 
 void ProgressDialog::ProgressChanged(int currentProgress) const
 {
-	ui->progressBar->setValue(currentProgress);
-	//ui->label->setText(QString("File ") + std::to_string(currentProgress).c_str());
+    ui->progressBar->setValue(currentProgress);
+    //ui->label->setText(QString("File ") + std::to_string(currentProgress).c_str());
 }

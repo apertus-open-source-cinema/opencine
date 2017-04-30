@@ -16,10 +16,19 @@ HashCheckTask::~HashCheckTask()
 {
 }
 
+unsigned int HashCheckTask::GetProgressPercentage()
+{
+    return _progressPercentage;
+}
+
+std::__cxx11::string HashCheckTask::GetTaskDescription() { return "Checksum verification"; }
+
+std::__cxx11::string HashCheckTask::GetSubTaskDescription() { return _fileName; }
+
 int HashCheckTask::GetFileSize(std::ifstream& fin) const
 {
-	fin.seekg(0, fin.end);
-	int fileSize = fin.tellg();
+    fin.seekg(0, fin.end);
+    int fileSize = fin.tellg();
 	fin.seekg(0, fin.beg);
 
 	return fileSize;
@@ -56,6 +65,9 @@ void HashCheckTask::Execute()
 			++totalChunks;
 		}
 
+        unsigned int progress = 0;
+        unsigned int progressBlock = totalChunks / 100;
+
 		for (unsigned int index = 0; index < totalChunks; ++index)
 		{
 			if (index == totalChunks - 1)
@@ -66,6 +78,15 @@ void HashCheckTask::Execute()
 			fin.read(buffer.data(), bufferSize);
 			_hashGenerator->Update(buffer.data(), bufferSize);
 			//fout.write(buffer.data(), bufferSize);
+
+
+            if (index > progressBlock + (progressBlock * index))
+            {
+                progress++;
+
+                //emit TaskUpdated(this);
+                ProgressChanged(progress);
+            }
 		}
 
         uint64_t fileHash = _hashGenerator->Retrieve();
@@ -87,4 +108,20 @@ void HashCheckTask::Execute()
 		std::cout << e.what() << '\n';
 		std::string ex = e.what();
 	}
+}
+
+void HashCheckTask::ProgressChanged(unsigned int progress)
+{
+    int i = 0;
+
+    //	std::ostringstream threadID;
+    //	threadID << std::this_thread::get_id();
+    //	QString t = QString("Transfer thread ID: %1").arg(QString::fromStdString(threadID.str()));
+    //	qDebug(t.toLatin1());
+
+    //emit CopyProgressChanged(progress);
+
+    _progressPercentage = progress;
+
+    emit TaskUpdated(this);
 }

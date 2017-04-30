@@ -29,9 +29,9 @@ DriveTransfer::DriveTransfer(std::string sourcePath, std::vector<std::string> de
     int i = 0;
 }
 
-int DriveTransfer::GetProgressPercentage()
+unsigned int DriveTransfer::GetProgressPercentage()
 {
-    return 0;
+    return _progressPercentage;
 }
 
 std::string DriveTransfer::GetTaskDescription()
@@ -41,12 +41,14 @@ std::string DriveTransfer::GetTaskDescription()
 
 std::string DriveTransfer::GetSubTaskDescription()
 {
-    return "Copying X";
+    return _subTaskDescription;
 }
 
 void DriveTransfer::TransferFile(QString sourcePath, QString relativeFilePath, QString targetPath, int64_t& checksum)
 {
     QFile source(sourcePath + "/" + relativeFilePath);
+
+    _subTaskDescription = "Copying " + relativeFilePath.toStdString();
 
     // TODO: Ensure trailing slash to remove need of appending it in multiple places
     if (QFile::exists(targetPath + relativeFilePath))
@@ -89,6 +91,7 @@ void DriveTransfer::TransferFile(QString sourcePath, QString relativeFilePath, Q
         {
             progress++;
 
+            //emit TaskUpdated(this);
             ProgressChanged(progress);
         }
     }
@@ -147,7 +150,7 @@ void DriveTransfer::Execute(/*std::string sourcePath, std::vector<std::string> d
     OC_LOG_INFO("Copying finished");
 }
 
-void DriveTransfer::ProgressChanged(int progress)
+void DriveTransfer::ProgressChanged(unsigned int progress)
 {
     int i = 0;
 
@@ -156,5 +159,9 @@ void DriveTransfer::ProgressChanged(int progress)
     //	QString t = QString("Transfer thread ID: %1").arg(QString::fromStdString(threadID.str()));
     //	qDebug(t.toLatin1());
 
-    emit CopyProgressChanged(progress);
+    //emit CopyProgressChanged(progress);
+
+    _progressPercentage = progress;
+
+    emit TaskUpdated(this);
 }

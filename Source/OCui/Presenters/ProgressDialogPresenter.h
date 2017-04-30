@@ -27,7 +27,8 @@ protected:
 	}
 
 private slots:
-	void ProgressChanged(int progress) const;
+    void ProgressChanged(int progress) const;
+    void TaskUpdated(ITask* task);
 };
 
 #endif //PROGRESSDIALOGPRESENTER_H

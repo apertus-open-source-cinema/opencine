@@ -6,14 +6,40 @@
 
 class OCCORE_EXPORT ITask : public ITaskProgress
 {
-	Q_OBJECT
+    Q_OBJECT
+
+
+protected:
+    unsigned int _id;
 
 public:
-	virtual ~ITask()
-	{
-	}
+    ITask()
+    {
+        GenerateTaskID();
+    }
 
-	//virtual void Execute(std::string sourcePath, std::vector<std::string> destinationPaths) = 0;
+    ~ITask()
+    {
+    }
+
+    unsigned int GetID()
+    {
+        return _id;
+    }
+
+private:
+    void GenerateTaskID()
+    {
+        std::random_device rd;
+        std::mt19937 mt(rd());
+        std::uniform_int_distribution<unsigned int> dist(100001, 999999);
+        _id = dist(mt);
+    }
+
+signals:
+    // TODO: Needs evaluation, switched to pointer as there are some problems with passing by reference and Qt type registration for abstract classes
+    void TaskUpdated(ITask*);
 };
+
 
 #endif //ITASK_H

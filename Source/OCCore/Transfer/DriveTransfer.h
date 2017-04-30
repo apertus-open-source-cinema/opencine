@@ -8,7 +8,7 @@
 
 #include "OCCore_export.h"
 
-class OCCORE_EXPORT DriveTransfer : public IDataTransfer
+class OCCORE_EXPORT DriveTransfer : public ITask
 {
 	Q_OBJECT
 
@@ -16,20 +16,24 @@ class OCCORE_EXPORT DriveTransfer : public IDataTransfer
 	std::vector<std::string> _destinationPaths;
 	std::vector<FileTransferInfo> _fileList;
 
+    std::string _subTaskDescription;
+
     void ReplicateFolderStructure(std::string& rootPath, std::string& targetPath) const;
 
 public:
 	// TODO: Add setters for source and destination paths to be able to reuse DriveTransfer
     DriveTransfer(std::string sourcePath, std::vector<std::string> destinationPaths, std::vector<FileTransferInfo> fileList);
 
-	int GetProgressPercentage() override;
+    unsigned int GetProgressPercentage() override;
 	std::string GetTaskDescription() override;
 	std::string GetSubTaskDescription() override;
     void TransferFile(QString sourcePath, QString relativeFilePath, QString targetPath, int64_t& checksum);
 
 public slots:
 	void Execute();
-	void ProgressChanged(int progress);
+
+private slots:
+    void ProgressChanged(unsigned int progress);
 
 signals:
 	void CopyProgressChanged(int progress);
