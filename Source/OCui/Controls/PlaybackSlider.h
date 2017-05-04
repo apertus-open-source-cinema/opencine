@@ -34,6 +34,8 @@ public:
 		_advancedMode = advancedMode;
 	}
 
+    void LoadFile(QString filePath);
+
 private:
 	Ui::PlaybackSlider *ui;
 	bool _advancedMode;

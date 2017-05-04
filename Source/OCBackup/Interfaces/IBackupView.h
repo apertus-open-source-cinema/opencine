@@ -19,6 +19,8 @@ public:
     virtual void SetItemList(std::vector<FileInfo> fileList) = 0;
     virtual void SetDestinationList(std::vector<PathInfo> destinationList) = 0;
 
+    virtual void OpenClip(QString clipPath) = 0;
+
 signals:
 	void StartTransfer();
 
@@ -26,6 +28,8 @@ signals:
 	void FolderSelectionChanged(QString folderPath);
 
 	void AddDestinationClicked();
+
+    void LoadClip(int clipIndex);
 };
 
 #endif //IBACKUPVIEW_H

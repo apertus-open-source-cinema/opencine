@@ -30,6 +30,7 @@ BackupView::BackupView(/*QWidget *parent,*/ IBackupPresenter* presenter) :
     SetupDestinationsView();
 
     connect(ui->destinationsControl, SIGNAL(AddDestinationClicked()), this, SIGNAL(AddDestinationClicked()));
+
     //ui->folderTreeControl->setModel(_folderTreeControlModel.get());
     //ui->folderTreeControl->setRootIndex(_folderTreeControlModel->index("E:"));
 }
@@ -58,6 +59,15 @@ void BackupView::SetupFolderView()
     connect(ui->folderTreeControl->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)), this, SLOT(CurrentFolderChanged(const QItemSelection&, const QItemSelection&)));
 }
 
+void ListQMLMethods(QQuickItem* item)
+{
+    const QMetaObject* metaObj = item->metaObject();
+    for (int i = 0; i < metaObj->methodCount(); ++i) {
+        QMetaMethod method = metaObj->method(i);
+        qDebug() << method.methodSignature();
+    }
+}
+
 //QList<QObject*>*  _fileList;
 void BackupView::SetupThumbnailView()
 {
@@ -69,6 +79,10 @@ void BackupView::SetupThumbnailView()
     _qmlContext->setContextProperty("fileList", QVariant::fromValue(*_fileList));
 
     ui->thumbnailViewControl->setSource(QUrl("./Widgets/ThumbnailView.qml"));
+
+    ListQMLMethods(ui->thumbnailViewControl->rootObject());
+
+    connect(ui->thumbnailViewControl->rootObject(), SIGNAL(playClip(int)), this, SLOT(PlayClip(int)));
 }
 
 void BackupView::SetupDestinationsView()
@@ -110,6 +124,8 @@ void BackupView::SetDriveList(std::vector<PathInfo> driveList)
     _qmlContext->setContextProperty("listModel", QVariant::fromValue(dataList));
 }
 
+
+
 void BackupView::SetItemList(std::vector<FileInfo> fileList)
 {
     _fileList->clear();
@@ -137,6 +153,11 @@ void BackupView::SetDestinationList(std::vector<PathInfo> destinationList)
     ui->destinationsControl->SetDestinationList(_destinationList);
 }
 
+void BackupView::OpenClip(QString clipPath)
+{
+    ui->widget_2->LoadFile(clipPath);
+}
+
 void BackupView::SetCurrentFolder(QString folderPath)
 {
     if (folderPath == "")
@@ -150,4 +171,11 @@ void BackupView::SetCurrentFolder(QString folderPath)
 
     ui->folderTreeControl->setModel(_folderTreeModel.get());
     ui->folderTreeControl->setRootIndex(_folderTreeModel->index(folderPath));
+}
+
+void BackupView::PlayClip(int clipIndex)
+{
+    emit LoadClip(clipIndex);
+    //qDebug() << "Clip selected: " << QString::number(clipIndex);
+
 }

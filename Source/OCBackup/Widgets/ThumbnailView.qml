@@ -8,7 +8,11 @@ Rectangle {
     height: 700
     color: "#1b1b1b"
 
+    signal playClip(int clipIndex);
+
     //property alias fileList: gridView1.model
+
+    property color highlightColor: "darkred";
 
     MouseArea {
         id: rootMouseArea
@@ -22,6 +26,21 @@ Rectangle {
         //propagateComposedEvents: true
     }
 
+    Component
+    {
+        id: thumbHighlight
+        Rectangle
+        {
+            color: highlightColor;
+            radius: 3;
+            border.color: "white";
+            border.width: 2;
+            opacity: 0.3;
+            //x: gridView1.currentItem.x
+            //y: gridView1.currentItem.y;
+        }
+    }
+
     GridView {
         id: gridView1
         cacheBuffer: 20
@@ -32,6 +51,11 @@ Rectangle {
         cellHeight: (cellWidth / 4 * 3)
         highlightRangeMode: GridView.NoHighlightRange
         snapMode: GridView.NoSnap
+
+        //highlightFollowsCurrentItem: true;
+        highlightMoveDuration: 0
+        highlight: thumbHighlight
+        focus: true
 
         //* (scaleSlider.value / 5)
         //keyNavigationWraps: false
@@ -46,6 +70,15 @@ Rectangle {
             clipPath: model.clipPath
             width: 210 * (scaleSlider.value / 3)
             //height: 200
+
+
+            MouseArea
+            {
+                anchors.fill: parent
+                onClicked: gridView1.currentIndex = index
+                onDoubleClicked: root.playClip(gridView1.currentIndex) //highlightColor = "darkorange"
+                hoverEnabled: true;
+            }
         }
 
         addDisplaced: Transition {

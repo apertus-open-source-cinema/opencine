@@ -55,6 +55,8 @@ private slots:
 	void AddDestination();
 	void FolderSelectionChanged(QString folderPath) const;
 
+    void LoadClip(int clipIndex) const;
+
 public:
 	explicit BackupPresenter(IBackupView& view, OCEventBus* eventBus);
 	void receive(const OCEvent& event) const;

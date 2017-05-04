@@ -36,6 +36,8 @@ void BackupPresenter::SetupSignals() const
     connect(_view, &IBackupView::AddDestinationClicked, this, &BackupPresenter::AddDestination);
     connect(_view, &IBackupView::FolderSelectionChanged, this, &BackupPresenter::FolderSelectionChanged);
     connect(_view, &IBackupView::StartTransfer, this, &BackupPresenter::StartTransfer);
+
+    connect(_view, &IBackupView::LoadClip, this, &BackupPresenter::LoadClip);
 }
 
 void BackupPresenter::receive(const OCEvent& event) const
@@ -168,4 +170,12 @@ void BackupPresenter::FolderSelectionChanged(QString folderPath) const
     }
 
     _view->SetItemList(fileInfoList);
+}
+
+void BackupPresenter::LoadClip(int clipIndex) const
+{
+    QString drivePath = QString::fromStdString(_driveList.at(_currentDrive).DrivePath);
+    QDir dir(drivePath);
+    QFileInfoList fileList = dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Files);
+    _view->OpenClip(fileList.at(clipIndex).filePath());
 }
