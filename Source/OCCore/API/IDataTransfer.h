@@ -6,36 +6,14 @@
 
 class IDataTransfer : public ITask
 {
-protected:
-	//std::string _sourcePath;
-	//std::string _targetPath;
-
 public:
 	virtual ~IDataTransfer()
 	{
 	}
 
-	IDataTransfer(std::string sourcePath = "", std::string targetPath = "") //:
-		//_sourcePath(sourcePath),
-		//_targetPath(targetPath)
+    IDataTransfer(std::string sourcePath = "", std::string targetPath = "")
 	{
 	}
-
-	//    QString GetSourcePath()
-	//    {
-	//        return _sourcePath;
-	//    }
-
-	//    QString GetTargetPath()
-	//    {
-	//        return _targetPath;
-	//    }
-
-	//virtual void StartTransfer() = 0;
-	//virtual int GetCount() = 0;
-
-//signals:
-//    void ProgressChanged(int);
 };
 
 #endif // IDATATRANSFER_H

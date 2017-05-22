@@ -38,13 +38,9 @@ Item {
         radius: 2;
         antialiasing: true;
         color: Qt.rgba(0.5, 0.5, 0.5, 0.85);
-        /*border {
-            width: 1;
-            color: "darkgray";
-        }*/
         anchors { fill: parent; }
 
-        opacity: 0 /* mouseArea.containsMouse ? 1.0 : 0.3*/
+        opacity: 0
 
         MouseArea
         {

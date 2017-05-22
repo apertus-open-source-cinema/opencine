@@ -96,51 +96,7 @@ BayerFramePreProcessor::BayerFramePreProcessor() :
 
 BayerFramePreProcessor::~BayerFramePreProcessor()
 {
-    //	delete [] _dataRed;
-    //	delete [] _dataGreen;
-    //	delete [] _dataBlue;
-    //
-    //	delete [] _outputData;
 }
-
-//void BayerFramePreProcessor::SetData(unsigned char& data, unsigned int width, unsigned int height, SourceFormat sourceFormat)
-//{
-//	_data = &data;
-//
-//	_width = width;
-//	_height = height;
-//
-//	_size = _width * _height;
-//
-//	_outputData = new uint16_t[_size];
-//
-//	//_dataRed = new uint16_t[_size * 2];
-//	//_dataGreen = new uint16_t[_size * 2];
-//	//_dataBlue = new uint16_t[_size * 2];
-//
-//	MapPatternToData();
-//}
-
-// TODO: Uncomment when it's required again
-//void BayerFramePreProcessor::SetData(unsigned char& data, unsigned int width, unsigned int height, SourceFormat sourceFormat, BayerPattern pattern)
-//{
-//	_data = &data;
-//
-//	_width = width;
-//	_height = height;
-//
-//	_size = _width * _height;
-//
-//	_outputData = new uint16_t[_size];
-//
-//    //_dataRed = new uint16_t[_size];
-//    //_dataGreen = new uint16_t[_size];
-//    //_dataBlue = new uint16_t[_size];
-//
-//	_pattern = pattern;
-//
-//	MapPatternToData();
-//}
 
 // TODO: Add parameter of data length, it would simplify some processing
 void BayerFramePreProcessor::SetData(uint8_t* data, OCImage& image, ImageFormat imageFormat)
@@ -215,43 +171,6 @@ void BayerFramePreProcessor::Convert12To16Bit() const
     }
 }
 
-//void BayerFramePreProcessor::Convert14To16Bit() const
-//{
-//    int j = 0;
-//    //4797520
-//    int dataSize = static_cast<int>((_width * 1.75) * _height); // 14bit / 8bit
-
-//    for (long index = 0; index < dataSize; index += 2)
-//    {
-//        uint8_t temp;
-
-//        temp = _data[index];
-//        _data[index] = _data[index + 1];
-//        _data[index + 1] = temp;
-//    }
-
-//    // Process 8 bytes at once to get 4 pixels of 14 bits
-//    //#pragma omp parallel for
-//    for (long index = 0; index < dataSize; index += 7)
-//    {
-//        uint64_t mergedBytes = (static_cast<uint64_t>(_data[index]) << 48) +
-//                (static_cast<uint64_t>(_data[index + 1]) << 40) +
-//                (static_cast<uint64_t>(_data[index + 2]) << 32) +
-//                (static_cast<uint64_t>(_data[index + 3]) << 24) +
-//                (static_cast<uint64_t>(_data[index + 4]) << 16) +
-//                (static_cast<uint64_t>(_data[index + 5]) << 8) +
-//                static_cast<uint64_t>(_data[index + 6]);
-
-//        // Processing bytes in reversed order, so it resembles the shifting of uint64_t to the right
-//        _outputData[j + 3] = static_cast<uint16_t>(mergedBytes & 0x3FFF);
-//        _outputData[j + 2] = static_cast<uint16_t>((mergedBytes >> 14) & 0x3FFF);
-//        _outputData[j + 1] = static_cast<uint16_t>((mergedBytes >> 28) & 0x3FFF);
-//        _outputData[j] = static_cast<uint16_t>((mergedBytes >> 42) & 0x3FFF);
-
-//        j += 4;
-//    }
-//}
-
 void BayerFramePreProcessor::Convert14To16Bit() const
 {
     int j = 0;
@@ -313,20 +232,3 @@ void BayerFramePreProcessor::SetLinearizationData(uint16_t* linearizationTable, 
     _linearizationTable = linearizationTable;
     _linearizationLength = linearizationLength;
 }
-
-// TODO: Uncomment when it's required again
-//void BayerFramePreProcessor::SetData(unsigned char& data, int width, int height, SourceFormat sourceFormat)
-//{
-//	_data = &data;
-//
-//	_width = width;
-//	_height = height;
-//
-//	_size = _width * _height;
-//
-//	_outputData = new uint16_t[_size];
-//
-//    //_dataRed = new uint16_t[_size];
-//    //_dataGreen = new uint16_t[_size];
-//    //_dataBlue = new uint16_t[_size];
-//}

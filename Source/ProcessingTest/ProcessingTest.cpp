@@ -26,8 +26,6 @@ public:
 		SetLayout(*static_cast<QWidget*>(_view.get()));
 		ShowMaximized();
 
-        //QtConcurrent::run(_presenter.get(), &IProcessingPresenter::Test);
-
         _presenter->Test();
 	}
 };

@@ -66,14 +66,6 @@ namespace OC
 				_height = height;
 			}
 
-			/*void SetData(unsigned char* data, unsigned int size)
-			{
-				_dataSize = size;
-
-				_data = new unsigned char[_dataSize];
-				memcpy(_data, data, _dataSize);
-			}*/
-
 			void* RedChannel()
 			{
 				return _redData;
@@ -88,11 +80,6 @@ namespace OC
 			{
 				return _blueData;
 			}
-
-			/*unsigned char* Data()
-			{
-				return _data;
-			}*/
 
 			void SetFormat(ImageFormat format)
 			{

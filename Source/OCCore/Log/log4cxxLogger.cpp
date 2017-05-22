@@ -25,5 +25,5 @@ namespace OC
 		{
 			std::cout << "FATAL: " << message << std::endl;
 		}
-	} // namespace Log
-} // namespace OC
+    }
+}

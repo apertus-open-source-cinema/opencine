@@ -13,16 +13,9 @@
 #include "../Data/ItemInfoQML.h"
 
 BackupView::BackupView(/*QWidget *parent,*/ IBackupPresenter* presenter) :
-    //QWidget(parent),
-    //_presenter(presenter),
     ui(new Ui::BackupView)
 {
     ui->setupUi(this);
-
-    //    _folderTreeControlModel = std::make_shared<QFileSystemModel>();
-    //    QString rootPath = "C:\\Temp\\";//_driveListModel->index(0).data().toString();
-    //    _folderTreeControlModel->setRootPath(QDir::currentPath());
-    //    _folderTreeControlModel->setFilter(QDir::Dirs | QDir::NoDotAndDotDot | QDir::AllDirs);
 
     SetupDriveView();
     SetupFolderView();
@@ -30,9 +23,6 @@ BackupView::BackupView(/*QWidget *parent,*/ IBackupPresenter* presenter) :
     SetupDestinationsView();
 
     connect(ui->destinationsControl, SIGNAL(AddDestinationClicked()), this, SIGNAL(AddDestinationClicked()));
-
-    //ui->folderTreeControl->setModel(_folderTreeControlModel.get());
-    //ui->folderTreeControl->setRootIndex(_folderTreeControlModel->index("E:"));
 }
 
 BackupView::~BackupView()
@@ -62,7 +52,8 @@ void BackupView::SetupFolderView()
 void ListQMLMethods(QQuickItem* item)
 {
     const QMetaObject* metaObj = item->metaObject();
-    for (int i = 0; i < metaObj->methodCount(); ++i) {
+    for (int i = 0; i < metaObj->methodCount(); ++i)
+    {
         QMetaMethod method = metaObj->method(i);
         qDebug() << method.methodSignature();
     }
@@ -80,16 +71,12 @@ void BackupView::SetupThumbnailView()
 
     ui->thumbnailViewControl->setSource(QUrl("./Widgets/ThumbnailView.qml"));
 
-    ListQMLMethods(ui->thumbnailViewControl->rootObject());
-
     connect(ui->thumbnailViewControl->rootObject(), SIGNAL(playClip(int)), this, SLOT(PlayClip(int)));
 }
 
 void BackupView::SetupDestinationsView()
 {
     _fileList = new QList<QObject*>();
-    //qmlContext2 = ui->thumbnailViewControl->rootContext();
-    //qmlContext2->setContextProperty("fileList", QVariant::fromValue(*_fileList));
 }
 
 void BackupView::TransferButtonClicked()

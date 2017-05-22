@@ -40,29 +40,6 @@ void BackupPresenter::SetupSignals() const
     connect(_view, &IBackupView::LoadClip, this, &BackupPresenter::LoadClip);
 }
 
-void BackupPresenter::receive(const OCEvent& event) const
-{
-    int j = 0;
-
-    j++;
-
-    int c = j;
-
-    OC_LOG_INFO("BackupPresenter received EventA -> 1");
-}
-
-
-void receive2(const OCEvent& event)
-{
-    int j = 0;
-
-    j++;
-
-    int c = j;
-
-    OC_LOG_INFO("BackupPresenter received EventA -> 2");
-}
-
 void BackupPresenter::StartTransfer()
 {
     StartDriveTransferEvent transferEvent;
@@ -82,9 +59,6 @@ void BackupPresenter::StartTransfer()
 
     transferEvent.SetDestinationsPaths(destinationPaths);
     GetEventBus()->FireEvent<StartDriveTransferEvent>(transferEvent);
-
-    //ProgressDialog* progressDialog = new ProgressDialog();
-    //progressDialog->show();
 }
 
 void BackupPresenter::DriveListChanged(std::vector<PathInfo> driveList)
@@ -98,9 +72,6 @@ void BackupPresenter::DriveListChanged(std::vector<PathInfo> driveList)
         _view->SetCurrentFolder(drive);
 
         FolderSelectionChanged(drive);
-        /*std::vector<std::string> flist;
-        flist.push_back("C:/Temp/test.jpg");
-        _view->SetItemList(flist);*/
     }
     else
     {

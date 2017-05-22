@@ -43,10 +43,6 @@ Rectangle
         model: destinationsList
         delegate: listDelegate
 
-        /*delegate: Text {
-                text: model.driveName
-        }*/
-
         highlight: null
     }
 }

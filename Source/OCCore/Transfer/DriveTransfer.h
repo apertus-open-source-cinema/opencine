@@ -14,7 +14,7 @@ class OCCORE_EXPORT DriveTransfer : public ITask
 
 	std::string _sourcePath;
 	std::vector<std::string> _destinationPaths;
-	std::vector<FileTransferInfo> _fileList;
+    std::vector<FileTransferInfo>* _fileList;
 
     std::string _subTaskDescription;
 
@@ -22,7 +22,7 @@ class OCCORE_EXPORT DriveTransfer : public ITask
 
 public:
 	// TODO: Add setters for source and destination paths to be able to reuse DriveTransfer
-    DriveTransfer(std::string sourcePath, std::vector<std::string> destinationPaths, std::vector<FileTransferInfo> fileList);
+    DriveTransfer(std::string sourcePath, std::vector<std::string> destinationPaths, std::vector<FileTransferInfo>* fileList);
 
     unsigned int GetProgressPercentage() override;
 	std::string GetTaskDescription() override;

@@ -25,17 +25,17 @@ void LauncherView::SetButtonList(std::vector<ApplicationInfo> list)
 void LauncherView::InsertButton(QString name, QString imagePath)
 {
     QToolButton* button = new QToolButton();
+
     button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     button->setToolButtonStyle(Qt::ToolButtonStyle::ToolButtonTextUnderIcon);
-    button->setGeometry(0, 0, button->rect().height(), button->rect().height());
+    button->setFixedSize(180,180);
     button->setText(name);
 
     QPixmap pixmap("./Resources/Launcher/" + imagePath);
     QIcon buttonIcon(pixmap);
     button->setIcon(buttonIcon);
-    button->setIconSize(QSize(button->rect().height(), button->rect().height()));
 
-    //button->setIconSize(pixmap.rect().size());
+    button->setIconSize(QSize(button->rect().height() * 0.8, button->rect().height() * 0.8));
 
     ui->buttonPane->addWidget(button);
 }

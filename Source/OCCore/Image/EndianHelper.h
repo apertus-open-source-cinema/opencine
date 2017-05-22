@@ -29,10 +29,8 @@ inline uint16_t GetUInt16(const unsigned char *buf, unsigned int &bufferPosition
 // NOTE: Little endian
 inline uint32_t GetUInt32(const unsigned char *buf, unsigned int &bufferPosition)
 {
-//    uint32_t result = *(((uint32_t*)buf) + bufferPosition);
     bufferPosition += 4;
 
-//    return result;
     return (static_cast<uint32_t>(buf[0]) << 0) | (static_cast<uint32_t>(buf[1]) << 8) |
            (static_cast<uint32_t>(buf[2]) << 16) | (static_cast<uint32_t>(buf[3]) << 24);
 }

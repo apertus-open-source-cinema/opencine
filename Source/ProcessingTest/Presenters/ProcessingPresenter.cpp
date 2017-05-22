@@ -26,11 +26,6 @@ void ProcessingPresenter::Test()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    //provider->Load("helloworld-ML-cleanup.DNG", FileFormat::DNG, *_image.get());
-
-    //OC_LOG_INFO(frameTimeLog);
-    //OC::Log::Logger::GetInstance().LogInfo("TEST1234");
-
     IAllocator* poolAllocator = new RawPoolAllocator(50 * 1024 * 1024);
 
     OC_LOG_INFO("Loading image");

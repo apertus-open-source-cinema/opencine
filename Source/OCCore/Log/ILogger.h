@@ -21,7 +21,7 @@ namespace OC
 			virtual void LogInfo(std::string message, std::string file, unsigned int line) = 0;
 			virtual void LogFatal(std::string message, std::string file, unsigned int line) = 0;
 		};
-	} // namespace Log
-} // namespace OC
+    }
+}
 
 #endif //ILOGGER_H

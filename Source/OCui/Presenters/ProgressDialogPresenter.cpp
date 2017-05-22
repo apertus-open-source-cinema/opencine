@@ -27,9 +27,6 @@ void ProgressDialogPresenter::NewTaskHandler(const OCEvent& event)
 
 void ProgressDialogPresenter::ProgressChanged(int progress) const
 {
-//    QString progressString = QString("Progress: %1%").arg(progress);
-//    qDebug(progressString.toLatin1());
-//    _view->SetTaskProgress(0, progress);
 }
 
 void ProgressDialogPresenter::TaskUpdated(ITask* task)

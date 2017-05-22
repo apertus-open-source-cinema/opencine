@@ -39,22 +39,12 @@ public:
 
     ~BayerFramePreProcessor();
 
-    //void SetData(unsigned char &data, int width, int height, OC::DataProvider::SourceFormat sourceFormat);
-
-    //virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat) override;
-
-    //virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, OC::DataProvider::SourceFormat sourceFormat, BayerPattern pattern);
-
     void SetData(uint8_t* data, OCImage& image, ImageFormat imageFormat) override;
 
     void Process() override;
 
     void Convert12To16Bit() const;
     void Convert14To16Bit() const;
-
-    /*void Convert14To16Bit()
-    {
-    }*/
 
     unsigned short* GetDataRed() override;
 

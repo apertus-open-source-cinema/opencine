@@ -65,11 +65,9 @@ void ProgressDialog::SetTaskProgress(ITask* task)
     values.replace(2, QString::number(task->GetProgressPercentage()));
 
     item->setData(values, Qt::DisplayRole);
-    //	_model->appendRow(item);
 }
 
 void ProgressDialog::ProgressChanged(int currentProgress) const
 {
     ui->progressBar->setValue(currentProgress);
-    //ui->label->setText(QString("File ") + std::to_string(currentProgress).c_str());
 }

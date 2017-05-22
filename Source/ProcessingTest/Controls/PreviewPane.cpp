@@ -34,13 +34,6 @@ PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent),
     format.setVersion(3, 3);
     format.setProfile(QSurfaceFormat::CoreProfile);
     setFormat(format);
-
-    //QSurfaceFormat format;
-    //format.setVersion(3, 3);
-    //format.setProfile(QSurfaceFormat::CoreProfile);
-    //format.setDepthBufferSize(24);
-    //format.setStencilBufferSize(8);
-    //QSurfaceFormat::setDefaultFormat(format);
 }
 
 PreviewPane::~PreviewPane()
@@ -83,16 +76,6 @@ float panY = 0.0;
 void PreviewPane::resizeGL(int w, int h)
 {
     viewWidth = (float)w / (float)h;
-    //viewHeight = 1.0;
-    //    QMatrix4x4 projection;
-    //    projection.ortho(-1.0 - wheelValue, 1.0 + wheelValue, -0.1, 0.1, 0.01f, 1000.0f);
-    //    QMatrix4x4 view;
-    //    view.lookAt(QVector3D(0.0,0.0,-5.0), QVector3D(0.0,0.0,0.0), QVector3D(0.0,1.0,0.0));
-    //    QMatrix4x4 model;
-    //    model.setToIdentity();
-
-    //    mvp = projection * view * model;
-    //glLoadMatrixf(m_projection.data());
 }
 
 void PreviewPane::paintGL()
@@ -199,20 +182,6 @@ void PreviewPane::SetupObject()
 
 void PreviewPane::SetupTexture()
 {
-    //    glGenTextures(1, &texture);
-
-    //    glBindTexture(GL_TEXTURE_2D, texture);
-
-    //    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    //    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixels[0]);
-    //    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE16, 4096, 3072, 0, GL_LUMINANCE, GL_UNSIGNED_SHORT, nullptr);
-
-    //    glGenerateMipmap(GL_TEXTURE_2D);
-
-    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    //    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 float zoomFactor = 1.1f;

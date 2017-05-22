@@ -73,7 +73,7 @@ QImage QMLThumbnailProvider::requestImage(const QString &id, QSize *size, const 
             if (dec->decode(pkt)) {
 
                 QtAV::VideoFrame frame = dec->frame();
-                // Increased requstedSize to get clear image when zooming in
+                // Increased requestedSize to get clear image when zooming in
                 // TODO: Check aspect ratio, seems a bit incorrect
                 image = frame.toImage(QImage::Format_RGB32, requestedSize * 2);
 
@@ -105,7 +105,7 @@ QImage QMLThumbnailProvider::requestImage(const QString &id, QSize *size, const 
 
     image = QImage(interleavedArray, _image->Width(), _image->Height(), QImage::Format_RGB888);
 
-    // Increased requstedSize to get clear image when zooming in
+    // Increased requestedSize to get clear image when zooming in
     image = image.scaled(requestedSize.width() * 2, requestedSize.height() * 2, Qt::KeepAspectRatio);
 
     delete[] interleavedArray;

@@ -18,7 +18,7 @@ namespace OC
 
             virtual void Process() = 0;
             virtual void SetData(uint8_t* /*data*/, OCImage& /*image*/, ImageFormat /*imageFormat*/) {}
-            //virtual void SetData(unsigned char& data, unsigned int width, unsigned int height, SourceFormat sourceFormat) = 0;
+
             virtual unsigned short* GetDataRed() = 0;
             virtual unsigned short* GetDataGreen() = 0;
             virtual unsigned short* GetDataBlue() = 0;

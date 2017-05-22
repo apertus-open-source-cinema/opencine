@@ -30,12 +30,6 @@ Rectangle {
             ctx.strokeStyle = '#222222'
             ctx.fillRect(0, 0, width, height)
 
-//            for(var i = 0; i < positions.length; i += 2)
-//            {
-//                positions[i] *= scaleFactorX;
-//                positions[i + 1] *= scaleFactorY;
-//            }
-
             var deltaX = width / 10
             var deltaY = height / 10
 

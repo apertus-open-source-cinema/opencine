@@ -5,10 +5,10 @@
 
 #include "Log/Logger.h"
 
-HashCheckTask::HashCheckTask(std::string fileName, uint64_t checkSum) :
+HashCheckTask::HashCheckTask(std::vector<FileTransferInfo>* fileList) :
     _hashGenerator(new xxHashAdapter()),
-    _fileName(fileName),
-    _checkSum(checkSum)
+    _fileList(fileList),
+    _currentFileIndex(0)
 {
 }
 
@@ -23,75 +23,58 @@ unsigned int HashCheckTask::GetProgressPercentage()
 
 std::__cxx11::string HashCheckTask::GetTaskDescription() { return "Checksum verification"; }
 
-std::__cxx11::string HashCheckTask::GetSubTaskDescription() { return _fileName; }
+std::__cxx11::string HashCheckTask::GetSubTaskDescription() { return _fileList->at(_currentFileIndex).FileName; }
 
-int HashCheckTask::GetFileSize(std::ifstream& fin) const
+long HashCheckTask::GetFileSize(std::ifstream& fin) const
 {
     fin.seekg(0, fin.end);
-    int fileSize = fin.tellg();
-	fin.seekg(0, fin.beg);
+    long fileSize = fin.tellg();
+    fin.seekg(0, fin.beg);
 
-	return fileSize;
+    return fileSize;
 }
 
 void HashCheckTask::Execute()
 {
-	//std::string targetFile = "E:/Temp/OC_COPY/ARRI/C001C005_140702_R3VJ.mov"; //QString::fromStdString(transferEvent.GetDestinationPaths().at(0));
-	//std::streamsize s;
+    unsigned int progress = 0;
+    unsigned int progressBlock = 100.0f / _fileList->size();
+    for(FileTransferInfo fileInfo : *_fileList)
+    {
+        _hashGenerator->Initialize();
 
-	//int count = 0;
+        std::ifstream fin(fileInfo.FullTargetPath, std::ios::in | std::ifstream::binary);
+        if (!fin.is_open())
+        {
+            return;
+        }
 
-	_hashGenerator->Initialize();
+        long fileSize = GetFileSize(fin);
 
-	try
-	{
-		std::ifstream fin(_fileName, std::ios::in | std::ifstream::binary);
-		//fin.exceptions(std::ifstream::failbit | std::ifstream::badbit);
-		if (!fin.is_open())
-		{
-			return;
-		}
-
-		int fileSize = GetFileSize(fin);
-		
-		unsigned int bufferSize = 1024 * 1024; // 1MB
+        unsigned int bufferSize = 1024 * 1024; // 1MB
         std::vector<char> buffer(fileSize, 0);
 
-		unsigned int totalChunks = fileSize / bufferSize;
-		unsigned int lastChunkSize = fileSize - (totalChunks * bufferSize);
+        unsigned int totalChunks = fileSize / bufferSize;
+        unsigned int lastChunkSize = fileSize - (totalChunks * bufferSize);
 
-		if (lastChunkSize != 0)
-		{
-			++totalChunks;
-		}
+        if (lastChunkSize != 0)
+        {
+            ++totalChunks;
+        }
 
-        unsigned int progress = 0;
-        unsigned int progressBlock = totalChunks / 100;
-
-		for (unsigned int index = 0; index < totalChunks; ++index)
-		{
-			if (index == totalChunks - 1)
-			{
-				bufferSize = lastChunkSize;
-			}
-
-			fin.read(buffer.data(), bufferSize);
-			_hashGenerator->Update(buffer.data(), bufferSize);
-			//fout.write(buffer.data(), bufferSize);
-
-
-            if (index > progressBlock + (progressBlock * index))
+        for (unsigned int index = 0; index < totalChunks; ++index)
+        {
+            if (index == totalChunks - 1)
             {
-                progress++;
-
-                //emit TaskUpdated(this);
-                ProgressChanged(progress);
+                bufferSize = lastChunkSize;
             }
-		}
+
+            fin.read(buffer.data(), bufferSize);
+            _hashGenerator->Update(buffer.data(), bufferSize);
+        }
 
         uint64_t fileHash = _hashGenerator->Retrieve();
-        OC_LOG_INFO("File: " + _fileName + " Hash: " + std::to_string(fileHash));
-        if(fileHash != _checkSum)
+        OC_LOG_INFO("File: " + fileInfo.FileName + " Hash: " + std::to_string(fileHash));
+        if(fileHash != fileInfo.Checksum)
         {
             OC_LOG_ERROR("Checksum not equal");
         }
@@ -100,27 +83,15 @@ void HashCheckTask::Execute()
             OC_LOG_INFO("Checksum OK");
         }
 
-		emit HashChecked(fileHash);
-	}
-	catch (const std::ios_base::failure& e)
-	{
-		// TODO: Just debug code, replace with logging
-		std::cout << e.what() << '\n';
-		std::string ex = e.what();
-	}
+        progress++;
+        _progressPercentage = progress * progressBlock;
+
+        emit TaskUpdated(this);
+    }
 }
 
 void HashCheckTask::ProgressChanged(unsigned int progress)
 {
-    int i = 0;
-
-    //	std::ostringstream threadID;
-    //	threadID << std::this_thread::get_id();
-    //	QString t = QString("Transfer thread ID: %1").arg(QString::fromStdString(threadID.str()));
-    //	qDebug(t.toLatin1());
-
-    //emit CopyProgressChanged(progress);
-
     _progressPercentage = progress;
 
     emit TaskUpdated(this);

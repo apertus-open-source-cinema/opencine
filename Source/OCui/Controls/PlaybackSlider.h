@@ -45,12 +45,7 @@ private:
     void SetupPlayer();
 
 	private slots:
-	//void OnSessionChanged(OCSession* session);
-	//void OnFrameChanged(unsigned int frameNumber, OCFrame* frame);
-	//void OnSliderMoved(int frameNumber);
-
     void OnPlayButtonToggled(bool toggled);
-	//void OnPlayRevButtonToggled(bool toggled);
 
     void OnStopClicked();
 

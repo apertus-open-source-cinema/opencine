@@ -23,14 +23,7 @@ void PlaybackSlider::UpdateSlider(qint64 currentPos)
 
 void PlaybackSlider::SetupEvents()
 {
-    //    connect(_presenter, SIGNAL(SessionChanged(OCSession*)), SLOT(OnSessionChanged(OCSession*)));
-    //    connect(_presenter, SIGNAL(FrameChanged(unsigned int, OCFrame*)), SLOT(OnFrameChanged(unsigned int, OCFrame*)));
-
-    //    connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), SLOT(OnSliderMoved(int)));
-
-    //connect(ui->playButton, SIGNAL(clicked()), SLOT(Play()));
     connect(ui->playButton, SIGNAL(toggled(bool)), SLOT(OnPlayButtonToggled(bool)));
-    //    connect(ui->playRevButton, SIGNAL(toggled(bool)), SLOT(OnPlayRevButtonToggled(bool)));
 
     connect(ui->stopButton, SIGNAL(clicked()), SLOT(OnStopClicked()));
 
@@ -39,8 +32,6 @@ void PlaybackSlider::SetupEvents()
 
     connect(ui->jumpStartButton, SIGNAL(clicked()), this, SLOT(OnJumpStartClicked()));
     connect(ui->jumpEndButton, SIGNAL(clicked()), this, SLOT(OnJumpEndClicked()));
-    //    connect(ui->jumpStartButton, SIGNAL(clicked()), _presenter, SLOT(JumpToStart()));
-    //    connect(ui->jumpEndButton, SIGNAL(clicked()), _presenter, SLOT(JumpToEnd()));
 }
 
 void PlaybackSlider::SetupPlayer()
@@ -76,8 +67,7 @@ void PlaybackSlider::SetupPlayer()
         player->setPosition(0);
         ui->horizontalSlider->setRange(0, player->duration());
     });
-    //player->setRelativeTimeMode(false);
-    //player->setStopPosition(player->duration());
+
     player->play();
 }
 
@@ -102,26 +92,6 @@ PlaybackSlider::~PlaybackSlider()
     delete ui;
 }
 
-//void PlaybackSlider::OnSessionChanged(OCSession* session)
-//{
-//  int i = 0;
-
-//  ui->horizontalSlider->setRange(0, session->GetFrameCount());
-//}
-
-//void PlaybackSlider::OnFrameChanged(unsigned int frameNumber, OCFrame* frame)
-//{
-//  ui->horizontalSlider->setSliderPosition(frameNumber);
-//}
-
-//void PlaybackSlider::OnSliderMoved(int frameNumber)
-//{
-//  disconnect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(OnSliderMoved(int)));
-
-//  _presenter->SetFrame(frameNumber);
-//  connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), SLOT(OnSliderMoved(int)));
-//}
-
 void PlaybackSlider::OnPlayButtonToggled(bool toggled)
 {
     player->togglePause();
@@ -132,19 +102,6 @@ void PlaybackSlider::OnPlayButtonToggled(bool toggled)
     }
 }
 
-//void PlaybackSlider::OnPlayRevButtonToggled(bool toggled)
-//{
-//  if(toggled)
-//  {
-//    ui->playButton->setChecked(false);
-//    _presenter->PlayRev();
-//  }
-//  else
-//  {
-//    _presenter->Pause();
-//  }
-//}
-
 void PlaybackSlider::OnStopClicked()
 {
     ui->playButton->setChecked(false);
@@ -153,7 +110,6 @@ void PlaybackSlider::OnStopClicked()
     player->togglePause();
     player->setState(QtAV::AVPlayer::PausedState);
     player->setPosition(0);
-    //_presenter->Stop();
 }
 
 void PlaybackSlider::OnJumpStartClicked()

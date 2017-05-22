@@ -47,8 +47,6 @@ Rectangle {
             asynchronous: true
             onStatusChanged:
             {
-                //console.log("Image state: " + status)
-
                 if (thumbnailImage.status == Image.Error || thumbnailImage.status == Image.Null)
                 {
                     thumbnailImage.source = "";

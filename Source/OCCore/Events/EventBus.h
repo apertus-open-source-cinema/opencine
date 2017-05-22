@@ -34,12 +34,6 @@ class StartDriveTransferEvent : public OCEvent
 	std::string _sourcePath;
 	std::vector<std::string> _destinationPaths;
 
-	std::string _testMember = "123";
-
-	//	void DummyMethod() override
-	//	{
-	//	}
-
 public:
 	void SetSourcePath(const std::string sourcePath)
 	{

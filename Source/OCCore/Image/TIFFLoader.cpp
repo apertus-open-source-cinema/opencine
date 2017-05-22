@@ -112,11 +112,6 @@ void TIFFLoader::Load(unsigned char* data, unsigned size, OCImage& image, IAlloc
 	unsigned int ifdOffset = header.IFDOffset;
 
 	FindMainImage(data, ifdOffset, ifdCount);
-
-	//ProcessIFDBlock(ifdOffset);
-
-	//tags = new TIFFTag[_ifdEntries];
-	//memcpy(tags, data + header.IFDOffset + sizeof(_ifdEntries), sizeof(TIFFTag) * _ifdEntries);
 	
 	std::unordered_map<int, std::string> tagNames = CreateTIFFTagMap();
 
@@ -132,8 +127,7 @@ void TIFFLoader::Load(unsigned char* data, unsigned size, OCImage& image, IAlloc
 		}
 
 		std::cout << "Tag ID: " << tags[i].ID << std::endl;
-		//OC_LOG_INFO("Tag ID: " + tagNames.find(tags[i].ID));// << std::to_string(tags[i].ID));
-		OC_LOG_INFO("Tag ID: " + std::to_string(tags[i].ID));// << std::to_string(tags[i].ID));
+        OC_LOG_INFO("Tag ID: " + std::to_string(tags[i].ID));
 
 		auto it = varMap.find(tags[i].ID);
 		if (it != varMap.end())
@@ -202,10 +196,6 @@ void TIFFLoader::ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&
 	varMap.insert(std::make_pair(273, [=, &image](TIFFTag& tag) mutable
 	{
 		_imageDataOffset = tag.DataOffset;
-		//unsigned int size = (unsigned int)(image.Width() * image.Height() * ((float)bitsPerPixel / 8.0f));
-		//imageData = new unsigned char[size];
-		//memcpy(imageData, data + tag.DataOffset, size);
-		//image.SetData((unsigned char*)data + tag.DataOffset, size);
 	}));
 }
 
@@ -219,14 +209,9 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image) const
     image.SetRedChannel(_allocator->Allocate(dataSize));
     image.SetGreenChannel(_allocator->Allocate(dataSize));
     image.SetBlueChannel(_allocator->Allocate(dataSize));
-    //for (unsigned int j = 0; j < linearizationLength - 1; j++)
-	//{
-	//	SwapEndian(linearizationTable[j]);
-	//}
 
     // TODO: Replace hardcoded image format value
     frameProcessor->SetData(&data[_imageDataOffset], image, ImageFormat::Integer12);
-	//frameProcessor->SetLinearizationData(linearizationTable, linearizationLength);
 	frameProcessor->Process();
 
 	auto diffTime = std::chrono::high_resolution_clock::now() - start;

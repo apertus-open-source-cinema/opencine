@@ -10,7 +10,6 @@
 #include <QtQml/QQmlComponent>
 #include <QItemSelection>
 
-//#include "Data/DestinationsListItem.h"
 #include "Interfaces/IBackupView.h"
 
 class IBackupPresenter;

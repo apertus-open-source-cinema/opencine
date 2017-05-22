@@ -4,8 +4,6 @@
 #include <QQmlContext>
 #include <QWidget>
 
-//#include "../Data/DestinationsListItem.h"
-
 namespace Ui {
     class DestinationsControl;
 }

@@ -15,21 +15,6 @@
 
 #include "../Interfaces/IBackupView.h"
 
-//class IBackupPresenter : public QObject
-//{
-//	Q_OBJECT
-
-//public:
-//	//virtual void RefreshDriveList() = 0;
-//	//virtual void SelectDrive(std::string drivePath) = 0;
-
-//	//virtual void StartTransfer() = 0;
-
-//signals:
-//	//void DriveListChanged(std::vector<PathInfo> driveList);
-//	//void DriveSelectionChanged(std::vector<std::string> driveList);
-//};
-
 class BackupPresenter : public OC::UI::BasePresenter
 {
 	Q_OBJECT
@@ -45,9 +30,6 @@ class BackupPresenter : public OC::UI::BasePresenter
 	void SetupSignals() const;
 
 	void StartTransfer();
-
-	//signals:
-	//void StartTransferSig(std::string drivePath);
 
 private slots:
 	void DriveListChanged(std::vector<PathInfo> driveList);

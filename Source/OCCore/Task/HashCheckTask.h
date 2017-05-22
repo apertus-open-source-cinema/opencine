@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "ITask.h"
+#include "Transfer/FileTransferInfo.h"
 #include "Hash/xxHashAdapter.h"
 
 #include "OCCore_export.h"
@@ -14,13 +15,15 @@ class OCCORE_EXPORT HashCheckTask : public ITask
 
 	std::unique_ptr<IHashGenerator> _hashGenerator = nullptr;
 
-	std::string _fileName;
-    uint64_t _checkSum;
+    std::vector<FileTransferInfo>* _fileList;
+    unsigned int _currentFileIndex;
 
-	int GetFileSize(std::ifstream& fin) const;
+    long GetFileSize(std::ifstream& fin) const;
+
+    void UpdateProgress(unsigned int index, unsigned int progress, unsigned int progressBlock);
 
 public:
-    HashCheckTask(std::string fileName, uint64_t checkSum);
+    HashCheckTask(std::vector<FileTransferInfo>* fileList);
 	virtual ~HashCheckTask();
 
     unsigned int GetProgressPercentage() override;

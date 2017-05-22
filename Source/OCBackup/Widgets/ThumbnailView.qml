@@ -16,10 +16,6 @@ Rectangle {
 
     MouseArea {
         id: rootMouseArea
-        //        anchors.rightMargin: -700
-        //        anchors.bottomMargin: -780
-        //        anchors.leftMargin: 700
-        //        anchors.topMargin: 780
         anchors.fill: parent
         hoverEnabled: true
 
@@ -36,8 +32,6 @@ Rectangle {
             border.color: "white";
             border.width: 2;
             opacity: 0.3;
-            //x: gridView1.currentItem.x
-            //y: gridView1.currentItem.y;
         }
     }
 
@@ -52,31 +46,24 @@ Rectangle {
         highlightRangeMode: GridView.NoHighlightRange
         snapMode: GridView.NoSnap
 
-        //highlightFollowsCurrentItem: true;
         highlightMoveDuration: 0
         highlight: thumbHighlight
         focus: true
-
-        //* (scaleSlider.value / 5)
-        //keyNavigationWraps: false
 
         model: fileList
 
         delegate: ThumbnailItem
         {
             id: thumbnailItem
-            //clipResolution: model.clipWidth + "x" + model.clipHeight
             clipName: model.clipName
             clipPath: model.clipPath
             width: 210 * (scaleSlider.value / 3)
-            //height: 200
-
 
             MouseArea
             {
                 anchors.fill: parent
                 onClicked: gridView1.currentIndex = index
-                onDoubleClicked: root.playClip(gridView1.currentIndex) //highlightColor = "darkorange"
+                onDoubleClicked: root.playClip(gridView1.currentIndex)
                 hoverEnabled: true;
             }
         }
