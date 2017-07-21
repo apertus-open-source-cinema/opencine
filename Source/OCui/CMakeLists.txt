@@ -1,3 +1,7 @@
+# Copyright (c) 2017 apertus° Association & contributors
+# Project: OpenCine / OCBackup
+# License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 cmake_minimum_required(VERSION 3.5)
 PROJECT(OCui)
 
@@ -17,7 +21,7 @@ FILE(GLOB_RECURSE QML_FILES "*.qml")
 
 QT5_WRAP_UI(UI_FILES_MOC ${UI_FILES})
 
-INCLUDE_DIRECTORIES("${OCCore_SOURCE_DIR}")
+INCLUDE_DIRECTORIES("${OCcore_SOURCE_DIR}")
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES} ${UI_FILES_MOC} ${QML_FILES})
 
@@ -30,7 +34,7 @@ message(WARNING "QtAV BINARY_DIR: ${BINARY_DIR}")
 LINK_DIRECTORIES(${BINARY_DIR}/lib/)
 
 add_dependencies(${PROJECT_NAME} QtAV_project)
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCCore ${BINARY_DIR}/lib/libQtAV.so ${BINARY_DIR}/lib/libQtAVWidgets.so)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCcore ${BINARY_DIR}/lib/libQtAV.so ${BINARY_DIR}/lib/libQtAVWidgets.so)
 
 include(GenerateExportHeader)
 string(TOUPPER "${PROJECT_NAME}_EXPORT" EXPORT_NAME)

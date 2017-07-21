@@ -1,12 +1,15 @@
 // Copyright (c) 2017 apertus° Association & contributors
-// Project: OpenCine / OCBackup
+// Project: OpenCine / OCcore
 // License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-#include "Log4cxxLoggingAdapter.h"
+//#include <QDirIterator>
 
 namespace OC
 {
-    namespace Log
-    {
-    }
+	namespace DataProvider
+	{
+        // TODO: Implement base class for data loaders
+	}
 }
+
+

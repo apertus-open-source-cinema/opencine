@@ -18,7 +18,7 @@
 #include <Hash/xxHashAdapter.h>
 #include "Task/HashCheckTask.h"
 
-// TODO: Refactor by moving to more suitable location and possibly renaming, possible location OCCore/Service
+// TODO: Refactor by moving to more suitable location and possibly renaming, possible location OCcore/Service
 // Note: std::string is used instead of QString, see previous note
 class IDriveTransferService : public OCService
 {

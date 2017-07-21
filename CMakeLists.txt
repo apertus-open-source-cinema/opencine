@@ -1,3 +1,7 @@
+# Copyright (c) 2017 apertus° Association & contributors
+# Project: OpenCine / OCBackup
+# License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 cmake_minimum_required(VERSION 3.5)
 project(ApertusOpenCine)
 
@@ -90,7 +94,7 @@ include_directories(${INSTALL_DIR}/src/QtAV_project/widgets/)
 
 #Projects
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OpenCine/)
-add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCCore/)
+add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCcore/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCui/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCLauncher/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCBackup/)
