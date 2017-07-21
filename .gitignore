@@ -16,3 +16,5 @@ cmake-build-debug/
 \.idea/
 
 \.sync\.ffs_db
+
+Source/\.vscode/

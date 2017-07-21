@@ -9,6 +9,9 @@
 #include "OCEvent.h"
 #include "Task/ITask.h"
 
+#include "Log/Logger.h"
+
+// TODO: Move to better location
 class RegisterNewTaskEvent : public OCEvent
 {
 	ITask* _task;
@@ -29,6 +32,7 @@ public:
 	}
 };
 
+// TODO: Move to better location
 class StartDriveTransferEvent : public OCEvent
 {
 	std::string _sourcePath;
@@ -93,6 +97,7 @@ class OCEventBus
 		if (it == eventMap.end())
 		{
 			//Not Found
+            //OC_LOG_ERROR("Event not found.");
 		}
 		else
 		{

@@ -12,6 +12,8 @@ if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 
+#SET( CMAKE_BUILD_TYPE Release ... FORCE )
+
 #if(WIN32)
 #ADD_DEFINITIONS(-DWIN32)
 #endif()
@@ -19,7 +21,8 @@ endif()
 # Simplifies configuration under Windows, have to be checked in Linux, if something similar is required when not using QtCreator
 #IF(WIN32)
 #    SET( CMAKE_PREFIX_PATH "C:/Qt/5.7/msvc2015_64/" CACHE FILEPATH "Qt path, e.g. C:/Qt/5.7/msvc2015_64/" )
-#ELSE(UNIX)
+#if(UNIX)
+#   set(CMAKE_GENERATOR "Unix Makefiles")
 #    SET( CMAKE_PREFIX_PATH "$HOME/Qt/5.8/gcc_64/lib/cmake" CACHE FILEPATH "Qt path, e.g. $HOME/Qt/5.8/gcc_64/lib/cmake/Qt5" )
 #ENDIF()
 

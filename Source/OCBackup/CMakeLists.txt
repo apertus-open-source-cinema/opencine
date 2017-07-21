@@ -1,3 +1,7 @@
+// Copyright (c) 2017 apertus° Association & contributors
+// Project: OpenCine / OCBackup
+// License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 cmake_minimum_required(VERSION 3.5)
 PROJECT(OCBackup)
 
@@ -10,6 +14,7 @@ set(CMAKE_AUTOMOC ON)
 
 FIND_PACKAGE(Qt5Widgets REQUIRED)
 FIND_PACKAGE(Qt5QuickWidgets REQUIRED)
+FIND_PACKAGE(Qt5Concurrent REQUIRED)
 
 FILE(GLOB SOURCE_FILES "*.cpp" "*.h"
     "Views/*.cpp" "Views/*.h"
@@ -35,7 +40,7 @@ ENDIF()
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCCore OCui)
 
-QT5_USE_MODULES(${PROJECT_NAME} Widgets QuickWidgets)
+QT5_USE_MODULES(${PROJECT_NAME} Widgets QuickWidgets Concurrent)
 
 FILE(COPY "Widgets" DESTINATION ${CMAKE_BINARY_DIR}/bin)
 

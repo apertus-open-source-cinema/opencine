@@ -1,3 +1,7 @@
+// Copyright (c) 2017 apertus° Association & contributors
+// Project: OpenCine / OCBackup
+// License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 #ifndef DRIVETRANSFERSERVICE_H
 #define DRIVETRANSFERSERVICE_H
 
@@ -9,7 +13,8 @@
 #include <QThread>
 
 #include "OCService.h"
-#include "Transfer/DriveTransfer.h"
+//#include "Transfer/DriveTransfer.h"
+#include "Transfer/SequentialDriveTransfer.h"
 #include <Hash/xxHashAdapter.h>
 #include "Task/HashCheckTask.h"
 
@@ -66,26 +71,45 @@ public:
         // TODO: Conversion is necessary at the moment, as arguments are not polymorphic yet
         const StartDriveTransferEvent transferEvent = dynamic_cast<const StartDriveTransferEvent&>(event);
 
-
         EnumerateFiles(QString::fromStdString(transferEvent.GetSourcePath()), &fileList);
-
-        ReplicateFolderStructure(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths().at(0));
 
         _destinationPaths = transferEvent.GetDestinationPaths();
 
-        DriveTransfer* driveTransfer = new DriveTransfer(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths(), &fileList);
+        std::vector<ITask*> tasks;
 
-        RegisterNewTaskEvent newTaskEvent(driveTransfer);
-        GetEventBus()->FireEvent<RegisterNewTaskEvent>(newTaskEvent);
+        for(std::string destination : _destinationPaths)
+        {
+            SequentialDriveTransfer* driveTransfer = new SequentialDriveTransfer(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths(), &fileList);
 
-        QThread* thread = thread = new QThread();
-        driveTransfer->moveToThread(thread);
-        connect(thread, SIGNAL(started()), driveTransfer, SLOT(Execute()));
-        connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+            ReplicateFolderStructure(transferEvent.GetSourcePath(), destination);
+
+            RegisterNewTaskEvent newTaskEvent(driveTransfer);
+            GetEventBus()->FireEvent<RegisterNewTaskEvent>(newTaskEvent);
+
+            tasks.push_back(driveTransfer);
+        }
+
+        //        SequentialDriveTransfer* driveTransfer = new SequentialDriveTransfer(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths(), &fileList);
+
+        //        RegisterNewTaskEvent newTaskEvent(driveTransfer);
+        //        GetEventBus()->FireEvent<RegisterNewTaskEvent>(newTaskEvent);
+
+        // TODO: Move to some central place
         qRegisterMetaType<int64_t>("int64_t");
-        connect(driveTransfer, SIGNAL(FileTransfered(int, int64_t)), this, SLOT(FileTransfered(int, int64_t)));
-        connect(driveTransfer, SIGNAL(TransferFinished()), this, SLOT(TransferFinished()));
-        thread->start();
+
+        for(ITask* task : tasks)
+        {
+             SequentialDriveTransfer* t = static_cast<SequentialDriveTransfer*>(task);
+             t->Execute();
+//            QThread* thread = new QThread(task);
+//            task->moveToThread(thread);
+//            connect(thread, SIGNAL(started()), task, SLOT(Execute()));
+//            connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+//            connect(task, SIGNAL(FileTransfered(int, int64_t)), this, SLOT(FileTransfered(int, int64_t)));
+//            connect(task, SIGNAL(TransferFinished()), this, SLOT(TransferFinished()));
+//            thread->start();
+        }
     }
 
     //void TestThread(DriveTransfer& driveTransfer) const;

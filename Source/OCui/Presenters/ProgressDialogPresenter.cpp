@@ -22,6 +22,7 @@ void ProgressDialogPresenter::NewTaskHandler(const OCEvent& event)
     //std::bind / std::function
     _view->AddTask(task);
 
+    // TODO: Add parent to supress separate window bar in the taskbar
     _view->show();
 }
 
