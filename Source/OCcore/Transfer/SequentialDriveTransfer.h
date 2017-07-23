@@ -22,7 +22,7 @@ class OCCORE_EXPORT SequentialDriveTransfer : public ITask
 
     std::string _subTaskDescription;
 
-    void ReplicateFolderStructure(std::string& rootPath, std::string& targetPath) const;
+    void ReplicateFolderStructure(std::string rootPath, std::string targetPath) const;
 
 public:
     // TODO: Add setters for source and destination paths to be able to reuse SequentialDriveTransfer

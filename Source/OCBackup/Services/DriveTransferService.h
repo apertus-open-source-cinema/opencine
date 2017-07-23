@@ -71,23 +71,19 @@ public:
         // TODO: Conversion is necessary at the moment, as arguments are not polymorphic yet
         const StartDriveTransferEvent transferEvent = dynamic_cast<const StartDriveTransferEvent&>(event);
 
+        fileList.clear();
         EnumerateFiles(QString::fromStdString(transferEvent.GetSourcePath()), &fileList);
 
         _destinationPaths = transferEvent.GetDestinationPaths();
 
         std::vector<ITask*> tasks;
 
-        for(std::string destination : _destinationPaths)
-        {
-            SequentialDriveTransfer* driveTransfer = new SequentialDriveTransfer(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths(), &fileList);
+        SequentialDriveTransfer* driveTransfer = new SequentialDriveTransfer(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths(), &fileList);
 
-            ReplicateFolderStructure(transferEvent.GetSourcePath(), destination);
+        RegisterNewTaskEvent newTaskEvent(driveTransfer);
+        GetEventBus()->FireEvent<RegisterNewTaskEvent>(newTaskEvent);
 
-            RegisterNewTaskEvent newTaskEvent(driveTransfer);
-            GetEventBus()->FireEvent<RegisterNewTaskEvent>(newTaskEvent);
-
-            tasks.push_back(driveTransfer);
-        }
+        tasks.push_back(driveTransfer);
 
         //        SequentialDriveTransfer* driveTransfer = new SequentialDriveTransfer(transferEvent.GetSourcePath(), transferEvent.GetDestinationPaths(), &fileList);
 
@@ -99,36 +95,20 @@ public:
 
         for(ITask* task : tasks)
         {
-             SequentialDriveTransfer* t = static_cast<SequentialDriveTransfer*>(task);
-             t->Execute();
-//            QThread* thread = new QThread(task);
-//            task->moveToThread(thread);
-//            connect(thread, SIGNAL(started()), task, SLOT(Execute()));
-//            connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+            SequentialDriveTransfer* t = static_cast<SequentialDriveTransfer*>(task);
+            t->Execute();
+            //            QThread* thread = new QThread(task);
+            //            task->moveToThread(thread);
+            //            connect(thread, SIGNAL(started()), task, SLOT(Execute()));
+            //            connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-//            connect(task, SIGNAL(FileTransfered(int, int64_t)), this, SLOT(FileTransfered(int, int64_t)));
-//            connect(task, SIGNAL(TransferFinished()), this, SLOT(TransferFinished()));
-//            thread->start();
+            //            connect(task, SIGNAL(FileTransfered(int, int64_t)), this, SLOT(FileTransfered(int, int64_t)));
+            //            connect(task, SIGNAL(TransferFinished()), this, SLOT(TransferFinished()));
+            //            thread->start();
         }
     }
 
     //void TestThread(DriveTransfer& driveTransfer) const;
-
-    void ReplicateFolderStructure(std::string rootPath, std::string targetPath) const
-    {
-        QDir().mkdir(QString::fromStdString(targetPath));
-
-        QDirIterator directories(QString::fromStdString(rootPath), QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
-
-        while (directories.hasNext())
-        {
-            directories.next();
-
-            QString relativePath = directories.filePath();
-            relativePath = relativePath.mid(static_cast<int>(rootPath.length()));
-            QDir().mkdir(QString::fromStdString(targetPath) + "/" + relativePath);
-        }
-    }
 
     // Used to enumerate files in source folder, usually source drive
     void EnumerateFiles(QString path, std::vector<FileTransferInfo>* fileList)

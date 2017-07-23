@@ -32,6 +32,22 @@ std::string SequentialDriveTransfer::GetSubTaskDescription()
     return _subTaskDescription;
 }
 
+void SequentialDriveTransfer::ReplicateFolderStructure(std::string rootPath, std::string targetPath) const
+{
+    QDir().mkdir(QString::fromStdString(targetPath));
+
+    QDirIterator directories(QString::fromStdString(rootPath), QDir::Dirs | QDir::NoSymLinks | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
+
+    while (directories.hasNext())
+    {
+        directories.next();
+
+        QString relativePath = directories.filePath();
+        relativePath = relativePath.mid(static_cast<int>(rootPath.length()));
+        QDir().mkdir(QString::fromStdString(targetPath) + "/" + relativePath);
+    }
+}
+
 void SequentialDriveTransfer::TransferFile(QString sourcePath, QString relativeFilePath, QString targetPath, int64_t& checksum)
 {
     QFile source(sourcePath + "/" + relativeFilePath);
@@ -77,11 +93,11 @@ void SequentialDriveTransfer::TransferFile(QString sourcePath, QString relativeF
 
         totalRead += readSize;
 
-         //progress = totalRead / progressBlock;
+        //progress = totalRead / progressBlock;
 
-        if (totalRead > progressBlock * progress)
+        if (totalRead > progressBlock * (progress + 1))
         {
-            progress += totalRead / progressBlock;
+            progress = totalRead / progressBlock;
 
             ProgressChanged(progress);
         }
@@ -95,19 +111,22 @@ void SequentialDriveTransfer::Execute()
     OC_LOG_INFO("Copying started");
 
     // TODO: Add handling of multiple destinations
-    std::string destination = _destinationPaths[0];
+    // std::string destination = _destinationPaths[0];
 
-    int index = 0;
-    for (FileTransferInfo& info : *_fileList)
+    for(std::string destination : _destinationPaths)
     {
-        QString relativeFilePath = QString::fromStdString(info.RelativeFolderPath + info.FileName);
-        int64_t checksum = 0;
-        TransferFile(_sourcePath.c_str(), relativeFilePath, QString::fromStdString(destination), checksum);
+        int index = 0;
+        for (FileTransferInfo& info : *_fileList)
+        {
+            QString relativeFilePath = QString::fromStdString(info.RelativeFolderPath + info.FileName);
+            int64_t checksum = 0;
+            TransferFile(_sourcePath.c_str(), relativeFilePath, QString::fromStdString(destination), checksum);
 
-        emit FileTransfered(index, checksum);
+            emit FileTransfered(index, checksum);
 
-        info.FullTargetPath = destination + "/" + relativeFilePath.toStdString();
-        index++;
+            info.FullTargetPath = destination + "/" + relativeFilePath.toStdString();
+            index++;
+        }
     }
 
     // NOTE: Workaround, as QThread::finished() wasn't emitted
