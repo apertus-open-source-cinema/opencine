@@ -14,7 +14,30 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="0">
+   <item row="0" column="0">
+    <widget class="PreviewPane" name="openGLWidget">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>480</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QWidget" name="widget" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>320</width>
+       <height>240</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="pushButton">
@@ -57,32 +80,6 @@
      </item>
     </layout>
    </item>
-   <item row="0" column="0">
-    <widget class="PreviewPane" name="openGLWidget">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>480</height>
-      </size>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QWidget" name="widget" native="true">
-     <property name="minimumSize">
-      <size>
-       <width>320</width>
-       <height>240</height>
-      </size>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="PlaybackSlider" name="widget_2" native="true"/>
-   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -90,12 +87,6 @@
    <class>PreviewPane</class>
    <extends>QOpenGLWidget</extends>
    <header>./Controls/PreviewPane.h</header>
-  </customwidget>
-  <customwidget>
-   <class>PlaybackSlider</class>
-   <extends>QWidget</extends>
-   <header>./Controls/PlaybackSlider.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

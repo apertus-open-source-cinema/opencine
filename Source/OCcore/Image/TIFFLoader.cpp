@@ -140,6 +140,7 @@ void TIFFLoader::Load(unsigned char* data, unsigned size, OCImage& image, IAlloc
 		}
 	}
 
+    _allocator = &allocator;
     PreProcess(data, image);
 
 	Cleanup();

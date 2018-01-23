@@ -22,7 +22,7 @@ void PlaybackSlider::UpdateSlider(qint64 currentPos)
     int pos = ui->horizontalSlider->value();
     int max = ui->horizontalSlider->maximum();
 
-    ui->horizontalSlider->setValue(player->position());
+    //ui->horizontalSlider->setValue(player->position());
 }
 
 void PlaybackSlider::SetupEvents()
@@ -40,55 +40,55 @@ void PlaybackSlider::SetupEvents()
 
 void PlaybackSlider::SetupPlayer()
 {
-    QtAV::setLogLevel(QtAV::LogWarning);
+//    QtAV::setLogLevel(QtAV::LogWarning);
 
-    QVBoxLayout *vl = new QVBoxLayout(ui->frame);
-    vl->setMargin(0);
-    QtAV::Widgets::registerRenderers();
-    player = new QtAV::AVPlayer(vl);
-    QtAV::VideoOutput* videoOutput = new QtAV::VideoOutput(vl);
-    if (!videoOutput->widget())
-    {
-        return;
-    }
+//    QVBoxLayout *vl = new QVBoxLayout(ui->frame);
+//    vl->setMargin(0);
+//    QtAV::Widgets::registerRenderers();
+//    player = new QtAV::AVPlayer(vl);
+//    QtAV::VideoOutput* videoOutput = new QtAV::VideoOutput(vl);
+//    if (!videoOutput->widget())
+//    {
+//        return;
+//    }
 
-    player->setRenderer(videoOutput);
-    QWidget* widget = videoOutput->widget();
-    vl->addWidget(widget);
-    //ui->frame->setLayout(vl);
-    QPoint pos = widget->pos();
-    int width = widget->width();
-    int height = widget->height();
+//    player->setRenderer(videoOutput);
+//    QWidget* widget = videoOutput->widget();
+//    vl->addWidget(widget);
+//    //ui->frame->setLayout(vl);
+//    QPoint pos = widget->pos();
+//    int width = widget->width();
+//    int height = widget->height();
 
-    //videoOutput->widget()->showFullScreen();
+//    //videoOutput->widget()->showFullScreen();
 
-    player->setSeekType(QtAV::AccurateSeek);
+//    player->setSeekType(QtAV::AccurateSeek);
 
-    connect(player, &QtAV::AVPlayer::positionChanged, this, &PlaybackSlider::UpdateSlider);
+//    connect(player, &QtAV::AVPlayer::positionChanged, this, &PlaybackSlider::UpdateSlider);
 
-    connect(player, &QtAV::AVPlayer::started, [this](){
-        connect(player, &QtAV::AVPlayer::seekFinished, this, &PlaybackSlider::PauseAfterLoad);
-        player->setPosition(0);
-        ui->horizontalSlider->setRange(0, player->duration());
-    });
+//    connect(player, &QtAV::AVPlayer::started, [this](){
+//        connect(player, &QtAV::AVPlayer::seekFinished, this, &PlaybackSlider::PauseAfterLoad);
+//        player->setPosition(0);
+//        ui->horizontalSlider->setRange(0, player->duration());
+//    });
 
-    player->play();
+//    player->play();
 }
 
 void PlaybackSlider::PrevFrame()
 {
-    player->stepBackward();
+    //player->stepBackward();
 }
 
 void PlaybackSlider::NextFrame()
 {
-    player->stepForward();
+    //player->stepForward();
 }
 
 void PlaybackSlider::PauseAfterLoad()
 {
-    player->pause(true);
-    disconnect(player, &QtAV::AVPlayer::seekFinished, this, &PlaybackSlider::PauseAfterLoad);
+    //player->pause(true);
+    //disconnect(player, &QtAV::AVPlayer::seekFinished, this, &PlaybackSlider::PauseAfterLoad);
 }
 
 PlaybackSlider::~PlaybackSlider()
@@ -98,7 +98,7 @@ PlaybackSlider::~PlaybackSlider()
 
 void PlaybackSlider::OnPlayButtonToggled(bool toggled)
 {
-    player->togglePause();
+    //player->togglePause();
 
     if(toggled)
     {
@@ -111,9 +111,9 @@ void PlaybackSlider::OnStopClicked()
     ui->playButton->setChecked(false);
     ui->playRevButton->setChecked(false);
 
-    player->togglePause();
-    player->setState(QtAV::AVPlayer::PausedState);
-    player->setPosition(0);
+//    player->togglePause();
+//    player->setState(QtAV::AVPlayer::PausedState);
+//    player->setPosition(0);
 }
 
 void PlaybackSlider::OnJumpStartClicked()
@@ -121,9 +121,9 @@ void PlaybackSlider::OnJumpStartClicked()
     ui->playButton->setChecked(false);
     ui->playRevButton->setChecked(false);
 
-    player->togglePause();
-    player->setState(QtAV::AVPlayer::PausedState);
-    player->setPosition(0);
+//    player->togglePause();
+//    player->setState(QtAV::AVPlayer::PausedState);
+//    player->setPosition(0);
 }
 
 void PlaybackSlider::OnJumpEndClicked()
@@ -131,14 +131,14 @@ void PlaybackSlider::OnJumpEndClicked()
     ui->playButton->setChecked(false);
     ui->playRevButton->setChecked(false);
 
-    player->togglePause();
-    player->setState(QtAV::AVPlayer::PausedState);
-    player->setPosition(player->duration());
+//    player->togglePause();
+//    player->setState(QtAV::AVPlayer::PausedState);
+//    player->setPosition(player->duration());
 }
 
 void PlaybackSlider::LoadFile(QString filePath)
 {
-    player->setFile(filePath);
-    player->load();
-    player->play();
+//    player->setFile(filePath);
+//    player->load();
+//    player->play();
 }

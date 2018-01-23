@@ -7,8 +7,8 @@
 
 #include <QWidget>
 
-#include <QtAV/QtAV>
-#include <QtAVWidgets/QtAVWidgets>
+//#include <QtAV/QtAV>
+//#include <QtAVWidgets/QtAVWidgets>
 
 #include "OCui_export.h"
 
@@ -44,7 +44,7 @@ private:
 	Ui::PlaybackSlider *ui;
 	bool _advancedMode;
 
-    QtAV::AVPlayer* player;
+    //QtAV::AVPlayer* player;
 
     void SetupPlayer();
 

@@ -77,27 +77,27 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/MemoryPool)
 
 SET(QTDIR ${CMAKE_PREFIX_PATH})
 
-message(WARNING "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
-ExternalProject_Add(QtAV_project
-                    PREFIX 3rdParty/QtAV
-                    GIT_REPOSITORY "https://github.com/wang-bin/QtAV.git"
-                    GIT_TAG "master"
-                    UPDATE_COMMAND ""
-                    INSTALL_COMMAND ""
-                    CMAKE_ARGS -DQTDIR=${QTDIR} -DBUILD_EXAMPLES=OFF)
+#message(WARNING "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+#ExternalProject_Add(QtAV_project
+#                    PREFIX 3rdParty/QtAV
+#                    GIT_REPOSITORY "https://github.com/wang-bin/QtAV.git"
+#                    GIT_TAG "master"
+#                    UPDATE_COMMAND ""
+#                    INSTALL_COMMAND ""
+#                    CMAKE_ARGS -DQTDIR=${QTDIR} -DBUILD_EXAMPLES=OFF)
 
 
-ExternalProject_Get_Property(QtAV_project INSTALL_DIR)
-include_directories(${INSTALL_DIR}/src/QtAV_project/src/)
-message(WARNING "QTAV_DIR: ${INSTALL_DIR}/src/QtAV_project/src/")
-include_directories(${INSTALL_DIR}/src/QtAV_project/widgets/)
+#ExternalProject_Get_Property(QtAV_project INSTALL_DIR)
+#include_directories(${INSTALL_DIR}/src/QtAV_project/src/)
+#message(WARNING "QTAV_DIR: ${INSTALL_DIR}/src/QtAV_project/src/")
+#include_directories(${INSTALL_DIR}/src/QtAV_project/widgets/)
 
 #Projects
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OpenCine/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCcore/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCui/)
-add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCLauncher/)
-add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCBackup/)
+#add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCLauncher/)
+#add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCBackup/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/ProcessingTest/)
 
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/CinemaDNGDecoder/)

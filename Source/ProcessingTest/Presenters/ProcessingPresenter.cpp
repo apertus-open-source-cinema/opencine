@@ -33,8 +33,8 @@ void ProcessingPresenter::Test()
     IAllocator* poolAllocator = new RawPoolAllocator(50 * 1024 * 1024);
 
     OC_LOG_INFO("Loading image");
-    //provider->Load("darklab-frame00004.dng", FileFormat::DNG, *_image.get(), *poolAllocator);
-    provider->Load("M11-1526.VB.mlv", FileFormat::MLV, *_image.get(), *poolAllocator);
+    provider->Load("test_frame.dng", FileFormat::DNG, *_image.get(), *poolAllocator);
+//    provider->Load("M11-1526.VB.mlv", FileFormat::MLV, *_image.get(), *poolAllocator);
     OC_LOG_INFO("Loading finished");
 
     OC_LOG_INFO("Demosaicing");

@@ -25,16 +25,16 @@ INCLUDE_DIRECTORIES("${OCcore_SOURCE_DIR}")
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES} ${UI_FILES_MOC} ${QML_FILES})
 
-ExternalProject_Get_Property(QtAV_project BINARY_DIR)
+#ExternalProject_Get_Property(QtAV_project BINARY_DIR)
 
 #message(STATUS "QtAV: ${QTAV_LIB}")
 #message(STATUS "QtAVWidgets: ${QTAVWIDGETS_LIB}")
 
 message(WARNING "QtAV BINARY_DIR: ${BINARY_DIR}")
-LINK_DIRECTORIES(${BINARY_DIR}/lib/)
+#LINK_DIRECTORIES(${BINARY_DIR}/lib/)
 
-add_dependencies(${PROJECT_NAME} QtAV_project)
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCcore ${BINARY_DIR}/lib/libQtAV.so ${BINARY_DIR}/lib/libQtAVWidgets.so)
+#add_dependencies(${PROJECT_NAME} QtAV_project)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCcore) #${BINARY_DIR}/lib/libQtAV.so ${BINARY_DIR}/lib/libQtAVWidgets.so)
 
 include(GenerateExportHeader)
 string(TOUPPER "${PROJECT_NAME}_EXPORT" EXPORT_NAME)

@@ -16,7 +16,9 @@ using namespace OC::DataProvider;
 
 ImageProvider::ImageProvider()
 {
-    _imageProviders.insert(std::make_pair(FileFormat::TIFF, std::make_shared<TIFFLoader>()));
+    std::shared_ptr<TIFFLoader> tiffLoader = std::make_shared<TIFFLoader>();
+    _imageProviders.insert(std::make_pair(FileFormat::TIFF, tiffLoader));
+    _imageProviders.insert(std::make_pair(FileFormat::DNG, tiffLoader));
     _imageProviders.insert(std::make_pair(FileFormat::MLV, std::make_shared<MLVLoader>()));
 }
 

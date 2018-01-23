@@ -39,9 +39,7 @@ void ProcessingView::paintEvent(QPaintEvent *)
 {
 	if (ui->openGLWidget->isValid() && testImage != nullptr)
 	{
-		ui->openGLWidget->SetTextureRed(testImage->Width(), testImage->Height(), static_cast<unsigned short*>(testImage->RedChannel()));
-		ui->openGLWidget->SetTextureGreen(testImage->Width(), testImage->Height(), static_cast<unsigned short*>(testImage->GreenChannel()));
-		ui->openGLWidget->SetTextureBlue(testImage->Width(), testImage->Height(), static_cast<unsigned short*>(testImage->BlueChannel()));
+        ui->openGLWidget->SetImage(*testImage);
 	}
 }
 

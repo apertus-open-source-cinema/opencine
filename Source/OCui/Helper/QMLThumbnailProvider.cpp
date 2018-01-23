@@ -9,21 +9,21 @@
 #include <Image/BilinearDebayer.h>
 #include "Memory/StaticAllocator.h"
 
-#include <QtAV/AVDemuxer.h>
-#include <QtAV/VideoDecoder.h>
+//#include <QtAV/AVDemuxer.h>
+//#include <QtAV/VideoDecoder.h>
 
 using namespace OC::DataProvider;
 
 
-QtAV::AVDemuxer* demux;
-QtAV::VideoDecoder* dec;
+//QtAV::AVDemuxer* demux;
+//QtAV::VideoDecoder* dec;
 
 QMLThumbnailProvider::QMLThumbnailProvider() : QQuickImageProvider(ImageType::Image),
     _provider(std::make_shared<ImageProvider>()),
     _thumbnailProvider(nullptr)
 {
-    demux = new QtAV::AVDemuxer();
-    dec = QtAV::VideoDecoder::create();
+//    demux = new QtAV::AVDemuxer();
+//    dec = QtAV::VideoDecoder::create();
 
     _allocator = new RawPoolAllocator(512 * 1024 * 1024);
 }
@@ -53,37 +53,37 @@ QImage QMLThumbnailProvider::requestImage(const QString &id, QSize *size, const 
     }
     else if(id.toLower().endsWith(".mov"))
     {
-        if (!dec) {
-            return image;
-        }
+//        if (!dec) {
+//            return image;
+//        }
 
-        demux->setMedia(id);
-        if (!demux->load()) {
-            qWarning("Failed to load file: %s", id.toUtf8().constData());
-            return image;
-        }
+//        demux->setMedia(id);
+//        if (!demux->load()) {
+//            qWarning("Failed to load file: %s", id.toUtf8().constData());
+//            return image;
+//        }
 
-        dec->setCodecContext(demux->videoCodecContext());
-        dec->open();
+//        dec->setCodecContext(demux->videoCodecContext());
+//        dec->open();
 
-        int vstream = demux->videoStream();
-        while (!demux->atEnd())
-        {
-            if (!demux->readFrame())
-                continue;
-            if (demux->stream() != vstream)
-                continue;
-            const QtAV::Packet pkt = demux->packet();
-            if (dec->decode(pkt)) {
+//        int vstream = demux->videoStream();
+//        while (!demux->atEnd())
+//        {
+//            if (!demux->readFrame())
+//                continue;
+//            if (demux->stream() != vstream)
+//                continue;
+//            const QtAV::Packet pkt = demux->packet();
+//            if (dec->decode(pkt)) {
 
-                QtAV::VideoFrame frame = dec->frame();
-                // Increased requestedSize to get clear image when zooming in
+//                QtAV::VideoFrame frame = dec->frame();
+//                // Increased requestedSize to get clear image when zooming in
                 // TODO: Check aspect ratio, seems a bit incorrect
-                image = frame.toImage(QImage::Format_RGB32, requestedSize * 2);
+//                image = frame.toImage(QImage::Format_RGB32, requestedSize * 2);
 
-                break;
-            }
-        }
+//                break;
+//            }
+//        }
 
         return image;
     }

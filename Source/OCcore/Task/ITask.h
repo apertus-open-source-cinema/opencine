@@ -5,6 +5,8 @@
 #ifndef ITASK_H
 #define ITASK_H
 
+#include <random>
+
 #include "OCcore_export.h"
 #include "ITaskProgress.h"
 

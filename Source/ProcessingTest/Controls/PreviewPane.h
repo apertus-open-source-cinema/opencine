@@ -12,6 +12,8 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLWidget>
 
+#include <Image/OCImage.h>
+
 class PreviewPane : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
 	QMatrix4x4 mvp;
@@ -20,13 +22,28 @@ class PreviewPane : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     bool greenChannel = true;
     bool blueChannel = true;
 
+    float viewWidth = 1;
+    float viewHeight = 1;
+    int imageWidth = 1;
+    int imageHeight = 1;
+
+    int oldX = 0;
+    int oldY = 0;
+
+    float panX = 0.0;
+    float panY = 0.0;
+
+    float wheelValue = 1.0;
+    float zoomFactor = 1.1f;
+
+    // Texture IDs
+    GLuint textureRed = 0;
+    GLuint textureGreen = 0;
+    GLuint textureBlue = 0;
+
 public:
 	PreviewPane(QWidget *parent = 0);
 	~PreviewPane();
-
-	void SetTextureRed(int width, int height, unsigned short* imageData);
-	void SetTextureGreen(int width, int height, unsigned short* imageData);
-	void SetTextureBlue(int width, int height, unsigned short* imageData);
 
 	void SwitchRedChannel(bool enabled);
 	void SwitchGreenChannel(bool enabled);
@@ -34,12 +51,17 @@ public:
 
 	bool IsInitialized();
 
+    void SetImage(OC::DataProvider::OCImage& image);
+
 protected:
 	void initializeGL() override;
 	void resizeGL(int w, int h) override;
 	void paintGL() override;
 
 	void printVersionInformation();
+
+    void SetTexture(int width, int height, unsigned short* imageData);
+
 private:
 	void SetupShaders();
 	void SetupVertexBuffer();
