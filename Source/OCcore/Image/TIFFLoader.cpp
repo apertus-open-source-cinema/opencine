@@ -9,7 +9,7 @@
 
 #include "Log/Logger.h"
 
-#include "BayerFramePreProcessor.h"
+#include "BayerFrameDownscaler.h"
 
 using namespace OC::DataProvider;
 
@@ -208,7 +208,7 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image) const
 {
 	auto start = std::chrono::high_resolution_clock::now();
 
-	std::unique_ptr<BayerFramePreProcessor> frameProcessor(new BayerFramePreProcessor());
+	std::unique_ptr<BayerFrameDownscaler> frameProcessor(new BayerFrameDownscaler());
 
     unsigned int dataSize = image.Width() * image.Height();
     image.SetRedChannel(_allocator->Allocate(dataSize));
@@ -222,7 +222,7 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image) const
 	auto diffTime = std::chrono::high_resolution_clock::now() - start;
 	auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(diffTime).count();
 
-	std::string log = "BayerFramePreProcessor: " + std::to_string(frameTime) + "ms";
+	std::string log = "BayerFrameDownscaler: " + std::to_string(frameTime) + "ms";
 	OC_LOG_WARNING(log);
 
 
