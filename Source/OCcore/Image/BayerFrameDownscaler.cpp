@@ -13,15 +13,15 @@ void BayerFrameDownscaler::Extract(int jump) const
 {
     unsigned int index;
     int dataIndex = 0;
-    for (index = 0; index < _height * _width; index += jump)
+    for (index = 0; index < dataSize; index += 2)
     {
-        if ((index % (_width * 2)) < _width) {
-            _dataRed[dataIndex] = _outputData[index];
-            _dataGreen[dataIndex] = (_outputData[index + 1] + _outputData[index + _width]) >> 1;
-            _dataBlue[dataIndex] = _outputData[index + _width + 1];
-            dataIndex++;
-        } else {
-            index += _width - jump;
+        _dataRed[dataIndex] = _outputData[index];
+        _dataGreen[dataIndex] = (_outputData[index + 1] + _outputData[index + _width]) >> 1;
+        _dataBlue[dataIndex] = _outputData[index + _width + 1];
+        dataIndex++;
+        if (index % _width == 0)
+        {
+            index += _width;
         }
     }
     OC_LOG_INFO("R: " + std::to_string(sizeof(_dataRed)/sizeof(*_dataRed)) + " G: " + std::to_string(sizeof(_dataGreen)/sizeof(*_dataGreen)) + " B: " + std::to_string(sizeof(_dataBlue)/sizeof(*_dataBlue)) + " index: " + std::to_string(index));
