@@ -13,13 +13,14 @@ void BayerFrameDownscaler::Extract(int jump) const
 {
     unsigned int index;
     int dataIndex = 0;
-    for (index = 0; index < dataSize; index += 2)
+    for (index = 0; index < _size; index += 2)
     {
+
         _dataRed[dataIndex] = _outputData[index];
         _dataGreen[dataIndex] = (_outputData[index + 1] + _outputData[index + _width]) >> 1;
         _dataBlue[dataIndex] = _outputData[index + _width + 1];
         dataIndex++;
-        if (index % _width == 0)
+        if ((index + 2) % _width == 0)
         {
             index += _width;
         }

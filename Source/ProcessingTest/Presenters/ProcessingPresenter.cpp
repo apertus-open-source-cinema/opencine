@@ -37,8 +37,8 @@ void ProcessingPresenter::Test()
 //    provider->Load("M11-1526.VB.mlv", FileFormat::MLV, *_image.get(), *poolAllocator);
     OC_LOG_INFO("Loading finished");
 
-    //OC_LOG_INFO("Demosaicing");
-    //BilinearDebayer* debayer = new BilinearDebayer(*_image.get());
+    OC_LOG_INFO("Demosaicing");
+    BilinearDebayer* debayer = new BilinearDebayer(*_image.get());
     //SHOODAKDebayer* debayer = new SHOODAKDebayer(*_image.get());
     //debayer->Process();
     //OC_LOG_INFO("Demosaicing finished");
