@@ -16,6 +16,7 @@
 #include "Image/SHOODAKDebayer.h"
 
 #include "Image/EndianHelper.h"
+#include "RawDump/rawdump.h"
 
 using namespace OC::DataProvider;
 
@@ -67,6 +68,9 @@ void ProcessingPresenter::Test()
         interleavedArray[i * 3 + 1] = (greenArray[i] >> 4)  * 1.0;
         interleavedArray[i * 3 + 2] = (blueArray[i] >> 4) * 1.0;
     }
+    unsigned char dummydata[] = "This is a dummy data to just test if the dump feature works or not.";
+    OcRawDump::dump("DummyDump.dat", dummydata, strlen((const char*)dummydata));
+    OcRawDump::dump("InterleavedArray.dat", interleavedArray, dataLength * 3);
     OC_LOG_INFO("Conversion finished");
 
     _view->SetThumbnail(_image->Width(), _image->Height(), interleavedArray);
