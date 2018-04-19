@@ -5,8 +5,18 @@
 #ifndef RAWDUMP_H
 #define RAWDUMP_H
 
-namespace OC::Image::RawDump{
-    bool dump(std::string fileName, unsigned char* data, long length);
+#include <string>
+
+namespace OC
+{
+    namespace Image
+    {
+        class RawDump
+        {
+        public:
+            static bool Dump(std::string fileName, unsigned char* data, long length);
+        };
+    }
 }
 
 #endif //RAWDUMP_H

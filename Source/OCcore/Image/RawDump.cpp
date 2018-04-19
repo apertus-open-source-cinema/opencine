@@ -8,7 +8,8 @@
 #include "Log/Logger.h"
 using namespace OC::Image;
 
-bool RawDump::dump(std::string fileName, unsigned char* data, long length){
+bool RawDump::Dump(std::string fileName, unsigned char* data, long length)
+{
     std::ofstream out;
     out.open(fileName, std::ios::binary);
     if (!out.is_open())

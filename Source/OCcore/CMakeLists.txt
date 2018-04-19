@@ -56,7 +56,7 @@ endif()
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${PLATFORM_FILES})
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} xxhash) # MemoryPool)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} xxhash Qt5::Core Qt5::Widgets) # MemoryPool )
 
 #set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER "OCcore")
 
@@ -68,7 +68,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_BINARY_DIR}/exports)
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/Logs)
 
-QT5_USE_MODULES(${PROJECT_NAME} Core Widgets)
+#QT5_USE_MODULES(${PROJECT_NAME} Core Widgets)
 
 set(_src_root_path ${CMAKE_CURRENT_SOURCE_DIR})
 
