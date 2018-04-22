@@ -4,6 +4,7 @@
 
 #include "BayerFramePreProcessor.h"
 
+// TODO: Add openmp package to the ArchLinux section in env_setup.sh
 #include <omp.h>
 #include <thread>
 
