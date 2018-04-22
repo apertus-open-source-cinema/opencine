@@ -10,7 +10,7 @@
 
 #include "EndianHelper.h"
 
-#include "BayerFramePreProcessor.h"
+#include "BayerFrameDownscaler.h"
 
 using namespace OC::DataProvider;
 
@@ -169,7 +169,7 @@ void MLVLoader::Load(uint8_t *data, unsigned size, OCImage& image, IAllocator& a
     }
 
     // TODO: Move to ImageProvider, so it's not instantiated several times
-    std::unique_ptr<BayerFramePreProcessor> frameProcessor(new BayerFramePreProcessor());
+    std::unique_ptr<BayerFrameDownscaler> frameProcessor(new BayerFrameDownscaler());
 
     unsigned int dataSize = blockRAWI.xRes * blockRAWI.yRes;
     image.SetWidth(blockRAWI.xRes);
