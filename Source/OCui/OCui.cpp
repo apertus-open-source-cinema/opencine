@@ -13,8 +13,8 @@
 #include "Layouts/MainWindow.h"
 
 // For QML debugging
-#include <QQmlDebuggingEnabler>
-QQmlDebuggingEnabler enabler;
+//#include <QQmlDebuggingEnabler>
+//QQmlDebuggingEnabler enabler;
 
 using namespace OCui;
 

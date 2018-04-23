@@ -25,9 +25,9 @@ unsigned int HashCheckTask::GetProgressPercentage()
     return _progressPercentage;
 }
 
-std::__cxx11::string HashCheckTask::GetTaskDescription() { return "Checksum verification"; }
+std::string HashCheckTask::GetTaskDescription() { return "Checksum verification"; }
 
-std::__cxx11::string HashCheckTask::GetSubTaskDescription() { return _fileList->at(_currentFileIndex).FileName; }
+std::string HashCheckTask::GetSubTaskDescription() { return _fileList->at(_currentFileIndex).FileName; }
 
 long HashCheckTask::GetFileSize(std::ifstream& fin) const
 {
