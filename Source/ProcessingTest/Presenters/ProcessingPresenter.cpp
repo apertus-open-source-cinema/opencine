@@ -41,7 +41,7 @@ void ProcessingPresenter::Test()
     OC_LOG_INFO("Demosaicing");
     BilinearDebayer* debayer = new BilinearDebayer(*_image.get());
     //SHOODAKDebayer* debayer = new SHOODAKDebayer(*_image.get());
-    //debayer->Process();
+    debayer->Process();
     //OC_LOG_INFO("Demosaicing finished");
 
     auto diffTime = std::chrono::high_resolution_clock::now() - start;
