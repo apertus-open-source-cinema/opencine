@@ -57,8 +57,8 @@ void BayerFrameDownscaler::SetData(uint8_t* data, OCImage& image, ImageFormat im
 
 
     // Changes the resolution to half the width and height.
-    image.SetWidth(image.Width()/64);
-    image.SetHeight(image.Height()/64);
+    image.SetWidth(image.Width()/2);
+    image.SetHeight(image.Height()/2);
 
     _outputData = new uint16_t[_size];
 
@@ -92,7 +92,7 @@ void BayerFrameDownscaler::Process()
     OC_LOG_INFO("Extracting");
 
     // It currently skips 4 pixels (half the width and height), 2 is normal.
-    BayerFrameDownscaler::Extract(64);
+    BayerFrameDownscaler::Extract(2);
 
     //OC_LOG_INFO("Extract finished");
 }
