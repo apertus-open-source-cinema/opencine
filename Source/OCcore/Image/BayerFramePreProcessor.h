@@ -47,9 +47,6 @@ public:
 
     void Process() override;
 
-    void Convert12To16Bit() const;
-    void Convert14To16Bit() const;
-
     unsigned short* GetDataRed() override;
 
     unsigned short* GetDataGreen() override;

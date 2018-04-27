@@ -18,10 +18,10 @@ namespace OC
         class IFrameProcessor
         {
         public:
-            virtual ~IFrameProcessor() {}
+            virtual ~IFrameProcessor();
 
             virtual void Process() = 0;
-            virtual void SetData(uint8_t* /*data*/, OCImage& /*image*/, ImageFormat /*imageFormat*/) {}
+            virtual void SetData(uint8_t* /*data*/, OCImage& /*image*/, ImageFormat /*imageFormat*/);
 
             virtual unsigned short* GetDataRed() = 0;
             virtual unsigned short* GetDataGreen() = 0;

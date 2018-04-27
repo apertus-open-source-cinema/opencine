@@ -15,8 +15,6 @@
 
 #include "Controls/PreviewPane.h"
 
-#include "Image/BayerFrameDownscaler.h"
-
 ProcessingView::ProcessingView(QWidget *parent) :
 	thumbnailImage(nullptr),
 	ui(new Ui::ProcessingView)
