@@ -7,7 +7,7 @@
 
 #include "IHashGenerator.h"
 
-#include <xxhash.h>
+#include <xxHash/xxhash.h>
 
 #include "OCcore_export.h"
 #include <cassert>

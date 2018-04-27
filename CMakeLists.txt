@@ -46,7 +46,8 @@ SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 #include_directories("${PROJECT_SOURCE_DIR}/3rdParty/LibRaw")
 #include_directories("${PROJECT_SOURCE_DIR}/3rdParty/Catch")
 #include_directories("${PROJECT_SOURCE_DIR}/3rdParty/RawSpeed/include")
-include_directories("${PROJECT_SOURCE_DIR}/3rdParty/xxHash")
+#include_directories("${PROJECT_SOURCE_DIR}/3rdParty/xxHash")
+include_directories("${PROJECT_SOURCE_DIR}/3rdParty/")
 
 #Dependencies
 SET(ENABLE_EXAMPLES OFF CACHE BOOL "LibRaw: Build shared library (without examples)")
@@ -99,6 +100,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCui/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCLauncher/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCBackup/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/ProcessingTest/)
+add_subdirectory(${PROJECT_SOURCE_DIR}/Source/UnitTests/)
 
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/CinemaDNGDecoder/)
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/CinemaDNGInfo/)
