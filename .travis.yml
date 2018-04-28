@@ -26,4 +26,5 @@ script:
   
 after_script:
   - cd build/bin/
+  - chmod +x OCTests
   - ./OCTests
