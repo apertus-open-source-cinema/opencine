@@ -24,7 +24,7 @@ script:
   - cmake .. # -DCMAKE_PREFIX_PATH=/opt/qt
   - make -j4
   
-after_script:
+after_success:
   - cd bin/
   - chmod +x OCTests
   - ./OCTests
