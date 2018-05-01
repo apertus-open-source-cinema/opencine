@@ -2,14 +2,14 @@
 // Project: OpenCine / OCcore
 // License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-#include "DebayerBilinear.h"
+#include "BilinearDebayer.h"
 
 // TODO: Add multi-threading.
 #include <thread>
 
 #include <Log/Logger.h>
 
-DebayerBilinear::DebayerBilinear(OCImage &image)
+BilinearDebayer::BilinearDebayer(OCImage &image)
 {
     _width = image.Width();
     _height = image.Height();
@@ -20,11 +20,11 @@ DebayerBilinear::DebayerBilinear(OCImage &image)
     _blueChannel = static_cast<uint16_t*>(image.BlueChannel());
 }
 
-DebayerBilinear::~DebayerBilinear()
+BilinearDebayer::~BilinearDebayer()
 {
 }
 
-void DebayerBilinear::ProcessRed()
+void BilinearDebayer::ProcessRed()
 {
     for(int index = (_width << 1); index < _size; index += 2)
     {
@@ -36,7 +36,7 @@ void DebayerBilinear::ProcessRed()
     }
 }
 
-void DebayerBilinear::ProcessGreen()
+void BilinearDebayer::ProcessGreen()
 {
     for(int index = (_width << 1); index < _size; index += 2)
     {
@@ -47,7 +47,7 @@ void DebayerBilinear::ProcessGreen()
     }
 }
 
-void DebayerBilinear::ProcessBlue()
+void BilinearDebayer::ProcessBlue()
 {
     for(int index = (_width << 1); index < _size; index += 2)
     {
@@ -59,9 +59,9 @@ void DebayerBilinear::ProcessBlue()
     }
 }
 
-void DebayerBilinear::Process()
+void BilinearDebayer::Process()
 {
-    DebayerBilinear::ProcessRed();
-    DebayerBilinear::ProcessGreen();
-    DebayerBilinear::ProcessBlue();
+    BilinearDebayer::ProcessRed();
+    BilinearDebayer::ProcessGreen();
+    BilinearDebayer::ProcessBlue();
 }

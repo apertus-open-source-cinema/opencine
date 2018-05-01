@@ -2,15 +2,15 @@
 // Project: OpenCine / OCcore
 // License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-#ifndef DEBAYERBILINEAR_H
-#define DEBAYERBILINEAR_H
+#ifndef BILINEARDEBAYER_H
+#define BILINEARDEBAYER_H
 
 #include "IFrameProcessor.h"
 #include "OCImage.h"
 
 using namespace OC::DataProvider;
 
-class DebayerBilinear
+class BilinearDebayer
 {
 private:
     // Color Channels.
@@ -27,9 +27,9 @@ private:
     // _patternOffsets
 
 public:
-    DebayerBilinear(OCImage& image);
+    BilinearDebayer(OCImage& image);
 
-    ~DebayerBilinear();
+    ~BilinearDebayer();
 
     // Processors for each color channel.
     void ProcessRed();
@@ -41,4 +41,4 @@ public:
 
 };
 
-#endif //DEBAYERBILINEAR_H
+#endif //BilinearDebayer_H
