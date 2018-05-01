@@ -9,6 +9,7 @@
 
 #include "Log/Logger.h"
 
+//#include "BayerFrameDownscaler.h"
 #include "BayerFramePreProcessor.h"
 
 using namespace OC::DataProvider;
