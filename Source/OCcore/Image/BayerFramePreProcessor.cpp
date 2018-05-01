@@ -108,17 +108,9 @@ void BayerFramePreProcessor::SetData(uint8_t* data, OCImage& image, ImageFormat 
     _dataBlue = static_cast<uint16_t*>(image.BlueChannel());
 
     _imageFormat = imageFormat;
-    _pattern = image.GetBayerPattern();
 
     MapPatternToData();
-}
 
-void BayerFramePreProcessor::Process()
-{
-    // For benchmarking.
-    //auto start = std::chrono::high_resolution_clock::now();
-
-    //std::thread t0;
     switch(_imageFormat)
     {
     case ImageFormat::Integer12:
@@ -135,15 +127,45 @@ void BayerFramePreProcessor::Process()
     case ImageFormat::Integer16:
         break;
     }
+}
+
+void BayerFramePreProcessor::SetData(uint16_t* imageData, OCImage& image)
+{
+    _width = image.Width();
+    _height = image.Height();
+
+    _size = _width * _height;
+
+    _outputData = imageData;
+
+    _dataRed = static_cast<uint16_t*>(image.RedChannel());
+    _dataGreen = static_cast<uint16_t*>(image.GreenChannel());
+    _dataBlue = static_cast<uint16_t*>(image.BlueChannel());
+
+    _pattern = image.GetBayerPattern();
+
+    MapPatternToData();
+}
+
+void BayerFramePreProcessor::Process()
+{
+    // For benchmarking.
+    //auto start = std::chrono::high_resolution_clock::now();
+
+    //std::thread t0;
+
 
     //t0.join();
 
-    std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
-    std::thread t2(&BayerFramePreProcessor::ExtractEvenRows, this);
+    //std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
+    //std::thread t2(&BayerFramePreProcessor::ExtractEvenRows, this);
+
+    ExtractOddRows();
+    ExtractEvenRows();
 
     OC_LOG_INFO("Extract rows");
-    t1.join();
-    t2.join();
+    //t1.join();
+    //t2.join();
 
     // For benchmarking.
     //auto diffTime = std::chrono::high_resolution_clock::now() - start;
