@@ -9,6 +9,7 @@
 #include <QThread>
 
 #include <Image/BilinearDebayer.h>
+#include <Image/DebayerBilinear.h>
 #include <Image/NearestNeighborScaler.h>
 #include <Log/Logger.h>
 #include <Memory/StaticAllocator.h>
@@ -39,8 +40,9 @@ void ProcessingPresenter::Test()
     OC_LOG_INFO("Loading finished");
 
     OC_LOG_INFO("Demosaicing");
-    BilinearDebayer* debayer = new BilinearDebayer(*_image.get());
+    //BilinearDebayer* debayer = new BilinearDebayer(*_image.get());
     //SHOODAKDebayer* debayer = new SHOODAKDebayer(*_image.get());
+    DebayerBilinear* debayer = new DebayerBilinear(*_image.get());
     debayer->Process();
     //OC_LOG_INFO("Demosaicing finished");
 
