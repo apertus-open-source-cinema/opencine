@@ -1,10 +1,12 @@
+// Copyright (c) 2017 apertus° Association & contributors
+// Project: OpenCine / OCBackup
+// License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 #ifndef DESTINATIONSCONTROL_H
 #define DESTINATIONSCONTROL_H
 
 #include <QQmlContext>
 #include <QWidget>
-
-//#include "../Data/DestinationsListItem.h"
 
 namespace Ui {
     class DestinationsControl;

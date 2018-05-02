@@ -1,3 +1,7 @@
+// Copyright (c) 2017 apertus° Association & contributors
+// Project: OpenCine / ProcessingTest
+// License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 #include "ProcessingView.h"
 #include "ui_ProcessingView.h"
 
@@ -10,8 +14,6 @@
 #include <QTimer>
 
 #include "Controls/PreviewPane.h"
-
-#include "Image/BayerFramePreProcessor.h"
 
 ProcessingView::ProcessingView(QWidget *parent) :
 	thumbnailImage(nullptr),
@@ -35,9 +37,7 @@ void ProcessingView::paintEvent(QPaintEvent *)
 {
 	if (ui->openGLWidget->isValid() && testImage != nullptr)
 	{
-		ui->openGLWidget->SetTextureRed(testImage->Width(), testImage->Height(), static_cast<unsigned short*>(testImage->RedChannel()));
-		ui->openGLWidget->SetTextureGreen(testImage->Width(), testImage->Height(), static_cast<unsigned short*>(testImage->GreenChannel()));
-		ui->openGLWidget->SetTextureBlue(testImage->Width(), testImage->Height(), static_cast<unsigned short*>(testImage->BlueChannel()));
+        ui->openGLWidget->SetImage(*testImage);
 	}
 }
 

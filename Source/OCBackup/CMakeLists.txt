@@ -1,3 +1,7 @@
+# Copyright (c) 2017 apertus° Association & contributors
+# Project: OpenCine / OCBackup
+# License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 cmake_minimum_required(VERSION 3.5)
 PROJECT(OCBackup)
 
@@ -10,6 +14,7 @@ set(CMAKE_AUTOMOC ON)
 
 FIND_PACKAGE(Qt5Widgets REQUIRED)
 FIND_PACKAGE(Qt5QuickWidgets REQUIRED)
+FIND_PACKAGE(Qt5Concurrent REQUIRED)
 
 FILE(GLOB SOURCE_FILES "*.cpp" "*.h"
     "Views/*.cpp" "Views/*.h"
@@ -25,7 +30,7 @@ FILE(GLOB QML_FILES "Widgets/*.qml")
 QT5_WRAP_UI(UI_FILES_MOC ${UI_FILES})
 
 INCLUDE_DIRECTORIES(${OCui_SOURCE_DIR})
-INCLUDE_DIRECTORIES(${OCCore_SOURCE_DIR})
+INCLUDE_DIRECTORIES(${OCcore_SOURCE_DIR})
 
 IF(WIN32)
 ADD_EXECUTABLE(${PROJECT_NAME} WIN32 ${SOURCE_FILES} ${UI_FILES_MOC} ${QML_FILES})
@@ -33,9 +38,9 @@ ELSE(UNIX)
 ADD_EXECUTABLE(${PROJECT_NAME} ${SOURCE_FILES} ${UI_FILES_MOC} ${QML_FILES})
 ENDIF()
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCCore OCui)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} OCcore OCui)
 
-QT5_USE_MODULES(${PROJECT_NAME} Widgets QuickWidgets)
+QT5_USE_MODULES(${PROJECT_NAME} Widgets QuickWidgets Concurrent)
 
 FILE(COPY "Widgets" DESTINATION ${CMAKE_BINARY_DIR}/bin)
 

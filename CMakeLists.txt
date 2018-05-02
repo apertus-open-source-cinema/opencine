@@ -1,3 +1,7 @@
+# Copyright (c) 2017 apertus° Association & contributors
+# Project: OpenCine
+# License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 cmake_minimum_required(VERSION 3.5)
 project(ApertusOpenCine)
 
@@ -12,6 +16,8 @@ if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 
+#SET( CMAKE_BUILD_TYPE Release ... FORCE )
+
 #if(WIN32)
 #ADD_DEFINITIONS(-DWIN32)
 #endif()
@@ -19,7 +25,8 @@ endif()
 # Simplifies configuration under Windows, have to be checked in Linux, if something similar is required when not using QtCreator
 #IF(WIN32)
 #    SET( CMAKE_PREFIX_PATH "C:/Qt/5.7/msvc2015_64/" CACHE FILEPATH "Qt path, e.g. C:/Qt/5.7/msvc2015_64/" )
-#ELSE(UNIX)
+#if(UNIX)
+#   set(CMAKE_GENERATOR "Unix Makefiles")
 #    SET( CMAKE_PREFIX_PATH "$HOME/Qt/5.8/gcc_64/lib/cmake" CACHE FILEPATH "Qt path, e.g. $HOME/Qt/5.8/gcc_64/lib/cmake/Qt5" )
 #ENDIF()
 
@@ -39,7 +46,8 @@ SET( CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
 #include_directories("${PROJECT_SOURCE_DIR}/3rdParty/LibRaw")
 #include_directories("${PROJECT_SOURCE_DIR}/3rdParty/Catch")
 #include_directories("${PROJECT_SOURCE_DIR}/3rdParty/RawSpeed/include")
-include_directories("${PROJECT_SOURCE_DIR}/3rdParty/xxHash")
+#include_directories("${PROJECT_SOURCE_DIR}/3rdParty/xxHash")
+include_directories("${PROJECT_SOURCE_DIR}/3rdParty/")
 
 #Dependencies
 SET(ENABLE_EXAMPLES OFF CACHE BOOL "LibRaw: Build shared library (without examples)")
@@ -70,28 +78,29 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/3rdParty/MemoryPool)
 
 SET(QTDIR ${CMAKE_PREFIX_PATH})
 
-message(WARNING "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
-ExternalProject_Add(QtAV_project
-                    PREFIX 3rdParty/QtAV
-                    GIT_REPOSITORY "https://github.com/wang-bin/QtAV.git"
-                    GIT_TAG "master"
-                    UPDATE_COMMAND ""
-                    INSTALL_COMMAND ""
-                    CMAKE_ARGS -DQTDIR=${QTDIR} -DBUILD_EXAMPLES=OFF)
+#message(WARNING "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+#ExternalProject_Add(QtAV_project
+#                    PREFIX 3rdParty/QtAV
+#                    GIT_REPOSITORY "https://github.com/wang-bin/QtAV.git"
+#                    GIT_TAG "master"
+#                    UPDATE_COMMAND ""
+#                    INSTALL_COMMAND ""
+#                    CMAKE_ARGS -DQTDIR=${QTDIR} -DBUILD_EXAMPLES=OFF)
 
 
-ExternalProject_Get_Property(QtAV_project INSTALL_DIR)
-include_directories(${INSTALL_DIR}/src/QtAV_project/src/)
-message(WARNING "QTAV_DIR: ${INSTALL_DIR}/src/QtAV_project/src/")
-include_directories(${INSTALL_DIR}/src/QtAV_project/widgets/)
+#ExternalProject_Get_Property(QtAV_project INSTALL_DIR)
+#include_directories(${INSTALL_DIR}/src/QtAV_project/src/)
+#message(WARNING "QTAV_DIR: ${INSTALL_DIR}/src/QtAV_project/src/")
+#include_directories(${INSTALL_DIR}/src/QtAV_project/widgets/)
 
 #Projects
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OpenCine/)
-add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCCore/)
+add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCcore/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCui/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCLauncher/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/OCBackup/)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Source/ProcessingTest/)
+add_subdirectory(${PROJECT_SOURCE_DIR}/Source/UnitTests/)
 
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/CinemaDNGDecoder/)
 #add_subdirectory(${PROJECT_SOURCE_DIR}/Source/CinemaDNGInfo/)
