@@ -1,4 +1,4 @@
-// Copyright (c) 2017 apertus° Association & contributors
+// Copyright (c) 2018 apertus° Association & contributors
 // Project: OpenCine / OCcore
 // License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 
@@ -8,155 +8,37 @@
 #include "IFrameProcessor.h"
 #include "OCImage.h"
 
-#include <thread>
+using namespace OC::DataProvider;
 
-namespace OC
+class BilinearDebayer
 {
-    namespace DataProvider
-    {
-        class BilinearDebayer : public IFrameProcessor
-        {
-            unsigned short* redChannel;
-            unsigned short* greenChannel;
-            unsigned short* blueChannel;
+private:
+    // Color Channels.
+    uint16_t* _redChannel;
+    uint16_t* _greenChannel;
+    uint16_t* _blueChannel;
 
-            unsigned int _width;
-            unsigned int _height;
+    // Image Dimensions.
+    uint32_t _width;
+    uint32_t _height;
+    uint32_t _size;
 
-            unsigned int colorOffsets[8] = { 1, 1, 1, 1, 1, 1, 1, 1 }; //R G1 G2 B, first: row, second: column
+    // TODO
+    // _patternOffsets
 
-        public:
-            explicit BilinearDebayer(OCImage& image)
-            {
-                redChannel = static_cast<unsigned short*>(image.RedChannel());
-                greenChannel = static_cast<unsigned short*>(image.GreenChannel());
-                blueChannel = static_cast<unsigned short*>(image.BlueChannel());
+public:
+    BilinearDebayer(OCImage& image);
 
-                _width = image.Width();
-                _height = image.Height();
+    ~BilinearDebayer();
 
-                SetColorOffsets(image.GetBayerPattern());
-            }
+    // Processors for each color channel.
+    void ProcessRed();
+    void ProcessBlue();
+    void ProcessGreen();
 
-            void BilinearFilterGreen() const
-            {
-                for (auto rowIndex = colorOffsets[2]; rowIndex < _height; rowIndex += 2)
-                {
-                    for (auto columnIndex = colorOffsets[3]; columnIndex < _width - 2; columnIndex += 2)
-                    {
-                        greenChannel[rowIndex * _width + columnIndex] = ((greenChannel[rowIndex * _width + columnIndex - 1] + greenChannel[rowIndex * _width + columnIndex + 1]) + (greenChannel[(rowIndex - 1) * _width + columnIndex] + greenChannel[(rowIndex + 1) * _width + columnIndex])) * 0.25f;
-                    }
-                }
+    // Main Processor.
+    void Process();
 
-                for (auto rowIndex = colorOffsets[4]; rowIndex < _height; rowIndex += 2)
-                {
-                    for (auto columnIndex = colorOffsets[5]; columnIndex < _width - 2; columnIndex += 2)
-                    {
-                        greenChannel[rowIndex * _width + columnIndex] = ((greenChannel[rowIndex * _width + columnIndex - 1] + greenChannel[rowIndex * _width + columnIndex + 1]) + (greenChannel[(rowIndex - 1) * _width + columnIndex] + greenChannel[(rowIndex + 1) * _width + columnIndex])) * 0.25f;
-                    }
-                }
-            }
+};
 
-            void BilinearFilterRed() const
-            {
-                for (auto rowIndex = colorOffsets[0]; rowIndex < _height; rowIndex += 2)
-                {
-                    for (auto columnIndex = colorOffsets[1]; columnIndex < _width - 2; columnIndex += 2)
-                    {
-                        redChannel[rowIndex * _width + columnIndex] = ((redChannel[(rowIndex - 1) * _width + columnIndex - 1] + redChannel[(rowIndex - 1) * _width + columnIndex + 1]) +
-                                (redChannel[(rowIndex + 1) * _width + columnIndex - 1] + redChannel[(rowIndex + 1) * _width + columnIndex + 1])) * 0.25f;
-
-                        redChannel[(rowIndex + 1) * _width + columnIndex] = (redChannel[(rowIndex + 1) * _width + columnIndex - 1] + redChannel[(rowIndex + 1) * _width + columnIndex + 1]) * 0.5f;
-                        redChannel[rowIndex * _width + columnIndex + 1] = (redChannel[(rowIndex + 1) * _width + columnIndex + 1] + redChannel[(rowIndex - 1) * _width + columnIndex + 1]) * 0.5f;
-                    }
-                }
-            }
-
-            void BilinearFilterBlue() const
-            {
-                for (auto rowIndex = colorOffsets[6]; rowIndex < _height; rowIndex += 2)
-                {
-                    for (auto columnIndex = colorOffsets[7]; columnIndex < _width - 2; columnIndex += 2)
-                    {
-                        blueChannel[rowIndex * _width + columnIndex] = ((blueChannel[(rowIndex - 1) * _width + columnIndex - 1] + blueChannel[(rowIndex - 1) * _width + columnIndex + 1]) +
-                                (blueChannel[(rowIndex + 1) * _width + columnIndex - 1] + blueChannel[(rowIndex + 1) * _width + columnIndex + 1])) * 0.25f;
-
-                        blueChannel[(rowIndex + 1) * _width + columnIndex] = (blueChannel[(rowIndex + 1) * _width + columnIndex - 1] + blueChannel[(rowIndex + 1) * _width + columnIndex + 1]) * 0.5f;
-                        blueChannel[rowIndex * _width + columnIndex + 1] = (blueChannel[(rowIndex + 1) * _width + columnIndex + 1] + blueChannel[(rowIndex - 1) * _width + columnIndex + 1]) * 0.5f;
-                    }
-                }
-            }
-
-            //TODO: Finish pattern layout
-            void SetColorOffsets(BayerPattern pattern)
-            {
-                switch (pattern)
-                {
-                case BayerPattern::RGGB:
-                    // R: row / column
-                    colorOffsets[0] = 1;
-                    colorOffsets[1] = 1;
-                    // G1
-                    colorOffsets[2] = 1;
-                    colorOffsets[3] = 1;
-                    // G2
-                    colorOffsets[4] = 2;
-                    colorOffsets[5] = 2;
-                    // B
-                    colorOffsets[6] = 2;
-                    colorOffsets[7] = 2;
-                    break;
-                case BayerPattern::BGGR:
-                    break;
-                case BayerPattern::GRBG:
-                    colorOffsets[0] = 1;
-                    colorOffsets[1] = 2;
-                    colorOffsets[2] = 1;
-                    colorOffsets[3] = 2;
-                    colorOffsets[4] = 2;
-                    colorOffsets[5] = 1;
-                    colorOffsets[6] = 2;
-                    colorOffsets[7] = 1;
-                    break;
-                case BayerPattern::GBRG:
-                    colorOffsets[0] = 2;
-                    colorOffsets[1] = 1;
-                    colorOffsets[2] = 1;
-                    colorOffsets[3] = 2;
-                    colorOffsets[4] = 2;
-                    colorOffsets[5] = 1;
-                    colorOffsets[6] = 1;
-                    colorOffsets[7] = 2;
-                    break;
-                }
-            }
-
-            void Process() override
-            {
-                std::thread redThread(&BilinearDebayer::BilinearFilterRed, this);
-                std::thread greenThread(&BilinearDebayer::BilinearFilterGreen, this);
-                std::thread blueThread(&BilinearDebayer::BilinearFilterBlue, this);
-
-                redThread.join();
-                greenThread.join();
-                blueThread.join();
-            }
-
-            unsigned short* GetDataRed() override
-            {
-                return nullptr;
-            }
-
-            unsigned short* GetDataGreen() override
-            {
-                return nullptr;
-            }
-
-            unsigned short* GetDataBlue() override
-            {
-                return nullptr;
-            }
-        };
-    }
-}
-#endif //BILINEARDEBAYER_H
+#endif //BilinearDebayer_H
