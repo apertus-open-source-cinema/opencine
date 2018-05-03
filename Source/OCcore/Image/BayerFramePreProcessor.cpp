@@ -110,10 +110,10 @@ void BayerFramePreProcessor::SetData(uint8_t* data, OCImage& image, ImageFormat 
     _imageFormat = imageFormat;
 
     MapPatternToData();
+}
 
 void BayerFramePreProcessor::Process()
 {
-
     switch(_imageFormat)
     {
     case ImageFormat::Integer12:
