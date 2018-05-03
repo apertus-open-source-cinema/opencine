@@ -218,6 +218,7 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image) const
 
     // TODO: Replace hardcoded image format value
     frameProcessor->SetData(&data[_imageDataOffset], image, ImageFormat::Integer12);
+
     frameProcessor->Process();
 
 	auto diffTime = std::chrono::high_resolution_clock::now() - start;

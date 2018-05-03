@@ -152,20 +152,12 @@ void BayerFramePreProcessor::Process()
     // For benchmarking.
     //auto start = std::chrono::high_resolution_clock::now();
 
-    //std::thread t0;
-
-
-    //t0.join();
-
-    //std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
-    //std::thread t2(&BayerFramePreProcessor::ExtractEvenRows, this);
-
-    ExtractOddRows();
-    ExtractEvenRows();
+    std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
+    std::thread t2(&BayerFramePreProcessor::ExtractEvenRows, this);
 
     OC_LOG_INFO("Extract rows");
-    //t1.join();
-    //t2.join();
+    t1.join();
+    t2.join();
 
     // For benchmarking.
     //auto diffTime = std::chrono::high_resolution_clock::now() - start;
