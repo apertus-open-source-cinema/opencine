@@ -13,7 +13,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
 FIND_PACKAGE(Qt5 COMPONENTS Core REQUIRED)
-#FIND_PACKAGE(Qt5Widgets REQUIRED)
 
 find_package(OpenMP)
 if (OPENMP_FOUND)
@@ -35,30 +34,15 @@ file(GLOB SOURCE_FILES "*.cpp" "*.h"
 	"Events/*.cpp" "Events/*.h"
 	"Hash/*.cpp" "Hash/*.h")
 
-#file(GLOB HEADER_FILES "*.h")
-
-#include_directories(${PROJECT_SOURCE_DIR})
-
 if(WIN32)
     file(GLOB PLATFORM_FILES "Platforms/Win/*.cpp" "Platforms/Win/*.h")
-    #file(GLOB HEADER_FILES "Platforms/Win")
 elseif(UNIX)
     file(GLOB PLATFORM_FILES "Platforms/Linux/*.cpp" "Platforms/Linux/*.h")
-    #file(GLOB HEADER_FILES "Platforms/Linux")
 endif()
-
-#SET(INCLUDE_DIRS "")
-#foreach (_headerFile ${HEADER_FILES})
-#get_filename_component(_dir ${_headerFile} PATH)
-#list (APPEND INCLUDE_DIRS ${_dir})
-#endforeach()
-#list(REMOVE_DUPLICATES INCLUDE_DIRS)
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${PLATFORM_FILES})
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} xxhash Qt5::Core) # MemoryPool )
-
-#set_property(TARGET ${PROJECT_NAME} PROPERTY FOLDER "OCcore")
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} xxhash Qt5::Core)
 
 include(GenerateExportHeader)
 string(TOUPPER "${PROJECT_NAME}_EXPORT" EXPORT_NAME)
@@ -67,8 +51,6 @@ GENERATE_EXPORT_HEADER(${PROJECT_NAME} EXPORT_MACRO_NAME ${EXPORT_NAME} EXPORT_F
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_BINARY_DIR}/exports)
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/Logs)
-
-#QT5_USE_MODULES(${PROJECT_NAME} Core Widgets)
 
 set(_src_root_path ${CMAKE_CURRENT_SOURCE_DIR})
 
