@@ -11,6 +11,37 @@
 
 #include "ImageHelper.h"
 
+void BayerFrameDownscaler::MapPatternToData()
+{
+    switch (_pattern)
+    {
+    case BayerPattern::RGGB:
+        dataUL = _dataRed;
+        dataUR = _dataGreen;
+        dataLL = _dataGreen;
+        dataLR = _dataBlue;
+        break;
+    case BayerPattern::BGGR:
+        dataUL = _dataBlue;
+        dataUR = _dataGreen;
+        dataLL = _dataGreen;
+        dataLR = _dataRed;
+        break;
+    case BayerPattern::GRBG:
+        dataUL = _dataGreen;
+        dataUR = _dataRed;
+        dataLL = _dataBlue;
+        dataLR = _dataGreen;
+        break;
+    case BayerPattern::GBRG:
+        dataUL = _dataGreen;
+        dataUR = _dataBlue;
+        dataLL = _dataRed;
+        dataLR = _dataGreen;
+        break;
+    }
+}
+
 void BayerFrameDownscaler::Extract(int jump) const
 {
     unsigned int index;
@@ -18,9 +49,10 @@ void BayerFrameDownscaler::Extract(int jump) const
     for (index = 0; index < _size; index += jump)
     {
 
-        _dataRed[dataIndex] = _outputData[index];
-        _dataGreen[dataIndex] = (_outputData[index + 1] + _outputData[index + _width]) >> 1;
-        _dataBlue[dataIndex] = _outputData[index + _width + 1];
+        dataUL[dataIndex] = _outputData[index];
+        dataUR[dataIndex] = _outputData[index + 1];
+        dataLL[dataIndex] = _outputData[index + _width];
+        dataLR[dataIndex] = _outputData[index + _width + 1];
         dataIndex++;
         if ((index + jump) % _width == 0)
         {
@@ -35,6 +67,10 @@ BayerFrameDownscaler::BayerFrameDownscaler() :
     _data(nullptr),
     _outputData(nullptr),
     _size(0),
+    dataUL(nullptr),
+    dataUR(nullptr),
+    dataLL(nullptr),
+    dataLR(nullptr),
     _dataRed(nullptr),
     _dataGreen(nullptr),
     _dataBlue(nullptr),
@@ -93,7 +129,7 @@ void BayerFrameDownscaler::SetData(uint16_t* imageData, OCImage& image)
     _pattern = image.GetBayerPattern();
 
     // TODO
-    // Map pattern to data.
+    MapPatternToData();
 }
 
 void BayerFrameDownscaler::Process()

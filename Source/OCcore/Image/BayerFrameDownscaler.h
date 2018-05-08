@@ -18,6 +18,11 @@ class BayerFrameDownscaler : public OC::DataProvider::IFrameProcessor
 
     BayerPattern _pattern = BayerPattern::RGGB;
 
+    uint16_t* dataUL; //upper-left data
+    uint16_t* dataUR; //upper-right data
+    uint16_t* dataLL; //lower-left data
+    uint16_t* dataLR; //lower-right data
+
     uint16_t* _dataRed;
     uint16_t* _dataGreen;
     uint16_t* _dataBlue;
@@ -26,6 +31,8 @@ class BayerFrameDownscaler : public OC::DataProvider::IFrameProcessor
     unsigned int _height;
 
     ImageFormat _imageFormat;
+
+    void MapPatternToData();
 
     void Extract(int jump) const;
 
