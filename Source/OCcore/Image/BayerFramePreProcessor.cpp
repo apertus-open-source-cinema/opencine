@@ -54,7 +54,7 @@ void BayerFramePreProcessor::ExtractOddRows() const
             index += _width;
     }
 
-//    OC_LOG_INFO("OddRows threads: " + std::to_string(omp_get_num_threads()));
+    OC_LOG_INFO("OddRows threads: " + std::to_string(omp_get_num_threads()));
 }
 
 void BayerFramePreProcessor::ExtractEvenRows() const
@@ -68,7 +68,7 @@ void BayerFramePreProcessor::ExtractEvenRows() const
             index += _width;
     }
 
-//    OC_LOG_INFO("EvenRows threads: " + std::to_string(omp_get_num_threads()));
+    OC_LOG_INFO("EvenRows threads: " + std::to_string(omp_get_num_threads()));
 }
 
 BayerFramePreProcessor::BayerFramePreProcessor() :
@@ -108,6 +108,40 @@ void BayerFramePreProcessor::SetData(uint8_t* data, OCImage& image, ImageFormat 
     _dataBlue = static_cast<uint16_t*>(image.BlueChannel());
 
     _imageFormat = imageFormat;
+
+    MapPatternToData();
+
+    switch(_imageFormat)
+    {
+    case ImageFormat::Integer12:
+        OC_LOG_INFO("12->16bit conversion");
+        OC::Image::ImageHelper::Convert12To16Bit(_data, _width, _height, _outputData);
+        //t0 = std::thread(&OC::Image::ImageHelper::Convert12To16Bit, this);
+        break;
+    case ImageFormat::Integer14:
+        OC_LOG_INFO("14->16bit conversion");
+        OC::Image::ImageHelper::Convert14To16Bit(_data, _width, _height, _outputData);
+        //t0 = std::thread(&OC::Image::ImageHelper::Convert14To16Bit, this);
+        break;
+    case ImageFormat::Unknown:
+    case ImageFormat::Integer16:
+        break;
+    }
+}
+
+void BayerFramePreProcessor::SetData(uint16_t* imageData, OCImage& image)
+{
+    _width = image.Width();
+    _height = image.Height();
+
+    _size = _width * _height;
+
+    _outputData = imageData;
+
+    _dataRed = static_cast<uint16_t*>(image.RedChannel());
+    _dataGreen = static_cast<uint16_t*>(image.GreenChannel());
+    _dataBlue = static_cast<uint16_t*>(image.BlueChannel());
+
     _pattern = image.GetBayerPattern();
 
     MapPatternToData();
@@ -116,40 +150,22 @@ void BayerFramePreProcessor::SetData(uint8_t* data, OCImage& image, ImageFormat 
 void BayerFramePreProcessor::Process()
 {
     // For benchmarking.
-    auto start = std::chrono::high_resolution_clock::now();
-
-    //std::thread t0;
-    switch(_imageFormat)
-    {
-    case ImageFormat::Integer12:
-        OC_LOG_INFO("12->16bit conversion");
-        OC::Image::ImageHelper::Convert12To16Bit(_data, _width, _height, _outputData);
-        break;
-    case ImageFormat::Integer14:
-        OC_LOG_INFO("14->16bit conversion");
-        OC::Image::ImageHelper::Convert14To16Bit(_data, _width, _height, _outputData);
-        break;
-    case ImageFormat::Unknown:
-    case ImageFormat::Integer16:
-        break;
-    }
-
-    //t0.join();
+    //auto start = std::chrono::high_resolution_clock::now();
 
     std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
     std::thread t2(&BayerFramePreProcessor::ExtractEvenRows, this);
 
-//    OC_LOG_INFO("Extract rows");
+    OC_LOG_INFO("Extract rows");
     t1.join();
     t2.join();
 
     // For benchmarking.
-    auto diffTime = std::chrono::high_resolution_clock::now() - start;
-    auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(diffTime).count();
-    auto log = "PreProcessorTime: " + std::to_string(frameTime) + " ms";
-    OC_LOG_INFO(log);
+    //auto diffTime = std::chrono::high_resolution_clock::now() - start;
+    //auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(diffTime).count();
+    //auto log = "PreProcessor time: " + std::to_string(frameTime) + "ms";
+    //OC_LOG_INFO(log);
 
-//    OC_LOG_INFO("Extract finished");
+    OC_LOG_INFO("Extract finished");
 }
 
 uint16_t*BayerFramePreProcessor::GetDataRed()

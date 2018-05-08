@@ -11,4 +11,6 @@ IFrameProcessor::~IFrameProcessor() {}
 
 void IFrameProcessor::SetData(uint8_t *, OCImage &, ImageFormat) {}
 
+void IFrameProcessor::SetData(uint16_t*, OCImage &) {}
+
 

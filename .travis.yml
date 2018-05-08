@@ -25,5 +25,5 @@ script:
   # removed _after section, otherwise build would not fail if tests fail
   # reference: https://docs.travis-ci.com/user/customizing-the-build#Breaking-the-Build
   - cd bin/
-  - chmod +x OCtest
-  - ./OCtest
+  - chmod +x OCTests
+  - ./OCTests

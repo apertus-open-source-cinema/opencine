@@ -44,6 +44,7 @@ public:
     ~BayerFramePreProcessor();
 
     void SetData(uint8_t* data, OCImage& image, ImageFormat imageFormat) override;
+    void SetData(uint16_t* imageData, OCImage& image) override;
 
     void Process() override;
 
