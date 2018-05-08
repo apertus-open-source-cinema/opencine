@@ -18,16 +18,16 @@ void BayerFrameDownscaler::Extract(int jump) const
     for (index = 0; index < _size; index += jump)
     {
 
-        _dataRed[dataIndex] = _outputData[index + _width];
-        _dataGreen[dataIndex] = (_outputData[index] + _outputData[index + 1 + _width]) >> 1;
-        _dataBlue[dataIndex] = _outputData[index + 1];
+        _dataRed[dataIndex] = _outputData[index];
+        _dataGreen[dataIndex] = (_outputData[index + 1] + _outputData[index + _width]) >> 1;
+        _dataBlue[dataIndex] = _outputData[index + _width + 1];
         dataIndex++;
         if ((index + jump) % _width == 0)
         {
             index += (jump - 1) * _width;
         }
     }
-    OC_LOG_INFO("R: " + std::to_string(sizeof(_dataRed)/sizeof(*_dataRed)) + " G: " + std::to_string(sizeof(_dataGreen)/sizeof(*_dataGreen)) + " B: " + std::to_string(sizeof(_dataBlue)/sizeof(*_dataBlue)) + " index: " + std::to_string(index));
+    OC_LOG_INFO("R: " + std::to_string(sizeof(_dataRed)/sizeof(uint16_t)) + " G: " + std::to_string(sizeof(_dataGreen)/sizeof(uint16_t)) + " B: " + std::to_string(sizeof(_dataBlue)/sizeof(uint16_t)) + " index: " + std::to_string(index));
 
 }
 
@@ -74,6 +74,28 @@ void BayerFrameDownscaler::SetData(uint8_t* data, OCImage& image, ImageFormat im
     OC_LOG_INFO("Width: " + std::to_string(_width) + " Height: " + std::to_string(_height));
 }
 
+void BayerFrameDownscaler::SetData(uint16_t* imageData, OCImage& image)
+{
+    _width = image.Width();
+    _height = image.Height();
+
+    _size = _width * _height;
+
+    image.SetWidth(image.Width()/2);
+    image.SetHeight(image.Height()/2);
+
+    _outputData = imageData;
+
+    _dataRed = static_cast<uint16_t*>(image.RedChannel());
+    _dataGreen = static_cast<uint16_t*>(image.GreenChannel());
+    _dataBlue = static_cast<uint16_t*>(image.BlueChannel());
+
+    _pattern = image.GetBayerPattern();
+
+    // TODO
+    // Map pattern to data.
+}
+
 void BayerFrameDownscaler::Process()
 {
     switch(_imageFormat)
@@ -96,7 +118,7 @@ void BayerFrameDownscaler::Process()
     // It currently skips 4 pixels (half the width and height), 2 is normal.
     BayerFrameDownscaler::Extract(2);
 
-    //OC_LOG_INFO("Extract finished");
+    OC_LOG_INFO("Extract finished");
 }
 
 uint16_t*BayerFrameDownscaler::GetDataRed()
