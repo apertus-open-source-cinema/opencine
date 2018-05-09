@@ -23,8 +23,9 @@ private:
     uint32_t _height;
     uint32_t _size;
 
-    // TODO
-    // _patternOffsets
+    // Pattern Offsets.
+    // The indexes follow the order: Red, Green0, Green1, Blue.
+    uint32_t _patternOffsets[4];
 
 public:
     BilinearDebayer(OCImage& image);
@@ -39,6 +40,8 @@ public:
     // Main Processor.
     void Process();
 
+    // Sets correct Pattern Offset.
+    void SetPatternOffsets(BayerPattern pattern);
 };
 
 #endif //BilinearDebayer_H
