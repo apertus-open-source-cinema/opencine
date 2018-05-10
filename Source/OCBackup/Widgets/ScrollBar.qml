@@ -1,3 +1,7 @@
+// Copyright (c) 2017 apertus° Association & contributors
+// Project: OpenCine / OCBackup
+// License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 import QtQuick 2.3;
 
 Item {
@@ -38,13 +42,9 @@ Item {
         radius: 2;
         antialiasing: true;
         color: Qt.rgba(0.5, 0.5, 0.5, 0.85);
-        /*border {
-            width: 1;
-            color: "darkgray";
-        }*/
         anchors { fill: parent; }
 
-        opacity: 0 /* mouseArea.containsMouse ? 1.0 : 0.3*/
+        opacity: 0
 
         MouseArea
         {

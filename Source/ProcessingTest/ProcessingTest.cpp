@@ -1,3 +1,7 @@
+// Copyright (c) 2017 apertus° Association & contributors
+// Project: OpenCine / ProcessingTest
+// License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 #include <memory>
 #include <thread>
 
@@ -25,8 +29,6 @@ public:
 
 		SetLayout(*static_cast<QWidget*>(_view.get()));
 		ShowMaximized();
-
-        //QtConcurrent::run(_presenter.get(), &IProcessingPresenter::Test);
 
         _presenter->Test();
 	}

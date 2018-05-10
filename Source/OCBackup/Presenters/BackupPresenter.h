@@ -1,3 +1,7 @@
+// Copyright (c) 2017 apertus° Association & contributors
+// Project: OpenCine / OCBackup
+// License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 #ifndef BACKUPPRESENTER_H
 #define BACKUPPRESENTER_H
 
@@ -15,21 +19,6 @@
 
 #include "../Interfaces/IBackupView.h"
 
-//class IBackupPresenter : public QObject
-//{
-//	Q_OBJECT
-
-//public:
-//	//virtual void RefreshDriveList() = 0;
-//	//virtual void SelectDrive(std::string drivePath) = 0;
-
-//	//virtual void StartTransfer() = 0;
-
-//signals:
-//	//void DriveListChanged(std::vector<PathInfo> driveList);
-//	//void DriveSelectionChanged(std::vector<std::string> driveList);
-//};
-
 class BackupPresenter : public OC::UI::BasePresenter
 {
 	Q_OBJECT
@@ -46,14 +35,13 @@ class BackupPresenter : public OC::UI::BasePresenter
 
 	void StartTransfer();
 
-	//signals:
-	//void StartTransferSig(std::string drivePath);
-
 private slots:
 	void DriveListChanged(std::vector<PathInfo> driveList);
 	void DriveSelectionChanged(int driveIndex);
 	void AddDestination();
 	void FolderSelectionChanged(QString folderPath) const;
+
+    void LoadClip(int clipIndex) const;
 
 public:
 	explicit BackupPresenter(IBackupView& view, OCEventBus* eventBus);

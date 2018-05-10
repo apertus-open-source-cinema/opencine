@@ -1,3 +1,7 @@
+// Copyright (c) 2017 apertus° Association & contributors
+// Project: OpenCine / OCBackup
+// License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 import QtQuick 2.3
 import QtGraphicalEffects 1.0
 import QtQuick.Controls 1.4
@@ -26,11 +30,7 @@ Item
         property string path: model.path ? model.path : "?";
         property string driveName: model.driveName ? model.driveName : "?";
         property string drive: model.driveLetter ? model.driveLetter : "?";
-//        property real usedSpace: model.usedSpace ? model.usedSpace : -1;
-//        property real totalSpace: model.totalSpace ? model.totalSpace : -1;
-//        property string spaceUnit: model.spaceUnit ? model.spaceUnit : "?";
         property alias backgroundColor: rectangle1.color;
-        //height: 49
 
         Text {
             id: pathInfo

@@ -1,3 +1,7 @@
+// Copyright (c) 2017 apertus° Association & contributors
+// Project: OpenCine / OCBackup
+// License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 import QtQuick 2.4
 import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.1
@@ -47,8 +51,6 @@ Rectangle {
             asynchronous: true
             onStatusChanged:
             {
-                //console.log("Image state: " + status)
-
                 if (thumbnailImage.status == Image.Error || thumbnailImage.status == Image.Null)
                 {
                     thumbnailImage.source = "";

@@ -1,20 +1,18 @@
+// Copyright (c) 2017 apertus° Association & contributors
+// Project: OpenCine / ProcessingTest
+// License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 #include "PreviewPane.h"
 
 #include <QWheelEvent>
 
-unsigned char pixels[12] = {
-    255,   0, 0,     0, 255,   0,
-    0, 255, 0,     0,   0, 255
-};
+//unsigned char pixels[12] = {
+//    255,   0, 0,     0, 255,   0,
+//    0, 255, 0,     0,   0, 255
+//};
 
-float xOffset = 0.5f / 4096.0f;
-float yOffset = 0.5f / 3072.0f;
-
-float wheelValue = 1.0;
-
-GLuint textureRed = 0;
-GLuint textureGreen = 0;
-GLuint textureBlue = 0;
+//float xOffset = 0.5f / 4096.0f;
+//float yOffset = 0.5f / 3072.0f;
 
 // Create a colored triangle
 static const float vertices[] = {
@@ -34,13 +32,6 @@ PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent),
     format.setVersion(3, 3);
     format.setProfile(QSurfaceFormat::CoreProfile);
     setFormat(format);
-
-    //QSurfaceFormat format;
-    //format.setVersion(3, 3);
-    //format.setProfile(QSurfaceFormat::CoreProfile);
-    //format.setDepthBufferSize(24);
-    //format.setStencilBufferSize(8);
-    //QSurfaceFormat::setDefaultFormat(format);
 }
 
 PreviewPane::~PreviewPane()
@@ -72,27 +63,9 @@ void PreviewPane::initializeGL()
     glGenTextures(1, &textureBlue);
 }
 
-float viewWidth = 1;
-float viewHeight = 1;
-int imageWidth = 1;
-int imageHeight = 1;
-
-float panX = 0.0;
-float panY = 0.0;
-
 void PreviewPane::resizeGL(int w, int h)
 {
-    viewWidth = (float)w / (float)h;
-    //viewHeight = 1.0;
-    //    QMatrix4x4 projection;
-    //    projection.ortho(-1.0 - wheelValue, 1.0 + wheelValue, -0.1, 0.1, 0.01f, 1000.0f);
-    //    QMatrix4x4 view;
-    //    view.lookAt(QVector3D(0.0,0.0,-5.0), QVector3D(0.0,0.0,0.0), QVector3D(0.0,1.0,0.0));
-    //    QMatrix4x4 model;
-    //    model.setToIdentity();
-
-    //    mvp = projection * view * model;
-    //glLoadMatrixf(m_projection.data());
+    viewWidth = static_cast<float>(w) / static_cast<float>(h);
 }
 
 void PreviewPane::paintGL()
@@ -102,12 +75,12 @@ void PreviewPane::paintGL()
     program->bind();
     {
         QMatrix4x4 projection;
-        projection.ortho(-viewWidth / 2.0 * wheelValue, viewWidth / 2.0 * wheelValue, -viewHeight / 2.0 * wheelValue, viewHeight / 2.0 * wheelValue, 0.01f, 1000.0f);
+        projection.ortho(-viewWidth / 2.0f * wheelValue, viewWidth / 2.0f * wheelValue, -viewHeight / 2.0f * wheelValue, viewHeight / 2.0f * wheelValue, 0.01f, 1000.0f);
         QMatrix4x4 view;
-        view.lookAt(QVector3D(panX, panY, 1.0), QVector3D(panX, panY, 0.0), QVector3D(0.0, 1.0, 0.0));
+        view.lookAt(QVector3D(panX * wheelValue, panY * wheelValue, 1.0), QVector3D(panX * wheelValue, panY * wheelValue, 0.0), QVector3D(0.0, 1.0, 0.0));
         QMatrix4x4 model;
         model.setToIdentity();
-        model.scale(float(imageWidth) / (float)imageHeight, 1.0f, 1.0f);
+        model.scale(static_cast<float>(imageWidth) / static_cast<float>(imageHeight), 1.0f, 1.0f);
 
         mvp = projection * view * model;
 
@@ -127,9 +100,9 @@ void PreviewPane::paintGL()
         glBindTexture(GL_TEXTURE_2D, textureBlue);
         program->setUniformValue("texture3", 2);
 
-        program->setUniformValue("redEnabled", (float)redChannel);
-        program->setUniformValue("greenEnabled", (float)greenChannel);
-        program->setUniformValue("blueEnabled", (float)blueChannel);
+        program->setUniformValue("redEnabled", static_cast<float>(redChannel));
+        program->setUniformValue("greenEnabled", static_cast<float>(greenChannel));
+        program->setUniformValue("blueEnabled", static_cast<float>(blueChannel));
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -199,23 +172,7 @@ void PreviewPane::SetupObject()
 
 void PreviewPane::SetupTexture()
 {
-    //    glGenTextures(1, &texture);
-
-    //    glBindTexture(GL_TEXTURE_2D, texture);
-
-    //    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    //    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixels[0]);
-    //    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE16, 4096, 3072, 0, GL_LUMINANCE, GL_UNSIGNED_SHORT, nullptr);
-
-    //    glGenerateMipmap(GL_TEXTURE_2D);
-
-    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    //    glBindTexture(GL_TEXTURE_2D, 0);
 }
-
-float zoomFactor = 1.1f;
 
 void PreviewPane::wheelEvent(QWheelEvent* event)
 {
@@ -240,9 +197,6 @@ void PreviewPane::wheelEvent(QWheelEvent* event)
     //wheelValue += event->pixelDelta().y() / 100.0f;
 }
 
-int oldX = 0;
-int oldY = 0;
-
 void PreviewPane::mouseMoveEvent(QMouseEvent *event)
 {
     if(event->buttons() == Qt::LeftButton)
@@ -255,50 +209,9 @@ void PreviewPane::mouseMoveEvent(QMouseEvent *event)
     oldY = event->globalY();
 }
 
-void PreviewPane::SetTextureRed(int width, int height, unsigned short* imageData)
+void PreviewPane::SetTexture(int width, int height, unsigned short* imageData)
 {
-    //    if(textureRed != 0)
-    //    {
-    //        return;
-    //    }
-
-    imageWidth = width;
-    imageHeight = height;
-
-    glBindTexture(GL_TEXTURE_2D, textureRed);
-
     glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixels[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R16UI, width, height, 0, GL_RED_INTEGER, GL_UNSIGNED_SHORT, imageData);
-
-    GLenum err;
-    while ((err = glGetError()) != GL_NO_ERROR)
-    {
-        qDebug() << "2 OpenGL error: " << err;
-    }
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_LINEAR_MIPMAP_NEAREST
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    //glGenerateMipmap(GL_TEXTURE_2D);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    while ((err = glGetError()) != GL_NO_ERROR)
-    {
-        qDebug() << "3 OpenGL error: " << err;
-    }
-}
-
-void PreviewPane::SetTextureBlue(int width, int height, unsigned short* imageData)
-{
-    glBindTexture(GL_TEXTURE_2D, textureBlue);
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixels[0]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_R16UI, width, height, 0, GL_RED_INTEGER, GL_UNSIGNED_SHORT, imageData);
 
     GLenum err;
@@ -338,37 +251,20 @@ void PreviewPane::SwitchBlueChannel(bool enabled)
     blueChannel = enabled;
 }
 
-void PreviewPane::SetTextureGreen(int width, int height, unsigned short* imageData)
-{
-    glBindTexture(GL_TEXTURE_2D, textureGreen);
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
-    //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, &pixels[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R16UI, width, height, 0, GL_RED_INTEGER, GL_UNSIGNED_SHORT, imageData);
-
-    GLenum err;
-    while ((err = glGetError()) != GL_NO_ERROR)
-    {
-        qDebug() << "2 OpenGL error: " << err;
-    }
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_LINEAR_MIPMAP_NEAREST
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    //glGenerateMipmap(GL_TEXTURE_2D);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    while ((err = glGetError()) != GL_NO_ERROR)
-    {
-        qDebug() << "3 OpenGL error: " << err;
-    }
-}
-
 bool PreviewPane::IsInitialized()
 {
     return isValid();
+}
+
+void PreviewPane::SetImage(OC::DataProvider::OCImage &image)
+{
+    imageWidth = static_cast<int>(image.Width());
+    imageHeight = static_cast<int>(image.Height());
+
+    glBindTexture(GL_TEXTURE_2D, textureRed);
+    SetTexture(imageWidth, imageHeight, static_cast<unsigned short*>(image.RedChannel()));
+    glBindTexture(GL_TEXTURE_2D, textureGreen);
+    SetTexture(imageWidth, imageHeight, static_cast<unsigned short*>(image.GreenChannel()));
+    glBindTexture(GL_TEXTURE_2D, textureBlue);
+    SetTexture(imageWidth, imageHeight, static_cast<unsigned short*>(image.BlueChannel()));
 }

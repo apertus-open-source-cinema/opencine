@@ -1,3 +1,7 @@
+// Copyright (c) 2017 apertus° Association & contributors
+// Project: OpenCine / OCui
+// License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
+
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
@@ -15,12 +19,5 @@ MainWindow::~MainWindow()
 
 void MainWindow::SetLayout(QWidget &widget)
 {
-	//ui->mainPane->setAttribute(Qt::WA_OpaquePaintEvent);
-
-	//ui->mainPane->setAttribute(Qt::WA_NoSystemBackground);
-
-	ui->mainPane->addWidget(&widget);
-
-	//widget.showFullScreen();
-	//this->adjustSize();
+    ui->mainPane->addWidget(&widget);
 }
