@@ -23,6 +23,7 @@ private:
     uint32_t _height;
     uint32_t _size;
 
+    BayerPattern _pattern;
     // Pattern Offsets.
     // The indexes follow the order: Red, Green0, Green1, Blue.
     uint32_t _patternOffsets[4];
@@ -33,9 +34,11 @@ public:
     ~BilinearDebayer();
 
     // Processors for each color channel.
-    void ProcessRed();
-    void ProcessBlue();
+    void ProcessBottomRight(uint16_t *channel);
+    void ProcessBottomLeft(uint16_t *channel);
     void ProcessGreen();
+    void ProcessTopRight(uint16_t *channel);
+    void ProcessTopLeft(uint16_t *channel);
 
     // Main Processor.
     void Process();
