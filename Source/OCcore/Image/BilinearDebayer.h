@@ -33,15 +33,21 @@ public:
 
     ~BilinearDebayer();
 
-    // Processors for each color channel.
-    void ProcessBottomRight(uint16_t *channel);
-    void ProcessBottomLeft(uint16_t *channel);
-    void ProcessGreen();
-    void ProcessTopRight(uint16_t *channel);
-    void ProcessTopLeft(uint16_t *channel);
+    // Debayers for each color channel.
+    void DebayerBottomRight(uint16_t *channel);
+    void DebayerBottomLeft(uint16_t *channel);
+    void DebayerGreen();
+    void DebayerTopRight(uint16_t *channel);
+    void DebayerTopLeft(uint16_t *channel);
 
     // Main Processor.
     void Process();
+
+    // Debayer for Nearest Interpolation.
+    void DebayerNearest(int red, int green0, int green1, int blue);
+
+    // Processor for Nearest Interpolation.
+    void ProcessNearest();
 
     // Sets correct Pattern Offset.
     void SetPatternOffsets(BayerPattern pattern);
