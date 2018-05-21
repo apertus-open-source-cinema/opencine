@@ -187,22 +187,18 @@ void BilinearDebayer::SetPatternOffsets(BayerPattern pattern)
         _patternOffsets[3] = _width + 1;
         break;
     case BayerPattern::GRBG:
-        _patternOffsets[0] = _width + 2;
-        _patternOffsets[1] = _width + 2;
-        _patternOffsets[2] = (2 * _width) + 1;
-        _patternOffsets[3] = (2 * _width) + 1;
-        break;
-    case BayerPattern::GBRG:
         _patternOffsets[0] = (2 * _width) + 1;
         _patternOffsets[1] = _width + 2;
         _patternOffsets[2] = (2 * _width) + 1;
         _patternOffsets[3] = _width + 2;
         break;
+    case BayerPattern::GBRG:
+        _patternOffsets[0] = _width + 2;
+        _patternOffsets[1] = _width + 2;
+        _patternOffsets[2] = (2 * _width) + 1;
+        _patternOffsets[3] = (2 * _width) + 1;
+        break;
     default:
-        _patternOffsets[0] = _width + 1;
-        _patternOffsets[1] = _width + 1;
-        _patternOffsets[2] = (2 * _width) + 2;
-        _patternOffsets[3] = (2 * _width) + 2;
         break;
 
     }
