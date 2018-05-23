@@ -24,8 +24,8 @@ private:
     uint32_t _size;
 
     BayerPattern _pattern;
-    // Pattern Offsets.
-    // The indexes follow the order: Red, Green0, Green1, Blue.
+
+    // Pattern Offsets. The indexes follow the order: Red/Blue, Green0, Green1, Blue/Red.
     uint32_t _patternOffsets[4];
 
 public:
@@ -39,6 +39,9 @@ public:
     void DebayerGreen();
     void DebayerTopRight(uint16_t *channel);
     void DebayerTopLeft(uint16_t *channel);
+
+    // Debayers Borders.
+    void DemosaicBorders(uint16_t *channel);
 
     // Main Processor.
     void Process();
