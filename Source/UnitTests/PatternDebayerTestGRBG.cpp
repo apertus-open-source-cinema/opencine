@@ -3,7 +3,7 @@
 #include "../OCcore/Image/BilinearDebayer.h"
 #include "../OCcore/Log/Logger.h"
 
-TEST_CASE("Pattern Debayer", "[OC::Image]")
+TEST_CASE("Pattern Debayer GRBG", "[OC::Image]")
 {
     const int inputDataLength = 64;
     const int outputDataLength = inputDataLength;
@@ -104,7 +104,7 @@ TEST_CASE("Pattern Debayer", "[OC::Image]")
     }
 
     std::unique_ptr<BilinearDebayer> debayer(new BilinearDebayer(*outputImage));
-    debayer.get()->ProcessNearest();
+    debayer.get()->Process();
 
     bool correctRed = true;
     bool correctGreen = true;
