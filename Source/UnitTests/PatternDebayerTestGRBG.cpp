@@ -1,6 +1,6 @@
 #include <Catch2/catch.hpp>
 
-#include "../OCcore/Image/BilinearDebayer.h"
+#include "../OCcore/Image/SHOODAKDebayer.h"
 #include "../OCcore/Log/Logger.h"
 
 TEST_CASE("Pattern Debayer GRBG", "[OC::Image]")
@@ -103,7 +103,7 @@ TEST_CASE("Pattern Debayer GRBG", "[OC::Image]")
         OC_LOG_INFO("index " + std::to_string(i) + ": " + std::to_string(imageRed[i]) + " " + std::to_string(imageGreen[i]) + " " + std::to_string(imageBlue[i]));
     }
 
-    std::unique_ptr<BilinearDebayer> debayer(new BilinearDebayer(*outputImage));
+    std::unique_ptr<SHOODAKDebayer> debayer(new SHOODAKDebayer(*outputImage));
     debayer.get()->Process();
 
     bool correctRed = true;
