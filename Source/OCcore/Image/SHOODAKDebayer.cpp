@@ -47,12 +47,34 @@ void SHOODAKDebayer::DebayerGreen(int hOffset, int vOffset)
     std::mt19937 gen(123456);
     std::uniform_int_distribution<> dis(1, 2);
 
+    int randomOffset;
+
     for(int index = 0; index < _size; index += 2)
     {
-        _greenChannel[index]              = _greenChannel[index + _patternOffsets[dis(gen)]];
-        _greenChannel[index + 1]          = _greenChannel[index + _patternOffsets[dis(gen)] + hOffset];
-        _greenChannel[index + _width]     = _greenChannel[index + vOffset * _width + _patternOffsets[dis(gen)]];
-        _greenChannel[index + _width + 1] = _greenChannel[index + vOffset * _width + _patternOffsets[dis(gen)] + hOffset];
+        _greenChannel[index]                = _greenChannel[index + _patternOffsets[dis(gen)]];
+
+
+        if (dis(gen) == 1)
+            randomOffset = index + hOffset + _patternOffsets[1];
+        else
+            randomOffset = index + vOffset + _patternOffsets[2];
+        _greenChannel[index + 1]            = _greenChannel[randomOffset];
+
+
+        if (dis(gen) == 1)
+            randomOffset = index + vOffset * _width + _patternOffsets[1];
+        else
+            randomOffset = index + hOffset * _width + _patternOffsets[2];
+        _greenChannel[index + _width]       = _greenChannel[randomOffset];
+
+        if (dis(gen) == 1)
+            randomOffset = index + hOffset + vOffset * _width + _patternOffsets[1];
+        else
+            randomOffset = index + vOffset + hOffset * _width + _patternOffsets[2];
+        _greenChannel[index + _width + 1]   = _greenChannel[randomOffset];
+
+
+
         if ((index + 2) % _width == 0)
             index += _width + 2;
     }
@@ -76,22 +98,22 @@ void SHOODAKDebayer::Process()
     switch (_pattern) {
     case BayerPattern::RGGB:
         DebayerRed(2, 2);
-//        DebayerGreen();
+        DebayerGreen(2, 0);
         DebayerBlue(0, 0);
         break;
     case BayerPattern::BGGR:
         DebayerRed(0, 0);
-//        DebayerGreen();
+        DebayerGreen(2, 0);
         DebayerBlue(2, 2);
         break;
     case BayerPattern::GRBG:
         DebayerRed(0, 2);
-//        DebayerGreen();
+        DebayerGreen(0, 2);
         DebayerBlue(2, 0);
         break;
     case BayerPattern::GBRG:
         DebayerRed(2, 0);
-//        DebayerGreen();
+        DebayerGreen(0, 2);
         DebayerBlue(0, 2);
         break;
     default:
