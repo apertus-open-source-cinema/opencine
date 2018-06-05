@@ -72,7 +72,8 @@ void ProcessingPresenter::Test()
         interleavedArray[i * 3 + 2] = (blueArray[i] >> 4) * 1.0;
     }
 
-    lodepng::encode("color.png", interleavedArray, _image->Width(), _image->Height(), LodePNGColorType::LCT_RGB, 8);
+    // Uncomment this to save the result.
+    //lodepng::encode("output.png", interleavedArray, _image->Width(), _image->Height(), LodePNGColorType::LCT_RGB, 8);
 
     unsigned char dummydata[] = "This is a dummy data to just test if the dump feature works or not.";
     OC::Image::RawDump::Dump("DummyDump.dat", dummydata, strlen((const char*)dummydata));

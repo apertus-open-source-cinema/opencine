@@ -20,8 +20,8 @@ FILE(GLOB SOURCE_FILES "*.cpp" "*.h" "*.hpp"
                        "Presenters/*.cpp" "Presenters/*.h"
                        "Controls/*.cpp" "Controls/*.h"
                        "Shaders/*.vert" "Shaders/*.frag"
-                       "../3rdParty/lodepng/lodepng.cpp"
-                       "../3rdParty/lodepng/lodepng.h"   )
+                       "${CMAKE_SOURCE_DIR}/3rdParty/lodepng/lodepng.cpp"
+                       "${CMAKE_SOURCE_DIR}/3rdParty/lodepng/lodepng.h")
 
 FILE(GLOB UI_FILES "Views/*.ui" "Controls/*.ui")
 
@@ -44,7 +44,7 @@ FILE(COPY "Shaders" DESTINATION ${CMAKE_BINARY_DIR}/bin)
 set(_src_root_path ${CMAKE_CURRENT_SOURCE_DIR})
 
 file(
-    GLOB_RECURSE _source_list 
+    GLOB_RECURSE _source_list
     LIST_DIRECTORIES false
     "${_src_root_path}/*.c*"
     "${_src_root_path}/*.h*"
