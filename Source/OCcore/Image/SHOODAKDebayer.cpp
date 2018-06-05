@@ -53,13 +53,11 @@ void SHOODAKDebayer::DebayerGreen(int hOffset, int vOffset)
     {
         _greenChannel[index]                = _greenChannel[index + _patternOffsets[dis(gen)]];
 
-
         if (dis(gen) == 1)
             randomOffset = index + hOffset + _patternOffsets[1];
         else
             randomOffset = index + vOffset + _patternOffsets[2];
         _greenChannel[index + 1]            = _greenChannel[randomOffset];
-
 
         if (dis(gen) == 1)
             randomOffset = index + vOffset * _width + _patternOffsets[1];
@@ -72,8 +70,6 @@ void SHOODAKDebayer::DebayerGreen(int hOffset, int vOffset)
         else
             randomOffset = index + vOffset + hOffset * _width + _patternOffsets[2];
         _greenChannel[index + _width + 1]   = _greenChannel[randomOffset];
-
-
 
         if ((index + 2) % _width == 0)
             index += _width + 2;

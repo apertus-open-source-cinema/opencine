@@ -18,6 +18,7 @@
 
 #include "Image/EndianHelper.h"
 #include "Image/RawDump.h"
+#include "lodepng/lodepng.h"
 
 using namespace OC::DataProvider;
 
@@ -41,8 +42,8 @@ void ProcessingPresenter::Test()
 
     OC_LOG_INFO("Demosaicing");
     //BilinearDebayer* debayer = new BilinearDebayer(*_image.get());
-    GEDIDebayer* debayer = new GEDIDebayer(*_image.get());
-    //SHOODAKDebayer* debayer = new SHOODAKDebayer(*_image.get());
+    //GEDIDebayer* debayer = new GEDIDebayer(*_image.get());
+    SHOODAKDebayer* debayer = new SHOODAKDebayer(*_image.get());
     debayer->Process();
     //OC_LOG_INFO("Demosaicing finished");
 
@@ -70,6 +71,9 @@ void ProcessingPresenter::Test()
         interleavedArray[i * 3 + 1] = (greenArray[i] >> 4)  * 1.0;
         interleavedArray[i * 3 + 2] = (blueArray[i] >> 4) * 1.0;
     }
+
+    lodepng::encode("color.png", interleavedArray, _image->Width(), _image->Height(), LodePNGColorType::LCT_RGB, 8);
+
     unsigned char dummydata[] = "This is a dummy data to just test if the dump feature works or not.";
     OC::Image::RawDump::Dump("DummyDump.dat", dummydata, strlen((const char*)dummydata));
     OC::Image::RawDump::Dump("InterleavedArray.dat", interleavedArray, dataLength * 3);
