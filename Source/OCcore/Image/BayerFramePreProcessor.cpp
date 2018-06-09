@@ -159,8 +159,7 @@ void BayerFramePreProcessor::Process()
         OC::Image::ImageHelper::Convert14To16Bit(_data, _width, _height, _outputData);
         //t0 = std::thread(&OC::Image::ImageHelper::Convert14To16Bit, this);
         break;
-    case ImageFormat::Unknown:
-    case ImageFormat::Integer16:
+    default:
         break;
     }
 

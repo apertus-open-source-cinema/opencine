@@ -102,7 +102,7 @@ void ProcessingPresenter::Show()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    IAllocator* poolAllocator = new RawPoolAllocator(50 * 1024 * 1024);
+    IAllocator* poolAllocator = new RawPoolAllocator(150 * 1024 * 1024);
 
     OC_LOG_INFO("Loading image");
     provider->Load(_currentFilePath, FileFormat::DNG, *_image.get(), *poolAllocator);

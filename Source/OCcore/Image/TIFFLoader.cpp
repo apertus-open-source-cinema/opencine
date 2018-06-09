@@ -22,7 +22,8 @@ IAllocator* _allocator = nullptr;
 
 TIFFLoader::TIFFLoader() :
 	_swapEndianess(false),
-	_imageDataOffset(0)
+    _imageDataOffset(0),
+    _bitsPerPixel(ImageFormat::Integer12)
 {
 }
 
@@ -120,9 +121,9 @@ void TIFFLoader::Load(unsigned char* data, unsigned size, OCImage& image, IAlloc
 	
 	std::unordered_map<int, std::string> tagNames = CreateTIFFTagMap();
 
-	ImageFormat bitsPerPixel = ImageFormat::Integer12;
+
 	std::unordered_map<int, std::function<void(TIFFTag&)>> varMap;
-	ProcessTags(varMap, bitsPerPixel, size, image, data);
+    ProcessTags(varMap, _bitsPerPixel, size, image, data);
 
 	for (int i = 0; i < ifdCount; i++)
 	{
@@ -217,7 +218,7 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image) const
     image.SetBlueChannel(_allocator->Allocate(dataSize));
 
     // TODO: Replace hardcoded image format value
-    frameProcessor->SetData(&data[_imageDataOffset], image, ImageFormat::Integer12);
+    frameProcessor->SetData(&data[_imageDataOffset], image, _bitsPerPixel);
 
     frameProcessor->Process();
 
