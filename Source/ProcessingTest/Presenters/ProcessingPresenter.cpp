@@ -29,7 +29,7 @@ ProcessingPresenter::ProcessingPresenter(IProcessingView& view):
 {
     _view = &view;
 
-    QStringList debayerMethods = {"Bilinear", "GEDI", "SHOODAK"};
+    QStringList debayerMethods = {"Bilinear", "GEDI", "SHOODAK", "None"};
     _view->SetAvailableDebayerMethods(debayerMethods);
 
     _debayerProcessors.push_back(std::make_shared<BilinearDebayer>());
@@ -110,11 +110,11 @@ void ProcessingPresenter::Show()
     OC_LOG_INFO("Loading finished");
 
     OC_LOG_INFO("Demosaicing");
-    //BilinearDebayer* debayer = new BilinearDebayer(*_image.get());
-    //GEDIDebayer* debayer = new GEDIDebayer(*_image.get());
-    //GEDIDebayer* debayer = new GEDIDebayer(*_image.get());
-    _debayerProcessors[_currentDebayerProcessor]->Process(*_image.get());
-    //OC_LOG_INFO("Demosaicing finished");
+    if(_currentDebayerProcessor != 3)
+    {
+        _debayerProcessors[_currentDebayerProcessor]->Process(*_image.get());
+    }
+    OC_LOG_INFO("Demosaicing finished");
 
     auto diffTime = std::chrono::high_resolution_clock::now() - start;
     auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(diffTime).count();
