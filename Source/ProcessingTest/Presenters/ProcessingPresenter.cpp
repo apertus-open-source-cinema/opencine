@@ -7,6 +7,7 @@
 #include <chrono>
 
 #include <QFileDialog>
+#include <QStringList>
 #include <QThread>
 
 #include <Image/BilinearDebayer.h>
@@ -23,13 +24,22 @@
 
 using namespace OC::DataProvider;
 
-ProcessingPresenter::ProcessingPresenter(IProcessingView& view)
+ProcessingPresenter::ProcessingPresenter(IProcessingView& view):
+    _currentDebayerProcessor(0)
 {
     _view = &view;
+
+    QStringList debayerMethods = {"Bilinear", "GEDI", "SHOODAK"};
+    _view->SetAvailableDebayerMethods(debayerMethods);
+
+    _debayerProcessors.push_back(std::make_shared<BilinearDebayer>());
+    _debayerProcessors.push_back(std::make_shared<GEDIDebayer>());
+    _debayerProcessors.push_back(std::make_shared<SHOODAKDebayer>());
 
     provider.reset(new ImageProvider());
 
     connect(_view, &IProcessingView::OpenRAWFile, this, &ProcessingPresenter::OpenRAWFile);
+    connect(_view, SIGNAL(DebayerMethodChanged(int)), this, SLOT(ChangeDebayerMethod(int)));
 }
 
 void ProcessingPresenter::Test()
@@ -88,22 +98,22 @@ void ProcessingPresenter::Test()
     //delete[] interleavedArray;
 }
 
-void ProcessingPresenter::Show(std::string filePath)
+void ProcessingPresenter::Show()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
     IAllocator* poolAllocator = new RawPoolAllocator(50 * 1024 * 1024);
 
     OC_LOG_INFO("Loading image");
-    provider->Load(filePath, FileFormat::DNG, *_image.get(), *poolAllocator);
+    provider->Load(_currentFilePath, FileFormat::DNG, *_image.get(), *poolAllocator);
     //    provider->Load("M11-1526.VB.mlv", FileFormat::MLV, *_image.get(), *poolAllocator);
     OC_LOG_INFO("Loading finished");
 
     OC_LOG_INFO("Demosaicing");
     //BilinearDebayer* debayer = new BilinearDebayer(*_image.get());
     //GEDIDebayer* debayer = new GEDIDebayer(*_image.get());
-    GEDIDebayer* debayer = new GEDIDebayer(*_image.get());
-    debayer->Process();
+    //GEDIDebayer* debayer = new GEDIDebayer(*_image.get());
+    _debayerProcessors[_currentDebayerProcessor]->Process(*_image.get());
     //OC_LOG_INFO("Demosaicing finished");
 
     auto diffTime = std::chrono::high_resolution_clock::now() - start;
@@ -114,29 +124,29 @@ void ProcessingPresenter::Show(std::string filePath)
 
     _view->SetFrame(*_image.get());
 
-//    OC_LOG_INFO("Convert to interleaved array");
-//    unsigned int dataLength = _image->Width() * _image->Height();
-//    unsigned char* interleavedArray = new unsigned char[dataLength * 3];
-//    unsigned int i = 0;
+    //    OC_LOG_INFO("Convert to interleaved array");
+    //    unsigned int dataLength = _image->Width() * _image->Height();
+    //    unsigned char* interleavedArray = new unsigned char[dataLength * 3];
+    //    unsigned int i = 0;
 
-//    unsigned short*  redArray = static_cast<unsigned short*>(_image->RedChannel());
-//    unsigned short*  greenArray = static_cast<unsigned short*>(_image->GreenChannel());
-//    unsigned short*  blueArray = static_cast<unsigned short*>(_image->BlueChannel());
+    //    unsigned short*  redArray = static_cast<unsigned short*>(_image->RedChannel());
+    //    unsigned short*  greenArray = static_cast<unsigned short*>(_image->GreenChannel());
+    //    unsigned short*  blueArray = static_cast<unsigned short*>(_image->BlueChannel());
 
-//    //#pragma omp for private(interleavedArray, i)
-//    for (; i < dataLength; i++)
-//    {
-//        interleavedArray[i * 3] = (redArray[i] >> 4) * 1.0;
-//        interleavedArray[i * 3 + 1] = (greenArray[i] >> 4)  * 1.0;
-//        interleavedArray[i * 3 + 2] = (blueArray[i] >> 4) * 1.0;
-//    }
+    //    //#pragma omp for private(interleavedArray, i)
+    //    for (; i < dataLength; i++)dummyImage
+    //    {
+    //        interleavedArray[i * 3] = (redArray[i] >> 4) * 1.0;
+    //        interleavedArray[i * 3 + 1] = (greenArray[i] >> 4)  * 1.0;
+    //        interleavedArray[i * 3 + 2] = (blueArray[i] >> 4) * 1.0;
+    //    }
 
-//    lodepng::encode("color.png", interleavedArray, _image->Width(), _image->Height(), LodePNGColorType::LCT_RGB, 8);
+    //    lodepng::encode("color.png", interleavedArray, _image->Width(), _image->Height(), LodePNGColorType::LCT_RGB, 8);
 
-//    unsigned char dummydata[] = "This is a dummy data to just test if the dump feature works or not.";
-//    OC::Image::RawDump::Dump("DummyDump.dat", dummydata, strlen((const char*)dummydata));
-//    OC::Image::RawDump::Dump("InterleavedArray.dat", interleavedArray, dataLength * 3);
-//    OC_LOG_INFO("Conversion finished");
+    //    unsigned char dummydata[] = "This is a dummy data to just test if the dump feature works or not.";
+    //    OC::Image::RawDump::Dump("DummyDump.dat", dummydata, strlen((const char*)dummydata));
+    //    OC::Image::RawDump::Dump("InterleavedArray.dat", interleavedArray, dataLength * 3);
+    //    OC_LOG_INFO("Conversion finished");
 
     //_view->SetThumbnail(_image->Width(), _image->Height(), interleavedArray);
 
@@ -149,16 +159,23 @@ void ProcessingPresenter::OpenRAWFile()
     //dialog.setViewMode(QFileDialog::Detail);
     //int result = dialog.exec();
 
-//    if (!result)
-//    {
-//        return;
-//    }
+    //    if (!result)
+    //    {
+    //        return;
+    //    }
 
     _view->EnableRendering(false);
 
     QString fileName = QFileDialog::getOpenFileName(_view, tr("Open Image"), QDir::currentPath(), tr("DNG Files (*.dng *.DNG)"));
-    Show(fileName.toStdString());
+    _currentFilePath = fileName.toStdString();
+    Show();
 
     _view->EnableRendering(true);
     //_view->repaint();
+}
+
+void ProcessingPresenter::ChangeDebayerMethod(int debayerMethod)
+{
+    _currentDebayerProcessor = debayerMethod;
+    Show();
 }

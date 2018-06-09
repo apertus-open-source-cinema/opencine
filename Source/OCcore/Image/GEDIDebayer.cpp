@@ -9,6 +9,11 @@
 
 #include <Log/Logger.h>
 
+GEDIDebayer::GEDIDebayer()
+{
+    // TODO (BAndiT1983): Add implementation
+}
+
 GEDIDebayer::GEDIDebayer(OCImage &image)
 {
     _width = image.Width();
@@ -157,6 +162,24 @@ void GEDIDebayer::Process()
     GEDIDebayer::DemosaicBorders(_blueChannel);
     GEDIDebayer::DemosaicBorders(_greenChannel);
     GEDIDebayer::DemosaicBorders(_redChannel);
+}
+
+void GEDIDebayer::Process(OCImage &image)
+{
+    _width = image.Width();
+    _height = image.Height();
+    _size = _width * _height;
+
+    _redChannel = static_cast<uint16_t*>(image.RedChannel());
+    _greenChannel = static_cast<uint16_t*>(image.GreenChannel());
+    _blueChannel = static_cast<uint16_t*>(image.BlueChannel());
+
+    _pattern = image.GetBayerPattern();
+    SetPatternOffsets(_pattern);
+
+    OC_LOG_INFO("\nConsidering width as " + std::to_string(_width) + ":\n" + std::to_string(_patternOffsets[0]) + "\n" + std::to_string(_patternOffsets[1]) + "\n" + std::to_string(_patternOffsets[2]) + "\n" + std::to_string(_patternOffsets[3]) + "\n");
+
+    Process();
 }
 
 void GEDIDebayer::SetPatternOffsets(BayerPattern pattern)

@@ -7,12 +7,13 @@
 
 #include "IFrameProcessor.h"
 #include "OCImage.h"
+#include "IDebayerProcessor.h"
 
 #include "OCcore_export.h"
 
 using namespace OC::DataProvider;
 
-class SHOODAKDebayer
+class SHOODAKDebayer : public IDebayerProcessor
 {
     private:
     // Color Channels.
@@ -31,6 +32,7 @@ class SHOODAKDebayer
     uint32_t _patternOffsets[4];
 
 public:
+    SHOODAKDebayer();
     SHOODAKDebayer(OCImage& image);
 
     ~SHOODAKDebayer();
@@ -42,6 +44,7 @@ public:
 
     // Main Processor.
     void Process();
+    void Process(OCImage& image);
 
     // Sets correct Pattern Offset.
     void SetPatternOffsets(BayerPattern pattern);

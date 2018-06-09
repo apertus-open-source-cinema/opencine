@@ -40,6 +40,8 @@ public:
 
     virtual void EnableRendering(bool enable);
 
+    void SetAvailableDebayerMethods(QStringList debayerMethods);
+
 private:
 	Ui::ProcessingView *ui;
 
@@ -48,6 +50,8 @@ private:
 	// QObject interface
 public:
 	bool eventFilter(QObject *, QEvent *) override;
+
+    // IProcessingView interface
 };
 
 #endif // PROCESSINGVIEW_H

@@ -5,6 +5,9 @@
 #ifndef IPROCESSINGVIEW_H
 #define IPROCESSINGVIEW_H
 
+#include <vector>
+#include <string>
+
 #include <QWidget>
 
 #include <Image/OCImage.h>
@@ -21,8 +24,11 @@ public:
 
     virtual void EnableRendering(bool enable) = 0;
 
+    virtual void SetAvailableDebayerMethods(QStringList debayerMethods) = 0;
+
 signals:
     void OpenRAWFile();
+    void DebayerMethodChanged(int index);
 };
 
 #endif //IPROCESSINGVIEW_H

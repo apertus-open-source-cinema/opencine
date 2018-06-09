@@ -24,6 +24,7 @@ ProcessingView::ProcessingView(QWidget *parent) :
 	ui->widget->installEventFilter(this);
 
     connect(ui->openFileButton, SIGNAL(clicked()), this, SIGNAL(OpenRAWFile()));
+    connect(ui->debayerMethods, SIGNAL(currentIndexChanged(int)), this, SIGNAL(DebayerMethodChanged(int)));
 }
 
 ProcessingView::~ProcessingView()
@@ -90,4 +91,10 @@ void ProcessingView::on_pushButton_4_toggled(bool checked)
 void ProcessingView::EnableRendering(bool enable)
 {
     ui->openGLWidget->EnableRendering(enable);
+}
+
+void ProcessingView::SetAvailableDebayerMethods(QStringList debayerMethods)
+{
+    ui->debayerMethods->addItems(debayerMethods);
+    ui->debayerMethods->setCurrentIndex(0);
 }

@@ -7,10 +7,11 @@
 
 #include "IFrameProcessor.h"
 #include "OCImage.h"
+#include "IDebayerProcessor.h"
 
 using namespace OC::DataProvider;
 
-class GEDIDebayer
+class GEDIDebayer : public IDebayerProcessor
 {
     private:
     // Color Channels.
@@ -29,6 +30,7 @@ class GEDIDebayer
     uint32_t _patternOffsets[4];
 
 public:
+    GEDIDebayer();
     GEDIDebayer(OCImage& image);
 
     ~GEDIDebayer();
@@ -45,6 +47,7 @@ public:
 
     // Main Processor.
     void Process();
+    void Process(OCImage& image);
 
     // Sets correct Pattern Offset.
     void SetPatternOffsets(BayerPattern pattern);

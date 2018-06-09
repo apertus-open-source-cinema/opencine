@@ -7,10 +7,11 @@
 
 #include "IFrameProcessor.h"
 #include "OCImage.h"
+#include "IDebayerProcessor.h"
 
 using namespace OC::DataProvider;
 
-class BilinearDebayer
+class BilinearDebayer : public IDebayerProcessor
 {
 private:
     // Color Channels.
@@ -29,6 +30,8 @@ private:
     uint32_t _patternOffsets[4];
 
 public:
+    BilinearDebayer();
+
     BilinearDebayer(OCImage& image);
 
     ~BilinearDebayer();
@@ -45,6 +48,9 @@ public:
 
     // Main Processor.
     void Process();
+
+    // TODO (BAndiT1983): Evaluate if this method should be pulled up to the interface
+    void Process(OCImage &image);
 
     // Debayer for Nearest Interpolation.
     void DebayerNearest(int red, int green0, int green1, int blue);
