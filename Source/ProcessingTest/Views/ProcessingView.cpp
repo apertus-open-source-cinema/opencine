@@ -22,6 +22,8 @@ ProcessingView::ProcessingView(QWidget *parent) :
 	ui->setupUi(this);
 
 	ui->widget->installEventFilter(this);
+
+    connect(ui->openFileButton, SIGNAL(clicked()), this, SIGNAL(OpenRAWFile()));
 }
 
 ProcessingView::~ProcessingView()
@@ -44,6 +46,8 @@ void ProcessingView::paintEvent(QPaintEvent *)
 void ProcessingView::SetFrame(OCImage &image)
 {
 	testImage = &image;
+
+    ui->openGLWidget->EnableRendering(true);
 }
 
 void ProcessingView::SetThumbnail(unsigned int width, unsigned int height, unsigned char* data)

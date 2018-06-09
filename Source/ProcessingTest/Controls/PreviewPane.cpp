@@ -27,6 +27,8 @@ PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent),
 {
     setMouseTracking(true);
 
+     _renderingEnabled = false;
+
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
     format.setVersion(3, 3);
@@ -70,6 +72,11 @@ void PreviewPane::resizeGL(int w, int h)
 
 void PreviewPane::paintGL()
 {
+    if(!_renderingEnabled)
+    {
+        return;
+    }
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     program->bind();
@@ -267,4 +274,9 @@ void PreviewPane::SetImage(OC::DataProvider::OCImage &image)
     SetTexture(imageWidth, imageHeight, static_cast<unsigned short*>(image.GreenChannel()));
     glBindTexture(GL_TEXTURE_2D, textureBlue);
     SetTexture(imageWidth, imageHeight, static_cast<unsigned short*>(image.BlueChannel()));
+}
+
+void PreviewPane::EnableRendering(bool enable)
+{
+    _renderingEnabled = enable;
 }

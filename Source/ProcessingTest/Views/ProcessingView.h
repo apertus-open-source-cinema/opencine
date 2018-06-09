@@ -5,6 +5,7 @@
 #ifndef PROCESSINGVIEW_H
 #define PROCESSINGVIEW_H
 
+#include <QObject>
 #include <QWidget>
 
 #include "Interfaces/IProcessingView.h"
@@ -17,7 +18,7 @@ class ProcessingView : public IProcessingView
 {
 	Q_OBJECT
 
-		OCImage* testImage = nullptr;
+    OCImage* testImage = nullptr;
 	QImage* thumbnailImage;
 
 public:

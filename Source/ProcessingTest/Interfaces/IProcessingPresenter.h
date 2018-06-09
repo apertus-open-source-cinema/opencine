@@ -5,10 +5,12 @@
 #ifndef IPROCESSINGPRESENTER_H
 #define IPROCESSINGPRESENTER_H
 
-class IProcessingPresenter
+#include <QObject>
+
+class IProcessingPresenter : public QObject
 {
 public:
-	virtual void Test() = 0;
+    virtual void Test() = 0;
 };
 
 #endif //IPROCESSINGPRESENTER_H
