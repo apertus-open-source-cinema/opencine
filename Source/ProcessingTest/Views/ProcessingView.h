@@ -38,6 +38,8 @@ public:
 
 	void on_pushButton_4_toggled(bool checked);
 
+    virtual void EnableRendering(bool enable);
+
 private:
 	Ui::ProcessingView *ui;
 

@@ -279,4 +279,9 @@ void PreviewPane::SetImage(OC::DataProvider::OCImage &image)
 void PreviewPane::EnableRendering(bool enable)
 {
     _renderingEnabled = enable;
+
+    if(_renderingEnabled)
+    {
+        this->update();
+    }
 }

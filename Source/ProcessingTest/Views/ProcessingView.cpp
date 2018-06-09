@@ -31,9 +31,9 @@ ProcessingView::~ProcessingView()
 	delete ui;
 }
 
-char bayerMatrixRGGB[2][2] = { {0, 1}, {1, 2} };
+//char bayerMatrixRGGB[2][2] = { {0, 1}, {1, 2} };
 
-bool init = false;
+//bool init = false;
 
 void ProcessingView::paintEvent(QPaintEvent *)
 {
@@ -46,8 +46,6 @@ void ProcessingView::paintEvent(QPaintEvent *)
 void ProcessingView::SetFrame(OCImage &image)
 {
 	testImage = &image;
-
-    ui->openGLWidget->EnableRendering(true);
 }
 
 void ProcessingView::SetThumbnail(unsigned int width, unsigned int height, unsigned char* data)
@@ -86,5 +84,10 @@ void ProcessingView::on_pushButton_3_toggled(bool checked)
 
 void ProcessingView::on_pushButton_4_toggled(bool checked)
 {
-	ui->openGLWidget->SwitchBlueChannel(checked);
+    ui->openGLWidget->SwitchBlueChannel(checked);
+}
+
+void ProcessingView::EnableRendering(bool enable)
+{
+    ui->openGLWidget->EnableRendering(enable);
 }
