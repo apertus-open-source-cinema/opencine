@@ -19,6 +19,8 @@ public:
 	virtual void SetFrame(OCImage& image) = 0;
 	virtual void SetThumbnail(unsigned int width, unsigned int height, unsigned char* data) = 0;
 
+    virtual void EnableRendering(bool enable) = 0;
+
 signals:
     void OpenRAWFile();
 };

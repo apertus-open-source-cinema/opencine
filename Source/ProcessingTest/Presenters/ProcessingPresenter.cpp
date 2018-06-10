@@ -114,24 +114,24 @@ void ProcessingPresenter::Show(std::string filePath)
 
     _view->SetFrame(*_image.get());
 
-    OC_LOG_INFO("Convert to interleaved array");
-    unsigned int dataLength = _image->Width() * _image->Height();
-    unsigned char* interleavedArray = new unsigned char[dataLength * 3];
-    unsigned int i = 0;
+//    OC_LOG_INFO("Convert to interleaved array");
+//    unsigned int dataLength = _image->Width() * _image->Height();
+//    unsigned char* interleavedArray = new unsigned char[dataLength * 3];
+//    unsigned int i = 0;
 
-    unsigned short*  redArray = static_cast<unsigned short*>(_image->RedChannel());
-    unsigned short*  greenArray = static_cast<unsigned short*>(_image->GreenChannel());
-    unsigned short*  blueArray = static_cast<unsigned short*>(_image->BlueChannel());
+//    unsigned short*  redArray = static_cast<unsigned short*>(_image->RedChannel());
+//    unsigned short*  greenArray = static_cast<unsigned short*>(_image->GreenChannel());
+//    unsigned short*  blueArray = static_cast<unsigned short*>(_image->BlueChannel());
 
-    //#pragma omp for private(interleavedArray, i)
-    for (; i < dataLength; i++)
-    {
-        interleavedArray[i * 3] = (redArray[i] >> 4) * 1.0;
-        interleavedArray[i * 3 + 1] = (greenArray[i] >> 4)  * 1.0;
-        interleavedArray[i * 3 + 2] = (blueArray[i] >> 4) * 1.0;
-    }
+//    //#pragma omp for private(interleavedArray, i)
+//    for (; i < dataLength; i++)
+//    {
+//        interleavedArray[i * 3] = (redArray[i] >> 4) * 1.0;
+//        interleavedArray[i * 3 + 1] = (greenArray[i] >> 4)  * 1.0;
+//        interleavedArray[i * 3 + 2] = (blueArray[i] >> 4) * 1.0;
+//    }
 
-    lodepng::encode("color.png", interleavedArray, _image->Width(), _image->Height(), LodePNGColorType::LCT_RGB, 8);
+//    lodepng::encode("color.png", interleavedArray, _image->Width(), _image->Height(), LodePNGColorType::LCT_RGB, 8);
 
 //    unsigned char dummydata[] = "This is a dummy data to just test if the dump feature works or not.";
 //    OC::Image::RawDump::Dump("DummyDump.dat", dummydata, strlen((const char*)dummydata));
@@ -154,7 +154,11 @@ void ProcessingPresenter::OpenRAWFile()
 //        return;
 //    }
 
+    _view->EnableRendering(false);
+
     QString fileName = QFileDialog::getOpenFileName(_view, tr("Open Image"), QDir::currentPath(), tr("DNG Files (*.dng *.DNG)"));
     Show(fileName.toStdString());
+
+    _view->EnableRendering(true);
     //_view->repaint();
 }
