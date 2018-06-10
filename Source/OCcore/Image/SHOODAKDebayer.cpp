@@ -47,29 +47,54 @@ void SHOODAKDebayer::DebayerGreen(int hOffset, int vOffset)
     std::mt19937 gen(123456);
     std::uniform_int_distribution<> dis(1, 2);
 
-    int randomOffset;
+    double greenRatio;
+    int greenInterpolation, randomOffset;
 
     for(int index = 0; index < _size; index += 2)
     {
-        _greenChannel[index]                = _greenChannel[index + _patternOffsets[dis(gen)]];
+        greenRatio = ((double) _greenChannel[index + _patternOffsets[1]]) / ( (double) _greenChannel[index + _patternOffsets[2]]);
+//        OC_LOG_INFO("\ngreenRatio " + std::to_string(greenRatio));
 
-        if (dis(gen) == 1)
-            randomOffset = index + hOffset + _patternOffsets[1];
-        else
-            randomOffset = index + vOffset + _patternOffsets[2];
-        _greenChannel[index + 1]            = _greenChannel[randomOffset];
+        if (greenRatio > 1.25 || greenRatio < 0.8)
+        {
+            greenInterpolation = (_greenChannel[index + _patternOffsets[1]] + _greenChannel[index + _patternOffsets[2]]) >> 1;
+            _greenChannel[index]                = greenInterpolation;
+            _greenChannel[index + 1]            = greenInterpolation;
+            _greenChannel[index + _width]       = greenInterpolation;
+            _greenChannel[index + _width + 1]   = greenInterpolation;
 
-        if (dis(gen) == 1)
-            randomOffset = index + vOffset * _width + _patternOffsets[1];
+//            _greenChannel[index]                = 255;
+//            _greenChannel[index + 1]            = 255;
+//            _greenChannel[index + _width]       = 255;
+//            _greenChannel[index + _width + 1]   = 255;
+        }
         else
-            randomOffset = index + hOffset * _width + _patternOffsets[2];
-        _greenChannel[index + _width]       = _greenChannel[randomOffset];
+        {
+            _greenChannel[index]                = _greenChannel[index + _patternOffsets[dis(gen)]];
 
-        if (dis(gen) == 1)
-            randomOffset = index + hOffset + vOffset * _width + _patternOffsets[1];
-        else
-            randomOffset = index + vOffset + hOffset * _width + _patternOffsets[2];
-        _greenChannel[index + _width + 1]   = _greenChannel[randomOffset];
+            if (dis(gen) == 1)
+                randomOffset = index + hOffset + _patternOffsets[1];
+            else
+                randomOffset = index + vOffset + _patternOffsets[2];
+            _greenChannel[index + 1]            = _greenChannel[randomOffset];
+
+            if (dis(gen) == 1)
+                randomOffset = index + vOffset * _width + _patternOffsets[1];
+            else
+                randomOffset = index + hOffset * _width + _patternOffsets[2];
+            _greenChannel[index + _width]       = _greenChannel[randomOffset];
+
+            if (dis(gen) == 1)
+                randomOffset = index + hOffset + vOffset * _width + _patternOffsets[1];
+            else
+                randomOffset = index + vOffset + hOffset * _width + _patternOffsets[2];
+            _greenChannel[index + _width + 1]   = _greenChannel[randomOffset];
+
+//            _greenChannel[index]                =  0;
+//            _greenChannel[index + 1]            = 0;
+//            _greenChannel[index + _width]       =  0;
+//            _greenChannel[index + _width + 1]   =  0;
+        }
 
         if ((index + 2) % _width == 0)
             index += _width + 2;
