@@ -26,8 +26,6 @@ SHOODAKDebayer::SHOODAKDebayer(OCImage &image)
 
     _pattern = image.GetBayerPattern();
     SetPatternOffsets(_pattern);
-
-    OC_LOG_INFO("\nConsidering width as " + std::to_string(_width) + ":\n" + std::to_string(_patternOffsets[0]) + "\n" + std::to_string(_patternOffsets[1]) + "\n" + std::to_string(_patternOffsets[2]) + "\n" + std::to_string(_patternOffsets[3]) + "\n");
 }
 
 SHOODAKDebayer::~SHOODAKDebayer()
@@ -36,12 +34,19 @@ SHOODAKDebayer::~SHOODAKDebayer()
 
 void SHOODAKDebayer::DebayerRed(int hOffset, int vOffset)
 {
+    int rValue0, rValue1, rValue2, rValue3;
     for(int index = 0; index < _size; index += 2)
     {
-        _redChannel[index]              = _redChannel[index + _patternOffsets[0]];
-        _redChannel[index + 1]          = _redChannel[index + _patternOffsets[0] + hOffset];
-        _redChannel[index + _width]     = _redChannel[index + vOffset * _width + _patternOffsets[0]];
-        _redChannel[index + _width + 1] = _redChannel[index + vOffset * _width + _patternOffsets[0] + hOffset];
+        rValue0 = _redChannel[index + _patternOffsets[0]];
+        rValue1 = _redChannel[index + _patternOffsets[0] + hOffset];
+        rValue2 = _redChannel[index + vOffset * _width + _patternOffsets[0]];
+        rValue3 = _redChannel[index + vOffset * _width + _patternOffsets[0] + hOffset];
+
+        _redChannel[index]              = rValue0;
+        _redChannel[index + 1]          = rValue1;
+        _redChannel[index + _width]     = rValue2;
+        _redChannel[index + _width + 1] = rValue3;
+
         if ((index + 2) % _width == 0)
             index += _width;
     }
@@ -53,69 +58,85 @@ void SHOODAKDebayer::DebayerGreen(int hOffset, int vOffset)
     std::uniform_int_distribution<> dis(1, 2);
 
     double greenRatio;
-    int greenInterpolation, randomOffset;
+    int gValue0, gValue1, gValue2, gValue3;
+    int randomOffset;
 
     for(int index = 0; index < _size; index += 2)
     {
         greenRatio = ((double) _greenChannel[index + _patternOffsets[1]]) / ( (double) _greenChannel[index + _patternOffsets[2]]);
-//        OC_LOG_INFO("\ngreenRatio " + std::to_string(greenRatio));
 
-        if (greenRatio > 1.25 || greenRatio < 0.8)
+        if (greenRatio > 1.176 || greenRatio < 0.85)
         {
-            greenInterpolation = (_greenChannel[index + _patternOffsets[1]] + _greenChannel[index + _patternOffsets[2]]) >> 1;
-            _greenChannel[index]                = greenInterpolation;
-            _greenChannel[index + 1]            = greenInterpolation;
-            _greenChannel[index + _width]       = greenInterpolation;
-            _greenChannel[index + _width + 1]   = greenInterpolation;
+            gValue0 = (_greenChannel[index + _patternOffsets[1]] +                          _greenChannel[index + _patternOffsets[2]])           >> 1;
+            gValue1 = (_greenChannel[index + _patternOffsets[1] + vOffset] +                _greenChannel[index + _patternOffsets[2] + hOffset]) >> 1;
+            gValue2 = (_greenChannel[index + _patternOffsets[1] + 2 * _width] +             _greenChannel[index + _patternOffsets[2]])           >> 1;
+            gValue3 = (_greenChannel[index + _patternOffsets[1] + 2 * _width + vOffset] +   _greenChannel[index + _patternOffsets[2] + hOffset]) >> 1;
 
-//            _greenChannel[index]                = 255;
-//            _greenChannel[index + 1]            = 255;
-//            _greenChannel[index + _width]       = 255;
-//            _greenChannel[index + _width + 1]   = 255;
+            _greenChannel[index]              = gValue0;
+            _greenChannel[index + 1]          = gValue1;
+            _greenChannel[index + _width]     = gValue2;
+            _greenChannel[index + _width + 1] = gValue3;
         }
         else
         {
-            _greenChannel[index]                = _greenChannel[index + _patternOffsets[dis(gen)]];
+            if (dis(gen) == 1)
+                gValue1 = _greenChannel[index + _patternOffsets[1] + vOffset];
+            else
+                gValue1 = _greenChannel[index + _patternOffsets[2] + hOffset];
 
             if (dis(gen) == 1)
-                randomOffset = index + hOffset + _patternOffsets[1];
+                gValue2 = _greenChannel[index + _patternOffsets[1] + 2 * _width];
             else
-                randomOffset = index + vOffset + _patternOffsets[2];
-            _greenChannel[index + 1]            = _greenChannel[randomOffset];
+                gValue2 = _greenChannel[index + _patternOffsets[2]];
 
             if (dis(gen) == 1)
-                randomOffset = index + vOffset * _width + _patternOffsets[1];
+                gValue3 = _greenChannel[index + _patternOffsets[1] + 2 * _width + vOffset];
             else
-                randomOffset = index + hOffset * _width + _patternOffsets[2];
-            _greenChannel[index + _width]       = _greenChannel[randomOffset];
+                gValue3 = _greenChannel[index + _patternOffsets[2] + hOffset];
 
-            if (dis(gen) == 1)
-                randomOffset = index + hOffset + vOffset * _width + _patternOffsets[1];
-            else
-                randomOffset = index + vOffset + hOffset * _width + _patternOffsets[2];
-            _greenChannel[index + _width + 1]   = _greenChannel[randomOffset];
-
-//            _greenChannel[index]                =  0;
-//            _greenChannel[index + 1]            = 0;
-//            _greenChannel[index + _width]       =  0;
-//            _greenChannel[index + _width + 1]   =  0;
+            _greenChannel[index]              = _greenChannel[index + _patternOffsets[dis(gen)]];
+            _greenChannel[index + 1]          = gValue1;
+            _greenChannel[index + _width]     = gValue2;
+            _greenChannel[index + _width + 1] = gValue3;
         }
 
         if ((index + 2) % _width == 0)
-            index += _width + 2;
+            index += _width;
     }
 }
 
 void SHOODAKDebayer::DebayerBlue(int hOffset, int vOffset)
 {
+    int bValue0, bValue1, bValue2, bValue3;
     for(int index = 0; index < _size; index += 2)
     {
-        _blueChannel[index]              = _blueChannel[index + _patternOffsets[3]];
-        _blueChannel[index + 1]          = _blueChannel[index + _patternOffsets[3] + hOffset];
-        _blueChannel[index + _width]     = _blueChannel[index + vOffset * _width + _patternOffsets[3]];
-        _blueChannel[index + _width + 1] = _blueChannel[index + vOffset * _width + _patternOffsets[3] + hOffset];
+        bValue0 = _blueChannel[index + _patternOffsets[3]];
+        bValue1 = _blueChannel[index + _patternOffsets[3] + hOffset];
+        bValue2 = _blueChannel[index + vOffset * _width + _patternOffsets[3]];
+        bValue3 = _blueChannel[index + vOffset * _width + _patternOffsets[3] + hOffset];
+
+        _blueChannel[index]              = bValue0;
+        _blueChannel[index + 1]          = bValue1;
+        _blueChannel[index + _width]     = bValue2;
+        _blueChannel[index + _width + 1] = bValue3;
+
         if ((index + 2) % _width == 0)
             index += _width;
+    }
+}
+
+void SHOODAKDebayer::DemosaicBorders(uint16_t *channel)
+{
+    int size = _size - _width;
+    for(int index = 0; index < _width; index += 2)
+    {
+        channel[size + index] = channel[size + index - _width];
+        channel[size + index + 1] = channel[size + index - _width + 1];
+    }
+    for(int index = 0; index < _height; index += 2)
+    {
+        channel[((index + 1) * _width) - 1] = channel[((index + 1) * _width) - 2];
+        channel[((index + 2) * _width) - 1] = channel[((index + 2) * _width) - 2];
     }
 }
 
@@ -144,8 +165,11 @@ void SHOODAKDebayer::Process()
         break;
     default:
         break;
-
     }
+
+    DemosaicBorders(_redChannel);
+    DemosaicBorders(_greenChannel);
+    DemosaicBorders(_blueChannel);
 }
 
 void SHOODAKDebayer::Process(OCImage &image)

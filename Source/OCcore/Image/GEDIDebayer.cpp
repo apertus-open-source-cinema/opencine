@@ -26,8 +26,6 @@ GEDIDebayer::GEDIDebayer(OCImage &image)
 
     _pattern = image.GetBayerPattern();
     SetPatternOffsets(_pattern);
-
-    OC_LOG_INFO("\nConsidering width as " + std::to_string(_width) + ":\n" + std::to_string(_patternOffsets[0]) + "\n" + std::to_string(_patternOffsets[1]) + "\n" + std::to_string(_patternOffsets[2]) + "\n" + std::to_string(_patternOffsets[3]) + "\n");
 }
 
 GEDIDebayer::~GEDIDebayer()

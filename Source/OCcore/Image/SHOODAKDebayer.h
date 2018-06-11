@@ -42,6 +42,9 @@ public:
     void DebayerGreen(int hOffset, int vOffset);
     void DebayerBlue(int hOffset, int vOffset);
 
+    // Debayers Borders.
+    void DemosaicBorders(uint16_t *channel);
+
     // Main Processor.
     void Process();
     void Process(OCImage& image);
