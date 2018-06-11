@@ -30,7 +30,7 @@ public:
 		SetLayout(*static_cast<QWidget*>(_view.get()));
 		ShowMaximized();
 
-        _presenter->Test();
+        //_presenter->Test();
 	}
 };
 

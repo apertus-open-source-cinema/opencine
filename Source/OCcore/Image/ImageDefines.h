@@ -20,6 +20,7 @@ namespace OC
         enum class ImageFormat
         {
             Unknown,
+            Integer8 = 8,
             Integer12 = 12,
             Integer14 = 14,
             Integer16 = 16

@@ -48,6 +48,8 @@ namespace OC
 
             unsigned int _imageDataOffset;
 
+            ImageFormat _bitsPerPixel;
+
             TIFFHeader ProcessHeader(char* buffer) const;
 
             void FindMainImage(unsigned char* data, unsigned int& ifdOffset, uint16_t& ifdCount);
