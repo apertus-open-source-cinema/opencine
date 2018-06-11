@@ -40,6 +40,7 @@ ProcessingPresenter::ProcessingPresenter(IProcessingView& view):
 
     connect(_view, &IProcessingView::OpenRAWFile, this, &ProcessingPresenter::OpenRAWFile);
     connect(_view, SIGNAL(DebayerMethodChanged(int)), this, SLOT(ChangeDebayerMethod(int)));
+    connect(_view, SIGNAL(DumpPNG()), this, SLOT(DumpPNG()));
 }
 
 void ProcessingPresenter::Test()
@@ -134,7 +135,7 @@ void ProcessingPresenter::Show()
     //    unsigned short*  blueArray = static_cast<unsigned short*>(_image->BlueChannel());
 
     //    //#pragma omp for private(interleavedArray, i)
-    //    for (; i < dataLength; i++)dummyImage
+    //    for (; i < dataLength; i++)
     //    {
     //        interleavedArray[i * 3] = (redArray[i] >> 4) * 1.0;
     //        interleavedArray[i * 3 + 1] = (greenArray[i] >> 4)  * 1.0;
@@ -178,4 +179,29 @@ void ProcessingPresenter::ChangeDebayerMethod(int debayerMethod)
 {
     _currentDebayerProcessor = debayerMethod;
     Show();
+}
+
+void ProcessingPresenter::DumpPNG()
+{
+    _view->EnableRendering(false);
+    QString fileName = QFileDialog::getSaveFileName(_view, tr("Save PNG"), QDir::currentPath(), tr("PNG Files (*.png *.PNG)"));
+
+    unsigned int i = 0;
+    unsigned int dataLength = _image->Width() * _image->Height();
+    unsigned char* interleavedArray = new unsigned char[dataLength * 3];
+
+    unsigned short*  redArray = static_cast<unsigned short*>(_image->RedChannel());
+    unsigned short*  greenArray = static_cast<unsigned short*>(_image->GreenChannel());
+    unsigned short*  blueArray = static_cast<unsigned short*>(_image->BlueChannel());
+
+    for (; i < dataLength; i++)
+    {
+        interleavedArray[i * 3] = (redArray[i] >> 4);
+        interleavedArray[i * 3 + 1] = (greenArray[i] >> 4);
+        interleavedArray[i * 3 + 2] = (blueArray[i] >> 4);
+    }
+
+    lodepng::encode(fileName.toStdString(), interleavedArray, _image->Width(), _image->Height(), LCT_RGB);
+
+    _view->EnableRendering(true);
 }

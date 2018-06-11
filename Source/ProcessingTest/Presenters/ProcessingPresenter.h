@@ -39,6 +39,7 @@ public:
 protected slots:
     void OpenRAWFile();
     void ChangeDebayerMethod(int debayerMethod);
+    void DumpPNG();
 };
 
 #endif // PROCESSINGPRESENTER_H
