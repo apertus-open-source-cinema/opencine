@@ -9,8 +9,7 @@
 #include <thread>
 
 #include <Log/Logger.h>
-
-#include "ImageHelper.h"
+#include <Image/ImageHelper.h>
 
 void BayerFramePreProcessor::MapPatternToData()
 {
@@ -46,12 +45,19 @@ void BayerFramePreProcessor::MapPatternToData()
 void BayerFramePreProcessor::ExtractOddRows() const
 {
     //#pragma omp parallel for schedule(dynamic,1)
-    for (unsigned int index = 0; index < _size; index += 2)
+    for (unsigned int rowIndex = 0; rowIndex < _height; rowIndex += 2)
     {
-        dataUL[index] = _outputData[index];
-        dataUR[index + 1] = _outputData[index + 1];
-        if ((index + 2) % _width == 0)
-            index += _width;
+        for (unsigned int columnIndex = 0; columnIndex < _width; columnIndex++)
+        {
+            if (columnIndex % 2)
+            {
+                dataUR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+            }
+            else
+            {
+                dataUL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+            }
+        }
     }
 
     OC_LOG_INFO("OddRows threads: " + std::to_string(omp_get_num_threads()));
@@ -60,12 +66,19 @@ void BayerFramePreProcessor::ExtractOddRows() const
 void BayerFramePreProcessor::ExtractEvenRows() const
 {
     //#pragma omp parallel for schedule(dynamic,1)
-    for (unsigned int index = _width; index < _size; index += 2)
+    for (unsigned int rowIndex = 1; rowIndex < _height; rowIndex += 2)
     {
-        dataLL[index] = _outputData[index];
-        dataLR[index + 1] = _outputData[index + 1];
-        if ((index + 2) % _width == 0)
-            index += _width;
+        for (unsigned int columnIndex = 0; columnIndex < _width; columnIndex++)
+        {
+            if (columnIndex % 2)
+            {
+                dataLR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+            }
+            else
+            {
+                dataLL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+            }
+        }
     }
 
     OC_LOG_INFO("EvenRows threads: " + std::to_string(omp_get_num_threads()));
@@ -108,25 +121,9 @@ void BayerFramePreProcessor::SetData(uint8_t* data, OCImage& image, ImageFormat 
     _dataBlue = static_cast<uint16_t*>(image.BlueChannel());
 
     _imageFormat = imageFormat;
+    _pattern = image.GetBayerPattern();
 
     MapPatternToData();
-
-    switch(_imageFormat)
-    {
-    case ImageFormat::Integer12:
-        OC_LOG_INFO("12->16bit conversion");
-        OC::Image::ImageHelper::Convert12To16Bit(_data, _width, _height, _outputData);
-        //t0 = std::thread(&OC::Image::ImageHelper::Convert12To16Bit, this);
-        break;
-    case ImageFormat::Integer14:
-        OC_LOG_INFO("14->16bit conversion");
-        OC::Image::ImageHelper::Convert14To16Bit(_data, _width, _height, _outputData);
-        //t0 = std::thread(&OC::Image::ImageHelper::Convert14To16Bit, this);
-        break;
-    case ImageFormat::Unknown:
-    case ImageFormat::Integer16:
-        break;
-    }
 }
 
 void BayerFramePreProcessor::SetData(uint16_t* imageData, OCImage& image)
@@ -149,8 +146,24 @@ void BayerFramePreProcessor::SetData(uint16_t* imageData, OCImage& image)
 
 void BayerFramePreProcessor::Process()
 {
-    // For benchmarking.
-    //auto start = std::chrono::high_resolution_clock::now();
+    //std::thread t0;
+    switch(_imageFormat)
+    {
+    case ImageFormat::Integer12:
+        OC_LOG_INFO("12->16bit conversion");
+        OC::Image::ImageHelper::Convert12To16Bit(_data, _width, _height, _outputData);
+        //t0 = std::thread(&OC::Image::ImageHelper::Convert12To16Bit, this);
+        break;
+    case ImageFormat::Integer14:
+        OC_LOG_INFO("14->16bit conversion");
+        OC::Image::ImageHelper::Convert14To16Bit(_data, _width, _height, _outputData);
+        //t0 = std::thread(&OC::Image::ImageHelper::Convert14To16Bit, this);
+        break;
+    default:
+        break;
+    }
+
+    //t0.join();
 
     std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
     std::thread t2(&BayerFramePreProcessor::ExtractEvenRows, this);
@@ -159,13 +172,7 @@ void BayerFramePreProcessor::Process()
     t1.join();
     t2.join();
 
-    // For benchmarking.
-    //auto diffTime = std::chrono::high_resolution_clock::now() - start;
-    //auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(diffTime).count();
-    //auto log = "PreProcessor time: " + std::to_string(frameTime) + "ms";
-    //OC_LOG_INFO(log);
-
-    OC_LOG_INFO("Extract finished");
+    //OC_LOG_INFO("Extract finished");
 }
 
 uint16_t*BayerFramePreProcessor::GetDataRed()

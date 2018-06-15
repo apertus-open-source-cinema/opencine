@@ -41,6 +41,8 @@ class PreviewPane : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     GLuint textureGreen = 0;
     GLuint textureBlue = 0;
 
+    bool _renderingEnabled;
+
 public:
 	PreviewPane(QWidget *parent = 0);
 	~PreviewPane();
@@ -52,6 +54,8 @@ public:
 	bool IsInitialized();
 
     void SetImage(OC::DataProvider::OCImage& image);
+
+    void EnableRendering(bool enable);
 
 protected:
 	void initializeGL() override;

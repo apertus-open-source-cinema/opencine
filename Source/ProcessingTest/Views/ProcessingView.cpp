@@ -22,6 +22,9 @@ ProcessingView::ProcessingView(QWidget *parent) :
 	ui->setupUi(this);
 
 	ui->widget->installEventFilter(this);
+
+    connect(ui->openFileButton, SIGNAL(clicked()), this, SIGNAL(OpenRAWFile()));
+    connect(ui->debayerMethods, SIGNAL(currentIndexChanged(int)), this, SIGNAL(DebayerMethodChanged(int)));
 }
 
 ProcessingView::~ProcessingView()
@@ -29,9 +32,9 @@ ProcessingView::~ProcessingView()
 	delete ui;
 }
 
-char bayerMatrixRGGB[2][2] = { {0, 1}, {1, 2} };
+//char bayerMatrixRGGB[2][2] = { {0, 1}, {1, 2} };
 
-bool init = false;
+//bool init = false;
 
 void ProcessingView::paintEvent(QPaintEvent *)
 {
@@ -82,5 +85,16 @@ void ProcessingView::on_pushButton_3_toggled(bool checked)
 
 void ProcessingView::on_pushButton_4_toggled(bool checked)
 {
-	ui->openGLWidget->SwitchBlueChannel(checked);
+    ui->openGLWidget->SwitchBlueChannel(checked);
+}
+
+void ProcessingView::EnableRendering(bool enable)
+{
+    ui->openGLWidget->EnableRendering(enable);
+}
+
+void ProcessingView::SetAvailableDebayerMethods(QStringList debayerMethods)
+{
+    ui->debayerMethods->addItems(debayerMethods);
+    ui->debayerMethods->setCurrentIndex(0);
 }
