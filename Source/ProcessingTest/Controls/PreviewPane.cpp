@@ -82,12 +82,13 @@ void PreviewPane::paintGL()
     program->bind();
     {
         QMatrix4x4 projection;
-        projection.ortho(-viewWidth / 2.0f * wheelValue, viewWidth / 2.0f * wheelValue, -viewHeight / 2.0f * wheelValue, viewHeight / 2.0f * wheelValue, 0.01f, 1000.0f);
+        projection.ortho(-viewWidth / 2.0f, viewWidth / 2.0f, -viewHeight / 2.0f, viewHeight / 2.0f, 0.01f, 1000.0f);
         QMatrix4x4 view;
-        view.lookAt(QVector3D(panX * wheelValue, panY * wheelValue, 1.0), QVector3D(panX * wheelValue, panY * wheelValue, 0.0), QVector3D(0.0, 1.0, 0.0));
+        view.lookAt(QVector3D(0.0,0.0, 1.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
         QMatrix4x4 model;
         model.setToIdentity();
-        model.scale(static_cast<float>(imageWidth) / static_cast<float>(imageHeight), 1.0f, 1.0f);
+        model.scale(static_cast<float>(imageWidth) / static_cast<float>(imageHeight) * wheelValue, 1.0f * wheelValue, 1.0f);
+        model.translate(panX, panY);
 
         mvp = projection * view * model;
 
@@ -183,7 +184,7 @@ void PreviewPane::SetupTexture()
 
 void PreviewPane::wheelEvent(QWheelEvent* event)
 {
-    if (event->delta() < 0)
+    if (event->delta() > 0)
     {
         wheelValue *= zoomFactor;
 
@@ -208,8 +209,8 @@ void PreviewPane::mouseMoveEvent(QMouseEvent *event)
 {
     if(event->buttons() == Qt::LeftButton)
     {
-        panX -= static_cast<float>(event->globalX() - oldX) / 1000.0f;
-        panY += static_cast<float>(event->globalY() - oldY) / 1000.0f;
+        panX += static_cast<float>(event->globalX() - oldX) / 1000.0f;
+        panY -= static_cast<float>(event->globalY() - oldY) / 1000.0f;
     }
 
     oldX = event->globalX();

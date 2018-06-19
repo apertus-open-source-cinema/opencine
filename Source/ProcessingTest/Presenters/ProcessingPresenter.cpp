@@ -47,7 +47,7 @@ void ProcessingPresenter::Test()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    IAllocator* poolAllocator = new RawPoolAllocator(50 * 1024 * 1024);
+    IAllocator* poolAllocator = new RawPoolAllocator(350 * 1024 * 1024);
 
     OC_LOG_INFO("Loading image");
     provider->Load("test_frame.dng", FileFormat::DNG, *_image.get(), *poolAllocator);
