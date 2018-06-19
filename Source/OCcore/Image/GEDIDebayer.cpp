@@ -34,7 +34,7 @@ GEDIDebayer::~GEDIDebayer()
 
 void GEDIDebayer::DebayerBottomRight(uint16_t *channel)
 {
-    for(int index = _patternOffsets[0]; index < _size; index += 2)
+    for(uint32_t index = _patternOffsets[0]; index < _size; index += 2)
     {
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
@@ -46,7 +46,7 @@ void GEDIDebayer::DebayerBottomRight(uint16_t *channel)
 
 void GEDIDebayer::DebayerBottomLeft(uint16_t *channel)
 {
-    for(int index = _patternOffsets[0]; index < _size; index += 2)
+    for(uint32_t index = _patternOffsets[0]; index < _size; index += 2)
     {
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
@@ -59,7 +59,7 @@ void GEDIDebayer::DebayerBottomLeft(uint16_t *channel)
 void GEDIDebayer::DebayerGreen()
 {
     int hGrad, hValue, vValue, vGrad;
-    for(int index = _patternOffsets[1]; index < _size; index += 2)
+    for(uint32_t index = _patternOffsets[1]; index < _size; index += 2)
     {
         hValue = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
         hGrad = std::abs(_greenChannel[index - 1] - hValue) + std::abs(_greenChannel[index + 1] - hValue);
@@ -74,7 +74,7 @@ void GEDIDebayer::DebayerGreen()
         if ((index + 3) % _width <= 1)
             index += _width + 2;
     }
-    for(int index = _patternOffsets[2]; index < _size; index += 2)
+    for(uint32_t index = _patternOffsets[2]; index < _size; index += 2)
     {
         hValue = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
         hGrad = std::abs(_greenChannel[index - 1] - hValue) + std::abs(_greenChannel[index + 1] - hValue);
@@ -93,7 +93,7 @@ void GEDIDebayer::DebayerGreen()
 
 void GEDIDebayer::DebayerTopLeft(uint16_t *channel)
 {
-    for(int index = _patternOffsets[3]; index < _size; index += 2)
+    for(uint32_t index = _patternOffsets[3]; index < _size; index += 2)
     {
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
@@ -105,7 +105,7 @@ void GEDIDebayer::DebayerTopLeft(uint16_t *channel)
 
 void GEDIDebayer::DebayerTopRight(uint16_t *channel)
 {
-    for(int index = _patternOffsets[3]; index < _size; index += 2)
+    for(uint32_t index = _patternOffsets[3]; index < _size; index += 2)
     {
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
@@ -117,15 +117,15 @@ void GEDIDebayer::DebayerTopRight(uint16_t *channel)
 
 void GEDIDebayer::DemosaicBorders(uint16_t *channel)
 {
-    int size = _size - _width;
-    for(int index = 0; index < _width; index += 2)
+    uint32_t size = _size - _width;
+    for(uint32_t index = 0; index < _width; index += 2)
     {
         channel[index] = channel[index + _width];
         channel[index + 1] = channel[index + _width + 1];
         channel[size + index] = channel[size + index - _width];
         channel[size + index + 1] = channel[size + index - _width + 1];
     }
-    for(int index = 0; index < _height; index += 2)
+    for(uint32_t index = 0; index < _height; index += 2)
     {
         channel[(index * _width)] = channel[(index * _width) + 1];
         channel[(index + 1) * _width] = channel[((index + 1) * _width) + 1];
@@ -152,8 +152,6 @@ void GEDIDebayer::Process()
     case BayerPattern::GBRG:
         GEDIDebayer::DebayerBottomLeft(_blueChannel);
         GEDIDebayer::DebayerTopRight(_redChannel);
-        break;
-    default:
         break;
     }
     GEDIDebayer::DebayerGreen();
@@ -197,8 +195,5 @@ void GEDIDebayer::SetPatternOffsets(BayerPattern pattern)
         _patternOffsets[2] = (2 * _width) + 1;
         _patternOffsets[3] = (2 * _width) + 1;
         break;
-    default:
-        break;
-
     }
 }

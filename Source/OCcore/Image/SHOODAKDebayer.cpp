@@ -32,10 +32,10 @@ SHOODAKDebayer::~SHOODAKDebayer()
 {
 }
 
-void SHOODAKDebayer::DebayerRed(int hOffset, int vOffset)
+void SHOODAKDebayer::DebayerRed(uint32_t hOffset, uint32_t vOffset)
 {
-    int rValue0, rValue1, rValue2, rValue3;
-    for(int index = 0; index < _size; index += 2)
+    uint16_t rValue0, rValue1, rValue2, rValue3;
+    for(uint32_t index = 0; index < _size; index += 2)
     {
         rValue0 = _redChannel[index + _patternOffsets[0]];
         rValue1 = _redChannel[index + _patternOffsets[0] + hOffset];
@@ -52,16 +52,15 @@ void SHOODAKDebayer::DebayerRed(int hOffset, int vOffset)
     }
 }
 
-void SHOODAKDebayer::DebayerGreen(int hOffset, int vOffset)
+void SHOODAKDebayer::DebayerGreen(uint32_t hOffset, uint32_t vOffset)
 {
     std::mt19937 gen(123456);
     std::uniform_int_distribution<> dis(1, 2);
 
     double greenRatio;
-    int gValue0, gValue1, gValue2, gValue3;
-    int randomOffset;
+    uint16_t gValue0, gValue1, gValue2, gValue3;
 
-    for(int index = 0; index < _size; index += 2)
+    for(uint32_t index = 0; index < _size; index += 2)
     {
         greenRatio = ((double) _greenChannel[index + _patternOffsets[1]]) / ( (double) _greenChannel[index + _patternOffsets[2]]);
 
@@ -105,10 +104,10 @@ void SHOODAKDebayer::DebayerGreen(int hOffset, int vOffset)
     }
 }
 
-void SHOODAKDebayer::DebayerBlue(int hOffset, int vOffset)
+void SHOODAKDebayer::DebayerBlue(uint32_t hOffset, uint32_t vOffset)
 {
-    int bValue0, bValue1, bValue2, bValue3;
-    for(int index = 0; index < _size; index += 2)
+    uint16_t bValue0, bValue1, bValue2, bValue3;
+    for(uint32_t index = 0; index < _size; index += 2)
     {
         bValue0 = _blueChannel[index + _patternOffsets[3]];
         bValue1 = _blueChannel[index + _patternOffsets[3] + hOffset];
@@ -127,13 +126,13 @@ void SHOODAKDebayer::DebayerBlue(int hOffset, int vOffset)
 
 void SHOODAKDebayer::DemosaicBorders(uint16_t *channel)
 {
-    int size = _size - _width;
-    for(int index = 0; index < _width; index += 2)
+    uint32_t size = _size - _width;
+    for(uint32_t index = 0; index < _width; index += 2)
     {
         channel[size + index] = channel[size + index - _width];
         channel[size + index + 1] = channel[size + index - _width + 1];
     }
-    for(int index = 0; index < _height; index += 2)
+    for(uint32_t index = 0; index < _height; index += 2)
     {
         channel[((index + 1) * _width) - 1] = channel[((index + 1) * _width) - 2];
         channel[((index + 2) * _width) - 1] = channel[((index + 2) * _width) - 2];
@@ -162,8 +161,6 @@ void SHOODAKDebayer::Process()
         DebayerRed(2, 0);
         DebayerGreen(0, 2);
         DebayerBlue(0, 2);
-        break;
-    default:
         break;
     }
 
@@ -218,8 +215,5 @@ void SHOODAKDebayer::SetPatternOffsets(BayerPattern pattern)
         _patternOffsets[2] = _width + 1;
         _patternOffsets[3] = 1;
         break;
-    default:
-        break;
-
     }
 }

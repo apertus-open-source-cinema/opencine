@@ -53,7 +53,7 @@ public:
     void Process(OCImage &image);
 
     // Debayer for Nearest Interpolation.
-    void DebayerNearest(int red, int green0, int green1, int blue);
+    void DebayerNearest(uint32_t red, uint32_t green0, uint32_t green1, uint32_t blue);
 
     // Processor for Nearest Interpolation.
     void ProcessNearest();
