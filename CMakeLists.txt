@@ -16,6 +16,9 @@ if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 
+# Compiler flags
+#SET(CMAKE_CXX_FLAGS "-O3") #Optimize
+
 #SET( CMAKE_BUILD_TYPE Release ... FORCE )
 
 #if(WIN32)
