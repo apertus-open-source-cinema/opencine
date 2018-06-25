@@ -58,33 +58,29 @@ void GEDIDebayer::DebayerBottomLeft(uint16_t *channel)
 
 void GEDIDebayer::DebayerGreen()
 {
-    int hGrad, hValue, vValue, vGrad;
+    int hGrad, vGrad;
     for(uint32_t index = _patternOffsets[1]; index < _size; index += 2)
     {
-        hValue = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
-        hGrad = std::abs(_greenChannel[index - 1] - hValue) + std::abs(_greenChannel[index + 1] - hValue);
-        vValue = (_greenChannel[index - _width] + _greenChannel[index + _width]) >> 1;
-        vGrad = std::abs(_greenChannel[index - _width] - vValue) + std::abs(_greenChannel[index + _width] - vValue);
+        hGrad = std::abs(_greenChannel[index - 1] - _greenChannel[index + 1]);
+        vGrad = std::abs(_greenChannel[index - _width] - _greenChannel[index + _width]);
 
         if (hGrad <= vGrad)
-            _greenChannel[index] = hValue;
+            _greenChannel[index] = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
         else
-            _greenChannel[index] = vValue;
+            _greenChannel[index] = (_greenChannel[index - _width] + _greenChannel[index + _width]) >> 1;
 
         if ((index + 3) % _width <= 1)
             index += _width + 2;
     }
     for(uint32_t index = _patternOffsets[2]; index < _size; index += 2)
     {
-        hValue = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
-        hGrad = std::abs(_greenChannel[index - 1] - hValue) + std::abs(_greenChannel[index + 1] - hValue);
-        vValue = (_greenChannel[index - _width] + _greenChannel[index + _width]) >> 1;
-        vGrad = std::abs(_greenChannel[index - _width] - vValue) + std::abs(_greenChannel[index + _width] - vValue);
+        hGrad = std::abs(_greenChannel[index - 1] - _greenChannel[index + 1]);
+        vGrad = std::abs(_greenChannel[index - _width] - _greenChannel[index + _width]);
 
         if (hGrad <= vGrad)
-            _greenChannel[index] = hValue;
+            _greenChannel[index] = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
         else
-            _greenChannel[index] = vValue;
+            _greenChannel[index] = (_greenChannel[index - _width] + _greenChannel[index + _width]) >> 1;
 
         if ((index + 3) % _width <= 1)
             index += _width + 2;
