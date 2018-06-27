@@ -4,12 +4,12 @@
 
 #include "../OCcore/Memory/StaticAllocator.h"
 #include "../OCcore/Image/ImageProvider.h"
-#include "../OCcore/Image/GEDIDebayer.h"
+#include "../OCcore/Image/GEDIDebayerOMP.h"
 #include "../OCcore/Log/Logger.h"
 
 #define NUM_TRIES 50
 
-TEST_CASE("GEDI Benchmark", "[OC::Image]")
+TEST_CASE("GEDI OMP Benchmark", "[OC::Image]")
 {
     IAllocator* poolAllocator = new RawPoolAllocator(50 * 1024 * 1024);
 
@@ -22,7 +22,7 @@ TEST_CASE("GEDI Benchmark", "[OC::Image]")
 
     OC_LOG_INFO("Benchmarking...");
 
-    std::unique_ptr<GEDIDebayer> debayer(new GEDIDebayer(*image));
+    std::unique_ptr<GEDIDebayerOMP> debayer(new GEDIDebayerOMP(*image));
     auto demosaicTime = 0;
 
     for (int i = 0; i < NUM_TRIES; i++)
@@ -35,7 +35,7 @@ TEST_CASE("GEDI Benchmark", "[OC::Image]")
         demosaicTime += std::chrono::duration_cast<std::chrono::milliseconds>(diffTime).count();
     }
 
-    OC_LOG_INFO("\nBenchmark finished:\nALGORITHM> GEDI\nNUM_TRIES> " + std::to_string(NUM_TRIES) + "\nAVG TIME > " + std::to_string(demosaicTime / NUM_TRIES) + "ms\n");
+    OC_LOG_INFO("\nBenchmark finished:\nALGORITHM> GEDIOMP\nNUM_TRIES> " + std::to_string(NUM_TRIES) + "\nAVG TIME > " + std::to_string(demosaicTime / NUM_TRIES) + "ms\n");
 
 
 }
