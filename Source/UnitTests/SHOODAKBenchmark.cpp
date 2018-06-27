@@ -7,7 +7,7 @@
 #include "../OCcore/Image/SHOODAKDebayer.h"
 #include "../OCcore/Log/Logger.h"
 
-#define NUM_TRIES 1000
+#define NUM_TRIES 50
 
 TEST_CASE("SHOODAK Benchmark", "[OC::Image]")
 {
