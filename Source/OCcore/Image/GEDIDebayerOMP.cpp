@@ -34,91 +34,122 @@ GEDIDebayerOMP::~GEDIDebayerOMP()
 
 void GEDIDebayerOMP::DebayerBottomRight(uint16_t *channel)
 {
+    #pragma omp parallel for schedule(static, 2 * _width)
     for(uint32_t index = _patternOffsets[0]; index < _size; index += 2)
     {
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
         channel[index + _width] = ( channel[index + _width - 1] + channel[index + _width + 1] ) >> 1;
+
         if ((index + 3) % _width <= 1)
+        {
             index += _width + 2;
+        }
     }
 }
 
 void GEDIDebayerOMP::DebayerBottomLeft(uint16_t *channel)
 {
+    #pragma omp parallel for schedule(static, 2 * _width)
     for(uint32_t index = _patternOffsets[0]; index < _size; index += 2)
     {
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
         channel[index + _width] = ( channel[index + _width - 1] + channel[index + _width + 1] ) >> 1;
+
         if ((index + 3) % _width <= 1)
+        {
             index += _width + 2;
+        }
     }
 }
 
 void GEDIDebayerOMP::DebayerGreen0()
 {
     int hGrad, vGrad;
+    #pragma omp parallel for private(hGrad, vGrad) schedule(static, 2 * _width)
     for(uint32_t index = _patternOffsets[1]; index < _size; index += 2)
     {
         hGrad = std::abs(_greenChannel[index - 1] - _greenChannel[index + 1]);
         vGrad = std::abs(_greenChannel[index - _width] - _greenChannel[index + _width]);
 
         if (hGrad <= vGrad)
+        {
             _greenChannel[index] = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
+        }
         else
+        {
             _greenChannel[index] = (_greenChannel[index - _width] + _greenChannel[index + _width]) >> 1;
+        }
 
         if ((index + 3) % _width <= 1)
+        {
             index += _width + 2;
+        }
     }
 }
 
 void GEDIDebayerOMP::DebayerGreen1()
 {
     int hGrad, vGrad;
+    #pragma omp parallel for private(hGrad, vGrad) schedule(static, 2 * _width)
     for(uint32_t index = _patternOffsets[2]; index < _size; index += 2)
     {
         hGrad = std::abs(_greenChannel[index - 1] - _greenChannel[index + 1]);
         vGrad = std::abs(_greenChannel[index - _width] - _greenChannel[index + _width]);
 
         if (hGrad <= vGrad)
+        {
             _greenChannel[index] = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
+        }
         else
+        {
             _greenChannel[index] = (_greenChannel[index - _width] + _greenChannel[index + _width]) >> 1;
+        }
 
         if ((index + 3) % _width <= 1)
+        {
             index += _width + 2;
+        }
     }
 }
 
 void GEDIDebayerOMP::DebayerTopLeft(uint16_t *channel)
 {
+    #pragma omp parallel for schedule(static, 2 * _width)
     for(uint32_t index = _patternOffsets[3]; index < _size; index += 2)
     {
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
         channel[index - _width] = ( channel[index - _width - 1] + channel[index - _width + 1] ) >> 1;
+
         if ((index + 3) % _width <= 1)
+        {
             index += _width + 2;
+        }
     }
 }
 
 void GEDIDebayerOMP::DebayerTopRight(uint16_t *channel)
 {
+    #pragma omp parallel for schedule(static, 2 * _width)
     for(uint32_t index = _patternOffsets[3]; index < _size; index += 2)
     {
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
         channel[index - _width] = ( channel[index - _width - 1] + channel[index - _width + 1] ) >> 1;
+
         if ((index + 3) % _width <= 1)
+        {
             index += _width + 2;
+        }
     }
 }
 
 void GEDIDebayerOMP::DemosaicBorders(uint16_t *channel)
 {
     uint32_t size = _size - _width;
+    #pragma omp parallel for
     for(uint32_t index = 0; index < _width; index += 2)
     {
         channel[index] = channel[index + _width];
@@ -126,6 +157,7 @@ void GEDIDebayerOMP::DemosaicBorders(uint16_t *channel)
         channel[size + index] = channel[size + index - _width];
         channel[size + index + 1] = channel[size + index - _width + 1];
     }
+    #pragma omp parallel for
     for(uint32_t index = 0; index < _height; index += 2)
     {
         channel[(index * _width)] = channel[(index * _width) + 1];
@@ -139,99 +171,27 @@ void GEDIDebayerOMP::Process()
 {
     switch (_pattern) {
     case BayerPattern::RGGB:
-        #pragma omp parallel sections
-        {
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerBottomRight(_redChannel);
-                GEDIDebayerOMP::DemosaicBorders(_redChannel);
-            }
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerTopLeft(_blueChannel);
-                GEDIDebayerOMP::DemosaicBorders(_blueChannel);
-            }
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerGreen0();
-            }
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerGreen1();
-            }
-        }
+        GEDIDebayerOMP::DebayerBottomRight(_redChannel);
+        GEDIDebayerOMP::DebayerTopLeft(_blueChannel);
         break;
     case BayerPattern::BGGR:
-        #pragma omp parallel sections
-        {
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerBottomRight(_blueChannel);
-                GEDIDebayerOMP::DemosaicBorders(_blueChannel);
-            }
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerTopLeft(_redChannel);
-                GEDIDebayerOMP::DemosaicBorders(_redChannel);
-            }
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerGreen0();
-            }
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerGreen1();
-            }
-        }
+        GEDIDebayerOMP::DebayerBottomRight(_blueChannel);
+        GEDIDebayerOMP::DebayerTopLeft(_redChannel);
         break;
     case BayerPattern::GRBG:
-        #pragma omp parallel sections
-        {
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerBottomLeft(_redChannel);
-                GEDIDebayerOMP::DemosaicBorders(_redChannel);
-            }
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerTopRight(_blueChannel);
-                GEDIDebayerOMP::DemosaicBorders(_blueChannel);
-            }
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerGreen0();
-            }
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerGreen1();
-            }
-        }
+        GEDIDebayerOMP::DebayerBottomLeft(_redChannel);
+        GEDIDebayerOMP::DebayerTopRight(_blueChannel);
         break;
     case BayerPattern::GBRG:
-        #pragma omp parallel sections
-        {
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerBottomLeft(_blueChannel);
-                GEDIDebayerOMP::DemosaicBorders(_blueChannel);
-            }
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerTopRight(_redChannel);
-                GEDIDebayerOMP::DemosaicBorders(_redChannel);
-            }
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerGreen0();
-            }
-        #pragma omp section
-            {
-                GEDIDebayerOMP::DebayerGreen1();
-            }
-        }
+        GEDIDebayerOMP::DebayerBottomLeft(_blueChannel);
+        GEDIDebayerOMP::DebayerTopRight(_redChannel);
         break;
     }
+    GEDIDebayerOMP::DebayerGreen0();
+    GEDIDebayerOMP::DebayerGreen1();
+    GEDIDebayerOMP::DemosaicBorders(_blueChannel);
     GEDIDebayerOMP::DemosaicBorders(_greenChannel);
+    GEDIDebayerOMP::DemosaicBorders(_redChannel);
 }
 
 void GEDIDebayerOMP::Process(OCImage &image)
