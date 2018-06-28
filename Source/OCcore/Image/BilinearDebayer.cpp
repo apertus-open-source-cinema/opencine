@@ -39,8 +39,11 @@ void BilinearDebayer::DebayerBottomRight(uint16_t *channel)
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
         channel[index + _width] = ( channel[index + _width - 1] + channel[index + _width + 1] ) >> 1;
+
         if ((index + 3) % _width <= 1)
+        {
             index += _width + 2;
+        }
     }
 }
 
@@ -51,8 +54,11 @@ void BilinearDebayer::DebayerBottomLeft(uint16_t *channel)
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
         channel[index + _width] = ( channel[index + _width - 1] + channel[index + _width + 1] ) >> 1;
+
         if ((index + 3) % _width <= 1)
+        {
             index += _width + 2;
+        }
     }
 }
 
@@ -188,7 +194,8 @@ void BilinearDebayer::DebayerNearest(uint32_t red, uint32_t green0, uint32_t gre
         _blueChannel[index + green0] = _blueChannel[index + blue];
         _blueChannel[index + green1] = _blueChannel[index + blue];
 
-        if ( ((index + 2) % _width) == 0 ) {
+        if ( ((index + 2) % _width) == 0 )
+        {
             index += _width;
         }
     }

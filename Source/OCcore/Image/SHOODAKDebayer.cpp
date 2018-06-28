@@ -48,7 +48,9 @@ void SHOODAKDebayer::DebayerRed(uint32_t hOffset, uint32_t vOffset)
         _redChannel[index + _width + 1] = rValue3;
 
         if ((index + 2) % _width == 0)
+        {
             index += _width;
+        }
     }
 }
 
@@ -100,7 +102,9 @@ void SHOODAKDebayer::DebayerGreen(uint32_t hOffset, uint32_t vOffset)
         }
 
         if ((index + 2) % _width == 0)
+        {
             index += _width;
+        }
     }
 }
 
@@ -120,7 +124,9 @@ void SHOODAKDebayer::DebayerBlue(uint32_t hOffset, uint32_t vOffset)
         _blueChannel[index + _width + 1] = bValue3;
 
         if ((index + 2) % _width == 0)
+        {
             index += _width;
+        }
     }
 }
 
