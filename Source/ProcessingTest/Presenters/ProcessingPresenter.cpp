@@ -11,12 +11,17 @@
 #include <QThread>
 
 #include <Image/BilinearDebayer.h>
+#include <Image/BilinearDebayerOMP.h>
+
 #include <Image/GEDIDebayer.h>
+#include <Image/GEDIDebayerOMP.h>
+
+#include "Image/SHOODAKDebayer.h"
+#include "Image/SHOODAKDebayerOMP.h"
+
 #include <Image/NearestNeighborScaler.h>
 #include <Log/Logger.h>
 #include <Memory/StaticAllocator.h>
-
-#include "Image/SHOODAKDebayer.h"
 
 #include "Image/EndianHelper.h"
 #include "Image/RawDump.h"
@@ -29,12 +34,15 @@ ProcessingPresenter::ProcessingPresenter(IProcessingView& view):
 {
     _view = &view;
 
-    QStringList debayerMethods = {"Bilinear", "GEDI", "SHOODAK", "None"};
+    QStringList debayerMethods = {"Bilinear", "GEDI", "SHOODAK", "Bilinear (OMP)", "GEDI (OMP)", "SHOODAK (OMP)", "None"};
     _view->SetAvailableDebayerMethods(debayerMethods);
 
     _debayerProcessors.push_back(std::make_shared<BilinearDebayer>());
     _debayerProcessors.push_back(std::make_shared<GEDIDebayer>());
     _debayerProcessors.push_back(std::make_shared<SHOODAKDebayer>());
+    _debayerProcessors.push_back(std::make_shared<BilinearDebayerOMP>());
+    _debayerProcessors.push_back(std::make_shared<GEDIDebayerOMP>());
+    _debayerProcessors.push_back(std::make_shared<SHOODAKDebayerOMP>());
 
     provider.reset(new ImageProvider());
 
@@ -111,7 +119,7 @@ void ProcessingPresenter::Show()
     OC_LOG_INFO("Loading finished");
 
     OC_LOG_INFO("Demosaicing");
-    if(_currentDebayerProcessor != 3)
+    if(_currentDebayerProcessor != 6)
     {
         _debayerProcessors[_currentDebayerProcessor]->Process(*_image.get());
     }
