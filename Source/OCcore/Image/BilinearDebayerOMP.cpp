@@ -5,7 +5,7 @@
 #include "BilinearDebayerOMP.h"
 
 // TODO: Add multi-threading.
-#include <thread>
+#include <omp.h>
 
 #include <Log/Logger.h>
 
@@ -34,92 +34,102 @@ BilinearDebayerOMP::~BilinearDebayerOMP()
 
 void BilinearDebayerOMP::DebayerBottomRight(uint16_t *channel)
 {
-    #pragma omp parallel for schedule(static, 2 * _width)
-    for(uint32_t index = _patternOffsets[0]; index < _size; index += 2)
+    uint32_t maxCol = _width - 1;
+    uint32_t index;
+    #pragma omp parallel for collapse(2)
+    for(uint32_t row = _patternOffsets[0]; row < _height; row += 2)
     {
-        channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
-        channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
-        channel[index + _width] = ( channel[index + _width - 1] + channel[index + _width + 1] ) >> 1;
-
-        if ((index + 3) % _width <= 1)
+        for(uint32_t col = _patternOffsets[1]; col < maxCol; col += 2)
         {
-            index += _width + 2;
+            index = (row * _width) + col;
+            channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
+            channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
+            channel[index + _width] = ( channel[index + _width - 1] + channel[index + _width + 1] ) >> 1;
         }
     }
 }
 
 void BilinearDebayerOMP::DebayerBottomLeft(uint16_t *channel)
 {
-    #pragma omp parallel for schedule(static, 2 * _width)
-    for(uint32_t index = _patternOffsets[0]; index < _size; index += 2)
+    uint32_t maxCol = _width - 1;
+    uint32_t index;
+    #pragma omp parallel for collapse(2)
+    for(uint32_t row = _patternOffsets[0]; row < _height; row += 2)
     {
-        channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
-        channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
-        channel[index + _width] = ( channel[index + _width - 1] + channel[index + _width + 1] ) >> 1;
-
-        if ((index + 3) % _width <= 1)
+        for(uint32_t col = _patternOffsets[1]; col < maxCol; col += 2)
         {
-            index += _width + 2;
+            index = (row * _width) + col;
+
+            channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
+            channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
+            channel[index + _width] = ( channel[index + _width - 1] + channel[index + _width + 1] ) >> 1;
+
         }
     }
 }
 
 void BilinearDebayerOMP::DebayerGreen0()
 {
-    #pragma omp parallel for schedule(static, 2 * _width)
-    for(uint32_t index = _patternOffsets[1]; index < _size; index += 2)
+    uint32_t index;
+    #pragma omp parallel for collapse(2)
+    for(uint32_t row = _patternOffsets[0]; row < _height; row += 2)
     {
-        _greenChannel[index] = ( _greenChannel[index - _width] + _greenChannel[index - 1] + _greenChannel[index + 1] + _greenChannel[index + _width] ) >> 2;
-
-        if ((index + 3) % _width <= 1)
+        for(uint32_t col = _patternOffsets[1]; col < _width; col += 2)
         {
-            index += _width + 2;
+            index = (row * _width) + col;
+
+            _greenChannel[index] = ( _greenChannel[index - _width] + _greenChannel[index - 1] + _greenChannel[index + 1] + _greenChannel[index + _width] ) >> 2;
         }
     }
 }
 
 void BilinearDebayerOMP::DebayerGreen1()
 {
-    #pragma omp parallel for schedule(static, 2 * _width)
-    for(uint32_t index = _patternOffsets[2]; index < _size; index += 2)
+    uint32_t index;
+    #pragma omp parallel for collapse(2)
+    for(uint32_t row = _patternOffsets[2]; row < _height; row += 2)
     {
-        _greenChannel[index] = ( _greenChannel[index - _width] + _greenChannel[index - 1] + _greenChannel[index + 1] + _greenChannel[index + _width] ) >> 2;
-
-        if ((index + 3) % _width <= 1)
+        for(uint32_t col = _patternOffsets[3]; col < _width; col += 2)
         {
-            index += _width + 2;
+            index = (row * _width) + col;
+
+            _greenChannel[index] = ( _greenChannel[index - _width] + _greenChannel[index - 1] + _greenChannel[index + 1] + _greenChannel[index + _width] ) >> 2;
         }
     }
 }
 
 void BilinearDebayerOMP::DebayerTopLeft(uint16_t *channel)
 {
-    #pragma omp parallel for schedule(static, 2 * _width)
-    for(uint32_t index = _patternOffsets[3]; index < _size; index += 2)
+    uint32_t maxCol = _width - 1;
+    uint32_t index;
+    #pragma omp parallel for collapse(2)
+    for(uint32_t row = _patternOffsets[2]; row < _height; row += 2)
     {
-        channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
-        channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
-        channel[index - _width] = ( channel[index - _width - 1] + channel[index - _width + 1] ) >> 1;
-
-        if ((index + 3) % _width <= 1)
+        for(uint32_t col = _patternOffsets[3]; col < maxCol; col += 2)
         {
-            index += _width + 2;
+            index = (row * _width) + col;
+
+            channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
+            channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
+            channel[index - _width] = ( channel[index - _width - 1] + channel[index - _width + 1] ) >> 1;
         }
     }
 }
 
 void BilinearDebayerOMP::DebayerTopRight(uint16_t *channel)
 {
-    #pragma omp parallel for schedule(static, 2 * _width)
-    for(uint32_t index = _patternOffsets[3]; index < _size; index += 2)
+    uint32_t maxCol = _width - 1;
+    uint32_t index;
+    #pragma omp parallel for collapse(2)
+    for(uint32_t row = _patternOffsets[2]; row < _height; row += 2)
     {
-        channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
-        channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
-        channel[index - _width] = ( channel[index - _width - 1] + channel[index - _width + 1] ) >> 1;
-
-        if ((index + 3) % _width <= 1)
+        for(uint32_t col = _patternOffsets[3]; col < maxCol; col += 2)
         {
-            index += _width + 2;
+            index = (row * _width) + col;
+
+            channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
+            channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
+            channel[index - _width] = ( channel[index - _width - 1] + channel[index - _width + 1] ) >> 1;
         }
     }
 }
@@ -235,21 +245,20 @@ void BilinearDebayerOMP::ProcessNearest()
 
 void BilinearDebayerOMP::SetPatternOffsets(BayerPattern pattern)
 {
-    switch (pattern)
-    {
+    switch (pattern) {
     case BayerPattern::RGGB:
     case BayerPattern::BGGR:
-        _patternOffsets[0] = _width + 1;
-        _patternOffsets[1] = _width + 1;
-        _patternOffsets[2] = (2 * _width) + 2;
-        _patternOffsets[3] = (2 * _width) + 2;
+        _patternOffsets[0] = 1;
+        _patternOffsets[1] = 1;
+        _patternOffsets[2] = 2;
+        _patternOffsets[3] = 2;
         break;
     case BayerPattern::GRBG:
     case BayerPattern::GBRG:
-        _patternOffsets[0] = _width + 2;
-        _patternOffsets[1] = _width + 2;
-        _patternOffsets[2] = (2 * _width) + 1;
-        _patternOffsets[3] = (2 * _width) + 1;
+        _patternOffsets[0] = 1;
+        _patternOffsets[1] = 2;
+        _patternOffsets[2] = 2;
+        _patternOffsets[3] = 1;
         break;
     }
 }
