@@ -36,7 +36,7 @@ void BilinearDebayerOMP::DebayerBottomRight(uint16_t *channel)
 {
     uint32_t maxCol = _width - 1;
     uint32_t index;
-    #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2) private(index)
     for(uint32_t row = _patternOffsets[0]; row < _height; row += 2)
     {
         for(uint32_t col = _patternOffsets[1]; col < maxCol; col += 2)
@@ -53,7 +53,7 @@ void BilinearDebayerOMP::DebayerBottomLeft(uint16_t *channel)
 {
     uint32_t maxCol = _width - 1;
     uint32_t index;
-    #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2) private(index)
     for(uint32_t row = _patternOffsets[0]; row < _height; row += 2)
     {
         for(uint32_t col = _patternOffsets[1]; col < maxCol; col += 2)
@@ -71,7 +71,7 @@ void BilinearDebayerOMP::DebayerBottomLeft(uint16_t *channel)
 void BilinearDebayerOMP::DebayerGreen0()
 {
     uint32_t index;
-    #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2) private(index)
     for(uint32_t row = _patternOffsets[0]; row < _height; row += 2)
     {
         for(uint32_t col = _patternOffsets[1]; col < _width; col += 2)
@@ -86,7 +86,7 @@ void BilinearDebayerOMP::DebayerGreen0()
 void BilinearDebayerOMP::DebayerGreen1()
 {
     uint32_t index;
-    #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2) private(index)
     for(uint32_t row = _patternOffsets[2]; row < _height; row += 2)
     {
         for(uint32_t col = _patternOffsets[3]; col < _width; col += 2)
@@ -102,7 +102,7 @@ void BilinearDebayerOMP::DebayerTopLeft(uint16_t *channel)
 {
     uint32_t maxCol = _width - 1;
     uint32_t index;
-    #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2) private(index)
     for(uint32_t row = _patternOffsets[2]; row < _height; row += 2)
     {
         for(uint32_t col = _patternOffsets[3]; col < maxCol; col += 2)
@@ -120,7 +120,7 @@ void BilinearDebayerOMP::DebayerTopRight(uint16_t *channel)
 {
     uint32_t maxCol = _width - 1;
     uint32_t index;
-    #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2) private(index)
     for(uint32_t row = _patternOffsets[2]; row < _height; row += 2)
     {
         for(uint32_t col = _patternOffsets[3]; col < maxCol; col += 2)
