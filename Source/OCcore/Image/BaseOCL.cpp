@@ -112,7 +112,7 @@ int loadImageOCL(OCImage &image)
 
     cl_image_format imgFormat = {
         CL_R,
-        CL_UNSIGNED_INT16,
+        CL_UNSIGNED_INT16
     };
 
     cl_image_desc imgDescriptor = {
@@ -125,7 +125,7 @@ int loadImageOCL(OCImage &image)
         0,
         0,
         0,
-        {nullptr},
+        {nullptr}
     };
 
     redChannel      = clCreateImage(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, &imgFormat, &imgDescriptor, (void*) image.RedChannel(), nullptr);
