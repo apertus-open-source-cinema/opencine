@@ -14,6 +14,13 @@ cl_mem redChannel;
 cl_mem greenChannel;
 cl_mem blueChannel;
 
+bool isOpenCL2Device = false;
+char* kernelsBuffer = nullptr;
+cl_uint width = 0;
+cl_uint height = 0;
+
+cl_kernel imageFillKernel;
+
 // TODO (TofuLynx): Error Handler.
 
 int initializeHost()
@@ -26,6 +33,7 @@ int initializeHost()
 int initializeOCL()
 {
     cl_uint numDevices = 0;
+    char deviceInfo[128];
 
     // Get number of GPU devices.
     clGetDeviceIDs(nullptr, CL_DEVICE_TYPE_GPU, 0, nullptr, &numDevices);
@@ -42,11 +50,56 @@ int initializeOCL()
     // Create Context.
     context = clCreateContext(nullptr, 1, devices, nullptr, nullptr, nullptr);
 
-    // Create Queue.
-    queue = clCreateCommandQueueWithProperties(context, devices[0], nullptr, nullptr);
+    // Get OpenCL C Version Support.
+    clGetDeviceInfo(devices[0], CL_DEVICE_OPENCL_C_VERSION, 128 * sizeof(char), deviceInfo, nullptr);
+    OC_LOG_INFO(deviceInfo);
 
-    // TODO (TofuLynx): Kernel load.
-    // TODO (TofuLynx: Memory.
+    // Create Queue.
+    if (deviceInfo[9] != '2')
+    {
+        queue = clCreateCommandQueue(context, devices[0], 0, nullptr);
+    }
+    else
+    {
+        isOpenCL2Device = true;
+        queue = clCreateCommandQueueWithProperties(context, devices[0], nullptr, nullptr);
+    }
+
+    if (loadKernels(KERNELS_FILE) != 0)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
+int loadKernels(const char *fileName)
+{
+    // Load Kernels File.
+    FILE* fp = fopen(fileName, "r");
+    if (fp == nullptr)
+    {
+        OC_LOG_ERROR("Error opening Kernels File!");
+        return -1;
+    }
+
+    // Get source length.
+    fseek(fp, 0, SEEK_END);
+    unsigned long sourceLen = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    kernelsBuffer = (char*) calloc(sourceLen + 1, sizeof(char));
+    fread(kernelsBuffer, sizeof(char), sourceLen, fp);
+
+    fclose(fp);
+
+    program = clCreateProgramWithSource(context, 1, (const char**) &kernelsBuffer, &sourceLen, nullptr);
+
+    clBuildProgram(program, 1, devices, nullptr, nullptr, nullptr);
+
+    // TODO (TofuLynx): Create Kernel Objects.
+
+    imageFillKernel = clCreateKernel(program, "imageFill", nullptr);
 
     return 0;
 }
@@ -54,28 +107,62 @@ int initializeOCL()
 int loadImageOCL(OCImage &image)
 {
     // TODO (TofuLynx): Make this more readable.
+    width = image.Width();
+    height = image.Height();
 
     cl_image_format imgFormat = {
-        CL_A,
-        CL_UNSIGNED_INT16
+        CL_R,
+        CL_UNSIGNED_INT16,
     };
 
     cl_image_desc imgDescriptor = {
         CL_MEM_OBJECT_IMAGE2D,
-        image.Width(),
-        image.Height(),
+        width,
+        height,
+        1,
         0,
         0,
         0,
         0,
         0,
-        0,
-        {nullptr}
+        {nullptr},
     };
 
-    redChannel      = clCreateImage(context, CL_MEM_READ_WRITE, &imgFormat, &imgDescriptor, image.RedChannel(), nullptr);
-    greenChannel    = clCreateImage(context, CL_MEM_READ_WRITE, &imgFormat, &imgDescriptor, image.GreenChannel(), nullptr);
-    blueChannel     = clCreateImage(context, CL_MEM_READ_WRITE, &imgFormat, &imgDescriptor, image.BlueChannel(), nullptr);
+    redChannel      = clCreateImage(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, &imgFormat, &imgDescriptor, (void*) image.RedChannel(), nullptr);
+    greenChannel    = clCreateImage(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, &imgFormat, &imgDescriptor, (void*) image.GreenChannel(), nullptr);
+    blueChannel     = clCreateImage(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, &imgFormat, &imgDescriptor, (void*) image.BlueChannel(), nullptr);
+
+    return 0;
+}
+
+int saveImageOCL(OCImage &image)
+{
+    size_t origin[3] = {0, 0, 0};
+    size_t region[3] = {width, height, 1};
+
+    uint16_t newRedChannel[width * height];
+
+    clEnqueueReadImage(queue, redChannel, CL_TRUE, origin, region, 0, 0, (void*) newRedChannel, 0, nullptr, nullptr);
+    clFinish(queue);
+
+    OC_LOG_INFO("GOT> " + std::to_string(newRedChannel[0]));
+
+    image.SetRedChannel(newRedChannel);
+
+    return 0;
+}
+
+int runImageFillKernel(cl_ushort value)
+{
+    clSetKernelArg(imageFillKernel, 0, sizeof(cl_ushort) * width * height, &redChannel);
+    clSetKernelArg(imageFillKernel, 1, sizeof(cl_uint), &width);
+    clSetKernelArg(imageFillKernel, 2, sizeof(cl_uint), &height);
+    clSetKernelArg(imageFillKernel, 3, sizeof(cl_ushort), &value);
+
+    size_t globalSizes[2] = {width, height};
+
+    clEnqueueNDRangeKernel(queue, imageFillKernel, 2, nullptr, globalSizes, nullptr, 0, nullptr, nullptr);
+    clFinish(queue);
 
     return 0;
 }

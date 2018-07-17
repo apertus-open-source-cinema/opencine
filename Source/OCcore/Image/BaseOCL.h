@@ -8,6 +8,8 @@
 #include <CL/cl.h>
 #include "OCImage.h"
 
+#define KERNELS_FILE "Kernels.cl"
+
 using namespace OC::DataProvider;
 
 extern cl_context context;
@@ -19,11 +21,23 @@ extern cl_mem redChannel;
 extern cl_mem greenChannel;
 extern cl_mem blueChannel;
 
+extern bool isOpenCL2Device;
+extern char* kernelsBuffer;
+extern cl_uint width;
+extern cl_uint height;
+
+extern cl_kernel imageFillKernel;
+
 int initializeHost();
 
 int initializeOCL();
 
+int loadKernels(const char* filename);
+
 int loadImageOCL(OCImage &image);
+int saveImageOCL(OCImage &image);
+
+int runImageFillKernel(cl_ushort value);
 
 int cleanupOCL();
 
