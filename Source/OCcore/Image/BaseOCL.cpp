@@ -2,6 +2,8 @@
 // Project: OpenCine / OCcore
 // License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 
+#include <iostream>
+
 #include "BaseOCL.h"
 #include <Log/Logger.h>
 
@@ -16,8 +18,8 @@ cl_mem blueChannel;
 
 bool isOpenCL2Device = false;
 char* kernelsBuffer = nullptr;
-cl_uint width = 0;
-cl_uint height = 0;
+unsigned int width = 0;
+unsigned int height = 0;
 
 cl_kernel imageFillKernel;
 
@@ -32,11 +34,11 @@ int initializeHost()
 
 int initializeOCL()
 {
-    cl_uint numDevices = 0;
+    unsigned int numDevices = 0;
     char deviceInfo[128];
 
     // Get number of GPU devices.
-    clGetDeviceIDs(nullptr, CL_DEVICE_TYPE_GPU, 0, nullptr, &numDevices);
+    clGetDeviceIDs(nullptr, CL_DEVICE_TYPE_ALL, 0, nullptr, &numDevices);
     if (numDevices == 0)
     {
         OC_LOG_ERROR("No OpenCL capable GPUs found!");
@@ -44,8 +46,8 @@ int initializeOCL()
     }
 
     // Get GPU devices.
-    devices = (cl_device_id*) malloc(sizeof(cl_device_id) * numDevices);
-    clGetDeviceIDs(nullptr, CL_DEVICE_TYPE_GPU, numDevices, devices, nullptr);
+    devices = static_cast<cl_device_id*>(malloc(sizeof(cl_device_id) * numDevices));
+    clGetDeviceIDs(nullptr, CL_DEVICE_TYPE_ALL, numDevices, devices, nullptr);
 
     // Create Context.
     context = clCreateContext(nullptr, 1, devices, nullptr, nullptr, nullptr);
@@ -54,7 +56,6 @@ int initializeOCL()
     clGetDeviceInfo(devices[0], CL_DEVICE_OPENCL_C_VERSION, 128 * sizeof(char), deviceInfo, nullptr);
     OC_LOG_INFO(deviceInfo);
 
-    // Create Queue.
     if (deviceInfo[9] != '2')
     {
         queue = clCreateCommandQueue(context, devices[0], 0, nullptr);
@@ -75,6 +76,8 @@ int initializeOCL()
 
 int loadKernels(const char *fileName)
 {
+    cl_int result;
+
     // Load Kernels File.
     FILE* fp = fopen(fileName, "r");
     if (fp == nullptr)
@@ -93,75 +96,82 @@ int loadKernels(const char *fileName)
 
     fclose(fp);
 
-    program = clCreateProgramWithSource(context, 1, (const char**) &kernelsBuffer, &sourceLen, nullptr);
+    program = clCreateProgramWithSource(context, 1, (const char**) &kernelsBuffer, &sourceLen, &result);
 
-    clBuildProgram(program, 1, devices, nullptr, nullptr, nullptr);
+    result = clBuildProgram(program, 1, devices, nullptr, nullptr, nullptr);
+
+    if(result != 0)
+    {
+        size_t length;
+        char buffer[2048];
+        clGetProgramBuildInfo(program, devices[0], CL_PROGRAM_BUILD_LOG, sizeof(buffer), buffer, &length);
+        std::cout<<"--- Build log ---\n "<<buffer<<std::endl;
+    }
 
     // TODO (TofuLynx): Create Kernel Objects.
-
-    imageFillKernel = clCreateKernel(program, "imageFill", nullptr);
+    imageFillKernel = clCreateKernel(program, "imageFill", &result);
 
     return 0;
 }
 
 int loadImageOCL(OCImage &image)
 {
-    // TODO (TofuLynx): Make this more readable.
     width = image.Width();
     height = image.Height();
 
-    cl_image_format imgFormat = {
-        CL_R,
-        CL_UNSIGNED_INT16
-    };
-
-    cl_image_desc imgDescriptor = {
-        CL_MEM_OBJECT_IMAGE2D,
-        width,
-        height,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        {nullptr}
-    };
-
-    redChannel      = clCreateImage(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, &imgFormat, &imgDescriptor, (void*) image.RedChannel(), nullptr);
-    greenChannel    = clCreateImage(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, &imgFormat, &imgDescriptor, (void*) image.GreenChannel(), nullptr);
-    blueChannel     = clCreateImage(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, &imgFormat, &imgDescriptor, (void*) image.BlueChannel(), nullptr);
+    cl_int result = 0;
+    redChannel      = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(unsigned short) * width * height, static_cast<void*>(image.RedChannel()), &result);
+    greenChannel    = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(unsigned short) * width * height, static_cast<void*>(image.GreenChannel()), &result);
+    blueChannel     = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(unsigned short) * width * height, static_cast<void*>(image.BlueChannel()), &result);
 
     return 0;
 }
 
 int saveImageOCL(OCImage &image)
 {
-    size_t origin[3] = {0, 0, 0};
-    size_t region[3] = {width, height, 1};
+    cl_int result;
 
-    uint16_t newRedChannel[width * height];
+    uint16_t* newRedChannel = new uint16_t[width * height];
+    uint16_t* newGreenChannel = new uint16_t[width * height];
+    uint16_t* newBlueChannel = new uint16_t[width * height];
 
-    clEnqueueReadImage(queue, redChannel, CL_TRUE, origin, region, 0, 0, (void*) newRedChannel, 0, nullptr, nullptr);
+    result = clEnqueueReadBuffer(queue, redChannel, CL_TRUE, 0, sizeof(unsigned short) * width * height, newRedChannel, 0, nullptr, nullptr);
+    result = clEnqueueReadBuffer(queue, greenChannel, CL_TRUE, 0, sizeof(unsigned short) * width * height, newGreenChannel, 0, nullptr, nullptr);
+    result =clEnqueueReadBuffer(queue, blueChannel, CL_TRUE, 0, sizeof(unsigned short) * width * height, newBlueChannel, 0, nullptr, nullptr);
     clFinish(queue);
 
-    OC_LOG_INFO("GOT> " + std::to_string(newRedChannel[0]));
+    OC_LOG_INFO("RGB>" + std::to_string(newRedChannel[1]) + " " + std::to_string(newGreenChannel[1]) + " " + std::to_string(newBlueChannel[1]));
 
     image.SetRedChannel(newRedChannel);
+    image.SetGreenChannel(newGreenChannel);
+    image.SetBlueChannel(newBlueChannel);
 
     return 0;
 }
 
-int runImageFillKernel(cl_ushort value)
+int runImageFillKernel(unsigned short value)
 {
-    clSetKernelArg(imageFillKernel, 0, sizeof(cl_ushort) * width * height, &redChannel);
-    clSetKernelArg(imageFillKernel, 1, sizeof(cl_uint), &width);
-    clSetKernelArg(imageFillKernel, 2, sizeof(cl_uint), &height);
-    clSetKernelArg(imageFillKernel, 3, sizeof(cl_ushort), &value);
+    cl_int result;
 
     size_t globalSizes[2] = {width, height};
+    size_t localSizes[2] = {1, 1};
 
-    clEnqueueNDRangeKernel(queue, imageFillKernel, 2, nullptr, globalSizes, nullptr, 0, nullptr, nullptr);
+    clSetKernelArg(imageFillKernel, 1, sizeof(unsigned int), &width);
+    clSetKernelArg(imageFillKernel, 2, sizeof(unsigned int), &height);
+    clSetKernelArg(imageFillKernel, 3, sizeof(unsigned short), &value);
+
+    clSetKernelArg(imageFillKernel, 0, sizeof(cl_mem), &redChannel);
+    result = clEnqueueNDRangeKernel(queue, imageFillKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+    OC_LOG_INFO("clEnqueueNDRangeKernel Red Result>" + std::to_string(result));
+
+    clSetKernelArg(imageFillKernel, 0, sizeof(cl_mem), &greenChannel);
+    result = clEnqueueNDRangeKernel(queue, imageFillKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+    OC_LOG_INFO("clEnqueueNDRangeKernel Green Result>" + std::to_string(result));
+
+    clSetKernelArg(imageFillKernel, 0, sizeof(cl_mem), &blueChannel);
+    result = clEnqueueNDRangeKernel(queue, imageFillKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+    OC_LOG_INFO("clEnqueueNDRangeKernel Blue Result>" + std::to_string(result));
+
     clFinish(queue);
 
     return 0;

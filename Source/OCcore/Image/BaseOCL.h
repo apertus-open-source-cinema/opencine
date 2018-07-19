@@ -23,8 +23,8 @@ extern cl_mem blueChannel;
 
 extern bool isOpenCL2Device;
 extern char* kernelsBuffer;
-extern cl_uint width;
-extern cl_uint height;
+extern unsigned int width;
+extern unsigned int height;
 
 extern cl_kernel imageFillKernel;
 
@@ -37,7 +37,7 @@ int loadKernels(const char* filename);
 int loadImageOCL(OCImage &image);
 int saveImageOCL(OCImage &image);
 
-int runImageFillKernel(cl_ushort value);
+int runImageFillKernel(unsigned short value);
 
 int cleanupOCL();
 

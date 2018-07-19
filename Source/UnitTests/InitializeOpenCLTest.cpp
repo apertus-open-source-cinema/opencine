@@ -7,18 +7,6 @@ TEST_CASE("Initialization of OpenCL Test", "[OC::Image]")
 {
     const int inputDataLength = 64;
 
-    // R = 1, G = 2, B = 3
-    uint16_t inputData[inputDataLength] = {
-        3,2,3,2,3,2,3,2,
-        2,1,2,1,2,1,2,1,
-        3,2,3,2,3,2,3,2,
-        2,1,2,1,2,1,2,1,
-        3,2,3,2,3,2,3,2,
-        2,1,2,1,2,1,2,1,
-        3,2,3,2,3,2,3,2,
-        2,1,2,1,2,1,2,1
-    };
-
     uint16_t inputRed[inputDataLength] = {
         9,9,9,9,9,9,9,9,
         9,9,9,9,9,9,9,9,
@@ -31,28 +19,28 @@ TEST_CASE("Initialization of OpenCL Test", "[OC::Image]")
     };
 
     uint16_t inputGreen[inputDataLength] = {
-        0,2,0,2,0,2,0,2,
-        2,0,2,0,2,0,2,0,
-        0,2,0,2,0,2,0,2,
-        2,0,2,0,2,0,2,0,
-        0,2,0,2,0,2,0,2,
-        2,0,2,0,2,0,2,0,
-        0,2,0,2,0,2,0,2,
-        2,0,2,0,2,0,2,0
+        1,1,1,1,1,1,1,1,
+        1,1,1,1,1,1,1,1,
+        1,1,1,1,1,1,1,1,
+        1,1,1,1,1,1,1,1,
+        1,1,1,1,1,1,1,1,
+        1,1,1,1,1,1,1,1,
+        1,1,1,1,1,1,1,1,
+        1,1,1,1,1,1,1,1
     };
 
     uint16_t inputBlue[inputDataLength] = {
-        3,0,3,0,3,0,3,0,
-        0,0,0,0,0,0,0,0,
-        3,0,3,0,3,0,3,0,
-        0,0,0,0,0,0,0,0,
-        3,0,3,0,3,0,3,0,
-        0,0,0,0,0,0,0,0,
-        3,0,3,0,3,0,3,0,
-        0,0,0,0,0,0,0,0
+        4,4,4,4,4,4,4,4,
+        4,4,4,4,4,4,4,4,
+        4,4,4,4,4,4,4,4,
+        4,4,4,4,4,4,4,4,
+        4,4,4,4,4,4,4,4,
+        4,4,4,4,4,4,4,4,
+        4,4,4,4,4,4,4,4,
+        4,4,4,4,4,4,4,4
     };
 
-    uint16_t expectedRed[inputDataLength] = {
+    uint16_t expectedValues[inputDataLength] = {
         7,7,7,7,7,7,7,7,
         7,7,7,7,7,7,7,7,
         7,7,7,7,7,7,7,7,
@@ -80,7 +68,7 @@ TEST_CASE("Initialization of OpenCL Test", "[OC::Image]")
 
     status = loadImageOCL(*inputImage);
 
-    //status = runImageFillKernel(7);
+    status = runImageFillKernel(7);
 
     OCImage* outputImage = new OCImage();
     outputImage->SetWidth(8);
@@ -96,18 +84,42 @@ TEST_CASE("Initialization of OpenCL Test", "[OC::Image]")
     uint16_t* imageBlue = (uint16_t*)outputImage->BlueChannel();
 
     bool correctRed = true;
+    bool correctGreen = true;
+    bool correctBlue = true;
 
     for(int index = 0; index < inputDataLength; index++)
     {
-        if(imageRed[index] != expectedRed[index])
+        if(imageRed[index] != expectedValues[index])
         {
             correctRed = false;
-            OC_LOG_INFO("index" + std::to_string(index) + " out:" + std::to_string(imageRed[index])+ " exp:" + std::to_string(expectedRed[index]));
+            OC_LOG_INFO("index" + std::to_string(index) + " out:" + std::to_string(imageRed[index])+ " exp:" + std::to_string(expectedValues[index]));
+            break;
+        }
+    }
+
+    for(int index = 0; index < inputDataLength; index++)
+    {
+        if(imageGreen[index] != expectedValues[index])
+        {
+            correctGreen = false;
+            OC_LOG_INFO("index" + std::to_string(index) + " out:" + std::to_string(imageGreen[index])+ " exp:" + std::to_string(expectedValues[index]));
+            break;
+        }
+    }
+
+    for(int index = 0; index < inputDataLength; index++)
+    {
+        if(imageBlue[index] != expectedValues[index])
+        {
+            correctBlue = false;
+            OC_LOG_INFO("index" + std::to_string(index) + " out:" + std::to_string(imageBlue[index])+ " exp:" + std::to_string(expectedValues[index]));
             break;
         }
     }
 
     REQUIRE(status == 0);
     REQUIRE(correctRed == true);
+    REQUIRE(correctGreen == true);
+    REQUIRE(correctBlue == true);
 }
 

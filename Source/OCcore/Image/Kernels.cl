@@ -2,11 +2,11 @@
 // Project: OpenCine / OCcore
 // License: GNU GPL Version 3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-__kernel void imageFill(__global cl_ushort* channel, const cl_uint width, const cl_uint height, const cl_ushort value)
+__kernel void imageFill(__global unsigned short* channel, const unsigned int width, const unsigned int height, const unsigned short value)
 {
-    int index;
+    __local int index;
 
-    index = get_global_id(0);
+    index = get_global_id(0) + (get_global_id(1) * width);
     
     channel[index] = value;
 }
