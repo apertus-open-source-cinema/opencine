@@ -18,10 +18,13 @@ cl_mem blueChannel;
 
 bool isOpenCL2Device = false;
 char* kernelsBuffer = nullptr;
+
+BayerPattern imagePattern;
 unsigned int width = 0;
 unsigned int height = 0;
 
 cl_kernel imageFillKernel;
+cl_kernel nearestNeighborKernel;
 
 // TODO (TofuLynx): Error Handler.
 
@@ -110,6 +113,189 @@ int loadKernels(const char *fileName)
 
     // TODO (TofuLynx): Create Kernel Objects.
     imageFillKernel = clCreateKernel(program, "imageFill", &result);
+    nearestNeighborKernel = clCreateKernel(program, "nearestNeighbor", &result);
+
+    return 0;
+}
+
+int runImageFillKernel(unsigned short value)
+{
+    cl_int result;
+
+    size_t globalSizes[2] = {width, height};
+    size_t localSizes[2] = {1, 1};
+
+    clSetKernelArg(imageFillKernel, 1, sizeof(unsigned int), &width);
+    clSetKernelArg(imageFillKernel, 2, sizeof(unsigned short), &value);
+
+    clSetKernelArg(imageFillKernel, 0, sizeof(cl_mem), &redChannel);
+    result = clEnqueueNDRangeKernel(queue, imageFillKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+    OC_LOG_INFO("clEnqueueNDRangeKernel Red Result>" + std::to_string(result));
+
+    clSetKernelArg(imageFillKernel, 0, sizeof(cl_mem), &greenChannel);
+    result = clEnqueueNDRangeKernel(queue, imageFillKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+    OC_LOG_INFO("clEnqueueNDRangeKernel Green Result>" + std::to_string(result));
+
+    clSetKernelArg(imageFillKernel, 0, sizeof(cl_mem), &blueChannel);
+    result = clEnqueueNDRangeKernel(queue, imageFillKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+    OC_LOG_INFO("clEnqueueNDRangeKernel Blue Result>" + std::to_string(result));
+
+    clFinish(queue);
+
+    return 0;
+}
+
+int runNearestNeighborKernel()
+{
+    cl_int result;
+
+    int hOffset, vOffset, colorOffset;
+
+    size_t globalSizes[2] = {width/2, height/2};
+    size_t localSizes[2] = {1, 1};
+
+    clSetKernelArg(nearestNeighborKernel, 1, sizeof(unsigned int), &width);
+
+    switch (imagePattern) {
+    case BayerPattern::RGGB:
+        // Red Channel.
+        clSetKernelArg(nearestNeighborKernel, 0, sizeof(cl_mem), &redChannel);
+        hOffset = 1;
+        vOffset = width;
+        colorOffset = RED_OFFSET_RGGB;
+        clSetKernelArg(nearestNeighborKernel, 2, sizeof(int), &hOffset);
+        clSetKernelArg(nearestNeighborKernel, 3, sizeof(int), &vOffset);
+        clSetKernelArg(nearestNeighborKernel, 4, sizeof(int), &colorOffset);
+
+        clEnqueueNDRangeKernel(queue, nearestNeighborKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+
+        // Green Channel.
+        clSetKernelArg(nearestNeighborKernel, 0, sizeof(cl_mem), &greenChannel);
+        hOffset = -1;
+        vOffset = width;
+        colorOffset = GREEN0_OFFSET_RGGB;
+        clSetKernelArg(nearestNeighborKernel, 2, sizeof(int), &hOffset);
+        clSetKernelArg(nearestNeighborKernel, 3, sizeof(int), &vOffset);
+        clSetKernelArg(nearestNeighborKernel, 4, sizeof(int), &colorOffset);
+
+        clEnqueueNDRangeKernel(queue, nearestNeighborKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+
+        // Blue Channel.
+        clSetKernelArg(nearestNeighborKernel, 0, sizeof(cl_mem), &blueChannel);
+        hOffset = -1;
+        vOffset = -width;
+        colorOffset = BLUE_OFFSET_RGGB;
+        clSetKernelArg(nearestNeighborKernel, 2, sizeof(int), &hOffset);
+        clSetKernelArg(nearestNeighborKernel, 3, sizeof(int), &vOffset);
+        clSetKernelArg(nearestNeighborKernel, 4, sizeof(int), &colorOffset);
+
+        clEnqueueNDRangeKernel(queue, nearestNeighborKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+        break;
+    case BayerPattern::BGGR:
+        // Red Channel.
+        clSetKernelArg(nearestNeighborKernel, 0, sizeof(cl_mem), &redChannel);
+        hOffset = -1;
+        vOffset = -width;
+        colorOffset = RED_OFFSET_BGGR;
+        clSetKernelArg(nearestNeighborKernel, 2, sizeof(int), &hOffset);
+        clSetKernelArg(nearestNeighborKernel, 3, sizeof(int), &vOffset);
+        clSetKernelArg(nearestNeighborKernel, 4, sizeof(int), &colorOffset);
+
+        clEnqueueNDRangeKernel(queue, nearestNeighborKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+
+        // Green Channel.
+        clSetKernelArg(nearestNeighborKernel, 0, sizeof(cl_mem), &greenChannel);
+        hOffset = -1;
+        vOffset = width;
+        colorOffset = GREEN0_OFFSET_BGGR;
+        clSetKernelArg(nearestNeighborKernel, 2, sizeof(int), &hOffset);
+        clSetKernelArg(nearestNeighborKernel, 3, sizeof(int), &vOffset);
+        clSetKernelArg(nearestNeighborKernel, 4, sizeof(int), &colorOffset);
+
+        clEnqueueNDRangeKernel(queue, nearestNeighborKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+
+        // Blue Channel.
+        clSetKernelArg(nearestNeighborKernel, 0, sizeof(cl_mem), &blueChannel);
+        hOffset = 1;
+        vOffset = width;
+        colorOffset = BLUE_OFFSET_BGGR;
+        clSetKernelArg(nearestNeighborKernel, 2, sizeof(int), &hOffset);
+        clSetKernelArg(nearestNeighborKernel, 3, sizeof(int), &vOffset);
+        clSetKernelArg(nearestNeighborKernel, 4, sizeof(int), &colorOffset);
+
+        clEnqueueNDRangeKernel(queue, nearestNeighborKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+        break;
+    case BayerPattern::GRBG:
+        // Red Channel.
+        clSetKernelArg(nearestNeighborKernel, 0, sizeof(cl_mem), &redChannel);
+        hOffset = -1;
+        vOffset = width;
+        colorOffset = RED_OFFSET_GRBG;
+        clSetKernelArg(nearestNeighborKernel, 2, sizeof(int), &hOffset);
+        clSetKernelArg(nearestNeighborKernel, 3, sizeof(int), &vOffset);
+        clSetKernelArg(nearestNeighborKernel, 4, sizeof(int), &colorOffset);
+
+        clEnqueueNDRangeKernel(queue, nearestNeighborKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+
+        // Green Channel.
+        clSetKernelArg(nearestNeighborKernel, 0, sizeof(cl_mem), &greenChannel);
+        hOffset = 1;
+        vOffset = width;
+        colorOffset = GREEN0_OFFSET_GRBG;
+        clSetKernelArg(nearestNeighborKernel, 2, sizeof(int), &hOffset);
+        clSetKernelArg(nearestNeighborKernel, 3, sizeof(int), &vOffset);
+        clSetKernelArg(nearestNeighborKernel, 4, sizeof(int), &colorOffset);
+
+        clEnqueueNDRangeKernel(queue, nearestNeighborKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+
+        // Blue Channel.
+        clSetKernelArg(nearestNeighborKernel, 0, sizeof(cl_mem), &blueChannel);
+        hOffset = 1;
+        vOffset = -width;
+        colorOffset = BLUE_OFFSET_GRBG;
+        clSetKernelArg(nearestNeighborKernel, 2, sizeof(int), &hOffset);
+        clSetKernelArg(nearestNeighborKernel, 3, sizeof(int), &vOffset);
+        clSetKernelArg(nearestNeighborKernel, 4, sizeof(int), &colorOffset);
+
+        clEnqueueNDRangeKernel(queue, nearestNeighborKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+        break;
+    case BayerPattern::GBRG:
+        // Red Channel.
+        clSetKernelArg(nearestNeighborKernel, 0, sizeof(cl_mem), &redChannel);
+        hOffset = 1;
+        vOffset = -width;
+        colorOffset = RED_OFFSET_GBRG;
+        clSetKernelArg(nearestNeighborKernel, 2, sizeof(int), &hOffset);
+        clSetKernelArg(nearestNeighborKernel, 3, sizeof(int), &vOffset);
+        clSetKernelArg(nearestNeighborKernel, 4, sizeof(int), &colorOffset);
+
+        clEnqueueNDRangeKernel(queue, nearestNeighborKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+
+        // Green Channel.
+        clSetKernelArg(nearestNeighborKernel, 0, sizeof(cl_mem), &greenChannel);
+        hOffset = 1;
+        vOffset = width;
+        colorOffset = GREEN0_OFFSET_GBRG;
+        clSetKernelArg(nearestNeighborKernel, 2, sizeof(int), &hOffset);
+        clSetKernelArg(nearestNeighborKernel, 3, sizeof(int), &vOffset);
+        clSetKernelArg(nearestNeighborKernel, 4, sizeof(int), &colorOffset);
+
+        clEnqueueNDRangeKernel(queue, nearestNeighborKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+
+        // Blue Channel.
+        clSetKernelArg(nearestNeighborKernel, 0, sizeof(cl_mem), &blueChannel);
+        hOffset = -1;
+        vOffset = width;
+        colorOffset = BLUE_OFFSET_GBRG;
+        clSetKernelArg(nearestNeighborKernel, 2, sizeof(int), &hOffset);
+        clSetKernelArg(nearestNeighborKernel, 3, sizeof(int), &vOffset);
+        clSetKernelArg(nearestNeighborKernel, 4, sizeof(int), &colorOffset);
+
+        clEnqueueNDRangeKernel(queue, nearestNeighborKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
+        break;
+    }
+
+    clFinish(queue);
 
     return 0;
 }
@@ -118,8 +304,10 @@ int loadImageOCL(OCImage &image)
 {
     width = image.Width();
     height = image.Height();
+    imagePattern = image.GetBayerPattern();
 
     cl_int result = 0;
+
     redChannel      = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(unsigned short) * width * height, static_cast<void*>(image.RedChannel()), &result);
     greenChannel    = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(unsigned short) * width * height, static_cast<void*>(image.GreenChannel()), &result);
     blueChannel     = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(unsigned short) * width * height, static_cast<void*>(image.BlueChannel()), &result);
@@ -135,9 +323,9 @@ int saveImageOCL(OCImage &image)
     uint16_t* newGreenChannel = new uint16_t[width * height];
     uint16_t* newBlueChannel = new uint16_t[width * height];
 
-    result = clEnqueueReadBuffer(queue, redChannel, CL_TRUE, 0, sizeof(unsigned short) * width * height, newRedChannel, 0, nullptr, nullptr);
-    result = clEnqueueReadBuffer(queue, greenChannel, CL_TRUE, 0, sizeof(unsigned short) * width * height, newGreenChannel, 0, nullptr, nullptr);
-    result =clEnqueueReadBuffer(queue, blueChannel, CL_TRUE, 0, sizeof(unsigned short) * width * height, newBlueChannel, 0, nullptr, nullptr);
+    result = clEnqueueReadBuffer(queue, redChannel, CL_FALSE    , 0, sizeof(unsigned short) * width * height, newRedChannel, 0, nullptr, nullptr);
+    result = clEnqueueReadBuffer(queue, greenChannel, CL_FALSE, 0, sizeof(unsigned short) * width * height, newGreenChannel, 0, nullptr, nullptr);
+    result =clEnqueueReadBuffer(queue, blueChannel, CL_FALSE, 0, sizeof(unsigned short) * width * height, newBlueChannel, 0, nullptr, nullptr);
     clFinish(queue);
 
     OC_LOG_INFO("RGB>" + std::to_string(newRedChannel[1]) + " " + std::to_string(newGreenChannel[1]) + " " + std::to_string(newBlueChannel[1]));
@@ -145,34 +333,6 @@ int saveImageOCL(OCImage &image)
     image.SetRedChannel(newRedChannel);
     image.SetGreenChannel(newGreenChannel);
     image.SetBlueChannel(newBlueChannel);
-
-    return 0;
-}
-
-int runImageFillKernel(unsigned short value)
-{
-    cl_int result;
-
-    size_t globalSizes[2] = {width, height};
-    size_t localSizes[2] = {1, 1};
-
-    clSetKernelArg(imageFillKernel, 1, sizeof(unsigned int), &width);
-    clSetKernelArg(imageFillKernel, 2, sizeof(unsigned int), &height);
-    clSetKernelArg(imageFillKernel, 3, sizeof(unsigned short), &value);
-
-    clSetKernelArg(imageFillKernel, 0, sizeof(cl_mem), &redChannel);
-    result = clEnqueueNDRangeKernel(queue, imageFillKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
-    OC_LOG_INFO("clEnqueueNDRangeKernel Red Result>" + std::to_string(result));
-
-    clSetKernelArg(imageFillKernel, 0, sizeof(cl_mem), &greenChannel);
-    result = clEnqueueNDRangeKernel(queue, imageFillKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
-    OC_LOG_INFO("clEnqueueNDRangeKernel Green Result>" + std::to_string(result));
-
-    clSetKernelArg(imageFillKernel, 0, sizeof(cl_mem), &blueChannel);
-    result = clEnqueueNDRangeKernel(queue, imageFillKernel, 2, nullptr, globalSizes, localSizes, 0, nullptr, nullptr);
-    OC_LOG_INFO("clEnqueueNDRangeKernel Blue Result>" + std::to_string(result));
-
-    clFinish(queue);
 
     return 0;
 }
