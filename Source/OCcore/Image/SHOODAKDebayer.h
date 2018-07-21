@@ -38,9 +38,9 @@ public:
     ~SHOODAKDebayer();
 
     // Debayers for each color channel.
-    void DebayerRed(int hOffset, int vOffset);
-    void DebayerGreen(int hOffset, int vOffset);
-    void DebayerBlue(int hOffset, int vOffset);
+    void DebayerRed(uint32_t hOffset, uint32_t vOffset);
+    void DebayerGreen(uint32_t hOffset, uint32_t vOffset);
+    void DebayerBlue(uint32_t hOffset, uint32_t vOffset);
 
     // Debayers Borders.
     void DemosaicBorders(uint16_t *channel);

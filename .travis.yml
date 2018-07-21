@@ -14,7 +14,7 @@ addons:
 before_script:
  - sudo add-apt-repository --yes ppa:beineri/opt-qt-5.10.1-trusty
  - sudo apt-get update -qq
- - sudo apt-get install qt510base qt510declarative
+ - sudo apt-get install qt510base qt510declarative ocl-icd-opencl-dev
    
 script:
   - mkdir build

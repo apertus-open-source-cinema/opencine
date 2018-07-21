@@ -11,12 +11,17 @@
 #include <QThread>
 
 #include <Image/BilinearDebayer.h>
+#include <Image/BilinearDebayerOMP.h>
+
 #include <Image/GEDIDebayer.h>
+#include <Image/GEDIDebayerOMP.h>
+
+#include "Image/SHOODAKDebayer.h"
+#include "Image/SHOODAKDebayerOMP.h"
+
 #include <Image/NearestNeighborScaler.h>
 #include <Log/Logger.h>
 #include <Memory/StaticAllocator.h>
-
-#include "Image/SHOODAKDebayer.h"
 
 #include "Image/EndianHelper.h"
 #include "Image/RawDump.h"
@@ -29,24 +34,28 @@ ProcessingPresenter::ProcessingPresenter(IProcessingView& view):
 {
     _view = &view;
 
-    QStringList debayerMethods = {"Bilinear", "GEDI", "SHOODAK", "None"};
+    QStringList debayerMethods = {"Bilinear", "GEDI", "SHOODAK", "Bilinear (OMP)", "GEDI (OMP)", "SHOODAK (OMP)", "None"};
     _view->SetAvailableDebayerMethods(debayerMethods);
 
     _debayerProcessors.push_back(std::make_shared<BilinearDebayer>());
     _debayerProcessors.push_back(std::make_shared<GEDIDebayer>());
     _debayerProcessors.push_back(std::make_shared<SHOODAKDebayer>());
+    _debayerProcessors.push_back(std::make_shared<BilinearDebayerOMP>());
+    _debayerProcessors.push_back(std::make_shared<GEDIDebayerOMP>());
+    _debayerProcessors.push_back(std::make_shared<SHOODAKDebayerOMP>());
 
     provider.reset(new ImageProvider());
 
     connect(_view, &IProcessingView::OpenRAWFile, this, &ProcessingPresenter::OpenRAWFile);
     connect(_view, SIGNAL(DebayerMethodChanged(int)), this, SLOT(ChangeDebayerMethod(int)));
+    connect(_view, SIGNAL(DumpPNG()), this, SLOT(DumpPNG()));
 }
 
 void ProcessingPresenter::Test()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    IAllocator* poolAllocator = new RawPoolAllocator(50 * 1024 * 1024);
+    IAllocator* poolAllocator = new RawPoolAllocator(350 * 1024 * 1024);
 
     OC_LOG_INFO("Loading image");
     provider->Load("test_frame.dng", FileFormat::DNG, *_image.get(), *poolAllocator);
@@ -110,7 +119,7 @@ void ProcessingPresenter::Show()
     OC_LOG_INFO("Loading finished");
 
     OC_LOG_INFO("Demosaicing");
-    if(_currentDebayerProcessor != 3)
+    if(_currentDebayerProcessor != 6)
     {
         _debayerProcessors[_currentDebayerProcessor]->Process(*_image.get());
     }
@@ -134,7 +143,7 @@ void ProcessingPresenter::Show()
     //    unsigned short*  blueArray = static_cast<unsigned short*>(_image->BlueChannel());
 
     //    //#pragma omp for private(interleavedArray, i)
-    //    for (; i < dataLength; i++)dummyImage
+    //    for (; i < dataLength; i++)
     //    {
     //        interleavedArray[i * 3] = (redArray[i] >> 4) * 1.0;
     //        interleavedArray[i * 3 + 1] = (greenArray[i] >> 4)  * 1.0;
@@ -178,4 +187,29 @@ void ProcessingPresenter::ChangeDebayerMethod(int debayerMethod)
 {
     _currentDebayerProcessor = debayerMethod;
     Show();
+}
+
+void ProcessingPresenter::DumpPNG()
+{
+    _view->EnableRendering(false);
+    QString fileName = QFileDialog::getSaveFileName(_view, tr("Save PNG"), QDir::currentPath(), tr("PNG Files (*.png *.PNG)"));
+
+    unsigned int i = 0;
+    unsigned int dataLength = _image->Width() * _image->Height();
+    unsigned char* interleavedArray = new unsigned char[dataLength * 3];
+
+    unsigned short*  redArray = static_cast<unsigned short*>(_image->RedChannel());
+    unsigned short*  greenArray = static_cast<unsigned short*>(_image->GreenChannel());
+    unsigned short*  blueArray = static_cast<unsigned short*>(_image->BlueChannel());
+
+    for (; i < dataLength; i++)
+    {
+        interleavedArray[i * 3] = (redArray[i] >> 4);
+        interleavedArray[i * 3 + 1] = (greenArray[i] >> 4);
+        interleavedArray[i * 3 + 2] = (blueArray[i] >> 4);
+    }
+
+    lodepng::encode(fileName.toStdString(), interleavedArray, _image->Width(), _image->Height(), LCT_RGB);
+
+    _view->EnableRendering(true);
 }

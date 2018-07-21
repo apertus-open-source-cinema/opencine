@@ -34,7 +34,7 @@ GEDIDebayer::~GEDIDebayer()
 
 void GEDIDebayer::DebayerBottomRight(uint16_t *channel)
 {
-    for(int index = _patternOffsets[0]; index < _size; index += 2)
+    for(uint32_t index = _patternOffsets[0]; index < _size; index += 2)
     {
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
@@ -46,7 +46,7 @@ void GEDIDebayer::DebayerBottomRight(uint16_t *channel)
 
 void GEDIDebayer::DebayerBottomLeft(uint16_t *channel)
 {
-    for(int index = _patternOffsets[0]; index < _size; index += 2)
+    for(uint32_t index = _patternOffsets[0]; index < _size; index += 2)
     {
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
@@ -58,33 +58,29 @@ void GEDIDebayer::DebayerBottomLeft(uint16_t *channel)
 
 void GEDIDebayer::DebayerGreen()
 {
-    int hGrad, hValue, vValue, vGrad;
-    for(int index = _patternOffsets[1]; index < _size; index += 2)
+    int hGrad, vGrad;
+    for(uint32_t index = _patternOffsets[1]; index < _size; index += 2)
     {
-        hValue = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
-        hGrad = std::abs(_greenChannel[index - 1] - hValue) + std::abs(_greenChannel[index + 1] - hValue);
-        vValue = (_greenChannel[index - _width] + _greenChannel[index + _width]) >> 1;
-        vGrad = std::abs(_greenChannel[index - _width] - vValue) + std::abs(_greenChannel[index + _width] - vValue);
+        hGrad = std::abs(_greenChannel[index - 1] - _greenChannel[index + 1]);
+        vGrad = std::abs(_greenChannel[index - _width] - _greenChannel[index + _width]);
 
         if (hGrad <= vGrad)
-            _greenChannel[index] = hValue;
+            _greenChannel[index] = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
         else
-            _greenChannel[index] = vValue;
+            _greenChannel[index] = (_greenChannel[index - _width] + _greenChannel[index + _width]) >> 1;
 
         if ((index + 3) % _width <= 1)
             index += _width + 2;
     }
-    for(int index = _patternOffsets[2]; index < _size; index += 2)
+    for(uint32_t index = _patternOffsets[2]; index < _size; index += 2)
     {
-        hValue = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
-        hGrad = std::abs(_greenChannel[index - 1] - hValue) + std::abs(_greenChannel[index + 1] - hValue);
-        vValue = (_greenChannel[index - _width] + _greenChannel[index + _width]) >> 1;
-        vGrad = std::abs(_greenChannel[index - _width] - vValue) + std::abs(_greenChannel[index + _width] - vValue);
+        hGrad = std::abs(_greenChannel[index - 1] - _greenChannel[index + 1]);
+        vGrad = std::abs(_greenChannel[index - _width] - _greenChannel[index + _width]);
 
         if (hGrad <= vGrad)
-            _greenChannel[index] = hValue;
+            _greenChannel[index] = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
         else
-            _greenChannel[index] = vValue;
+            _greenChannel[index] = (_greenChannel[index - _width] + _greenChannel[index + _width]) >> 1;
 
         if ((index + 3) % _width <= 1)
             index += _width + 2;
@@ -93,7 +89,7 @@ void GEDIDebayer::DebayerGreen()
 
 void GEDIDebayer::DebayerTopLeft(uint16_t *channel)
 {
-    for(int index = _patternOffsets[3]; index < _size; index += 2)
+    for(uint32_t index = _patternOffsets[3]; index < _size; index += 2)
     {
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
@@ -105,7 +101,7 @@ void GEDIDebayer::DebayerTopLeft(uint16_t *channel)
 
 void GEDIDebayer::DebayerTopRight(uint16_t *channel)
 {
-    for(int index = _patternOffsets[3]; index < _size; index += 2)
+    for(uint32_t index = _patternOffsets[3]; index < _size; index += 2)
     {
         channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
         channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
@@ -117,15 +113,15 @@ void GEDIDebayer::DebayerTopRight(uint16_t *channel)
 
 void GEDIDebayer::DemosaicBorders(uint16_t *channel)
 {
-    int size = _size - _width;
-    for(int index = 0; index < _width; index += 2)
+    uint32_t size = _size - _width;
+    for(uint32_t index = 0; index < _width; index += 2)
     {
         channel[index] = channel[index + _width];
         channel[index + 1] = channel[index + _width + 1];
         channel[size + index] = channel[size + index - _width];
         channel[size + index + 1] = channel[size + index - _width + 1];
     }
-    for(int index = 0; index < _height; index += 2)
+    for(uint32_t index = 0; index < _height; index += 2)
     {
         channel[(index * _width)] = channel[(index * _width) + 1];
         channel[(index + 1) * _width] = channel[((index + 1) * _width) + 1];
@@ -153,8 +149,6 @@ void GEDIDebayer::Process()
         GEDIDebayer::DebayerBottomLeft(_blueChannel);
         GEDIDebayer::DebayerTopRight(_redChannel);
         break;
-    default:
-        break;
     }
     GEDIDebayer::DebayerGreen();
     GEDIDebayer::DemosaicBorders(_blueChannel);
@@ -175,7 +169,7 @@ void GEDIDebayer::Process(OCImage &image)
     _pattern = image.GetBayerPattern();
     SetPatternOffsets(_pattern);
 
-    OC_LOG_INFO("\nConsidering width as " + std::to_string(_width) + ":\n" + std::to_string(_patternOffsets[0]) + "\n" + std::to_string(_patternOffsets[1]) + "\n" + std::to_string(_patternOffsets[2]) + "\n" + std::to_string(_patternOffsets[3]) + "\n");
+//    OC_LOG_INFO("\nConsidering width as " + std::to_string(_width) + ":\n" + std::to_string(_patternOffsets[0]) + "\n" + std::to_string(_patternOffsets[1]) + "\n" + std::to_string(_patternOffsets[2]) + "\n" + std::to_string(_patternOffsets[3]) + "\n");
 
     Process();
 }
@@ -197,8 +191,5 @@ void GEDIDebayer::SetPatternOffsets(BayerPattern pattern)
         _patternOffsets[2] = (2 * _width) + 1;
         _patternOffsets[3] = (2 * _width) + 1;
         break;
-    default:
-        break;
-
     }
 }

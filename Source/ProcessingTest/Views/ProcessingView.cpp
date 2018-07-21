@@ -24,6 +24,7 @@ ProcessingView::ProcessingView(QWidget *parent) :
 	ui->widget->installEventFilter(this);
 
     connect(ui->openFileButton, SIGNAL(clicked()), this, SIGNAL(OpenRAWFile()));
+    connect(ui->dumpPNGButton, SIGNAL(clicked()), this, SIGNAL(DumpPNG()));
     connect(ui->debayerMethods, SIGNAL(currentIndexChanged(int)), this, SIGNAL(DebayerMethodChanged(int)));
 }
 
@@ -47,6 +48,8 @@ void ProcessingView::paintEvent(QPaintEvent *)
 void ProcessingView::SetFrame(OCImage &image)
 {
 	testImage = &image;
+
+    ui->dumpPNGButton->setEnabled(true);
 }
 
 void ProcessingView::SetThumbnail(unsigned int width, unsigned int height, unsigned char* data)

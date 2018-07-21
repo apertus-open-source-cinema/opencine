@@ -103,6 +103,16 @@
       <item>
        <widget class="QComboBox" name="debayerMethods"/>
       </item>
+      <item>
+       <widget class="QPushButton" name="dumpPNGButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Dump PNG</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
