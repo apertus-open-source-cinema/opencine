@@ -13,12 +13,12 @@ addons:
       
 before_script:
  #- cat /proc/cpuinfo
- #- wget https://raw.githubusercontent.com/KhronosGroup/SyclParallelSTL/master/.travis/install_intel_opencl.sh
- #- chmod +x ./install_intel_opencl.sh
- #- sudo ./install_intel_opencl.sh
+ - wget https://raw.githubusercontent.com/KhronosGroup/SyclParallelSTL/master/.travis/install_intel_opencl.sh
+ - chmod +x ./install_intel_opencl.sh
+ - sudo ./install_intel_opencl.sh
  - sudo add-apt-repository --yes ppa:beineri/opt-qt-5.10.1-trusty
  - sudo apt-get update -qq
- - sudo apt-get install qt510base qt510declarative clinfo opencl-headers beignet ocl-icd-libopencl1
+ - sudo apt-get install qt510base qt510declarative clinfo opencl-headers #beignet ocl-icd-libopencl1
    
 script:
   - clinfo
