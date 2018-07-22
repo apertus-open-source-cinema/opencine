@@ -59,15 +59,15 @@ int initializeOCL()
     clGetDeviceInfo(devices[0], CL_DEVICE_OPENCL_C_VERSION, 128 * sizeof(char), deviceInfo, nullptr);
     OC_LOG_INFO(deviceInfo);
 
-    if (deviceInfo[9] != '2')
-    {
+//    if (deviceInfo[9] != '2')
+//    {
         queue = clCreateCommandQueue(context, devices[0], 0, nullptr);
-    }
-    else
-    {
-        isOpenCL2Device = true;
-        queue = clCreateCommandQueueWithProperties(context, devices[0], nullptr, nullptr);
-    }
+//    }
+//    else
+//    {
+//        isOpenCL2Device = true;
+//        queue = clCreateCommandQueueWithProperties(context, devices[0], nullptr, nullptr);
+//    }
 
     if (loadKernels(KERNELS_FILE) != 0)
     {
