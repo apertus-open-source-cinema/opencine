@@ -10,14 +10,62 @@ __kernel void imageFill(__global unsigned short* channel, const unsigned int wid
     channel[index] = value;
 }
 
-__kernel void nearestNeighbor(__global unsigned short* channel, const unsigned int width, const int hOffset, const int vOffset, const int colorOffset)
+__kernel void nearestBottomRight(__global unsigned short* channel, const unsigned int width)
 {
     __local int index;
-    index = (get_global_id(0) * 2) + ((get_global_id(1) * width * 2)) + colorOffset;
-    
-    channel[index + hOffset] = channel[index];
-    channel[index + vOffset] = channel[index];
-    channel[index + hOffset + vOffset] = channel[index];
+    index = (get_global_id(0) * 2) + (get_global_id(1) * width * 2);
+
+    channel[index + 1] = channel[index];
+    channel[index + width] = channel[index];
+    channel[index + width + 1] = channel[index];
+}
+
+__kernel void nearestBottomLeft(__global unsigned short* channel, const unsigned int width)
+{
+    __local int index;
+    index = (get_global_id(0) * 2) + (get_global_id(1) * width * 2) + 1;
+
+    channel[index - 1] = channel[index];
+    channel[index + width] = channel[index];
+    channel[index + width - 1] = channel[index];
+}
+
+__kernel void nearestTopRight(__global unsigned short* channel, const unsigned int width)
+{
+    __local int index;
+    index = (get_global_id(0) * 2) + (get_global_id(1) * width * 2) + width;
+
+    channel[index + 1] = channel[index];
+    channel[index - width] = channel[index];
+    channel[index - width + 1] = channel[index];
+}
+
+__kernel void nearestTopLeft(__global unsigned short* channel, const unsigned int width)
+{
+    __local int index;
+    index = (get_global_id(0) * 2) + (get_global_id(1) * width * 2) + width + 1;
+
+    channel[index - 1] = channel[index];
+    channel[index - width] = channel[index];
+    channel[index - width - 1] = channel[index];
+}
+
+__kernel void nearestGreen0(__global unsigned short* channel, const unsigned int width)
+{
+    __local int index;
+    index = (get_global_id(0) * 2) + (get_global_id(1) * width * 2) + 1;
+
+    channel[index - 1] = channel[index];
+    channel[index + width] = channel[index + width - 1];
+}
+
+__kernel void nearestGreen1(__global unsigned short* channel, const unsigned int width)
+{
+    __local int index;
+    index = (get_global_id(0) * 2) + (get_global_id(1) * width * 2);
+
+    channel[index + 1] = channel[index];
+    channel[index + width] = channel[index + width + 1];
 }
 
 __kernel void bilinearBottomRight(__global unsigned short* channel, const unsigned int width)
