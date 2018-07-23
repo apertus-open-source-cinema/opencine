@@ -50,6 +50,13 @@ extern unsigned int height;
 
 extern cl_kernel imageFillKernel;
 
+extern cl_kernel nearestTopLeftKernel;
+extern cl_kernel nearestTopRightKernel;
+extern cl_kernel nearestBottomLeftKernel;
+extern cl_kernel nearestBottomRightKernel;
+extern cl_kernel nearestGreen0Kernel;
+extern cl_kernel nearestGreen1Kernel;
+
 extern cl_kernel bilinearTopLeftKernel;
 extern cl_kernel bilinearTopRightKernel;
 extern cl_kernel bilinearBottomLeftKernel;
