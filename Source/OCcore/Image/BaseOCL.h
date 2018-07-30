@@ -5,26 +5,38 @@
 #ifndef BASEOCL_H
 #define BASEOCL_H
 
-#include <CL/cl.h>
-#include "OCImage.h"
+#include <vector>
 
-#define KERNELS_FILE "Kernels.cl"
+#include <CL/cl.hpp>
+//#include "OCImage.h"
 
-using namespace OC::DataProvider;
+#include "IProcessorOCL.h"
+
+//#define KERNELS_FILE "Kernels.cl"
+
+//using namespace OC::DataProvider;
 
 class BaseOCL
 {
 private:
-    cl_context _context;
-    cl_device_id* _devices;
-    cl_command_queue _queue;
-    cl_program _program;
+    cl::Context _context;
+    
+	std::vector<cl::Device> _devices;
+	cl::Device _defaultDevice;
+
+	cl::CommandQueue _queue;
+    cl::Program _program;
+
+	cl::Kernel _kernel;
 
     cl_uint _numDevices;
 
-    char* _fileBuffer;
+    std::string _fileBuffer;
 
     cl_int _result;
+
+	// TODO: Extend for multiple
+	IProcessorOCL* _processor;
 
 public:
     BaseOCL();
@@ -33,8 +45,17 @@ public:
 
     int SetupOCL();
 
-    cl_command_queue GetQueue();
+    cl::CommandQueue GetQueue();
+	cl::Context GetContext();
 
+	void RegisterProcessor(IProcessorOCL* processor);
+
+	void ExecuteProcessor();
+
+private:
+	void InitBase();
+
+	std::string LoadKernelSource(std::string kernelPath);
 };
 
 #endif //BASEOCL_H
