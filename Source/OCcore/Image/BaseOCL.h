@@ -27,7 +27,7 @@ private:
 	cl::CommandQueue _queue;
     cl::Program _program;
 
-	cl::Kernel _kernel;
+    cl::Kernel _kernels[6];
 
     cl_uint _numDevices;
 
@@ -48,7 +48,7 @@ public:
     cl::CommandQueue GetQueue();
 	cl::Context GetContext();
 
-	void RegisterProcessor(IProcessorOCL* processor);
+    void RegisterProcessor(IProcessorOCL* processor, OCImage &image);
 
 	void ExecuteProcessor();
 

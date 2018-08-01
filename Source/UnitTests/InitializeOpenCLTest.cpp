@@ -4,7 +4,7 @@
 #include "../OCcore/Log/Logger.h"
 
 #include <iostream>
-#include "../OCcore/Image/SumProcessorOCL.h"
+#include "../OCcore/Image/BilinearProcessorOCL.h"
 
 TEST_CASE("Initialization of OpenCL Test", "[OC::Image]")
 {
@@ -89,27 +89,68 @@ TEST_CASE("Initialization of OpenCL Test", "[OC::Image]")
         3,3,3,3,3,3,3,3
     };
 
+    OCImage* outputImage = new OCImage();
+    outputImage->SetWidth(8);
+    outputImage->SetHeight(8);
+    outputImage->SetBayerPattern(BayerPattern::BGGR);
+
+    outputImage->SetRedChannel(inputRed);
+    outputImage->SetGreenChannel(inputGreen);
+    outputImage->SetBlueChannel(inputBlue);
+
     BaseOCL* ocl = new BaseOCL();
     ocl->SetupOCL();
 
     cl::Context context = ocl->GetContext();
 
-    SumProcessorOCL sumProc;
-    ocl->RegisterProcessor(&sumProc);
+    BilinearProcessorOCL bilinearProcessor;
+    ocl->RegisterProcessor(&bilinearProcessor, *outputImage);
 
     // TODO: Extend for multiple processors
     // TODO: Evaluate which id to use to call
     ocl->ExecuteProcessor();
 
-    int* C = sumProc.GetResult();
+    uint16_t* imageRed = (uint16_t*) bilinearProcessor.GetRedChannel();
+    uint16_t* imageGreen = (uint16_t*) bilinearProcessor.GetGreenChannel();
+    uint16_t* imageBlue = (uint16_t*) bilinearProcessor.GetBlueChannel();
 
-    std::cout << " result: \n";
-    for (int i = 0; i < 10; i++)
+    bool correctRed = true;
+    bool correctGreen = true;
+    bool correctBlue = true;
+
+    for(int index = 0; index < outputDataLength; index++)
     {
-        std::cout << C[i] << " ";
+        if(imageRed[index] != expectedRed[index])
+        {
+            correctRed = false;
+            OC_LOG_INFO("index" + std::to_string(index) + " out:" + std::to_string(imageRed[index])+ " exp:" + std::to_string(expectedRed[index]));
+            break;
+        }
     }
 
-    std::cout << std::endl;
+    for(int index = 0; index < outputDataLength; index++)
+    {
+        if(imageGreen[index] != expectedGreen[index])
+        {
+            correctGreen = false;
+            OC_LOG_INFO("index" + std::to_string(index) + " out:" + std::to_string(imageGreen[index])+ " exp:" + std::to_string(expectedGreen[index]));
+            break;
+        }
+    }
+
+    for(int index = 0; index < outputDataLength; index++)
+    {
+        if(imageBlue[index] != expectedBlue[index])
+        {
+            correctBlue = false;
+            OC_LOG_INFO("index" + std::to_string(index) + " out:" + std::to_string(imageBlue[index])+ " exp:" + std::to_string(expectedBlue[index]));
+            break;
+        }
+    }
+
+    REQUIRE(correctRed == true);
+    REQUIRE(correctGreen == true);
+    REQUIRE(correctBlue == true);
     delete ocl;
 }
 

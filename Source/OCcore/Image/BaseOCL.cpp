@@ -39,10 +39,12 @@ cl::Context BaseOCL::GetContext()
 	return _context;
 }
 
-void BaseOCL::RegisterProcessor(IProcessorOCL * processor)
+void BaseOCL::RegisterProcessor(IProcessorOCL * processor, OCImage &image)
 {
+    std::cout << "Registering Processor\n";
 	_processor = processor;
 
+    // Get Kernel Source.
 	std::string kernelSource = LoadKernelSource(_processor->GetKernelFilePath());
 
 	_program = cl::Program(_context, kernelSource);
@@ -52,8 +54,19 @@ void BaseOCL::RegisterProcessor(IProcessorOCL * processor)
 		exit(1);
 	}
 
-	_kernel = cl::Kernel(_program, "simple_add");
-	_processor->GetArguments(_context, _kernel, _queue);
+    // Get Kernels Strings.
+    std::string kernelsStrings[6];
+    processor->GetKernelsStrings(image.GetBayerPattern(), kernelsStrings);
+
+    // Load Kernels.
+    for (int i = 0; i < 6; i++)
+    {
+        std::cout << "Loading: " << kernelsStrings[i] << "\n";
+        _kernels[i] = cl::Kernel(_program, kernelsStrings[i].c_str());
+    }
+
+    // Pass arguments to processor.
+    _processor->GetArguments(_context, image, _kernels, _queue);
 }
 
 void BaseOCL::ExecuteProcessor()

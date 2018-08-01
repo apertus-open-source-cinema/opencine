@@ -191,5 +191,3 @@ __kernel void gediGreen1(__global unsigned short* channel, const unsigned int wi
 	channel[index] = hadd(channel[index - width], channel[index + width]);
     }
 }
-
-
