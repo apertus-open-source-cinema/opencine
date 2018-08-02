@@ -25,9 +25,6 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/bench_frame.dng
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Source/OCcore/Image/Kernels.cl
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Source/OCcore/Image/test_kernel.cl
-        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin)
-
 #SET( CMAKE_BUILD_TYPE Release ... FORCE )
 
 #if(WIN32)

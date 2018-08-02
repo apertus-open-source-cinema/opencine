@@ -50,7 +50,7 @@ public:
 
     void RegisterProcessor(IProcessorOCL* processor, OCImage &image);
 
-	void ExecuteProcessor();
+    void ExecuteProcessor();
 
 private:
 	void InitBase();

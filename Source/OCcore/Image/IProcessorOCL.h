@@ -12,9 +12,11 @@ class IProcessorOCL
 public:
 	virtual std::string GetKernelFilePath() = 0;
 
-    virtual void GetArguments(cl::Context& context, OCImage& image, cl::Kernel kernels[6], cl::CommandQueue& queue) = 0;
+    virtual void GetArguments(cl::Context& context, OCImage& image, cl::Kernel kernels[6]) = 0;
 
     virtual void GetKernelsStrings(BayerPattern pattern, std::string kernelsStrings[6]) = 0;
+
+    virtual void Process(cl::CommandQueue& queue) = 0;
 
     virtual void* GetRedChannel() = 0;
 

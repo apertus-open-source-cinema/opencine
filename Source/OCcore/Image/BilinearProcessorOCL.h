@@ -9,159 +9,125 @@ private:
     void* _redChannel;
     void* _greenChannel;
     void* _blueChannel;
+
+    unsigned int _width;
+    unsigned int _height;
+    unsigned long _size;
+
+    cl::Kernel* _kernels;
+
+    cl::NDRange _globalSizes;
+    cl::NDRange _localSizes;
+    cl::NDRange _verticalSize;
+    cl::NDRange _horizontalSize;
+
+    cl::NDRange _greenOffsets;
+    cl::NDRange _greenSizes;
+
+    // Varies accordingly to pattern.
+    cl::NDRange _redOffsets, _redVerticalOffsets, _redHorizontalOffsets;
+    cl::NDRange _blueOffsets, _blueVerticalOffsets, _blueHorizontalOffsets;
+
+    cl::Buffer _redBuffer;
+    cl::Buffer _greenBuffer;
+    cl::Buffer _blueBuffer;
+
 public:
 	virtual std::string GetKernelFilePath() override
 	{
         return "Kernels.cl";
 	}
 
-    virtual void GetArguments(cl::Context& context, OCImage& image, cl::Kernel kernels[6], cl::CommandQueue& queue) override
+    virtual void GetArguments(cl::Context& context, OCImage& image, cl::Kernel kernels[6]) override
 	{
+        _kernels = kernels;
+        BayerPattern imagePattern = image.GetBayerPattern();
+
         _redChannel = image.RedChannel();
         _greenChannel = image.GreenChannel();
         _blueChannel = image.BlueChannel();
 
-        unsigned int width = image.Width();
-        unsigned int height = image.Height();
-        unsigned long size = width * height;
+        _width = image.Width();
+        _height = image.Height();
+        _size = _width * _height;
 
-        cl::NDRange globalSizes((width / 2) - 1, (height / 2) - 1);
-        cl::NDRange localSizes(1,1);
-        cl::NDRange verticalSize(1, height / 2);
-        cl::NDRange horizontalSize(width / 2, 1);
+        _globalSizes    = cl::NDRange((_width / 2) - 1, (_height / 2) - 1);
+        _localSizes     = cl::NDRange(1,1);
+        _verticalSize   = cl::NDRange(1, _height / 2);
+        _horizontalSize = cl::NDRange(_width / 2, 1);
 
-        cl::NDRange greenOffsets(1, 1);
-        cl::NDRange greenSizes((width / 2) - 2, (height / 2) - 2);
-
-        // Varies accordingly to pattern.
-        cl::NDRange redOffsets, redVerticalOffsets, redHorizontalOffsets;
-        cl::NDRange blueOffsets, blueVerticalOffsets, blueHorizontalOffsets;
-
-        BayerPattern imagePattern = image.GetBayerPattern();
+        _greenOffsets   = cl::NDRange(1, 1);
+        _greenSizes     = cl::NDRange((_width / 2) - 2, (_height / 2) - 2);
 
         // Create buffers on the device.
-        cl::Buffer redBuffer(context, CL_MEM_COPY_HOST_PTR | CL_MEM_READ_WRITE, sizeof(short) * size, _redChannel);
-        cl::Buffer greenBuffer(context, CL_MEM_COPY_HOST_PTR | CL_MEM_READ_WRITE, sizeof(short) * size, _greenChannel);
-        cl::Buffer blueBuffer(context, CL_MEM_COPY_HOST_PTR | CL_MEM_READ_WRITE, sizeof(short) * size, _blueChannel);
+        _redBuffer = cl::Buffer(context, CL_MEM_COPY_HOST_PTR | CL_MEM_READ_WRITE, sizeof(short) * _size, _redChannel);
+        _greenBuffer = cl::Buffer(context, CL_MEM_COPY_HOST_PTR | CL_MEM_READ_WRITE, sizeof(short) * _size, _greenChannel);
+        _blueBuffer = cl::Buffer(context, CL_MEM_COPY_HOST_PTR | CL_MEM_READ_WRITE, sizeof(short) * _size, _blueChannel);
 
         switch (imagePattern) {
         case BayerPattern::RGGB:
             // Red Channel.
-            kernels[0].setArg(0, sizeof(cl::Buffer), &redBuffer);
-            kernels[0].setArg(1, sizeof(int), &width);
-            redOffsets = cl::NullRange;
-
-            kernels[1].setArg(0, sizeof(cl::Buffer), &redBuffer);
-            kernels[1].setArg(1, sizeof(int), &width);
-            redVerticalOffsets = cl::NDRange((width / 2) - 1, 0);
-            redHorizontalOffsets = cl::NDRange(0, (height / 2) - 1);
-
-            // Green Channel.
-            kernels[2].setArg(0, sizeof(cl::Buffer), &greenBuffer);
-            kernels[2].setArg(1, sizeof(int), &width);
-            kernels[3].setArg(0, sizeof(cl::Buffer), &greenBuffer);
-            kernels[3].setArg(1, sizeof(int), &width);
+            _redOffsets = cl::NullRange;
+            _redVerticalOffsets = cl::NDRange((_width / 2) - 1, 0);
+            _redHorizontalOffsets = cl::NDRange(0, (_height / 2) - 1);
 
             // Blue Channel.
-            kernels[4].setArg(0, sizeof(cl::Buffer), &blueBuffer);
-            kernels[4].setArg(1, sizeof(int), &width);
-            blueOffsets = cl::NDRange(1,1);
-
-            kernels[5].setArg(0, sizeof(cl::Buffer), &blueBuffer);
-            kernels[5].setArg(1, sizeof(int), &width);
-            blueVerticalOffsets = cl::NullRange;
-            blueHorizontalOffsets = cl::NullRange;
+            _blueOffsets = cl::NDRange(1,1);
+            _blueVerticalOffsets = cl::NullRange;
+            _blueHorizontalOffsets = cl::NullRange;
             break;
         case BayerPattern::BGGR:
             // Blue Channel.
-            kernels[4].setArg(0, sizeof(cl::Buffer), &blueBuffer);
-            kernels[4].setArg(1, sizeof(int), &width);
-            blueOffsets = cl::NullRange;
-
-            kernels[5].setArg(0, sizeof(cl::Buffer), &blueBuffer);
-            kernels[5].setArg(1, sizeof(int), &width);
-            blueVerticalOffsets = cl::NDRange((width / 2) - 1, 0);
-            blueHorizontalOffsets = cl::NDRange(0, (height / 2) - 1);
+            _blueOffsets = cl::NullRange;
+            _blueVerticalOffsets = cl::NDRange((_width / 2) - 1, 0);
+            _blueHorizontalOffsets = cl::NDRange(0, (_height / 2) - 1);
 
             // Red Channel.
-            kernels[0].setArg(0, sizeof(cl::Buffer), &redBuffer);
-            kernels[0].setArg(1, sizeof(int), &width);
-            redOffsets = cl::NDRange(1,1);
-
-            kernels[1].setArg(0, sizeof(cl::Buffer), &redBuffer);
-            kernels[1].setArg(1, sizeof(int), &width);
-            redVerticalOffsets = cl::NullRange;
-            redHorizontalOffsets = cl::NullRange;
+            _redOffsets = cl::NDRange(1,1);
+            _redVerticalOffsets = cl::NullRange;
+            _redHorizontalOffsets = cl::NullRange;
             break;
         case BayerPattern::GRBG:
             // Red Channel.
-            kernels[0].setArg(0, sizeof(cl::Buffer), &redBuffer);
-            kernels[0].setArg(1, sizeof(int), &width);
-            redOffsets = cl::NDRange(1,0);
-
-            kernels[1].setArg(0, sizeof(cl::Buffer), &redBuffer);
-            kernels[1].setArg(1, sizeof(int), &width);
-            redVerticalOffsets = cl::NullRange;
-            redHorizontalOffsets = cl::NDRange(0, (height / 2) - 1);
+            _redOffsets = cl::NDRange(1,0);
+            _redVerticalOffsets = cl::NullRange;
+            _redHorizontalOffsets = cl::NDRange(0, (_height / 2) - 1);
 
             // Blue Channel.
-            kernels[4].setArg(0, sizeof(cl::Buffer), &blueBuffer);
-            kernels[4].setArg(1, sizeof(int), &width);
-            blueOffsets = cl::NDRange(0,1);
-
-            kernels[5].setArg(0, sizeof(cl::Buffer), &blueBuffer);
-            kernels[5].setArg(1, sizeof(int), &width);
-            blueVerticalOffsets = cl::NDRange((width / 2) - 1, 0);
-            blueHorizontalOffsets = cl::NullRange;
+            _blueOffsets = cl::NDRange(0,1);
+            _blueVerticalOffsets = cl::NDRange((_width / 2) - 1, 0);
+            _blueHorizontalOffsets = cl::NullRange;
             break;
         case BayerPattern::GBRG:
             // Blue Channel.
-            kernels[4].setArg(0, sizeof(cl::Buffer), &blueBuffer);
-            kernels[4].setArg(1, sizeof(int), &width);
-            blueOffsets = cl::NDRange(1,0);
-
-            kernels[5].setArg(0, sizeof(cl::Buffer), &blueBuffer);
-            kernels[5].setArg(1, sizeof(int), &width);
-            blueVerticalOffsets = cl::NullRange;
-            blueHorizontalOffsets = cl::NDRange(0, (height / 2) - 1);
+            _blueOffsets = cl::NDRange(1,0);
+            _blueVerticalOffsets = cl::NullRange;
+            _blueHorizontalOffsets = cl::NDRange(0, (_height / 2) - 1);
 
             // Red Channel.
-            kernels[0].setArg(0, sizeof(cl::Buffer), &redBuffer);
-            kernels[0].setArg(1, sizeof(int), &width);
-            redOffsets = cl::NDRange(0,1);
-
-            kernels[1].setArg(0, sizeof(cl::Buffer), &redBuffer);
-            kernels[1].setArg(1, sizeof(int), &width);
-            redVerticalOffsets = cl::NDRange((width / 2) - 1, 0);
-            redHorizontalOffsets = cl::NullRange;
+            _redOffsets = cl::NDRange(0,1);
+            _redVerticalOffsets = cl::NDRange((_width / 2) - 1, 0);
+            _redHorizontalOffsets = cl::NullRange;
             break;
         }
 
+        // Red Channel.
+        _kernels[0].setArg(0, sizeof(cl::Buffer), &_redBuffer);
+        _kernels[0].setArg(1, sizeof(int), &_width);
+        _kernels[1].setArg(0, sizeof(cl::Buffer), &_redBuffer);
+        _kernels[1].setArg(1, sizeof(int), &_width);
+
         // Green Channel.
-        kernels[2].setArg(0, sizeof(cl::Buffer), &greenBuffer);
-        kernels[2].setArg(1, sizeof(int), &width);
-        kernels[3].setArg(0, sizeof(cl::Buffer), &greenBuffer);
-        kernels[3].setArg(1, sizeof(int), &width);
+        _kernels[2].setArg(0, sizeof(cl::Buffer), &_greenBuffer);
+        _kernels[2].setArg(1, sizeof(int), &_width);
+        _kernels[3].setArg(0, sizeof(cl::Buffer), &_greenBuffer);
+        _kernels[3].setArg(1, sizeof(int), &_width);
 
-        // Run kernels.
-        queue.enqueueNDRangeKernel(kernels[0], redOffsets, globalSizes, localSizes);
-        queue.enqueueNDRangeKernel(kernels[1], redVerticalOffsets, verticalSize, localSizes);
-        queue.enqueueNDRangeKernel(kernels[1], redHorizontalOffsets, horizontalSize, localSizes);
-
-        queue.enqueueNDRangeKernel(kernels[2], greenOffsets, greenSizes, localSizes);
-        queue.enqueueNDRangeKernel(kernels[3], cl::NullRange, verticalSize, localSizes);
-        queue.enqueueNDRangeKernel(kernels[3], cl::NullRange, horizontalSize, localSizes);
-        queue.enqueueNDRangeKernel(kernels[3], cl::NDRange((width / 2) - 1, 0), verticalSize, localSizes);
-        queue.enqueueNDRangeKernel(kernels[3], cl::NDRange(0, (height / 2) - 1), horizontalSize, localSizes);
-
-        queue.enqueueNDRangeKernel(kernels[4], blueOffsets, globalSizes, localSizes);
-        queue.enqueueNDRangeKernel(kernels[5], blueVerticalOffsets, verticalSize, localSizes);
-        queue.enqueueNDRangeKernel(kernels[5], blueHorizontalOffsets, horizontalSize, localSizes);
-
-        // Read buffers from device to host.
-        queue.enqueueReadBuffer(redBuffer, CL_TRUE, 0, sizeof(short) * size, _redChannel);
-        queue.enqueueReadBuffer(greenBuffer, CL_TRUE, 0, sizeof(short) * size, _greenChannel);
-        queue.enqueueReadBuffer(blueBuffer, CL_TRUE, 0, sizeof(short) * size, _blueChannel);
+        // Blue Channel.
+        _kernels[4].setArg(0, sizeof(cl::Buffer), &_blueBuffer);
+        _kernels[4].setArg(1, sizeof(int), &_width);
+        _kernels[5].setArg(0, sizeof(cl::Buffer), &_blueBuffer);
+        _kernels[5].setArg(1, sizeof(int), &_width);
 	}
 
     void GetKernelsStrings(BayerPattern pattern, std::string kernelsStrings[6]) override
@@ -186,21 +152,44 @@ public:
         case BayerPattern::GRBG:
             kernelsStrings[0] = "bilinearBottomLeft";
             kernelsStrings[1] = "nearestBottomLeft";
-            kernelsStrings[2] = "bilinearGreen0";
-            kernelsStrings[3] = "nearestGreen0";
+            kernelsStrings[2] = "bilinearGreen1";
+            kernelsStrings[3] = "nearestGreen1";
             kernelsStrings[4] = "bilinearTopRight";
             kernelsStrings[5] = "nearestTopRight";
             break;
         case BayerPattern::GBRG:
             kernelsStrings[0] = "bilinearTopRight";
             kernelsStrings[1] = "nearestTopRight";
-            kernelsStrings[2] = "bilinearGreen0";
-            kernelsStrings[3] = "nearestGreen0";
+            kernelsStrings[2] = "bilinearGreen1";
+            kernelsStrings[3] = "nearestGreen1";
             kernelsStrings[4] = "bilinearBottomLeft";
             kernelsStrings[5] = "nearestBottomLeft";
             break;
         }
         return;
+    }
+
+    void Process(cl::CommandQueue& queue) override
+    {
+        // Run _kernels.
+        queue.enqueueNDRangeKernel(_kernels[0], _redOffsets, _globalSizes, _localSizes);
+        queue.enqueueNDRangeKernel(_kernels[1], _redVerticalOffsets, _verticalSize, _localSizes);
+        queue.enqueueNDRangeKernel(_kernels[1], _redHorizontalOffsets, _horizontalSize, _localSizes);
+
+        queue.enqueueNDRangeKernel(_kernels[2], _greenOffsets, _greenSizes, _localSizes);
+        queue.enqueueNDRangeKernel(_kernels[3], cl::NullRange, _verticalSize, _localSizes);
+        queue.enqueueNDRangeKernel(_kernels[3], cl::NullRange, _horizontalSize, _localSizes);
+        queue.enqueueNDRangeKernel(_kernels[3], cl::NDRange((_width / 2) - 1, 0), _verticalSize, _localSizes);
+        queue.enqueueNDRangeKernel(_kernels[3], cl::NDRange(0, (_height / 2) - 1), _horizontalSize, _localSizes);
+
+        queue.enqueueNDRangeKernel(_kernels[4], _blueOffsets, _globalSizes, _localSizes);
+        queue.enqueueNDRangeKernel(_kernels[5], _blueVerticalOffsets, _verticalSize, _localSizes);
+        queue.enqueueNDRangeKernel(_kernels[5], _blueHorizontalOffsets, _horizontalSize, _localSizes);
+
+        // Read buffers from device to host.
+        queue.enqueueReadBuffer(_redBuffer, CL_TRUE, 0, sizeof(short) * _size, _redChannel);
+        queue.enqueueReadBuffer(_greenBuffer, CL_TRUE, 0, sizeof(short) * _size, _greenChannel);
+        queue.enqueueReadBuffer(_blueBuffer, CL_TRUE, 0, sizeof(short) * _size, _blueChannel);
     }
 
     void* GetRedChannel() override

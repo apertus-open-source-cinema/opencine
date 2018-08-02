@@ -50,7 +50,7 @@ void BaseOCL::RegisterProcessor(IProcessorOCL * processor, OCImage &image)
 	_program = cl::Program(_context, kernelSource);
 	if (_program.build({ _defaultDevice }) != CL_SUCCESS)
 	{
-		std::cout << " Error building: " << _program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(_defaultDevice) << "\n";
+        std::cout << " Error building: " << _program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(_defaultDevice) << "\n";
 		exit(1);
 	}
 
@@ -66,11 +66,12 @@ void BaseOCL::RegisterProcessor(IProcessorOCL * processor, OCImage &image)
     }
 
     // Pass arguments to processor.
-    _processor->GetArguments(_context, image, _kernels, _queue);
+    _processor->GetArguments(_context, image, _kernels);
 }
 
 void BaseOCL::ExecuteProcessor()
 {
+    _processor->Process(_queue);
 	_queue.finish();
 }
 
