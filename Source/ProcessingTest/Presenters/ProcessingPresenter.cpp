@@ -7,6 +7,7 @@
 #include <chrono>
 
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QStringList>
 #include <QThread>
 
@@ -30,7 +31,8 @@
 using namespace OC::DataProvider;
 
 ProcessingPresenter::ProcessingPresenter(IProcessingView& view):
-    _currentDebayerProcessor(0)
+    _currentDebayerProcessor(0),
+    _lastDir(QDir::currentPath())
 {
     _view = &view;
 
@@ -164,23 +166,15 @@ void ProcessingPresenter::Show()
 
 void ProcessingPresenter::OpenRAWFile()
 {
-    //QFileDialog dialog;
-    //dialog.setViewMode(QFileDialog::Detail);
-    //int result = dialog.exec();
-
-    //    if (!result)
-    //    {
-    //        return;
-    //    }
-
     _view->EnableRendering(false);
 
-    QString fileName = QFileDialog::getOpenFileName(_view, tr("Open Image"), QDir::currentPath(), tr("DNG Files (*.dng *.DNG)"));
+    QString fileName = QFileDialog::getOpenFileName(_view, tr("Open Image"), _lastDir, tr("DNG Files (*.dng *.DNG)"));
     _currentFilePath = fileName.toStdString();
+    _lastDir = QFileInfo(fileName).path();
+
     Show();
 
     _view->EnableRendering(true);
-    //_view->repaint();
 }
 
 void ProcessingPresenter::ChangeDebayerMethod(int debayerMethod)
