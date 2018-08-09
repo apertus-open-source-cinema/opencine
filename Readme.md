@@ -1,6 +1,6 @@
 **OpenCine**
 
-[![Build Status](https://travis-ci.org/apertus-open-source-cinema/opencine.svg?branch=master)](https://travis-ci.org/apertus-open-source-cinema/opencine)
+[![Build Status](https://travis-ci.org/apertus-open-source-cinema/opencine.svg?branch=dev)](https://travis-ci.org/apertus-open-source-cinema/opencine)
 
 General: https://wiki.apertus.org/index.php?title=Open_Cine
 
