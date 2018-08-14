@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: Install System Dependencies
-          command: sudo add-apt-repository --yes ppa:beineri/opt-qt-5.10.1-trusty && sudo apt-get update -qq && sudo apt-get install qt510base qt510declarative 
+          command: add-apt-repository --yes ppa:beineri/opt-qt-5.10.1-trusty && apt-get update -qq && apt-get install qt510base qt510declarative 
       - run: mkdir -p build && cd build
   test:
     docker:
