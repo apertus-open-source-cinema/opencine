@@ -3,6 +3,9 @@
 #include "../OCcore/Image/BaseOCL.h"
 #include "../OCcore/Log/Logger.h"
 
+#include <iostream>
+#include "../OCcore/Image/BilinearProcessorOCL.h"
+
 TEST_CASE("Initialization of OpenCL Test", "[OC::Image]")
 {
     const int inputDataLength = 64;
@@ -86,43 +89,36 @@ TEST_CASE("Initialization of OpenCL Test", "[OC::Image]")
         3,3,3,3,3,3,3,3
     };
 
-    OCImage* inputImage = new OCImage();
-    inputImage->SetWidth(8);
-    inputImage->SetHeight(8);
-    inputImage->SetBayerPattern(BayerPattern::BGGR);
-
-    inputImage->SetRedChannel(inputRed);
-    inputImage->SetGreenChannel(inputGreen);
-    inputImage->SetBlueChannel(inputBlue);
-
-    bool status = 0;
-
-    status = initializeHost();
-
-    status = initializeOCL();
-
-    status = loadImageOCL(*inputImage);
-
-    status = runNearestNeighborKernel();
-
     OCImage* outputImage = new OCImage();
     outputImage->SetWidth(8);
     outputImage->SetHeight(8);
     outputImage->SetBayerPattern(BayerPattern::BGGR);
 
-    status = saveImageOCL(*outputImage);
+    outputImage->SetRedChannel(inputRed);
+    outputImage->SetGreenChannel(inputGreen);
+    outputImage->SetBlueChannel(inputBlue);
 
-    status = cleanupOCL();
+    BaseOCL* ocl = new BaseOCL();
+    ocl->SetupOCL();
 
-    uint16_t* imageRed = (uint16_t*)outputImage->RedChannel();
-    uint16_t* imageGreen = (uint16_t*)outputImage->GreenChannel();
-    uint16_t* imageBlue = (uint16_t*)outputImage->BlueChannel();
+    cl::Context context = ocl->GetContext();
+
+    BilinearProcessorOCL bilinearProcessor;
+    ocl->RegisterProcessor(&bilinearProcessor, *outputImage);
+
+    // TODO: Extend for multiple processors
+    // TODO: Evaluate which id to use to call
+    ocl->ExecuteProcessor();
+
+    uint16_t* imageRed = (uint16_t*) bilinearProcessor.GetRedChannel();
+    uint16_t* imageGreen = (uint16_t*) bilinearProcessor.GetGreenChannel();
+    uint16_t* imageBlue = (uint16_t*) bilinearProcessor.GetBlueChannel();
 
     bool correctRed = true;
     bool correctGreen = true;
     bool correctBlue = true;
 
-    for(int index = 0; index < inputDataLength; index++)
+    for(int index = 0; index < outputDataLength; index++)
     {
         if(imageRed[index] != expectedRed[index])
         {
@@ -132,7 +128,7 @@ TEST_CASE("Initialization of OpenCL Test", "[OC::Image]")
         }
     }
 
-    for(int index = 0; index < inputDataLength; index++)
+    for(int index = 0; index < outputDataLength; index++)
     {
         if(imageGreen[index] != expectedGreen[index])
         {
@@ -142,7 +138,7 @@ TEST_CASE("Initialization of OpenCL Test", "[OC::Image]")
         }
     }
 
-    for(int index = 0; index < inputDataLength; index++)
+    for(int index = 0; index < outputDataLength; index++)
     {
         if(imageBlue[index] != expectedBlue[index])
         {
@@ -152,9 +148,9 @@ TEST_CASE("Initialization of OpenCL Test", "[OC::Image]")
         }
     }
 
-    REQUIRE(status == 0);
     REQUIRE(correctRed == true);
     REQUIRE(correctGreen == true);
     REQUIRE(correctBlue == true);
+    delete ocl;
 }
 

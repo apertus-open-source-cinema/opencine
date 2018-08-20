@@ -5,64 +5,57 @@
 #ifndef BASEOCL_H
 #define BASEOCL_H
 
-#include <CL/cl.h>
-#include "OCImage.h"
+#include <vector>
 
-#define KERNELS_FILE "Kernels.cl"
+#include <CL/cl.hpp>
+//#include "OCImage.h"
 
-#define RED_OFFSET_RGGB 0
-#define GREEN0_OFFSET_RGGB 1
-#define GREEN1_OFFSET_RGGB width
-#define BLUE_OFFSET_RGGB width + 1
+#include "IProcessorOCL.h"
 
-#define BLUE_OFFSET_BGGR 0
-#define GREEN0_OFFSET_BGGR 1
-#define GREEN1_OFFSET_BGGR width
-#define RED_OFFSET_BGGR width + 1
+//#define KERNELS_FILE "Kernels.cl"
 
-#define GREEN0_OFFSET_GRBG 0
-#define RED_OFFSET_GRBG 1
-#define BLUE_OFFSET_GRBG width
-#define GREEN1_OFFSET_GRBG width + 1
+//using namespace OC::DataProvider;
 
-#define GREEN0_OFFSET_GBRG 0
-#define BLUE_OFFSET_GBRG 1
-#define RED_OFFSET_GBRG width
-#define GREEN1_OFFSET_GBRG width + 1
+class BaseOCL
+{
+private:
+    cl::Context _context;
+    
+	std::vector<cl::Device> _devices;
+	cl::Device _defaultDevice;
 
-using namespace OC::DataProvider;
+	cl::CommandQueue _queue;
+    cl::Program _program;
 
-extern cl_context context;
-extern cl_device_id* devices;
-extern cl_command_queue queue;
-extern cl_program program;
+    cl::Kernel _kernels[6];
 
-extern cl_mem redChannel;
-extern cl_mem greenChannel;
-extern cl_mem blueChannel;
+    cl_uint _numDevices;
 
-extern bool isOpenCL2Device;
-extern char* kernelsBuffer;
+    std::string _fileBuffer;
 
-extern BayerPattern imagePattern;
-extern unsigned int width;
-extern unsigned int height;
+    cl_int _result;
 
-extern cl_kernel imageFillKernel;
-extern cl_kernel nearestNeighborKernel;
+	// TODO: Extend for multiple
+	IProcessorOCL* _processor;
 
-int initializeHost();
+public:
+    BaseOCL();
 
-int initializeOCL();
+    ~BaseOCL();
 
-int loadKernels(const char* filename);
+    int SetupOCL();
 
-int runImageFillKernel(unsigned short value);
-int runNearestNeighborKernel();
+    cl::CommandQueue GetQueue();
+	cl::Context GetContext();
 
-int loadImageOCL(OCImage &image);
-int saveImageOCL(OCImage &image);
+    void RegisterProcessor(IProcessorOCL* processor, OCImage &image);
 
-int cleanupOCL();
+    void ExecuteProcessor();
+
+private:
+	void InitBase();
+
+	std::string LoadKernelSource(std::string kernelPath);
+};
 
 #endif //BASEOCL_H
