@@ -40,9 +40,11 @@ elseif(UNIX)
     file(GLOB PLATFORM_FILES "Platforms/Linux/*.cpp" "Platforms/Linux/*.h")
 endif()
 
+find_package(OpenCL REQUIRED)
+
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${PLATFORM_FILES})
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} xxhash Qt5::Core)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} xxhash Qt5::Core OpenCL::OpenCL)
 
 include(GenerateExportHeader)
 string(TOUPPER "${PROJECT_NAME}_EXPORT" EXPORT_NAME)

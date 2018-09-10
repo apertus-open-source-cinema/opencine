@@ -28,6 +28,7 @@ class ProcessingPresenter : public IProcessingPresenter
     int _currentDebayerProcessor;
 
     std::string _currentFilePath;
+    QString _lastDir;
 
 public:
     explicit ProcessingPresenter(IProcessingView& view);
@@ -39,6 +40,7 @@ public:
 protected slots:
     void OpenRAWFile();
     void ChangeDebayerMethod(int debayerMethod);
+    void DumpPNG();
 };
 
 #endif // PROCESSINGPRESENTER_H

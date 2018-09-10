@@ -29,6 +29,7 @@ public:
 signals:
     void OpenRAWFile();
     void DebayerMethodChanged(int index);
+    void DumpPNG();
 };
 
 #endif //IPROCESSINGVIEW_H

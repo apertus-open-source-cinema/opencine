@@ -16,6 +16,15 @@ if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 
+# Compiler flags
+# SET(CMAKE_CXX_FLAGS "-O3") #Optimize
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/bench_frame.dng
+     DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin)
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/Source/OCcore/Image/Kernels.cl
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin)
+
 #SET( CMAKE_BUILD_TYPE Release ... FORCE )
 
 #if(WIN32)

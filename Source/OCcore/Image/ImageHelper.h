@@ -42,21 +42,21 @@ namespace OC
                 //#pragma omp parallel for
                 for (long index = 0; index < dataSize; index += 14)
                 {
-                    uint64_t mergedBytes1 = (static_cast<uint64_t>(inputData[index]) << 48) +
-                            (static_cast<uint64_t>(inputData[index + 1]) << 56) +
-                            (static_cast<uint64_t>(inputData[index + 2]) << 32) +
-                            (static_cast<uint64_t>(inputData[index + 3]) << 40) +
-                            (static_cast<uint64_t>(inputData[index + 4]) << 16) +
-                            (static_cast<uint64_t>(inputData[index + 5]) << 24) +
-                            (static_cast<uint64_t>(inputData[index + 6])) +
-                            static_cast<uint64_t>(inputData[index + 7] << 8);
+                    uint64_t mergedBytes1 = (static_cast<uint64_t>(inputData[index]) << 56) +
+                            (static_cast<uint64_t>(inputData[index + 1]) << 48) +
+                            (static_cast<uint64_t>(inputData[index + 2]) << 40) +
+                            (static_cast<uint64_t>(inputData[index + 3]) << 32) +
+                            (static_cast<uint64_t>(inputData[index + 4]) << 24) +
+                            (static_cast<uint64_t>(inputData[index + 5]) << 16) +
+                            (static_cast<uint64_t>(inputData[index + 6]) << 8) +
+                            static_cast<uint64_t>(inputData[index + 7]);
 
-                    uint64_t mergedBytes2 = (static_cast<uint64_t>(inputData[index + 8]) << 32) +
-                            (static_cast<uint64_t>(inputData[index + 9]) << 40) +
-                            (static_cast<uint64_t>(inputData[index + 10]) << 16) +
-                            (static_cast<uint64_t>(inputData[index + 11]) << 24) +
-                            (static_cast<uint64_t>(inputData[index + 12])) +
-                            static_cast<uint64_t>(inputData[index + 13] << 8);
+                    uint64_t mergedBytes2 = (static_cast<uint64_t>(inputData[index + 8]) << 40) +
+                            (static_cast<uint64_t>(inputData[index + 9]) << 32) +
+                            (static_cast<uint64_t>(inputData[index + 10]) << 24) +
+                            (static_cast<uint64_t>(inputData[index + 11]) << 16) +
+                            (static_cast<uint64_t>(inputData[index + 12]) << 8) +
+                            static_cast<uint64_t>(inputData[index + 13]);
 
                     // Processing bytes in reversed order, so it resembles the shifting of uint64_t to the right
                     outputData[j + 7] = static_cast<uint16_t>(mergedBytes2 & 0x3FFF);
