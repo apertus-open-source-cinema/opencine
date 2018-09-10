@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: Install System Dependencies
-          command: apt-get update -qq && apt-get install qtdeclarative5-dev opencl-headers
+          command: apt-get update -qq && apt-get install -y qtdeclarative5-dev opencl-headers
       - run: mkdir -p build && cd build
   test:
     docker:
