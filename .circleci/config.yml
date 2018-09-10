@@ -7,8 +7,8 @@ jobs:
       - checkout
       - run:
           name: Install System Dependencies
-          command: apt-get update -qq && apt-get install -y cmake qtdeclarative5-dev opencl-headers
-      - run: mkdir -p build && cd build
+          command: apt-get update -qq && apt-get install -y build-essential cmake qtdeclarative5-dev opencl-headers
+      - run: mkdir build && cd build
       - run: cmake ..
       - run: make -j4
   test:
