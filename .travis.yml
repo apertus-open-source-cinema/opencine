@@ -18,7 +18,7 @@ before_script:
  - sudo ./install_intel_opencl.sh
  - sudo add-apt-repository --yes ppa:beineri/opt-qt-5.10.1-trusty
  - sudo apt-get update -qq
- - sudo apt-get install qt510base qt510declarative clinfo opencl-headers ocl-icd-dev #beignet 
+ - sudo apt-get install qt510base qt510declarative opencl-headers ocl-icd-opencl-dev 
    
 script:
   - clinfo
