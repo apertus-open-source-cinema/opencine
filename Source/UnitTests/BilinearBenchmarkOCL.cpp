@@ -23,14 +23,14 @@ TEST_CASE("Bilinear OCL Benchmark", "[OC::Image]")
 
     OC_LOG_INFO("Benchmarking...");
 
-    BaseOCL* ocl = new BaseOCL();
-    ocl->SetupOCL();
+    //BaseOCL* ocl = new BaseOCL();
+    //ocl->SetupOCL();
 
-    cl::Context context = ocl->GetContext();
+    //cl::Context context = ocl->GetContext();
 
     BilinearProcessorOCL bilinearProcessor;
 
-    ocl->RegisterProcessor(&bilinearProcessor, *image);
+    //ocl->RegisterProcessor(&bilinearProcessor, *image);
 
     auto demosaicTime = 0;
 
