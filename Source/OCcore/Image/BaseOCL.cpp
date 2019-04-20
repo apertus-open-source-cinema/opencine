@@ -23,7 +23,7 @@ int BaseOCL::SetupOCL()
 {
 	InitBase();
 
-	_context = cl::Context({ _defaultDevice });
+	_context = cl::Context( _defaultDevice );
 	_queue = cl::CommandQueue(_context, _defaultDevice);
 
 	return 0;
@@ -48,7 +48,7 @@ void BaseOCL::RegisterProcessor(IProcessorOCL * processor, OCImage &image)
 	std::string kernelSource = LoadKernelSource(_processor->GetKernelFilePath());
 
 	_program = cl::Program(_context, kernelSource);
-	if (_program.build({ _defaultDevice }) != CL_SUCCESS)
+	if (_program.build(_defaultDevice) != CL_SUCCESS)
 	{
         std::cout << " Error building: " << _program.getBuildInfo<CL_PROGRAM_BUILD_LOG>(_defaultDevice) << "\n";
 		exit(1);
