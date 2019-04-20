@@ -1,4 +1,4 @@
-**OpenCine**
+# OpenCine
 
 General: https://wiki.apertus.org/index.php?title=Open_Cine
 
