@@ -38,7 +38,7 @@ TEST_CASE("Bilinear OCL Benchmark", "[OC::Image]")
     {
         auto start = std::chrono::high_resolution_clock::now();
 
-        ocl->ExecuteProcessor();
+       // ocl->ExecuteProcessor();
         uint16_t* imageRed = (uint16_t*) bilinearProcessor.GetRedChannel();
         uint16_t* imageGreen = (uint16_t*) bilinearProcessor.GetGreenChannel();
         uint16_t* imageBlue = (uint16_t*) bilinearProcessor.GetBlueChannel();
