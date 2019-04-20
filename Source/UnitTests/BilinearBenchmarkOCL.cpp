@@ -23,14 +23,14 @@ TEST_CASE("Bilinear OCL Benchmark", "[OC::Image]")
 
     OC_LOG_INFO("Benchmarking...");
 
-    //BaseOCL* ocl = new BaseOCL();
-    //ocl->SetupOCL();
+    BaseOCL* ocl = new BaseOCL();
+    ocl->SetupOCL();
 
-    //cl::Context context = ocl->GetContext();
+    cl::Context context = ocl->GetContext();
 
     BilinearProcessorOCL bilinearProcessor;
 
-    //ocl->RegisterProcessor(&bilinearProcessor, *image);
+    ocl->RegisterProcessor(&bilinearProcessor, *image);
 
     auto demosaicTime = 0;
 
@@ -38,7 +38,7 @@ TEST_CASE("Bilinear OCL Benchmark", "[OC::Image]")
     {
         auto start = std::chrono::high_resolution_clock::now();
 
-       // ocl->ExecuteProcessor();
+        ocl->ExecuteProcessor();
         uint16_t* imageRed = (uint16_t*) bilinearProcessor.GetRedChannel();
         uint16_t* imageGreen = (uint16_t*) bilinearProcessor.GetGreenChannel();
         uint16_t* imageBlue = (uint16_t*) bilinearProcessor.GetBlueChannel();
