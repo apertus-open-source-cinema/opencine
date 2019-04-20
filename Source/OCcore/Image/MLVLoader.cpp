@@ -108,7 +108,7 @@ mlv_vidf_hdr_t MLVLoader::ReadVIDF(uint8_t* buffer, unsigned int& bufferPosition
     // FIXME: Remove "processed" when frame loading is implemented, used here to get only first frame
     if(processed == false)
     {
-        sourceData = &buffer[bufferPosition + block.frameSpace];
+        _sourceData = &buffer[bufferPosition + block.frameSpace];
         processed = true;
     }
 
@@ -172,6 +172,7 @@ void MLVLoader::Load(uint8_t *data, unsigned size, OCImage& image, IAllocator& a
     std::unique_ptr<BayerFrameDownscaler> frameProcessor(new BayerFrameDownscaler());
 
     unsigned int dataSize = blockRAWI.xRes * blockRAWI.yRes;
+    unsigned int imageDataSize;
     image.SetWidth(blockRAWI.xRes);
     image.SetHeight(blockRAWI.yRes);
     image.SetBayerPattern(BayerPattern::RGGB);
@@ -185,10 +186,16 @@ void MLVLoader::Load(uint8_t *data, unsigned size, OCImage& image, IAllocator& a
     {
     case 14:
         imageFormat = ImageFormat::Integer14;
+        imageDataSize = dataSize * 1.75f;
         break;
     }
-
-    frameProcessor->SetData(sourceData, image, imageFormat);
+    
+    for(int i = 0; i < imageDataSize; i += 2)
+    {
+        std::swap(_sourceData[i], _sourceData[i + 1]);
+    }
+     
+    frameProcessor->SetData(_sourceData, image, imageFormat);
     //frameProcessor->SetLinearizationData(linearizationTable, linearizationLength);
     frameProcessor->Process();
 

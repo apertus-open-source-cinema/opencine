@@ -16,28 +16,28 @@ void BayerFrameDownscaler::MapPatternToData()
     switch (_pattern)
     {
     case BayerPattern::RGGB:
-        dataUL = _dataRed;
-        dataUR = _dataGreen;
-        dataLL = _dataGreen;
-        dataLR = _dataBlue;
+        _dataUL = _dataRed;
+        _dataUR = _dataGreen;
+        _dataLL = _dataGreen;
+        _dataLR = _dataBlue;
         break;
     case BayerPattern::BGGR:
-        dataUL = _dataBlue;
-        dataUR = _dataGreen;
-        dataLL = _dataGreen;
-        dataLR = _dataRed;
+        _dataUL = _dataBlue;
+        _dataUR = _dataGreen;
+        _dataLL = _dataGreen;
+        _dataLR = _dataRed;
         break;
     case BayerPattern::GRBG:
-        dataUL = _dataGreen;
-        dataUR = _dataRed;
-        dataLL = _dataBlue;
-        dataLR = _dataGreen;
+        _dataUL = _dataGreen;
+        _dataUR = _dataRed;
+        _dataLL = _dataBlue;
+        _dataLR = _dataGreen;
         break;
     case BayerPattern::GBRG:
-        dataUL = _dataGreen;
-        dataUR = _dataBlue;
-        dataLL = _dataRed;
-        dataLR = _dataGreen;
+        _dataUL = _dataGreen;
+        _dataUR = _dataBlue;
+        _dataLL = _dataRed;
+        _dataLR = _dataGreen;
         break;
     }
 }
@@ -49,10 +49,10 @@ void BayerFrameDownscaler::Extract(int jump) const
     for (index = 0; index < _size; index += jump)
     {
 
-        dataUL[dataIndex] = _outputData[index];
-        dataUR[dataIndex] = _outputData[index + 1];
-        dataLL[dataIndex] = _outputData[index + _width];
-        dataLR[dataIndex] = _outputData[index + _width + 1];
+        _dataUL[dataIndex] = _outputData[index];
+        _dataUR[dataIndex] = _outputData[index + 1];
+        _dataLL[dataIndex] = _outputData[index + _width];
+        _dataLR[dataIndex] = _outputData[index + _width + 1];
         dataIndex++;
         if ((index + jump) % _width == 0)
         {
@@ -67,10 +67,10 @@ BayerFrameDownscaler::BayerFrameDownscaler() :
     _data(nullptr),
     _outputData(nullptr),
     _size(0),
-    dataUL(nullptr),
-    dataUR(nullptr),
-    dataLL(nullptr),
-    dataLR(nullptr),
+    _dataUL(nullptr),
+    _dataUR(nullptr),
+    _dataLL(nullptr),
+    _dataLR(nullptr),
     _dataRed(nullptr),
     _dataGreen(nullptr),
     _dataBlue(nullptr),
@@ -106,7 +106,8 @@ void BayerFrameDownscaler::SetData(uint8_t* data, OCImage& image, ImageFormat im
 
     _imageFormat = imageFormat;
     _pattern = image.GetBayerPattern();
-
+    
+    MapPatternToData();
     OC_LOG_INFO("Width: " + std::to_string(_width) + " Height: " + std::to_string(_height));
 }
 

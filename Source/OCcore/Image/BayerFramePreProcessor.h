@@ -18,10 +18,10 @@ class BayerFramePreProcessor : public OC::DataProvider::IFrameProcessor
 
     BayerPattern _pattern = BayerPattern::RGGB;
 
-    uint16_t* dataUL; //upper-left data
-    uint16_t* dataUR; //upper-right data
-    uint16_t* dataLL; //lower-left data
-    uint16_t* dataLR; //lower-right data
+    uint16_t* _dataUL; //upper-left data
+    uint16_t* _dataUR; //upper-right data
+    uint16_t* _dataLL; //lower-left data
+    uint16_t* _dataLR; //lower-right data
 
     uint16_t* _dataRed;
     uint16_t* _dataGreen;
