@@ -16,28 +16,28 @@ void BayerFramePreProcessor::MapPatternToData()
     switch (_pattern)
     {
     case BayerPattern::RGGB:
-        dataUL = _dataRed;
-        dataUR = _dataGreen;
-        dataLL = _dataGreen;
-        dataLR = _dataBlue;
+        _dataUL = _dataRed;
+        _dataUR = _dataGreen;
+        _dataLL = _dataGreen;
+        _dataLR = _dataBlue;
         break;
     case BayerPattern::BGGR:
-        dataUL = _dataBlue;
-        dataUR = _dataGreen;
-        dataLL = _dataGreen;
-        dataLR = _dataRed;
+        _dataUL = _dataBlue;
+        _dataUR = _dataGreen;
+        _dataLL = _dataGreen;
+        _dataLR = _dataRed;
         break;
     case BayerPattern::GRBG:
-        dataUL = _dataGreen;
-        dataUR = _dataRed;
-        dataLL = _dataBlue;
-        dataLR = _dataGreen;
+        _dataUL = _dataGreen;
+        _dataUR = _dataRed;
+        _dataLL = _dataBlue;
+        _dataLR = _dataGreen;
         break;
     case BayerPattern::GBRG:
-        dataUL = _dataGreen;
-        dataUR = _dataBlue;
-        dataLL = _dataRed;
-        dataLR = _dataGreen;
+        _dataUL = _dataGreen;
+        _dataUR = _dataBlue;
+        _dataLL = _dataRed;
+        _dataLR = _dataGreen;
         break;
     }
 }
@@ -51,11 +51,11 @@ void BayerFramePreProcessor::ExtractOddRows() const
         {
             if (columnIndex % 2)
             {
-                dataUR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                _dataUR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
             }
             else
             {
-                dataUL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                _dataUL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
             }
         }
     }
@@ -72,11 +72,11 @@ void BayerFramePreProcessor::ExtractEvenRows() const
         {
             if (columnIndex % 2)
             {
-                dataLR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                _dataLR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
             }
             else
             {
-                dataLL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                _dataLL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
             }
         }
     }
@@ -88,10 +88,10 @@ BayerFramePreProcessor::BayerFramePreProcessor() :
     _data(nullptr),
     _outputData(nullptr),
     _size(0),
-    dataUL(nullptr),
-    dataUR(nullptr),
-    dataLL(nullptr),
-    dataLR(nullptr),
+    _dataUL(nullptr),
+    _dataUR(nullptr),
+    _dataLL(nullptr),
+    _dataLR(nullptr),
     _dataRed(nullptr),
     _dataGreen(nullptr),
     _dataBlue(nullptr),

@@ -98,20 +98,21 @@ mlv_vidf_hdr_t MLVLoader::ReadVIDF(uint8_t* buffer, unsigned int& bufferPosition
     mlv_vidf_hdr_t block;
 
     block.frameNumber = GetUInt32(&buffer[bufferPosition], bufferPosition);
-    block.cropPosX = GetUInt16(&buffer[bufferPosition], bufferPosition);
-    block.cropPosY = GetUInt16(&buffer[bufferPosition], bufferPosition);
-    block.panPosX = GetUInt16(&buffer[bufferPosition], bufferPosition);
-    block.panPosY = GetUInt16(&buffer[bufferPosition], bufferPosition);
-    block.frameSpace = GetUInt32(&buffer[bufferPosition], bufferPosition);
+    block.cropPosX    = GetUInt16(&buffer[bufferPosition], bufferPosition);
+    block.cropPosY    = GetUInt16(&buffer[bufferPosition], bufferPosition);
+    block.panPosX     = GetUInt16(&buffer[bufferPosition], bufferPosition);
+    block.panPosY     = GetUInt16(&buffer[bufferPosition], bufferPosition);
+    block.frameSpace  = GetUInt32(&buffer[bufferPosition], bufferPosition);
     //uint8_t	frameData
 
     // FIXME: Remove "processed" when frame loading is implemented, used here to get only first frame
     if(processed == false)
     {
-        sourceData = &buffer[bufferPosition + block.frameSpace];
-        processed = true;
+        _sourceData = &buffer[bufferPosition + block.frameSpace];
+        processed  = true;
     }
-
+    
+    _frameSize      = blockHeader.blockSize - (sizeof(mlv_vidf_hdr_t) + sizeof(mlv_hdr_t) + block.frameSpace);
     bufferPosition += blockHeader.blockSize - (sizeof(mlv_vidf_hdr_t) + sizeof(mlv_hdr_t));
 
     return block;
@@ -148,7 +149,7 @@ void MLVLoader::Load(uint8_t *data, unsigned size, OCImage& image, IAllocator& a
             break;
         case BlockType_VIDF:
         {
-            blockVIDF= ReadVIDF(data, bufferPosition, blockHeader);
+            blockVIDF = ReadVIDF(data, bufferPosition, blockHeader);
         }
             break;
         case BlockType_NULL:
@@ -161,7 +162,7 @@ void MLVLoader::Load(uint8_t *data, unsigned size, OCImage& image, IAllocator& a
         {
             std::string s( reinterpret_cast<char const*>(&blockHeader.blockType), 4 ) ;
             std::cout << "No processing implemented for block. Type: " << s << " Size: " << blockHeader.blockSize <<" bytes"<<std::endl;
-
+            
             // Jump over the block
             bufferPosition += blockHeader.blockSize - blockHeaderSize;
         }
@@ -186,9 +187,14 @@ void MLVLoader::Load(uint8_t *data, unsigned size, OCImage& image, IAllocator& a
     case 14:
         imageFormat = ImageFormat::Integer14;
         break;
-    }
+    }   
 
-    frameProcessor->SetData(sourceData, image, imageFormat);
+    for(unsigned int i = 0; i < _frameSize; i += 2)
+    {
+        std::swap(_sourceData[i], _sourceData[i + 1]);   
+    }
+    
+    frameProcessor->SetData(_sourceData, image, imageFormat);
     //frameProcessor->SetLinearizationData(linearizationTable, linearizationLength);
     frameProcessor->Process();
 
