@@ -119,7 +119,7 @@ void ProcessingPresenter::Show()
     std::string extension = _currentFilePath.substr(_currentFilePath.find_last_of(".") + 1);
     std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
     
-    FileFormat fileFormat;
+    FileFormat fileFormat = FileFormat::Unknown;
     if(extension == "dng")
     {
         fileFormat = FileFormat::DNG;    
@@ -129,7 +129,7 @@ void ProcessingPresenter::Show()
         fileFormat = FileFormat::MLV;
     }
     
-    provider->Load(_currentFilePath, FileFormat::DNG, *_image.get(), *poolAllocator);
+    provider->Load(_currentFilePath, fileFormat, *_image.get(), *poolAllocator);
     
     OC_LOG_INFO("Loading finished");
 
