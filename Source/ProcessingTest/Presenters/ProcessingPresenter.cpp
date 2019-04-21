@@ -182,7 +182,7 @@ void ProcessingPresenter::OpenRAWFile()
     _view->EnableRendering(false);
 
     QString fileName = QFileDialog::getOpenFileName(_view, tr("Open Image"), _lastDir,
-    tr("DNG Files (*.dng *.DNG) Magiclantern files(*.mlv *.MLV)"));
+    tr("DNG Files (*.dng *.DNG) ;; Magiclantern files(*.mlv *.MLV)"));
     
     _currentFilePath = fileName.toStdString();
     _lastDir = QFileInfo(fileName).path();
