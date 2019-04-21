@@ -118,15 +118,18 @@ void ProcessingPresenter::Show()
     OC_LOG_INFO("Loading image");
     std::string extension = _currentFilePath.substr(_currentFilePath.find_last_of(".") + 1);
     std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-     
+    
+    FileFormat fileFormat;
     if(extension == "dng")
     {
-        provider->Load(_currentFilePath, FileFormat::DNG, *_image.get(), *poolAllocator);
+        fileFormat = FileFormat::DNG;    
     }
     else if(extension == "mlv")
     {
-        provider->Load(_currentFilePath, FileFormat::MLV, *_image.get(), *poolAllocator);
+        fileFormat = FileFormat::MLV;
     }
+    
+    provider->Load(_currentFilePath, FileFormat::DNG, *_image.get(), *poolAllocator);
     
     OC_LOG_INFO("Loading finished");
 
@@ -178,7 +181,9 @@ void ProcessingPresenter::OpenRAWFile()
 {
     _view->EnableRendering(false);
 
-    QString fileName = QFileDialog::getOpenFileName(_view, tr("Open Image"), _lastDir, tr("DNG Files (*.dng *.DNG *.mlv *.MLV)"));
+    QString fileName = QFileDialog::getOpenFileName(_view, tr("Open Image"), _lastDir,
+    tr("DNG Files (*.dng *.DNG) Magiclantern files(*.mlv *.MLV)"));
+    
     _currentFilePath = fileName.toStdString();
     _lastDir = QFileInfo(fileName).path();
 
