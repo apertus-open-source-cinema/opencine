@@ -116,8 +116,21 @@ void ProcessingPresenter::Show()
     IAllocator* poolAllocator = new RawPoolAllocator(150 * 1024 * 1024);
 
     OC_LOG_INFO("Loading image");
-    provider->Load(_currentFilePath, FileFormat::DNG, *_image.get(), *poolAllocator);
-    //    provider->Load("M11-1526.VB.mlv", FileFormat::MLV, *_image.get(), *poolAllocator);
+    std::string extension = _currentFilePath.substr(_currentFilePath.find_last_of(".") + 1);
+    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+    
+    FileFormat fileFormat = FileFormat::Unknown;
+    if(extension == "dng")
+    {
+        fileFormat = FileFormat::DNG;    
+    }
+    else if(extension == "mlv")
+    {
+        fileFormat = FileFormat::MLV;
+    }
+    
+    provider->Load(_currentFilePath, fileFormat, *_image.get(), *poolAllocator);
+    
     OC_LOG_INFO("Loading finished");
 
     OC_LOG_INFO("Demosaicing");
@@ -168,7 +181,9 @@ void ProcessingPresenter::OpenRAWFile()
 {
     _view->EnableRendering(false);
 
-    QString fileName = QFileDialog::getOpenFileName(_view, tr("Open Image"), _lastDir, tr("DNG Files (*.dng *.DNG)"));
+    QString fileName = QFileDialog::getOpenFileName(_view, tr("Open Image"), _lastDir,
+    tr("DNG Files (*.dng *.DNG) ;; Magiclantern files(*.mlv *.MLV)"));
+    
     _currentFilePath = fileName.toStdString();
     _lastDir = QFileInfo(fileName).path();
 
