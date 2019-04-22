@@ -90,7 +90,7 @@ TEST_CASE("Bilinear OMP Test GRBG", "[OC::Image]")
     REQUIRE(CompareArrays(imageBlue, expectedBlueGRBG, dataLength));
 }
 
-TEST_CASE("Bilinear Test RGGB", "[OC::Image]")
+TEST_CASE("Bilinear OMP Test RGGB", "[OC::Image]")
 {
     unsigned int dataLength = 64;
 
