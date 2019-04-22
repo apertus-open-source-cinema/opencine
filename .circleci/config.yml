@@ -10,7 +10,8 @@ jobs:
           command: apt-get update -qq && apt-get install --no-upgrade -y build-essential cmake qtdeclarative5-dev opencl-headers ocl-icd-opencl-dev
       - run:
           name: Build
-          command: mkdir build && 
+          command: git submodule update --init --recursive &&
+		   mkdir build && 
                    cd build &&
                    cmake .. &&
                    make -j4
