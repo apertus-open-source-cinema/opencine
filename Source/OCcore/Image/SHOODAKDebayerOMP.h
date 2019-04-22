@@ -5,17 +5,15 @@
 #ifndef SHOODAKDEBAYEROMP_H
 #define SHOODAKDEBAYEROMP_H
 
+#include "IDebayerProcessor.h"
 #include "IFrameProcessor.h"
 #include "OCImage.h"
-#include "IDebayerProcessor.h"
 
 #include "OCcore_export.h"
 
-using namespace OC::DataProvider;
-
 class SHOODAKDebayerOMP : public IDebayerProcessor
 {
-    private:
+private:
     // Color Channels.
     uint16_t* _redChannel;
     uint16_t* _greenChannel;
@@ -26,14 +24,14 @@ class SHOODAKDebayerOMP : public IDebayerProcessor
     uint32_t _height;
     uint32_t _size;
 
-    BayerPattern _pattern;
+    OC::Image::BayerPattern _pattern;
 
     // Pattern Offsets. The indexes follow the order: Red/Blue, Green0, Green1, Blue/Red.
     uint32_t _patternOffsets[4];
 
 public:
     SHOODAKDebayerOMP();
-    SHOODAKDebayerOMP(OCImage& image);
+    SHOODAKDebayerOMP(OC::Image::OCImage& image);
 
     ~SHOODAKDebayerOMP();
 
@@ -43,14 +41,14 @@ public:
     void DebayerBlue(uint32_t hOffset, uint32_t vOffset);
 
     // Debayers Borders.
-    void DemosaicBorders(uint16_t *channel);
+    void DemosaicBorders(uint16_t* channel);
 
     // Main Processor.
     void Process();
-    void Process(OCImage& image);
+    void Process(OC::Image::OCImage& image);
 
     // Sets correct Pattern Offset.
-    void SetPatternOffsets(BayerPattern pattern);
+    void SetPatternOffsets(OC::Image::BayerPattern pattern);
 };
 
-#endif //SHOODAKDEBAYEROMP_H
+#endif // SHOODAKDEBAYEROMP_H

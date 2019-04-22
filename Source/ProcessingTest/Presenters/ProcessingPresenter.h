@@ -10,28 +10,26 @@
 #include "Interfaces/IProcessingPresenter.h"
 #include "Interfaces/IProcessingView.h"
 
-#include <Image/ImageProvider.h>
 #include <Image/IDebayerProcessor.h>
-
-using namespace OC::DataProvider;
+#include <Image/ImageProvider.h>
 
 class ProcessingPresenter : public IProcessingPresenter
 {
     Q_OBJECT
 
-    IProcessingView* _view;
+    IProcessingView *_view;
 
-    std::shared_ptr<OCImage> _image = std::make_shared<OCImage>();
-    std::unique_ptr<ImageProvider> provider;
+    std::shared_ptr<OC::Image::OCImage> _image = std::make_shared<OC::Image::OCImage>();
+    std::unique_ptr<OC::DataProvider::ImageProvider> provider;
 
     std::vector<std::shared_ptr<IDebayerProcessor>> _debayerProcessors;
-    int _currentDebayerProcessor;
+    unsigned int _currentDebayerProcessor;
 
     std::string _currentFilePath;
     QString _lastDir;
 
 public:
-    explicit ProcessingPresenter(IProcessingView& view);
+    explicit ProcessingPresenter(IProcessingView &view);
 
     void Test();
 
@@ -39,7 +37,7 @@ public:
 
 protected slots:
     void OpenRAWFile();
-    void ChangeDebayerMethod(int debayerMethod);
+    void ChangeDebayerMethod(unsigned int debayerMethod);
     void DumpPNG();
 };
 

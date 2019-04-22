@@ -8,43 +8,35 @@ TEST_CASE("Downscaler Extraction", "[OC::Image]")
     const int outputDataLength = inputDataLength / 4;
 
     // R = 1, G = 2, B = 3
-    uint16_t inputData[inputDataLength] = {
-        1,2,1,2,1,2,1,2,
-        2,3,2,3,2,3,2,3,
-        1,2,1,2,1,2,1,2,
-        2,3,2,3,2,3,2,3,
-        1,2,1,2,1,2,1,2,
-        2,3,2,3,2,3,2,3,
-        1,2,1,2,1,2,1,2,
-        2,3,2,3,2,3,2,3
-    };
+    uint16_t inputData[inputDataLength] = {1, 2, 1, 2, 1, 2, 1, 2,  //
+                                           2, 3, 2, 3, 2, 3, 2, 3,  //
+                                           1, 2, 1, 2, 1, 2, 1, 2,  //
+                                           2, 3, 2, 3, 2, 3, 2, 3,  //
+                                           1, 2, 1, 2, 1, 2, 1, 2,  //
+                                           2, 3, 2, 3, 2, 3, 2, 3,  //
+                                           1, 2, 1, 2, 1, 2, 1, 2,  //
+                                           2, 3, 2, 3, 2, 3, 2, 3}; //
 
-    uint16_t expectedRed[outputDataLength] = {
-        1,1,1,1,
-        1,1,1,1,
-        1,1,1,1,
-        1,1,1,1
-    };
+    uint16_t expectedRed[outputDataLength] = {1, 1, 1, 1,  //
+                                              1, 1, 1, 1,  //
+                                              1, 1, 1, 1,  //
+                                              1, 1, 1, 1}; //
 
-    uint16_t expectedGreen[outputDataLength] = {
-        2,2,2,2,
-        2,2,2,2,
-        2,2,2,2,
-        2,2,2,2
-    };
+    uint16_t expectedGreen[outputDataLength] = {2, 2, 2, 2,  //
+                                                2, 2, 2, 2,  //
+                                                2, 2, 2, 2,  //
+                                                2, 2, 2, 2}; //
 
-    uint16_t expectedBlue[outputDataLength] = {
-        3,3,3,3,
-        3,3,3,3,
-        3,3,3,3,
-        3,3,3,3
-    };
+    uint16_t expectedBlue[outputDataLength] = {3, 3, 3, 3,  //
+                                               3, 3, 3, 3,  //
+                                               3, 3, 3, 3,  //
+                                               3, 3, 3, 3}; //
 
     std::unique_ptr<BayerFrameDownscaler> downscaler(new BayerFrameDownscaler);
-    OCImage* outputImage = new OCImage();
+    OC::Image::OCImage* outputImage = new OC::Image::OCImage();
     outputImage->SetWidth(8);
     outputImage->SetHeight(8);
-    outputImage->SetBayerPattern(BayerPattern::RGGB);
+    outputImage->SetBayerPattern(OC::Image::BayerPattern::RGGB);
 
     outputImage->SetRedChannel(new uint16_t[inputDataLength]);
     memset(outputImage->RedChannel(), 0, 64 * sizeof(uint16_t));

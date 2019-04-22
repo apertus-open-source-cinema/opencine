@@ -11,9 +11,11 @@
 
 #include "ImageHelper.h"
 
+using namespace OC::Image;
+
 void BayerFrameDownscaler::MapPatternToData()
 {
-    switch (_pattern)
+    switch(_pattern)
     {
     case BayerPattern::RGGB:
         _dataUL = _dataRed;
@@ -46,7 +48,7 @@ void BayerFrameDownscaler::Extract(int jump) const
 {
     unsigned int index;
     int dataIndex = 0;
-    for (index = 0; index < _size; index += jump)
+    for(index = 0; index < _size; index += jump)
     {
 
         _dataUL[dataIndex] = _outputData[index];
@@ -54,13 +56,14 @@ void BayerFrameDownscaler::Extract(int jump) const
         _dataLL[dataIndex] = _outputData[index + _width];
         _dataLR[dataIndex] = _outputData[index + _width + 1];
         dataIndex++;
-        if ((index + jump) % _width == 0)
+        if((index + jump) % _width == 0)
         {
             index += (jump - 1) * _width;
         }
     }
-    OC_LOG_INFO("R: " + std::to_string(sizeof(_dataRed)/sizeof(uint16_t)) + " G: " + std::to_string(sizeof(_dataGreen)/sizeof(uint16_t)) + " B: " + std::to_string(sizeof(_dataBlue)/sizeof(uint16_t)) + " index: " + std::to_string(index));
-
+    OC_LOG_INFO("R: " + std::to_string(sizeof(_dataRed) / sizeof(uint16_t)) +
+                " G: " + std::to_string(sizeof(_dataGreen) / sizeof(uint16_t)) +
+                " B: " + std::to_string(sizeof(_dataBlue) / sizeof(uint16_t)) + " index: " + std::to_string(index));
 }
 
 BayerFrameDownscaler::BayerFrameDownscaler() :
@@ -95,8 +98,8 @@ void BayerFrameDownscaler::SetData(uint8_t* data, OCImage& image, ImageFormat im
 
 
     // Changes the resolution to half the width and height.
-    image.SetWidth(image.Width()/2);
-    image.SetHeight(image.Height()/2);
+    image.SetWidth(image.Width() / 2);
+    image.SetHeight(image.Height() / 2);
 
     _outputData = new uint16_t[_size];
 
@@ -106,8 +109,9 @@ void BayerFrameDownscaler::SetData(uint8_t* data, OCImage& image, ImageFormat im
 
     _imageFormat = imageFormat;
     _pattern = image.GetBayerPattern();
-    
+
     MapPatternToData();
+
     OC_LOG_INFO("Width: " + std::to_string(_width) + " Height: " + std::to_string(_height));
 }
 
@@ -118,8 +122,8 @@ void BayerFrameDownscaler::SetData(uint16_t* imageData, OCImage& image)
 
     _size = _width * _height;
 
-    image.SetWidth(image.Width()/2);
-    image.SetHeight(image.Height()/2);
+    image.SetWidth(image.Width() / 2);
+    image.SetHeight(image.Height() / 2);
 
     _outputData = imageData;
 
@@ -158,17 +162,17 @@ void BayerFrameDownscaler::Process()
     OC_LOG_INFO("Extract finished");
 }
 
-uint16_t*BayerFrameDownscaler::GetDataRed()
+uint16_t* BayerFrameDownscaler::GetDataRed()
 {
     return _dataRed;
 }
 
-uint16_t*BayerFrameDownscaler::GetDataGreen()
+uint16_t* BayerFrameDownscaler::GetDataGreen()
 {
     return _dataGreen;
 }
 
-uint16_t*BayerFrameDownscaler::GetDataBlue()
+uint16_t* BayerFrameDownscaler::GetDataBlue()
 {
     return _dataBlue;
 }

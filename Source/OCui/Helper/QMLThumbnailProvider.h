@@ -18,19 +18,18 @@
 
 class OCUI_EXPORT QMLThumbnailProvider : public QQuickImageProvider
 {
-	OC::DataProvider::ThumbnailProvider* _thumbnailProvider;
+    OC::DataProvider::ThumbnailProvider *_thumbnailProvider;
     std::shared_ptr<OC::DataProvider::ImageProvider> _provider;
 
-	std::unique_ptr<OC::DataProvider::OCImage> _image;
+    std::unique_ptr<OC::Image::OCImage> _image;
 
-    IAllocator* _allocator;
-
-public:
-	QMLThumbnailProvider();
-	~QMLThumbnailProvider();
+    IAllocator *_allocator;
 
 public:
-	QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize) override;
+    QMLThumbnailProvider();
+    ~QMLThumbnailProvider() override;
+
+    QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize) override;
 };
 
-#endif //QMLTHUMBNAILPROVIDER_H
+#endif // QMLTHUMBNAILPROVIDER_H

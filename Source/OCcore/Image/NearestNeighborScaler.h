@@ -9,16 +9,16 @@
 
 namespace OC
 {
-	namespace DataProvider
-	{
-		class NearestNeighborScaler
-		{
-		public:
-			NearestNeighborScaler(OCImage& image)
-			{
-				//for
-			}
-		};
-	}
+    namespace DataProvider
+    {
+        class NearestNeighborScaler
+        {
+        public:
+            NearestNeighborScaler(OC::Image::OCImage& image)
+            {
+                // for
+            }
+        };
+    }
 }
-#endif //NEARESTNEIGHBORSCALER_H
+#endif // NEARESTNEIGHBORSCALER_H

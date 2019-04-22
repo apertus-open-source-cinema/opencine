@@ -8,15 +8,13 @@
 #include "IFrameProcessor.h"
 #include "OCImage.h"
 
-using namespace OC::DataProvider;
-
 class BayerFrameDownscaler : public OC::DataProvider::IFrameProcessor
 {
     uint8_t* _data;
     uint16_t* _outputData;
     unsigned int _size;
 
-    BayerPattern _pattern = BayerPattern::RGGB;
+    OC::Image::BayerPattern _pattern = OC::Image::BayerPattern::RGGB;
 
     uint16_t* _dataUL; //upper-left data
     uint16_t* _dataUR; //upper-right data
@@ -30,7 +28,7 @@ class BayerFrameDownscaler : public OC::DataProvider::IFrameProcessor
     unsigned int _width;
     unsigned int _height;
 
-    ImageFormat _imageFormat;
+    OC::Image::ImageFormat _imageFormat;
 
     void MapPatternToData();
 
@@ -41,8 +39,8 @@ public:
 
     ~BayerFrameDownscaler();
 
-    void SetData(uint8_t* data, OCImage& image, ImageFormat imageFormat) override;
-    void SetData(uint16_t* imageData, OCImage& image) override;
+    void SetData(uint8_t* data, OC::Image::OCImage& image, OC::Image::ImageFormat imageFormat) override;
+    void SetData(uint16_t* imageData, OC::Image::OCImage& image) override;
 
     void Process() override;
 
@@ -54,4 +52,3 @@ public:
 };
 
 #endif // IFRAMEPROCESSOR_H
-

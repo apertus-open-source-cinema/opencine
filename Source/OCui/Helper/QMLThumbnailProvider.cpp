@@ -6,44 +6,45 @@
 
 #include <memory>
 
-#include <Image/BilinearDebayer.h>
 #include "Memory/StaticAllocator.h"
+#include <Image/BilinearDebayer.h>
 
 //#include <QtAV/AVDemuxer.h>
 //#include <QtAV/VideoDecoder.h>
 
 using namespace OC::DataProvider;
+using namespace OC::Image;
 
+// QtAV::AVDemuxer* demux;
+// QtAV::VideoDecoder* dec;
 
-//QtAV::AVDemuxer* demux;
-//QtAV::VideoDecoder* dec;
-
-QMLThumbnailProvider::QMLThumbnailProvider() : QQuickImageProvider(ImageType::Image),
-    _provider(std::make_shared<ImageProvider>()),
-    _thumbnailProvider(nullptr)
+QMLThumbnailProvider::QMLThumbnailProvider() :
+        QQuickImageProvider(ImageType::Image),
+        _provider(std::make_shared<ImageProvider>()),
+        _thumbnailProvider(nullptr)
 {
-//    demux = new QtAV::AVDemuxer();
-//    dec = QtAV::VideoDecoder::create();
+    //    demux = new QtAV::AVDemuxer();
+    //    dec = QtAV::VideoDecoder::create();
 
     _allocator = new RawPoolAllocator(512 * 1024 * 1024);
 }
 
 QMLThumbnailProvider::~QMLThumbnailProvider()
 {
-    if (_thumbnailProvider != nullptr)
+    if(_thumbnailProvider != nullptr)
     {
         delete _thumbnailProvider;
     }
 }
 
-QImage QMLThumbnailProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
+QImage QMLThumbnailProvider::requestImage(const QString& id, QSize* size, const QSize& requestedSize)
 {
     QImage image;
 
     OCImage* _image = new OCImage();
     //_image.reset(new OCImage());
 
-    if (id.toLower().endsWith(".dng"))
+    if(id.toLower().endsWith(".dng"))
     {
         _provider->Load(id.toStdString(), FileFormat::DNG, *_image, *_allocator);
     }
@@ -53,37 +54,37 @@ QImage QMLThumbnailProvider::requestImage(const QString &id, QSize *size, const 
     }
     else if(id.toLower().endsWith(".mov"))
     {
-//        if (!dec) {
-//            return image;
-//        }
+        //        if (!dec) {
+        //            return image;
+        //        }
 
-//        demux->setMedia(id);
-//        if (!demux->load()) {
-//            qWarning("Failed to load file: %s", id.toUtf8().constData());
-//            return image;
-//        }
+        //        demux->setMedia(id);
+        //        if (!demux->load()) {
+        //            qWarning("Failed to load file: %s", id.toUtf8().constData());
+        //            return image;
+        //        }
 
-//        dec->setCodecContext(demux->videoCodecContext());
-//        dec->open();
+        //        dec->setCodecContext(demux->videoCodecContext());
+        //        dec->open();
 
-//        int vstream = demux->videoStream();
-//        while (!demux->atEnd())
-//        {
-//            if (!demux->readFrame())
-//                continue;
-//            if (demux->stream() != vstream)
-//                continue;
-//            const QtAV::Packet pkt = demux->packet();
-//            if (dec->decode(pkt)) {
+        //        int vstream = demux->videoStream();
+        //        while (!demux->atEnd())
+        //        {
+        //            if (!demux->readFrame())
+        //                continue;
+        //            if (demux->stream() != vstream)
+        //                continue;
+        //            const QtAV::Packet pkt = demux->packet();
+        //            if (dec->decode(pkt)) {
 
-//                QtAV::VideoFrame frame = dec->frame();
-//                // Increased requestedSize to get clear image when zooming in
-                // TODO: Check aspect ratio, seems a bit incorrect
-//                image = frame.toImage(QImage::Format_RGB32, requestedSize * 2);
+        //                QtAV::VideoFrame frame = dec->frame();
+        //                // Increased requestedSize to get clear image when zooming in
+        // TODO: Check aspect ratio, seems a bit incorrect
+        //                image = frame.toImage(QImage::Format_RGB32, requestedSize * 2);
 
-//                break;
-//            }
-//        }
+        //                break;
+        //            }
+        //        }
 
         return image;
     }
@@ -100,7 +101,7 @@ QImage QMLThumbnailProvider::requestImage(const QString &id, QSize *size, const 
     unsigned char* interleavedArray = new unsigned char[dataLength * 3];
     unsigned int i = 0;
 
-    for (; i < dataLength; i++)
+    for(; i < dataLength; i++)
     {
         interleavedArray[i * 3] = (static_cast<unsigned short*>(_image->RedChannel())[i] - 2052 / 3) >> 6;
         interleavedArray[i * 3 + 1] = (static_cast<unsigned short*>(_image->GreenChannel())[i] - 2052 / 3) >> 6;

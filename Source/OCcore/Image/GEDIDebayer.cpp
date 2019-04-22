@@ -9,6 +9,8 @@
 
 #include <Log/Logger.h>
 
+using namespace OC::Image;
+
 GEDIDebayer::GEDIDebayer()
 {
     // TODO (BAndiT1983): Add implementation
@@ -20,9 +22,9 @@ GEDIDebayer::GEDIDebayer(OCImage &image)
     _height = image.Height();
     _size = _width * _height;
 
-    _redChannel = static_cast<uint16_t*>(image.RedChannel());
-    _greenChannel = static_cast<uint16_t*>(image.GreenChannel());
-    _blueChannel = static_cast<uint16_t*>(image.BlueChannel());
+    _redChannel = static_cast<uint16_t *>(image.RedChannel());
+    _greenChannel = static_cast<uint16_t *>(image.GreenChannel());
+    _blueChannel = static_cast<uint16_t *>(image.BlueChannel());
 
     _pattern = image.GetBayerPattern();
     SetPatternOffsets(_pattern);
@@ -36,10 +38,12 @@ void GEDIDebayer::DebayerBottomRight(uint16_t *channel)
 {
     for(uint32_t index = _patternOffsets[0]; index < _size; index += 2)
     {
-        channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
-        channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
-        channel[index + _width] = ( channel[index + _width - 1] + channel[index + _width + 1] ) >> 1;
-        if ((index + 3) % _width <= 1)
+        channel[index] = (channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] +
+                          channel[index + _width + 1]) >>
+                         2;
+        channel[index + 1] = (channel[index + _width + 1] + channel[index - _width + 1]) >> 1;
+        channel[index + _width] = (channel[index + _width - 1] + channel[index + _width + 1]) >> 1;
+        if((index + 3) % _width <= 1)
             index += _width + 2;
     }
 }
@@ -48,10 +52,12 @@ void GEDIDebayer::DebayerBottomLeft(uint16_t *channel)
 {
     for(uint32_t index = _patternOffsets[0]; index < _size; index += 2)
     {
-        channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
-        channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
-        channel[index + _width] = ( channel[index + _width - 1] + channel[index + _width + 1] ) >> 1;
-        if ((index + 3) % _width <= 1)
+        channel[index] = (channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] +
+                          channel[index + _width + 1]) >>
+                         2;
+        channel[index - 1] = (channel[index + _width - 1] + channel[index - _width - 1]) >> 1;
+        channel[index + _width] = (channel[index + _width - 1] + channel[index + _width + 1]) >> 1;
+        if((index + 3) % _width <= 1)
             index += _width + 2;
     }
 }
@@ -64,12 +70,12 @@ void GEDIDebayer::DebayerGreen()
         hGrad = std::abs(_greenChannel[index - 1] - _greenChannel[index + 1]);
         vGrad = std::abs(_greenChannel[index - _width] - _greenChannel[index + _width]);
 
-        if (hGrad <= vGrad)
+        if(hGrad <= vGrad)
             _greenChannel[index] = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
         else
             _greenChannel[index] = (_greenChannel[index - _width] + _greenChannel[index + _width]) >> 1;
 
-        if ((index + 3) % _width <= 1)
+        if((index + 3) % _width <= 1)
             index += _width + 2;
     }
     for(uint32_t index = _patternOffsets[2]; index < _size; index += 2)
@@ -77,12 +83,12 @@ void GEDIDebayer::DebayerGreen()
         hGrad = std::abs(_greenChannel[index - 1] - _greenChannel[index + 1]);
         vGrad = std::abs(_greenChannel[index - _width] - _greenChannel[index + _width]);
 
-        if (hGrad <= vGrad)
+        if(hGrad <= vGrad)
             _greenChannel[index] = (_greenChannel[index - 1] + _greenChannel[index + 1]) >> 1;
         else
             _greenChannel[index] = (_greenChannel[index - _width] + _greenChannel[index + _width]) >> 1;
 
-        if ((index + 3) % _width <= 1)
+        if((index + 3) % _width <= 1)
             index += _width + 2;
     }
 }
@@ -91,10 +97,12 @@ void GEDIDebayer::DebayerTopLeft(uint16_t *channel)
 {
     for(uint32_t index = _patternOffsets[3]; index < _size; index += 2)
     {
-        channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
-        channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
-        channel[index - _width] = ( channel[index - _width - 1] + channel[index - _width + 1] ) >> 1;
-        if ((index + 3) % _width <= 1)
+        channel[index] = (channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] +
+                          channel[index + _width + 1]) >>
+                         2;
+        channel[index - 1] = (channel[index + _width - 1] + channel[index - _width - 1]) >> 1;
+        channel[index - _width] = (channel[index - _width - 1] + channel[index - _width + 1]) >> 1;
+        if((index + 3) % _width <= 1)
             index += _width + 2;
     }
 }
@@ -103,10 +111,12 @@ void GEDIDebayer::DebayerTopRight(uint16_t *channel)
 {
     for(uint32_t index = _patternOffsets[3]; index < _size; index += 2)
     {
-        channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
-        channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
-        channel[index - _width] = ( channel[index - _width - 1] + channel[index - _width + 1] ) >> 1;
-        if ((index + 3) % _width <= 1)
+        channel[index] = (channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] +
+                          channel[index + _width + 1]) >>
+                         2;
+        channel[index + 1] = (channel[index + _width + 1] + channel[index - _width + 1]) >> 1;
+        channel[index - _width] = (channel[index - _width - 1] + channel[index - _width + 1]) >> 1;
+        if((index + 3) % _width <= 1)
             index += _width + 2;
     }
 }
@@ -132,7 +142,8 @@ void GEDIDebayer::DemosaicBorders(uint16_t *channel)
 
 void GEDIDebayer::Process()
 {
-    switch (_pattern) {
+    switch(_pattern)
+    {
     case BayerPattern::RGGB:
         GEDIDebayer::DebayerBottomRight(_redChannel);
         GEDIDebayer::DebayerTopLeft(_blueChannel);
@@ -162,21 +173,24 @@ void GEDIDebayer::Process(OCImage &image)
     _height = image.Height();
     _size = _width * _height;
 
-    _redChannel = static_cast<uint16_t*>(image.RedChannel());
-    _greenChannel = static_cast<uint16_t*>(image.GreenChannel());
-    _blueChannel = static_cast<uint16_t*>(image.BlueChannel());
+    _redChannel = static_cast<uint16_t *>(image.RedChannel());
+    _greenChannel = static_cast<uint16_t *>(image.GreenChannel());
+    _blueChannel = static_cast<uint16_t *>(image.BlueChannel());
 
     _pattern = image.GetBayerPattern();
     SetPatternOffsets(_pattern);
 
-//    OC_LOG_INFO("\nConsidering width as " + std::to_string(_width) + ":\n" + std::to_string(_patternOffsets[0]) + "\n" + std::to_string(_patternOffsets[1]) + "\n" + std::to_string(_patternOffsets[2]) + "\n" + std::to_string(_patternOffsets[3]) + "\n");
+    //    OC_LOG_INFO("\nConsidering width as " + std::to_string(_width) + ":\n" + std::to_string(_patternOffsets[0]) + "\n" +
+    //    std::to_string(_patternOffsets[1]) + "\n" + std::to_string(_patternOffsets[2]) + "\n" +
+    //    std::to_string(_patternOffsets[3]) + "\n");
 
     Process();
 }
 
 void GEDIDebayer::SetPatternOffsets(BayerPattern pattern)
 {
-    switch (pattern) {
+    switch(pattern)
+    {
     case BayerPattern::RGGB:
     case BayerPattern::BGGR:
         _patternOffsets[0] = _width + 1;

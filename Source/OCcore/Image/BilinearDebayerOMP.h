@@ -5,9 +5,9 @@
 #ifndef BILINEARDEBAYEROMP_H
 #define BILINEARDEBAYEROMP_H
 
+#include "IDebayerProcessor.h"
 #include "IFrameProcessor.h"
 #include "OCImage.h"
-#include "IDebayerProcessor.h"
 
 using namespace OC::DataProvider;
 
@@ -15,16 +15,16 @@ class BilinearDebayerOMP : public IDebayerProcessor
 {
 private:
     // Color Channels.
-    uint16_t* _redChannel;
-    uint16_t* _greenChannel;
-    uint16_t* _blueChannel;
+    uint16_t *_redChannel;
+    uint16_t *_greenChannel;
+    uint16_t *_blueChannel;
 
     // Image Dimensions.
     uint32_t _width;
     uint32_t _height;
     uint32_t _size;
 
-    BayerPattern _pattern;
+    OC::Image::BayerPattern _pattern;
 
     // Pattern Offsets. The indexes follow the order: Red/Blue, Green0, Green1, Blue/Red.
     uint32_t _patternOffsets[4];
@@ -32,9 +32,11 @@ private:
 public:
     BilinearDebayerOMP();
 
-    BilinearDebayerOMP(OCImage& image);
+    BilinearDebayerOMP(OC::Image::OCImage &image);
 
     ~BilinearDebayerOMP();
+
+    // TODO: !!! Remove methods from public scope, to meet OOP requirements
 
     // Debayers for each color channel.
     void DebayerBottomRight(uint16_t *channel);
@@ -51,7 +53,7 @@ public:
     void Process();
 
     // TODO (BAndiT1983): Evaluate if this method should be pulled up to the interface
-    void Process(OCImage &image);
+    void Process(OC::Image::OCImage &image);
 
     // Debayer for Nearest Interpolation.
     void DebayerNearest(uint32_t red, uint32_t green0, uint32_t green1, uint32_t blue);
@@ -60,7 +62,7 @@ public:
     void ProcessNearest();
 
     // Sets correct Pattern Offset.
-    void SetPatternOffsets(BayerPattern pattern);
+    void SetPatternOffsets(OC::Image::BayerPattern pattern);
 };
 
-#endif //BILINEARDEBAYEROMP_H
+#endif // BILINEARDEBAYEROMP_H

@@ -9,20 +9,20 @@
 
 #include "Log/Logger.h"
 
-ProgressDialog::ProgressDialog(QWidget* parent/*, IDataTransfer* dataTransfer*/) :
-    QDialog(parent),
-    ui(new Ui::ProgressDialog),
-    _indexCount(0)
+ProgressDialog::ProgressDialog(QWidget* parent /*, IDataTransfer* dataTransfer*/) :
+        QDialog(parent),
+        ui(new Ui::ProgressDialog),
+        _indexCount(0)
 {
     ui->setupUi(this);
 
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-    //setWindowFlags(Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+    // setWindowFlags(Qt::WindowTitleHint | Qt::CustomizeWindowHint);
     setModal(true);
 
     ui->listView->setItemDelegate(new TaskProgressDelegate());
     _model = new QStandardItemModel();
-    ui->listView->setModel(_model); //connect the model to view.
+    ui->listView->setModel(_model); // connect the model to view.
 }
 
 ProgressDialog::~ProgressDialog()
@@ -30,7 +30,7 @@ ProgressDialog::~ProgressDialog()
     delete ui;
 }
 
-void ProgressDialog::AddTask(ITask *task)
+void ProgressDialog::AddTask(ITask* task)
 {
     // TODO: Replace by adequate data struct, so the data is compact and intuitive to use in delegate
     QStandardItem* item = new QStandardItem();
@@ -50,17 +50,17 @@ void ProgressDialog::AddTask(ITask *task)
 
 void ProgressDialog::SetTaskProgress(ITask* task)
 {
-    auto it = _taskMap.find (task->GetID());
+    auto it = _taskMap.find(task->GetID());
 
-    if ( it == _taskMap.end() )
+    if(it == _taskMap.end())
     {
         OC_LOG_WARNING("Task " + std::to_string(task->GetID()) + "not found");
         return;
     }
 
 
-    QStandardItem* item = _model->item(static_cast<int>((*it).second), 0);//new QStandardItem();
-    qDebug("Task row: " + QString::number(static_cast<int>((*it).second)).toLatin1());
+    QStandardItem* item = _model->item(static_cast<int>((*it).second), 0); // new QStandardItem();
+    // qDebug("Task row: " + QString::number(static_cast<int>((*it).second)).toLatin1());
     QString taskDescription = QString::fromStdString(task->GetTaskDescription());
     QString subTaskDescription = QString::fromStdString(task->GetSubTaskDescription());
     QStringList values = item->model()->data(item->index()).toStringList();

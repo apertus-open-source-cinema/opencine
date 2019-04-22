@@ -11,29 +11,33 @@
 
 #include "ImageDefines.h"
 
-#include  "OCcore_export.h"
+#include "OCcore_export.h"
 
 class IAllocator;
 
 namespace OC
 {
-	namespace DataProvider
-	{
-		class OCImage;
+    namespace Image
+    {
+        class OCImage;
+    }
+
+    namespace DataProvider
+    {
         class IImageLoader;
 
-		class OCCORE_EXPORT ImageProvider
-		{
+        class OCCORE_EXPORT ImageProvider
+        {
             // FIXME: Evaluate usage of FileFormat enum as key
-            std::unordered_map<FileFormat, std::shared_ptr<IImageLoader>, FileFormatHash> _imageProviders;
+            std::unordered_map<OC::Image::FileFormat, std::shared_ptr<IImageLoader>, OC::Image::FileFormatHash> _imageProviders;
 
-		public:
+        public:
             ImageProvider();
 
-			bool ReadBinaryFile(std::string fileName, int& length, unsigned char*& fileData) const;
-			void Load(std::string fileName, FileFormat format, OCImage& image, IAllocator& allocator) const;
-		};
-	}
+            bool ReadBinaryFile(std::string fileName, int& length, unsigned char*& fileData) const;
+            void Load(std::string fileName, OC::Image::FileFormat format, OC::Image::OCImage& image, IAllocator& allocator) const;
+        };
+    }
 }
 
-#endif //IMAGEPROVIDER_H
+#endif // IMAGEPROVIDER_H

@@ -5,15 +5,13 @@
 #ifndef GEDIDEBAYEROMP_H
 #define GEDIDEBAYEROMP_H
 
+#include "IDebayerProcessor.h"
 #include "IFrameProcessor.h"
 #include "OCImage.h"
-#include "IDebayerProcessor.h"
-
-using namespace OC::DataProvider;
 
 class GEDIDebayerOMP : public IDebayerProcessor
 {
-    private:
+private:
     // Color Channels.
     uint16_t* _redChannel;
     uint16_t* _greenChannel;
@@ -24,34 +22,34 @@ class GEDIDebayerOMP : public IDebayerProcessor
     uint32_t _height;
     uint32_t _size;
 
-    BayerPattern _pattern;
+    OC::Image::BayerPattern _pattern;
 
     // Pattern Offsets. The indexes follow the order: Red/Blue, Green0, Green1, Blue/Red.
     uint32_t _patternOffsets[4];
 
 public:
     GEDIDebayerOMP();
-    GEDIDebayerOMP(OCImage& image);
+    GEDIDebayerOMP(OC::Image::OCImage& image);
 
     ~GEDIDebayerOMP();
 
     // Debayers for each color channel.
-    void DebayerBottomRight(uint16_t *channel);
-    void DebayerBottomLeft(uint16_t *channel);
+    void DebayerBottomRight(uint16_t* channel);
+    void DebayerBottomLeft(uint16_t* channel);
     void DebayerGreen0();
     void DebayerGreen1();
-    void DebayerTopRight(uint16_t *channel);
-    void DebayerTopLeft(uint16_t *channel);
+    void DebayerTopRight(uint16_t* channel);
+    void DebayerTopLeft(uint16_t* channel);
 
     // Debayers Borders.
-    void DemosaicBorders(uint16_t *channel);
+    void DemosaicBorders(uint16_t* channel);
 
     // Main Processor.
     void Process();
-    void Process(OCImage& image);
+    void Process(OC::Image::OCImage& image);
 
     // Sets correct Pattern Offset.
-    void SetPatternOffsets(BayerPattern pattern);
+    void SetPatternOffsets(OC::Image::BayerPattern pattern);
 };
 
-#endif //GEDIDEBAYEROMP_H
+#endif // GEDIDEBAYEROMP_H

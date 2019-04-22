@@ -12,159 +12,77 @@
 
 namespace OC
 {
-	namespace DataProvider
-	{
-		//TODO: Move to some general definition file
-		enum class BayerPattern
-		{
-			RGGB,
-			BGGR,
-			GRBG,
-			GBRG
-		};
+    namespace Image
+    {
+        // TODO: Move to some general definition file
+        enum class BayerPattern
+        {
+            RGGB,
+            BGGR,
+            GRBG,
+            GBRG
+        };
 
-		class OCImage
-		{
-			unsigned int _width;
-			unsigned int _height;
-			//unsigned char* _data;
+        class OCImage
+        {
+            unsigned int _width;
+            unsigned int _height;
+            // unsigned char* _data;
 
-			BayerPattern _pattern;
+            BayerPattern _pattern;
 
-			ImageType _type;
+            ImageType _type;
 
-			void* _redData;
-			void* _greenData;
-			void* _blueData;
+            void* _redData;
+            void* _greenData;
+            void* _blueData;
 
-			//unsigned int _dataSize;
-			unsigned int _dataLength;
-			ImageFormat _format;
+            // unsigned int _dataSize;
+            unsigned int _dataLength;
+            ImageFormat _format;
 
-		public:
-			OCImage() :
-				_width(0),
-				_height(0),
-				_pattern(BayerPattern::RGGB),
-				_redData(nullptr),
-				_greenData(nullptr),
-				_blueData(nullptr),
-				_dataLength(0)
-			{
-			}
+        public:
+            OCImage();
 
-			~OCImage()
-			{
-				delete[](short*)_redData;
-				delete[](short*)_greenData;
-				delete[](short*)_blueData;
-			}
+            ~OCImage();
 
-			void SetWidth(unsigned int width)
-			{
-				_width = width;
-			}
+            void SetWidth(unsigned int width);
 
-			void SetHeight(unsigned int height)
-			{
-				_height = height;
-			}
+            void SetHeight(unsigned int height);
 
-			void* RedChannel()
-			{
-				return _redData;
-			}
+            void* RedChannel();
 
-			void* GreenChannel()
-			{
-				return _greenData;
-			}
+            void* GreenChannel();
 
-			void* BlueChannel()
-			{
-				return _blueData;
-			}
+            void* BlueChannel();
 
-			void SetFormat(ImageFormat format)
-			{
-				_format = format;
-			}
+            void SetFormat(ImageFormat format);
 
-			unsigned int Width() const
-			{
-				return _width;
-			}
+            unsigned int Width() const;
 
-			unsigned int Height() const
-			{
-				return _height;
-			}
+            unsigned int Height() const;
 
-			ImageFormat Format() const
-			{
-				return _format;
-			}
+            ImageFormat Format() const;
 
-			ImageType Type() const
-			{
-				return _type;
-			}
+            ImageType Type() const;
 
-			void SetType(ImageType type)
-			{
-				_type = type;
-			}
+            void SetType(ImageType type);
 
-			//TODO: Should be called before Set*Channel() at the moment, later (see TODO below) it shouldn't be a problem anymore
-			unsigned int DataLength() const
-			{
-				return _dataLength;
-			}
+            // TODO: Should be called before Set*Channel() at the moment, later (see TODO below) it shouldn't be a problem anymore
+            unsigned int DataLength() const;
 
-			//TODO: Remove memcpy() when static allocator is implemented, just store pointer to data instead
-			void SetRedChannel(void* redData)
-			{
-				_dataLength = _width * _height * sizeof(unsigned short);
+            // TODO: Remove memcpy() when static allocator is implemented, just store pointer to data instead
+            void SetRedChannel(void* redData);
 
-				if (_redData == nullptr)
-				{
-					_redData = new unsigned short[_dataLength];
-				}
+            void SetGreenChannel(void* greenData);
 
-				memmove(_redData, redData, _dataLength);
-			}
+            void SetBlueChannel(void* blueData);
 
-			void SetGreenChannel(void* greenData)
-			{
-				if (_greenData == nullptr)
-				{
-					_greenData = new unsigned short[_dataLength];
-				}
+            void SetBayerPattern(BayerPattern pattern);
 
-				memmove(_greenData, greenData, _dataLength);
-			}
-
-			void SetBlueChannel(void* blueData)
-			{
-				if (_blueData == nullptr)
-				{
-					_blueData = new unsigned short[_dataLength];
-				}
-
-				memmove(_blueData, blueData, _dataLength);
-			}
-
-			void SetBayerPattern(BayerPattern pattern)
-			{
-				_pattern = pattern;
-			}
-
-			BayerPattern GetBayerPattern() const
-			{
-				return _pattern;
-			}
-		};
-	}
+            BayerPattern GetBayerPattern() const;
+        };
+    }
 }
 
-#endif //OCIMAGE_H
+#endif // OCIMAGE_H

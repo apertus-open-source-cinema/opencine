@@ -5,8 +5,8 @@
 #ifndef IIMAGELOADER_H
 #define IIMAGELOADER_H
 
-#include "OCImage.h"
 #include "Memory/StaticAllocator.h"
+#include "OCImage.h"
 
 namespace OC
 {
@@ -16,8 +16,8 @@ namespace OC
         class IImageLoader
         {
         public:
-            virtual void Load(uint8_t* data, unsigned int size, OCImage& image, IAllocator& allocator) = 0;
+            virtual void Load(uint8_t* data, unsigned int size, OC::Image::OCImage& image, IAllocator& allocator) = 0;
         };
     }
 }
-#endif //IIMAGELOADER_H
+#endif // IIMAGELOADER_H

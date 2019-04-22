@@ -11,12 +11,12 @@
 
 namespace OC
 {
-	namespace DataProvider 
-	{
-		class LibRawAdapter : public IImageLoader
-		{
-		};
-	}
+    namespace DataProvider
+    {
+        class LibRawAdapter : public IImageLoader
+        {
+        };
+    }
 }
 
-#endif //LIBRAWADAPTER_H
+#endif // LIBRAWADAPTER_H

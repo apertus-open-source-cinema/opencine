@@ -5,16 +5,14 @@
 #include <CL/cl.hpp>
 #include <string>
 
-using namespace OC::DataProvider;
-
 class IProcessorOCL
 {
 public:
-	virtual std::string GetKernelFilePath() = 0;
+    virtual std::string GetKernelFilePath() = 0;
 
-    virtual void GetArguments(cl::Context& context, OCImage& image, cl::Kernel kernels[6]) = 0;
+    virtual void GetArguments(cl::Context& context, OC::Image::OCImage& image, cl::Kernel kernels[6]) = 0;
 
-    virtual void GetKernelsStrings(BayerPattern pattern, std::string kernelsStrings[6]) = 0;
+    virtual void GetKernelsStrings(OC::Image::BayerPattern pattern, std::string kernelsStrings[6]) = 0;
 
     virtual void Process(cl::CommandQueue& queue) = 0;
 
@@ -25,4 +23,4 @@ public:
     virtual void* GetBlueChannel() = 0;
 };
 
-#endif //IPROCESSOROCL_H
+#endif // IPROCESSOROCL_H

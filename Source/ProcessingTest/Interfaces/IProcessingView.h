@@ -5,22 +5,20 @@
 #ifndef IPROCESSINGVIEW_H
 #define IPROCESSINGVIEW_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <QWidget>
 
 #include <Image/OCImage.h>
-
-using namespace OC::DataProvider;
 
 class IProcessingView : public QWidget
 {
     Q_OBJECT
 
 public:
-	virtual void SetFrame(OCImage& image) = 0;
-	virtual void SetThumbnail(unsigned int width, unsigned int height, unsigned char* data) = 0;
+    virtual void SetFrame(OC::Image::OCImage& image) = 0;
+    virtual void SetThumbnail(unsigned int width, unsigned int height, unsigned char* data) = 0;
 
     virtual void EnableRendering(bool enable) = 0;
 
@@ -32,4 +30,4 @@ signals:
     void DumpPNG();
 };
 
-#endif //IPROCESSINGVIEW_H
+#endif // IPROCESSINGVIEW_H

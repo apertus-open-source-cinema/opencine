@@ -7,23 +7,33 @@ jobs:
       - checkout
       - run:
           name: Install System Dependencies
-          command: apt-get update -qq && apt-get install -y build-essential cmake qtdeclarative5-dev opencl-headers ocl-icd-opencl-dev
+          command: apt-get update -qq && apt-get install --no-upgrade -y build-essential cmake qtdeclarative5-dev opencl-headers ocl-icd-opencl-dev
       - run:
           name: Build
           command: mkdir build && 
                    cd build &&
                    cmake .. &&
                    make -j4
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build
   test:
     docker:
-      - image: gcc:latest
+      - image: ubuntu:18.04
     steps:
-      - checkout
+      - attach_workspace:
+          at: ./build
+      - run: ./OCTests
+
+      #- checkout
       
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
-      #- test
+      - test:
+          requires:
+            - build
       

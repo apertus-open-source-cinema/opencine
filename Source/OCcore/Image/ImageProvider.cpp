@@ -9,10 +9,11 @@
 
 #include "Log/Logger.h"
 
-#include "TIFFLoader.h"
 #include "MLVLoader.h"
+#include "TIFFLoader.h"
 
 using namespace OC::DataProvider;
+using namespace OC::Image;
 
 ImageProvider::ImageProvider()
 {
@@ -27,7 +28,7 @@ bool ImageProvider::ReadBinaryFile(std::string fileName, int& length, uint8_t*& 
     std::ifstream is;
     is.open(fileName, std::ios::binary);
 
-    if (!is.is_open())
+    if(!is.is_open())
     {
         std::cout << "ImageProvider: File couldn't be opened" << std::endl;
         return false;
@@ -54,7 +55,7 @@ void ImageProvider::Load(std::string fileName, FileFormat format, OCImage& image
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    if (!ReadBinaryFile(fileName, length, fileData))
+    if(!ReadBinaryFile(fileName, length, fileData))
     {
         OC_LOG_ERROR("Failed to load file: " + fileName);
         return;
@@ -70,7 +71,7 @@ void ImageProvider::Load(std::string fileName, FileFormat format, OCImage& image
     IImageLoader* imageLoader = nullptr;
 
     auto it = _imageProviders.find(format);
-    if (it != _imageProviders.end())
+    if(it != _imageProviders.end())
     {
         imageLoader = it->second.get();
     }

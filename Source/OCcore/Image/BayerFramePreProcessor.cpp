@@ -8,12 +8,14 @@
 #include <omp.h>
 #include <thread>
 
-#include <Log/Logger.h>
 #include <Image/ImageHelper.h>
+#include <Log/Logger.h>
+
+using namespace OC::Image;
 
 void BayerFramePreProcessor::MapPatternToData()
 {
-    switch (_pattern)
+    switch(_pattern)
     {
     case BayerPattern::RGGB:
         _dataUL = _dataRed;
@@ -45,11 +47,11 @@ void BayerFramePreProcessor::MapPatternToData()
 void BayerFramePreProcessor::ExtractOddRows() const
 {
     //#pragma omp parallel for schedule(dynamic,1)
-    for (unsigned int rowIndex = 0; rowIndex < _height; rowIndex += 2)
+    for(unsigned int rowIndex = 0; rowIndex < _height; rowIndex += 2)
     {
-        for (unsigned int columnIndex = 0; columnIndex < _width; columnIndex++)
+        for(unsigned int columnIndex = 0; columnIndex < _width; columnIndex++)
         {
-            if (columnIndex % 2)
+            if(columnIndex % 2)
             {
                 _dataUR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
             }
@@ -66,11 +68,11 @@ void BayerFramePreProcessor::ExtractOddRows() const
 void BayerFramePreProcessor::ExtractEvenRows() const
 {
     //#pragma omp parallel for schedule(dynamic,1)
-    for (unsigned int rowIndex = 1; rowIndex < _height; rowIndex += 2)
+    for(unsigned int rowIndex = 1; rowIndex < _height; rowIndex += 2)
     {
-        for (unsigned int columnIndex = 0; columnIndex < _width; columnIndex++)
+        for(unsigned int columnIndex = 0; columnIndex < _width; columnIndex++)
         {
-            if (columnIndex % 2)
+            if(columnIndex % 2)
             {
                 _dataLR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
             }
@@ -146,24 +148,24 @@ void BayerFramePreProcessor::SetData(uint16_t* imageData, OCImage& image)
 
 void BayerFramePreProcessor::Process()
 {
-    //std::thread t0;
+    // std::thread t0;
     switch(_imageFormat)
     {
     case ImageFormat::Integer12:
         OC_LOG_INFO("12->16bit conversion");
         OC::Image::ImageHelper::Convert12To16Bit(_data, _width, _height, _outputData);
-        //t0 = std::thread(&OC::Image::ImageHelper::Convert12To16Bit, this);
+        // t0 = std::thread(&OC::Image::ImageHelper::Convert12To16Bit, this);
         break;
     case ImageFormat::Integer14:
         OC_LOG_INFO("14->16bit conversion");
         OC::Image::ImageHelper::Convert14To16Bit(_data, _width, _height, _outputData);
-        //t0 = std::thread(&OC::Image::ImageHelper::Convert14To16Bit, this);
+        // t0 = std::thread(&OC::Image::ImageHelper::Convert14To16Bit, this);
         break;
     default:
         break;
     }
 
-    //t0.join();
+    // t0.join();
 
     std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
     std::thread t2(&BayerFramePreProcessor::ExtractEvenRows, this);
@@ -172,20 +174,20 @@ void BayerFramePreProcessor::Process()
     t1.join();
     t2.join();
 
-    //OC_LOG_INFO("Extract finished");
+    // OC_LOG_INFO("Extract finished");
 }
 
-uint16_t*BayerFramePreProcessor::GetDataRed()
+uint16_t* BayerFramePreProcessor::GetDataRed()
 {
     return _dataRed;
 }
 
-uint16_t*BayerFramePreProcessor::GetDataGreen()
+uint16_t* BayerFramePreProcessor::GetDataGreen()
 {
     return _dataGreen;
 }
 
-uint16_t*BayerFramePreProcessor::GetDataBlue()
+uint16_t* BayerFramePreProcessor::GetDataBlue()
 {
     return _dataBlue;
 }

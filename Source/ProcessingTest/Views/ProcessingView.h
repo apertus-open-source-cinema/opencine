@@ -10,46 +10,47 @@
 
 #include "Interfaces/IProcessingView.h"
 
-namespace Ui {
-	class ProcessingView;
+namespace Ui
+{
+    class ProcessingView;
 }
 
 class ProcessingView : public IProcessingView
 {
-	Q_OBJECT
+    Q_OBJECT
 
-    OCImage* testImage = nullptr;
-	QImage* thumbnailImage;
+    OC::Image::OCImage* testImage = nullptr;
+    QImage* thumbnailImage;
 
 public:
-	explicit ProcessingView(QWidget *parent = nullptr);
-	~ProcessingView();
+    explicit ProcessingView(QWidget* parent = nullptr);
+    ~ProcessingView();
 
-	virtual void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
+    virtual void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
 
-	void SetFrame(OCImage& image) override;
+    void SetFrame(OC::Image::OCImage& image) override;
 
-	void SetThumbnail(unsigned int width, unsigned int height, unsigned char* data) override;
+    void SetThumbnail(unsigned int width, unsigned int height, unsigned char* data) override;
 
-	private slots:
-	void on_pushButton_toggled(bool checked);
+private slots:
+    void on_pushButton_toggled(bool checked);
 
-	void on_pushButton_3_toggled(bool checked);
+    void on_pushButton_3_toggled(bool checked);
 
-	void on_pushButton_4_toggled(bool checked);
+    void on_pushButton_4_toggled(bool checked);
 
     virtual void EnableRendering(bool enable);
 
     void SetAvailableDebayerMethods(QStringList debayerMethods);
 
 private:
-	Ui::ProcessingView *ui;
+    Ui::ProcessingView* ui;
 
-	void LoadTexture();
+    void LoadTexture();
 
-	// QObject interface
+    // QObject interface
 public:
-	bool eventFilter(QObject *, QEvent *) override;
+    bool eventFilter(QObject*, QEvent*) override;
 
     // IProcessingView interface
 };
