@@ -11,14 +11,14 @@ jobs:
       - run:
           name: Build
           command: git submodule update --init --recursive &&
-		   mkdir build && 
+                   mkdir build && 
                    cd build &&
                    cmake .. &&
                    make -j4
-      - persist_to_workspace:
-          root: .
-          paths:
-            - build
+      #- persist_to_workspace:
+      #    root: .
+      #    paths:
+      #      - build
   #test:
   #  docker:
   #    - image: ubuntu:18.04
