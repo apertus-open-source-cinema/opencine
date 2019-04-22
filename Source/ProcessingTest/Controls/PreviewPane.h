@@ -16,7 +16,7 @@
 
 class PreviewPane : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
-	QMatrix4x4 mvp;
+    QMatrix4x4 mvp;
 
     bool redChannel = true;
     bool greenChannel = true;
@@ -44,44 +44,44 @@ class PreviewPane : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
     bool _renderingEnabled;
 
 public:
-	PreviewPane(QWidget *parent = 0);
-	~PreviewPane();
+    PreviewPane(QWidget* parent = 0);
+    ~PreviewPane();
 
-	void SwitchRedChannel(bool enabled);
-	void SwitchGreenChannel(bool enabled);
-	void SwitchBlueChannel(bool enabled);
+    void SwitchRedChannel(bool enabled);
+    void SwitchGreenChannel(bool enabled);
+    void SwitchBlueChannel(bool enabled);
 
-	bool IsInitialized();
+    bool IsInitialized();
 
-    void SetImage(OC::DataProvider::OCImage& image);
+    void SetImage(OC::Image::OCImage& image);
 
     void EnableRendering(bool enable);
 
 protected:
-	void initializeGL() override;
-	void resizeGL(int w, int h) override;
-	void paintGL() override;
+    void initializeGL() override;
+    void resizeGL(int w, int h) override;
+    void paintGL() override;
 
-	void printVersionInformation();
+    void printVersionInformation();
 
     void SetTexture(int width, int height, unsigned short* imageData);
 
 private:
-	void SetupShaders();
-	void SetupVertexBuffer();
-	void SetupObject();
-	void SetupTexture();
+    void SetupShaders();
+    void SetupVertexBuffer();
+    void SetupObject();
+    void SetupTexture();
 
-	QOpenGLShaderProgram* program;
-	QOpenGLBuffer vertex;
-	QOpenGLVertexArrayObject object;
+    QOpenGLShaderProgram* program;
+    QOpenGLBuffer vertex;
+    QOpenGLVertexArrayObject object;
 
-	bool _initialized;
+    bool _initialized;
 
-	// QWidget interface
+    // QWidget interface
 protected:
     void wheelEvent(QWheelEvent* event) override;
-    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent* event) override;
 };
 
 #endif // PREVIEWPANE_H

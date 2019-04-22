@@ -5,12 +5,17 @@
 #include "IFrameProcessor.h"
 
 using namespace OC::DataProvider;
+using namespace OC::Image;
 
 // Moved methods to .cpp to prevent vtable warnings
-IFrameProcessor::~IFrameProcessor() {}
+IFrameProcessor::~IFrameProcessor()
+{
+}
 
-void IFrameProcessor::SetData(uint8_t *, OCImage &, ImageFormat) {}
+void IFrameProcessor::SetData(uint8_t *, OCImage &, ImageFormat)
+{
+}
 
-void IFrameProcessor::SetData(uint16_t*, OCImage &) {}
-
-
+void IFrameProcessor::SetData(uint16_t *, OCImage &)
+{
+}

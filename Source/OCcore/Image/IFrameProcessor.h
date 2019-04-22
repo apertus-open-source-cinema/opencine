@@ -11,18 +11,21 @@
 
 namespace OC
 {
-    namespace DataProvider
+    namespace Image
     {
         class OCImage;
+    }
 
+    namespace DataProvider
+    {
         class IFrameProcessor
         {
         public:
             virtual ~IFrameProcessor();
 
             virtual void Process() = 0;
-            virtual void SetData(uint8_t* /*data*/, OCImage& /*image*/, ImageFormat /*imageFormat*/);
-            virtual void SetData(uint16_t* /*imageData*/, OCImage& /*image*/);
+            virtual void SetData(uint8_t* /*data*/, OC::Image::OCImage& /*image*/, OC::Image::ImageFormat /*imageFormat*/);
+            virtual void SetData(uint16_t* /*imageData*/, OC::Image::OCImage& /*image*/);
 
             virtual unsigned short* GetDataRed() = 0;
             virtual unsigned short* GetDataGreen() = 0;
@@ -30,4 +33,4 @@ namespace OC
         };
     }
 }
-#endif //IFRAMEPROCESSOR_H
+#endif // IFRAMEPROCESSOR_H

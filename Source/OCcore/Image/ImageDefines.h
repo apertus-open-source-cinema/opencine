@@ -9,7 +9,7 @@
 
 namespace OC
 {
-    namespace DataProvider
+    namespace Image
     {
         enum class SourceFormat
         {
@@ -59,4 +59,4 @@ namespace OC
         }
     }
 }
-#endif //IMAGEDEFINES_H
+#endif // IMAGEDEFINES_H

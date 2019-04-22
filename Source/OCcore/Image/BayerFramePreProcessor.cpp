@@ -8,36 +8,38 @@
 #include <omp.h>
 #include <thread>
 
-#include <Log/Logger.h>
 #include <Image/ImageHelper.h>
+#include <Log/Logger.h>
+
+using namespace OC::Image;
 
 void BayerFramePreProcessor::MapPatternToData()
 {
-    switch (_pattern)
+    switch(_pattern)
     {
     case BayerPattern::RGGB:
-        dataUL = _dataRed;
-        dataUR = _dataGreen;
-        dataLL = _dataGreen;
-        dataLR = _dataBlue;
+        _dataUL = _dataRed;
+        _dataUR = _dataGreen;
+        _dataLL = _dataGreen;
+        _dataLR = _dataBlue;
         break;
     case BayerPattern::BGGR:
-        dataUL = _dataBlue;
-        dataUR = _dataGreen;
-        dataLL = _dataGreen;
-        dataLR = _dataRed;
+        _dataUL = _dataBlue;
+        _dataUR = _dataGreen;
+        _dataLL = _dataGreen;
+        _dataLR = _dataRed;
         break;
     case BayerPattern::GRBG:
-        dataUL = _dataGreen;
-        dataUR = _dataRed;
-        dataLL = _dataBlue;
-        dataLR = _dataGreen;
+        _dataUL = _dataGreen;
+        _dataUR = _dataRed;
+        _dataLL = _dataBlue;
+        _dataLR = _dataGreen;
         break;
     case BayerPattern::GBRG:
-        dataUL = _dataGreen;
-        dataUR = _dataBlue;
-        dataLL = _dataRed;
-        dataLR = _dataGreen;
+        _dataUL = _dataGreen;
+        _dataUR = _dataBlue;
+        _dataLL = _dataRed;
+        _dataLR = _dataGreen;
         break;
     }
 }
@@ -45,17 +47,17 @@ void BayerFramePreProcessor::MapPatternToData()
 void BayerFramePreProcessor::ExtractOddRows() const
 {
     //#pragma omp parallel for schedule(dynamic,1)
-    for (unsigned int rowIndex = 0; rowIndex < _height; rowIndex += 2)
+    for(unsigned int rowIndex = 0; rowIndex < _height; rowIndex += 2)
     {
-        for (unsigned int columnIndex = 0; columnIndex < _width; columnIndex++)
+        for(unsigned int columnIndex = 0; columnIndex < _width; columnIndex++)
         {
-            if (columnIndex % 2)
+            if(columnIndex % 2)
             {
-                dataUR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                _dataUR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
             }
             else
             {
-                dataUL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                _dataUL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
             }
         }
     }
@@ -66,17 +68,17 @@ void BayerFramePreProcessor::ExtractOddRows() const
 void BayerFramePreProcessor::ExtractEvenRows() const
 {
     //#pragma omp parallel for schedule(dynamic,1)
-    for (unsigned int rowIndex = 1; rowIndex < _height; rowIndex += 2)
+    for(unsigned int rowIndex = 1; rowIndex < _height; rowIndex += 2)
     {
-        for (unsigned int columnIndex = 0; columnIndex < _width; columnIndex++)
+        for(unsigned int columnIndex = 0; columnIndex < _width; columnIndex++)
         {
-            if (columnIndex % 2)
+            if(columnIndex % 2)
             {
-                dataLR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                _dataLR[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
             }
             else
             {
-                dataLL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
+                _dataLL[rowIndex * _width + columnIndex] = _outputData[rowIndex * _width + columnIndex];
             }
         }
     }
@@ -88,10 +90,10 @@ BayerFramePreProcessor::BayerFramePreProcessor() :
     _data(nullptr),
     _outputData(nullptr),
     _size(0),
-    dataUL(nullptr),
-    dataUR(nullptr),
-    dataLL(nullptr),
-    dataLR(nullptr),
+    _dataUL(nullptr),
+    _dataUR(nullptr),
+    _dataLL(nullptr),
+    _dataLR(nullptr),
     _dataRed(nullptr),
     _dataGreen(nullptr),
     _dataBlue(nullptr),
@@ -146,24 +148,24 @@ void BayerFramePreProcessor::SetData(uint16_t* imageData, OCImage& image)
 
 void BayerFramePreProcessor::Process()
 {
-    //std::thread t0;
+    // std::thread t0;
     switch(_imageFormat)
     {
     case ImageFormat::Integer12:
         OC_LOG_INFO("12->16bit conversion");
         OC::Image::ImageHelper::Convert12To16Bit(_data, _width, _height, _outputData);
-        //t0 = std::thread(&OC::Image::ImageHelper::Convert12To16Bit, this);
+        // t0 = std::thread(&OC::Image::ImageHelper::Convert12To16Bit, this);
         break;
     case ImageFormat::Integer14:
         OC_LOG_INFO("14->16bit conversion");
         OC::Image::ImageHelper::Convert14To16Bit(_data, _width, _height, _outputData);
-        //t0 = std::thread(&OC::Image::ImageHelper::Convert14To16Bit, this);
+        // t0 = std::thread(&OC::Image::ImageHelper::Convert14To16Bit, this);
         break;
     default:
         break;
     }
 
-    //t0.join();
+    // t0.join();
 
     std::thread t1(&BayerFramePreProcessor::ExtractOddRows, this);
     std::thread t2(&BayerFramePreProcessor::ExtractEvenRows, this);
@@ -172,20 +174,20 @@ void BayerFramePreProcessor::Process()
     t1.join();
     t2.join();
 
-    //OC_LOG_INFO("Extract finished");
+    // OC_LOG_INFO("Extract finished");
 }
 
-uint16_t*BayerFramePreProcessor::GetDataRed()
+uint16_t* BayerFramePreProcessor::GetDataRed()
 {
     return _dataRed;
 }
 
-uint16_t*BayerFramePreProcessor::GetDataGreen()
+uint16_t* BayerFramePreProcessor::GetDataGreen()
 {
     return _dataGreen;
 }
 
-uint16_t*BayerFramePreProcessor::GetDataBlue()
+uint16_t* BayerFramePreProcessor::GetDataBlue()
 {
     return _dataBlue;
 }

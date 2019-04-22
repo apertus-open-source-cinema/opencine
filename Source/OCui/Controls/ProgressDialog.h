@@ -14,25 +14,26 @@
 
 #include "OCui_export.h"
 
-namespace Ui {
-class ProgressDialog;
+namespace Ui
+{
+    class ProgressDialog;
 }
 
 class OCUI_EXPORT ProgressDialog : public QDialog
 {
-	Q_OBJECT
-		
-	QStandardItemModel* _model;
+    Q_OBJECT
+
+    QStandardItemModel *_model;
 
     std::unordered_map<unsigned int, unsigned int> _taskMap; // task ID, row index
     unsigned int _indexCount; // Used for _taskMap, correct increment or decrement has to be ensured
 
 public:
-    explicit ProgressDialog(QWidget *parent = 0/*, IDataTransfer* dataTransfer = nullptr*/);
+    explicit ProgressDialog(QWidget *parent = 0 /*, IDataTransfer* dataTransfer = nullptr*/);
     ~ProgressDialog();
 
-	// TODO: Create interface for class and also consider to use some sort of proxy for tasks
-    void AddTask(ITask* taskProgress);
+    // TODO: Create interface for class and also consider to use some sort of proxy for tasks
+    void AddTask(ITask *taskProgress);
 
     void SetTaskProgress(ITask *task);
 

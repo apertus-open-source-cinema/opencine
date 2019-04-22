@@ -31,8 +31,10 @@ file(GLOB SOURCE_FILES "*.cpp" "*.h"
     "Log/*.cpp" "Log/*.h"
     "Task/*.cpp" "Task/*.h"
     "Memory/*.cpp" "Memory/*.h"
-	"Events/*.cpp" "Events/*.h"
-	"Hash/*.cpp" "Hash/*.h")
+    "Events/*.cpp" "Events/*.h"
+    "Hash/*.cpp" "Hash/*.h"
+    "${CMAKE_SOURCE_DIR}/3rdParty/lodepng/lodepng.cpp"
+    "${CMAKE_SOURCE_DIR}/3rdParty/lodepng/lodepng.h")
 
 if(WIN32)
     file(GLOB PLATFORM_FILES "Platforms/Win/*.cpp" "Platforms/Win/*.h")

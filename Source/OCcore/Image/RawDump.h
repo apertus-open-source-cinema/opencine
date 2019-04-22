@@ -11,12 +11,15 @@ namespace OC
 {
     namespace Image
     {
+        class OCImage;
+
         class RawDump
         {
         public:
             static bool Dump(std::string fileName, unsigned char* data, long length);
+            static bool DumpPNG(std::string fileName, OC::Image::OCImage& image);
         };
     }
 }
 
-#endif //RAWDUMP_H
+#endif // RAWDUMP_H

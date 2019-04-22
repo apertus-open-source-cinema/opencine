@@ -7,47 +7,47 @@
 
 #include <OCui.h>
 
-#include <QtConcurrent/QtConcurrentRun>
 #include <QDebug>
+#include <QtConcurrent/QtConcurrentRun>
 
-#include "Views/ProcessingView.h"
 #include "Presenters/ProcessingPresenter.h"
+#include "Views/ProcessingView.h"
 
-#include <Image/FramePool.h>
 #include "Log/Logger.h"
+#include <Image/FramePool.h>
 
 class ProcessingTest : public OCui::GUIApplication
 {
-	std::shared_ptr<IProcessingView> _view;
-	std::shared_ptr<IProcessingPresenter> _presenter;
+    std::shared_ptr<IProcessingView> _view;
+    std::shared_ptr<IProcessingPresenter> _presenter;
 
 public:
-	ProcessingTest(int& argc, char** argv) : OCui::GUIApplication(argc, argv, "ProcessingTest")
-	{
+    ProcessingTest(int& argc, char** argv) : OCui::GUIApplication(argc, argv, "ProcessingTest")
+    {
         _view = std::make_shared<ProcessingView>();
-		_presenter = std::make_shared<ProcessingPresenter>(*_view);
+        _presenter = std::make_shared<ProcessingPresenter>(*_view);
 
-		SetLayout(*static_cast<QWidget*>(_view.get()));
-		ShowMaximized();
+        SetLayout(*static_cast<QWidget*>(_view.get()));
+        ShowMaximized();
 
         //_presenter->Test();
-	}
+    }
 };
 
 int main(int argc, char** argv)
 {
-	OC_LOG_INFO("-----");
-	OC_LOG_INFO("ProcessingTest started");
+    OC_LOG_INFO("-----");
+    OC_LOG_INFO("ProcessingTest started");
 
-	ProcessingTest* app = new ProcessingTest(argc, argv);
-	app->Run();
+    ProcessingTest* app = new ProcessingTest(argc, argv);
+    app->Run();
 
-	if (app != nullptr)
-	{
-		delete app;
-	}
+    if(app != nullptr)
+    {
+        delete app;
+    }
 
-	OC_LOG_INFO("ProcessingTest exited");
-	OC_LOG_INFO("-----");
-	return 0;
+    OC_LOG_INFO("ProcessingTest exited");
+    OC_LOG_INFO("-----");
+    return 0;
 }

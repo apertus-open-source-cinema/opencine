@@ -6,28 +6,25 @@
 
 #include <QWheelEvent>
 
-//unsigned char pixels[12] = {
+using namespace OC::Image;
+
+// unsigned char pixels[12] = {
 //    255,   0, 0,     0, 255,   0,
 //    0, 255, 0,     0,   0, 255
 //};
 
-//float xOffset = 0.5f / 4096.0f;
-//float yOffset = 0.5f / 3072.0f;
+// float xOffset = 0.5f / 4096.0f;
+// float yOffset = 0.5f / 3072.0f;
 
 // Create a colored triangle
-static const float vertices[] = {
-    -1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 0.0,
-    -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 1.0,
-    1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 0.0,
-    1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 1.0
-};
+static const float vertices[] = {-1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 0.0, -1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0, 1.0,
+                                 1.0f,  1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 0.0, 1.0f,  -1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0, 1.0};
 
-PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent),
-    _initialized(false)
+PreviewPane::PreviewPane(QWidget *parent) : QOpenGLWidget(parent), _initialized(false)
 {
     setMouseTracking(true);
 
-     _renderingEnabled = false;
+    _renderingEnabled = false;
 
     QSurfaceFormat format;
     format.setDepthBufferSize(24);
@@ -52,7 +49,7 @@ void PreviewPane::initializeGL()
     SetupShaders();
     SetupVertexBuffer();
     SetupObject();
-    //SetupTexture();
+    // SetupTexture();
 
     object.release();
     vertex.release();
@@ -78,13 +75,13 @@ void PreviewPane::paintGL()
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     program->bind();
     {
         QMatrix4x4 projection;
         projection.ortho(-viewWidth / 2.0f, viewWidth / 2.0f, -viewHeight / 2.0f, viewHeight / 2.0f, 0.01f, 1000.0f);
         QMatrix4x4 view;
-        view.lookAt(QVector3D(0.0,0.0, 1.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
+        view.lookAt(QVector3D(0.0, 0.0, 1.0), QVector3D(0.0, 0.0, 0.0), QVector3D(0.0, 1.0, 0.0));
         QMatrix4x4 model;
         model.setToIdentity();
         model.scale(static_cast<float>(imageWidth) / static_cast<float>(imageHeight) * wheelValue, 1.0f * wheelValue, 1.0f);
@@ -129,15 +126,18 @@ void PreviewPane::printVersionInformation()
 
     // Get Version Information
     glType = (context()->isOpenGLES()) ? "OpenGL ES" : "OpenGL";
-    glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+    glVersion = reinterpret_cast<const char *>(glGetString(GL_VERSION));
 
     // Get Profile Information
-#define CASE(c) case QSurfaceFormat::c: glProfile = #c; break
-    switch (format().profile())
+#define CASE(c)                                                                                                                  \
+    case QSurfaceFormat::c:                                                                                                      \
+        glProfile = #c;                                                                                                          \
+        break
+    switch(format().profile())
     {
-    CASE(NoProfile);
-    CASE(CoreProfile);
-    CASE(CompatibilityProfile);
+        CASE(NoProfile);
+        CASE(CoreProfile);
+        CASE(CompatibilityProfile);
     }
 #undef CASE
 
@@ -182,13 +182,13 @@ void PreviewPane::SetupTexture()
 {
 }
 
-void PreviewPane::wheelEvent(QWheelEvent* event)
+void PreviewPane::wheelEvent(QWheelEvent *event)
 {
-    if (event->delta() > 0)
+    if(event->delta() > 0)
     {
         wheelValue *= zoomFactor;
 
-        if (wheelValue > 100.0f)
+        if(wheelValue > 100.0f)
         {
             wheelValue = 100.0f;
         }
@@ -196,13 +196,13 @@ void PreviewPane::wheelEvent(QWheelEvent* event)
     else
     {
         wheelValue *= (1.0f / zoomFactor);
-        if (wheelValue < 0.01f)
+        if(wheelValue < 0.01f)
         {
             wheelValue = 0.01f;
         }
     }
 
-    //wheelValue += event->pixelDelta().y() / 100.0f;
+    // wheelValue += event->pixelDelta().y() / 100.0f;
 }
 
 void PreviewPane::mouseMoveEvent(QMouseEvent *event)
@@ -217,13 +217,13 @@ void PreviewPane::mouseMoveEvent(QMouseEvent *event)
     oldY = event->globalY();
 }
 
-void PreviewPane::SetTexture(int width, int height, unsigned short* imageData)
+void PreviewPane::SetTexture(int width, int height, unsigned short *imageData)
 {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 2);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_R16UI, width, height, 0, GL_RED_INTEGER, GL_UNSIGNED_SHORT, imageData);
 
     GLenum err;
-    while ((err = glGetError()) != GL_NO_ERROR)
+    while((err = glGetError()) != GL_NO_ERROR)
     {
         qDebug() << "2 OpenGL error: " << err;
     }
@@ -231,14 +231,14 @@ void PreviewPane::SetTexture(int width, int height, unsigned short* imageData)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_LINEAR_MIPMAP_NEAREST
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // GL_LINEAR_MIPMAP_NEAREST
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    //glGenerateMipmap(GL_TEXTURE_2D);
+    // glGenerateMipmap(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    while ((err = glGetError()) != GL_NO_ERROR)
+    while((err = glGetError()) != GL_NO_ERROR)
     {
         qDebug() << "3 OpenGL error: " << err;
     }
@@ -264,17 +264,17 @@ bool PreviewPane::IsInitialized()
     return isValid();
 }
 
-void PreviewPane::SetImage(OC::DataProvider::OCImage &image)
+void PreviewPane::SetImage(OCImage &image)
 {
     imageWidth = static_cast<int>(image.Width());
     imageHeight = static_cast<int>(image.Height());
 
     glBindTexture(GL_TEXTURE_2D, textureRed);
-    SetTexture(imageWidth, imageHeight, static_cast<unsigned short*>(image.RedChannel()));
+    SetTexture(imageWidth, imageHeight, static_cast<unsigned short *>(image.RedChannel()));
     glBindTexture(GL_TEXTURE_2D, textureGreen);
-    SetTexture(imageWidth, imageHeight, static_cast<unsigned short*>(image.GreenChannel()));
+    SetTexture(imageWidth, imageHeight, static_cast<unsigned short *>(image.GreenChannel()));
     glBindTexture(GL_TEXTURE_2D, textureBlue);
-    SetTexture(imageWidth, imageHeight, static_cast<unsigned short*>(image.BlueChannel()));
+    SetTexture(imageWidth, imageHeight, static_cast<unsigned short *>(image.BlueChannel()));
 }
 
 void PreviewPane::EnableRendering(bool enable)

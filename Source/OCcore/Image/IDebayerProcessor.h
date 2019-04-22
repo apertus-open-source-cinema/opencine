@@ -6,9 +6,11 @@
 class IDebayerProcessor
 {
 public:
-    virtual ~IDebayerProcessor() {}
+    virtual ~IDebayerProcessor()
+    {
+    }
 
-     virtual void Process(OC::DataProvider::OCImage &image) = 0;
+    virtual void Process(OC::Image::OCImage &image) = 0;
 };
 
 #endif // DEBAYERPROCESSOR_H

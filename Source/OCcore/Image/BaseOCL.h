@@ -14,17 +14,17 @@
 
 //#define KERNELS_FILE "Kernels.cl"
 
-//using namespace OC::DataProvider;
+// using namespace OC::DataProvider;
 
 class BaseOCL
 {
 private:
     cl::Context _context;
-    
-	std::vector<cl::Device> _devices;
-	cl::Device _defaultDevice;
 
-	cl::CommandQueue _queue;
+    std::vector<cl::Device> _devices;
+    cl::Device _defaultDevice;
+
+    cl::CommandQueue _queue;
     cl::Program _program;
 
     cl::Kernel _kernels[6];
@@ -35,8 +35,8 @@ private:
 
     cl_int _result;
 
-	// TODO: Extend for multiple
-	IProcessorOCL* _processor;
+    // TODO: Extend for multiple
+    IProcessorOCL* _processor;
 
 public:
     BaseOCL();
@@ -46,16 +46,16 @@ public:
     int SetupOCL();
 
     cl::CommandQueue GetQueue();
-	cl::Context GetContext();
+    cl::Context GetContext();
 
-    void RegisterProcessor(IProcessorOCL* processor, OCImage &image);
+    void RegisterProcessor(IProcessorOCL* processor, OC::Image::OCImage& image);
 
     void ExecuteProcessor();
 
 private:
-	void InitBase();
+    void InitBase();
 
-	std::string LoadKernelSource(std::string kernelPath);
+    std::string LoadKernelSource(std::string kernelPath);
 };
 
-#endif //BASEOCL_H
+#endif // BASEOCL_H

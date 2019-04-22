@@ -12,6 +12,7 @@
 
 #include "BayerFrameDownscaler.h"
 
+using namespace OC::Image;
 using namespace OC::DataProvider;
 
 mlv_file_hdr_t MLVLoader::ReadHeader(uint8_t* buffer, unsigned int& bufferPosition)
@@ -51,8 +52,8 @@ raw_info MLVLoader::ReadRawInfo(uint8_t* buffer, unsigned int& bufferPosition)
     raw_info block;
 
     block.api_version = GetUInt32(&buffer[bufferPosition], bufferPosition);
-    //block.do_not_use_this = GetUInt32(&buffer[bufferPosition], bufferPosition);
-    bufferPosition += 4; //step over some obsolete struct member
+    // block.do_not_use_this = GetUInt32(&buffer[bufferPosition], bufferPosition);
+    bufferPosition += 4; // step over some obsolete struct member
     block.height = GetUInt32(&buffer[bufferPosition], bufferPosition);
     block.width = GetUInt32(&buffer[bufferPosition], bufferPosition);
     block.pitch = GetUInt32(&buffer[bufferPosition], bufferPosition);
@@ -74,7 +75,7 @@ raw_info MLVLoader::ReadRawInfo(uint8_t* buffer, unsigned int& bufferPosition)
     block.calibration_illuminant1 = GetUInt32(&buffer[bufferPosition], bufferPosition);
     unsigned int tempLength = 18 * sizeof(int32_t);
     // TODO: Check the SIGABRT when the next line is active
-    //std::copy(&buffer[bufferPosition], &buffer[bufferPosition] + tempLength, block.color_matrix1); // 4 * 18 -> uint32_t * 18
+    // std::copy(&buffer[bufferPosition], &buffer[bufferPosition] + tempLength, block.color_matrix1); // 4 * 18 -> uint32_t * 18
     bufferPosition += tempLength;
     block.dynamic_range = GetUInt32(&buffer[bufferPosition], bufferPosition);
 
@@ -87,7 +88,7 @@ mlv_rawi_hdr_t MLVLoader::ReadRAWI(uint8_t* buffer, unsigned int& bufferPosition
 
     block.xRes = GetUInt16(&buffer[bufferPosition], bufferPosition);
     block.yRes = GetUInt16(&buffer[bufferPosition], bufferPosition);
-    //block.rawInfo = &buffer[bufferPosition];
+    // block.rawInfo = &buffer[bufferPosition];
     block.rawInfo = ReadRawInfo(buffer, bufferPosition);
 
     return block;
@@ -103,12 +104,12 @@ mlv_vidf_hdr_t MLVLoader::ReadVIDF(uint8_t* buffer, unsigned int& bufferPosition
     block.panPosX = GetUInt16(&buffer[bufferPosition], bufferPosition);
     block.panPosY = GetUInt16(&buffer[bufferPosition], bufferPosition);
     block.frameSpace = GetUInt32(&buffer[bufferPosition], bufferPosition);
-    //uint8_t	frameData
+    // uint8_t	frameData
 
     // FIXME: Remove "processed" when frame loading is implemented, used here to get only first frame
     if(processed == false)
     {
-        sourceData = &buffer[bufferPosition + block.frameSpace];
+        _sourceData = &buffer[bufferPosition + block.frameSpace];
         processed = true;
     }
 
@@ -119,10 +120,9 @@ mlv_vidf_hdr_t MLVLoader::ReadVIDF(uint8_t* buffer, unsigned int& bufferPosition
 
 MLVLoader::MLVLoader()
 {
-
 }
 
-void MLVLoader::Load(uint8_t *data, unsigned size, OCImage& image, IAllocator& allocator)
+void MLVLoader::Load(uint8_t* data, unsigned size, OCImage& image, IAllocator& allocator)
 {
     // TODO: Add handlng of endianess
 
@@ -136,31 +136,32 @@ void MLVLoader::Load(uint8_t *data, unsigned size, OCImage& image, IAllocator& a
     mlv_vidf_hdr_t blockVIDF;
 
     // TODO: Check if switch can be replaced by hash map of func<>
-    while (bufferPosition < size)
+    while(bufferPosition < size)
     {
         mlv_hdr_t blockHeader = ReadBlockHeader(data, bufferPosition);
-        switch (blockHeader.blockType)
+        switch(blockHeader.blockType)
         {
         case BlockType_RAWI:
         {
             blockRAWI = ReadRAWI(data, bufferPosition, blockHeader);
         }
-            break;
+        break;
         case BlockType_VIDF:
         {
-            blockVIDF= ReadVIDF(data, bufferPosition, blockHeader);
+            blockVIDF = ReadVIDF(data, bufferPosition, blockHeader);
         }
-            break;
+        break;
         case BlockType_NULL:
         {
             // Jump over this padding block
             bufferPosition += blockHeader.blockSize - blockHeaderSize;
         }
-            break;
+        break;
         default:
         {
-            std::string s( reinterpret_cast<char const*>(&blockHeader.blockType), 4 ) ;
-            std::cout << "No processing implemented for block. Type: " << s << " Size: " << blockHeader.blockSize <<" bytes"<<std::endl;
+            std::string s(reinterpret_cast<char const*>(&blockHeader.blockType), 4);
+            std::cout << "No processing implemented for block. Type: " << s << " Size: " << blockHeader.blockSize << " bytes"
+                      << std::endl;
 
             // Jump over the block
             bufferPosition += blockHeader.blockSize - blockHeaderSize;
@@ -180,16 +181,23 @@ void MLVLoader::Load(uint8_t *data, unsigned size, OCImage& image, IAllocator& a
     image.SetGreenChannel(allocator.Allocate(dataSize));
     image.SetBlueChannel(allocator.Allocate(dataSize));
 
+    unsigned int imageDataSize = 0;
     ImageFormat imageFormat = ImageFormat::Integer12;
     switch(blockRAWI.rawInfo.bits_per_pixel)
     {
     case 14:
         imageFormat = ImageFormat::Integer14;
+        imageDataSize = dataSize * 1.75f; // 14bit / 8 bit
         break;
     }
 
-    frameProcessor->SetData(sourceData, image, imageFormat);
-    //frameProcessor->SetLinearizationData(linearizationTable, linearizationLength);
+    for(int i = 0; i < imageDataSize; i += 2)
+    {
+        std::swap(_sourceData[i], _sourceData[i + 1]);
+    }
+
+    frameProcessor->SetData(_sourceData, image, imageFormat);
+    // frameProcessor->SetLinearizationData(linearizationTable, linearizationLength);
     frameProcessor->Process();
 
     image.SetRedChannel(frameProcessor->GetDataRed());

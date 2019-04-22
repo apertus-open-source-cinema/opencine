@@ -9,6 +9,8 @@
 
 #include <Log/Logger.h>
 
+using namespace OC::Image;
+
 BilinearDebayer::BilinearDebayer()
 {
     // TODO (BAndiT1983): Add implementation
@@ -20,9 +22,9 @@ BilinearDebayer::BilinearDebayer(OCImage &image)
     _height = image.Height();
     _size = _width * _height;
 
-    _redChannel = static_cast<uint16_t*>(image.RedChannel());
-    _greenChannel = static_cast<uint16_t*>(image.GreenChannel());
-    _blueChannel = static_cast<uint16_t*>(image.BlueChannel());
+    _redChannel = static_cast<uint16_t *>(image.RedChannel());
+    _greenChannel = static_cast<uint16_t *>(image.GreenChannel());
+    _blueChannel = static_cast<uint16_t *>(image.BlueChannel());
 
     _pattern = image.GetBayerPattern();
     SetPatternOffsets(_pattern);
@@ -36,11 +38,13 @@ void BilinearDebayer::DebayerBottomRight(uint16_t *channel)
 {
     for(uint32_t index = _patternOffsets[0]; index < _size; index += 2)
     {
-        channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
-        channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
-        channel[index + _width] = ( channel[index + _width - 1] + channel[index + _width + 1] ) >> 1;
+        channel[index] = (channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] +
+                          channel[index + _width + 1]) >>
+                         2;
+        channel[index + 1] = (channel[index + _width + 1] + channel[index - _width + 1]) >> 1;
+        channel[index + _width] = (channel[index + _width - 1] + channel[index + _width + 1]) >> 1;
 
-        if ((index + 3) % _width <= 1)
+        if((index + 3) % _width <= 1)
         {
             index += _width + 2;
         }
@@ -51,11 +55,13 @@ void BilinearDebayer::DebayerBottomLeft(uint16_t *channel)
 {
     for(uint32_t index = _patternOffsets[0]; index < _size; index += 2)
     {
-        channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
-        channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
-        channel[index + _width] = ( channel[index + _width - 1] + channel[index + _width + 1] ) >> 1;
+        channel[index] = (channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] +
+                          channel[index + _width + 1]) >>
+                         2;
+        channel[index - 1] = (channel[index + _width - 1] + channel[index - _width - 1]) >> 1;
+        channel[index + _width] = (channel[index + _width - 1] + channel[index + _width + 1]) >> 1;
 
-        if ((index + 3) % _width <= 1)
+        if((index + 3) % _width <= 1)
         {
             index += _width + 2;
         }
@@ -66,18 +72,22 @@ void BilinearDebayer::DebayerGreen()
 {
     for(uint32_t index = _patternOffsets[1]; index < _size; index += 2)
     {
-        _greenChannel[index] = ( _greenChannel[index - _width] + _greenChannel[index - 1] + _greenChannel[index + 1] + _greenChannel[index + _width] ) >> 2;
+        _greenChannel[index] = (_greenChannel[index - _width] + _greenChannel[index - 1] + _greenChannel[index + 1] +
+                                _greenChannel[index + _width]) >>
+                               2;
 
-        if ((index + 3) % _width <= 1)
+        if((index + 3) % _width <= 1)
         {
             index += _width + 2;
         }
     }
     for(uint32_t index = _patternOffsets[2]; index < _size; index += 2)
     {
-        _greenChannel[index] = ( _greenChannel[index - _width] + _greenChannel[index - 1] + _greenChannel[index + 1] + _greenChannel[index + _width] ) >> 2;
+        _greenChannel[index] = (_greenChannel[index - _width] + _greenChannel[index - 1] + _greenChannel[index + 1] +
+                                _greenChannel[index + _width]) >>
+                               2;
 
-        if ((index + 3) % _width <= 1)
+        if((index + 3) % _width <= 1)
         {
             index += _width + 2;
         }
@@ -88,11 +98,13 @@ void BilinearDebayer::DebayerTopLeft(uint16_t *channel)
 {
     for(uint32_t index = _patternOffsets[3]; index < _size; index += 2)
     {
-        channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
-        channel[index - 1] = ( channel[index + _width - 1] + channel[index - _width - 1] ) >> 1;
-        channel[index - _width] = ( channel[index - _width - 1] + channel[index - _width + 1] ) >> 1;
+        channel[index] = (channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] +
+                          channel[index + _width + 1]) >>
+                         2;
+        channel[index - 1] = (channel[index + _width - 1] + channel[index - _width - 1]) >> 1;
+        channel[index - _width] = (channel[index - _width - 1] + channel[index - _width + 1]) >> 1;
 
-        if ((index + 3) % _width <= 1)
+        if((index + 3) % _width <= 1)
         {
             index += _width + 2;
         }
@@ -103,11 +115,13 @@ void BilinearDebayer::DebayerTopRight(uint16_t *channel)
 {
     for(uint32_t index = _patternOffsets[3]; index < _size; index += 2)
     {
-        channel[index] = ( channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] + channel[index + _width + 1] ) >> 2;
-        channel[index + 1] = ( channel[index + _width + 1] + channel[index - _width + 1] ) >> 1;
-        channel[index - _width] = ( channel[index - _width - 1] + channel[index - _width + 1] ) >> 1;
+        channel[index] = (channel[index - _width - 1] + channel[index - _width + 1] + channel[index + _width - 1] +
+                          channel[index + _width + 1]) >>
+                         2;
+        channel[index + 1] = (channel[index + _width + 1] + channel[index - _width + 1]) >> 1;
+        channel[index - _width] = (channel[index - _width - 1] + channel[index - _width + 1]) >> 1;
 
-        if ((index + 3) % _width <= 1)
+        if((index + 3) % _width <= 1)
         {
             index += _width + 2;
         }
@@ -134,27 +148,30 @@ void BilinearDebayer::DemosaicBorders(uint16_t *channel)
 }
 
 
-void BilinearDebayer::Process(OCImage& image)
+void BilinearDebayer::Process(OCImage &image)
 {
     _width = image.Width();
     _height = image.Height();
     _size = _width * _height;
 
-    _redChannel = static_cast<uint16_t*>(image.RedChannel());
-    _greenChannel = static_cast<uint16_t*>(image.GreenChannel());
-    _blueChannel = static_cast<uint16_t*>(image.BlueChannel());
+    _redChannel = static_cast<uint16_t *>(image.RedChannel());
+    _greenChannel = static_cast<uint16_t *>(image.GreenChannel());
+    _blueChannel = static_cast<uint16_t *>(image.BlueChannel());
 
     _pattern = image.GetBayerPattern();
     SetPatternOffsets(_pattern);
 
-    //    OC_LOG_INFO("\nConsidering width as " + std::to_string(_width) + ":\n" + std::to_string(_patternOffsets[0]) + "\n" + std::to_string(_patternOffsets[1]) + "\n" + std::to_string(_patternOffsets[2]) + "\n" + std::to_string(_patternOffsets[3]) + "\n");
+    //    OC_LOG_INFO("\nConsidering width as " + std::to_string(_width) + ":\n" + std::to_string(_patternOffsets[0]) + "\n" +
+    //    std::to_string(_patternOffsets[1]) + "\n" + std::to_string(_patternOffsets[2]) + "\n" +
+    //    std::to_string(_patternOffsets[3]) + "\n");
 
     Process();
 }
 
 void BilinearDebayer::Process()
 {
-    switch (_pattern) {
+    switch(_pattern)
+    {
     case BayerPattern::RGGB:
         BilinearDebayer::DebayerBottomRight(_redChannel);
         BilinearDebayer::DebayerTopLeft(_blueChannel);
@@ -185,16 +202,16 @@ void BilinearDebayer::DebayerNearest(uint32_t red, uint32_t green0, uint32_t gre
     {
         _redChannel[index + green0] = _redChannel[index + red];
         _redChannel[index + green1] = _redChannel[index + red];
-        _redChannel[index + blue]   = _redChannel[index + red];
+        _redChannel[index + blue] = _redChannel[index + red];
 
-        _greenChannel[index + red]  = _greenChannel[index + green0];
+        _greenChannel[index + red] = _greenChannel[index + green0];
         _greenChannel[index + blue] = _greenChannel[index + green1];
 
-        _blueChannel[index + red]    = _blueChannel[index + blue];
+        _blueChannel[index + red] = _blueChannel[index + blue];
         _blueChannel[index + green0] = _blueChannel[index + blue];
         _blueChannel[index + green1] = _blueChannel[index + blue];
 
-        if ( ((index + 2) % _width) == 0 )
+        if(((index + 2) % _width) == 0)
         {
             index += _width;
         }
@@ -204,7 +221,7 @@ void BilinearDebayer::DebayerNearest(uint32_t red, uint32_t green0, uint32_t gre
 void BilinearDebayer::ProcessNearest()
 {
     // Nearest Interpolation Processor.
-    switch (_pattern)
+    switch(_pattern)
     {
     case BayerPattern::RGGB:
         DebayerNearest(0, 1, _width, _width + 1);
@@ -223,7 +240,7 @@ void BilinearDebayer::ProcessNearest()
 
 void BilinearDebayer::SetPatternOffsets(BayerPattern pattern)
 {
-    switch (pattern)
+    switch(pattern)
     {
     case BayerPattern::RGGB:
     case BayerPattern::BGGR:
