@@ -18,22 +18,20 @@ jobs:
           root: .
           paths:
             - build
-  test:
-    docker:
-      - image: ubuntu:18.04
-    steps:
-      - attach_workspace:
-          at: ./build
-      - run: ./OCTests
-
-      #- checkout
-      
+  #test:
+  #  docker:
+  #    - image: ubuntu:18.04
+  #  steps:
+  #    - attach_workspace:
+  #        at: ./build
+  #    - run: ./OCTests
+   
 workflows:
   version: 2
   build_and_test:
     jobs:
       - build
-      - test:
-          requires:
-            - build
+      #- test:
+      #    requires:
+      #      - build
       
