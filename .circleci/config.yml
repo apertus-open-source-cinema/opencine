@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: Install System Dependencies
-          command: apt-get update -qq && apt-get install --no-upgrade -y build-essential cmake qtdeclarative5-dev opencl-headers ocl-icd-opencl-dev
+          command: apt-get update -qq && apt-get install --no-upgrade -y build-essential git cmake qtdeclarative5-dev opencl-headers ocl-icd-opencl-dev
       - run:
           name: Build
           command: git submodule update --init --recursive &&
