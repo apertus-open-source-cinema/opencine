@@ -15,8 +15,10 @@ namespace OC
 
         class RawDump
         {
+            static uint8_t GetBitShift(OCImage& image);
+
         public:
-            static bool Dump(std::string fileName, unsigned char* data, long length);
+            static bool DumpRAW(std::string fileName, uint8_t* data, long length);
             static bool DumpPNG(std::string fileName, OC::Image::OCImage& image);
         };
     }

@@ -8,6 +8,7 @@ AllowShortBlocksOnASingleLine: false
 AllowShortFunctionsOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
 AlwaysBreakTemplateDeclarations: true
 BasedOnStyle: LLVM
 BreakBeforeBraces: Allman
@@ -16,9 +17,10 @@ ColumnLimit: 130
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 ConstructorInitializerIndentWidth: 8
 Cpp11BracedListStyle: true
-DerivePointerAlignment: true
+DerivePointerAlignment: false
 FixNamespaceComments: false
 IndentWidth: 4
+IndentCaseLabels: true
 Language: Cpp
 MaxEmptyLinesToKeep: 2
 NamespaceIndentation: All

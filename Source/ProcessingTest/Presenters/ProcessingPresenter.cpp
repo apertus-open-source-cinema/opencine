@@ -30,7 +30,7 @@
 using namespace OC::DataProvider;
 using namespace OC::Image;
 
-ProcessingPresenter::ProcessingPresenter(IProcessingView &view) : _currentDebayerProcessor(0), _lastDir(QDir::currentPath())
+ProcessingPresenter::ProcessingPresenter(IProcessingView& view) : _currentDebayerProcessor(0), _lastDir(QDir::currentPath())
 {
     _view = &view;
 
@@ -117,7 +117,7 @@ void ProcessingPresenter::Show()
 {
     auto start = std::chrono::high_resolution_clock::now();
 
-    IAllocator *poolAllocator = new RawPoolAllocator(150 * 1024 * 1024);
+    IAllocator* poolAllocator = new RawPoolAllocator(150 * 1024 * 1024);
 
     OC_LOG_INFO("Loading image");
     std::string extension = _currentFilePath.substr(_currentFilePath.find_last_of(".") + 1);
@@ -189,7 +189,7 @@ void ProcessingPresenter::OpenRAWFile()
     _view->EnableRendering(false);
 
     QString fileName = QFileDialog::getOpenFileName(_view, tr("Open Image"), _lastDir,
-                                                    tr("DNG Files (*.dng *.DNG);;Magiclantern files(*.mlv *.MLV)"));
+                                                    tr("DNG Files(*.dng *.DNG);;Magiclantern files(*.mlv *.MLV)"));
 
     _currentFilePath = fileName.toStdString();
     _lastDir = QFileInfo(fileName).path();
@@ -208,11 +208,9 @@ void ProcessingPresenter::ChangeDebayerMethod(unsigned int debayerMethod)
 void ProcessingPresenter::DumpPNG()
 {
     _view->EnableRendering(false);
-    QString fileName = QFileDialog::getSaveFileName(_view, tr("Save PNG"), QDir::currentPath(), tr("PNG Files (*.png *.PNG)"));
-
+    QString fileName = QFileDialog::getSaveFileName(_view, tr("Save PNG"), QDir::currentPath(), tr("PNG Files(*.png *.PNG)"));
 
     OC::Image::RawDump::DumpPNG(fileName.toStdString(), *_image.get());
-    // unsigned int dataLength = _image->Width() * _image->Height();
 
     _view->EnableRendering(true);
 }
