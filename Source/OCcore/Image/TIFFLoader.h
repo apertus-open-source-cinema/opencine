@@ -58,22 +58,7 @@ namespace OC
 
             void SwapEndian(uint32_t& val) const;
 
-            inline void SwapTagEndianess(TIFFTag& tag) const
-            {
-                SwapEndian(tag.ID);
-                SwapEndian(tag.DataType);
-                SwapEndian(tag.DataCount);
-
-                if(tag.DataType == 3)
-                {
-                    tag.DataOffset = tag.DataOffset >> 16;
-                    SwapEndian(reinterpret_cast<uint16_t&>(tag.DataOffset));
-                }
-                else if(tag.DataType == 4)
-                {
-                    SwapEndian(tag.DataOffset);
-                }
-            }
+            inline void SwapTagEndianess(TIFFTag& tag) const;
 
             void ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&)>>& varMap, OC::Image::ImageFormat& bitsPerPixel,
                              unsigned int size, OC::Image::OCImage& image, unsigned char* data);
@@ -84,9 +69,11 @@ namespace OC
 
         public:
             TIFFLoader();
+            virtual ~TIFFLoader();
 
             void ProcessIFDBlock() const;
-            void Load(unsigned char* data, unsigned size, OC::Image::OCImage& image, IAllocator& allocator) override;
+            void Load(uint8_t* data, unsigned int size, Image::OCImage& image, IAllocator& allocator) override;
+            bool CheckFormat(uint8_t* data, std::streamsize size);
         };
     }
 }

@@ -25,6 +25,10 @@ TIFFLoader::TIFFLoader() : _swapEndianess(false), _imageDataOffset(0), _bitsPerP
 {
 }
 
+TIFFLoader::~TIFFLoader()
+{
+}
+
 void TIFFLoader::Cleanup() const
 {
     if(imageData != nullptr)
@@ -40,6 +44,21 @@ void TIFFLoader::Cleanup() const
 
 void TIFFLoader::ProcessIFDBlock() const
 {
+}
+
+bool TIFFLoader::CheckFormat(uint8_t* data, std::streamsize size)
+{
+    bool result = false;
+
+    uint16_t id = static_cast<uint16_t>(data[1] << 8 | data[0]);
+    uint16_t version = static_cast<uint16_t>(data[3] << 8 | data[2]);
+
+    if((id == 0x4949 || id == 0x4d4d) && version == 42)
+    {
+        result = true;
+    }
+
+    return result;
 }
 
 TIFFHeader TIFFLoader::ProcessHeader(char* buffer) const
@@ -103,7 +122,7 @@ void TIFFLoader::FindMainImage(unsigned char* data, unsigned int& ifdOffset, uin
     }
 }
 
-void TIFFLoader::Load(unsigned char* data, unsigned size, OCImage& image, IAllocator& allocator)
+void TIFFLoader::Load(uint8_t* data, unsigned size, OCImage& image, IAllocator& allocator)
 {
     if((data[0] << 8 | data[1]) == 0x4d4d && !IsBigEndianMachine())
     {
@@ -148,8 +167,8 @@ void TIFFLoader::Load(unsigned char* data, unsigned size, OCImage& image, IAlloc
 
 inline void TIFFLoader::SwapEndian(uint16_t& val) const
 {
-    val = (val << 8) |                       // left-shift always fills with zeros
-          (static_cast<uint16_t>(val) >> 8); // right-shift sign-extends, so force to zero
+    val = ((uint16_t)val << 8) | // left-shift always fills with zeros
+          ((uint16_t)val >> 8);  // right-shift sign-extends, so force to zero
 }
 
 inline void TIFFLoader::SwapEndian(uint32_t& val) const
@@ -157,31 +176,52 @@ inline void TIFFLoader::SwapEndian(uint32_t& val) const
     val = (val << 24) | ((val << 8) & 0x00ff0000) | ((val >> 8) & 0x0000ff00) | (val >> 24);
 }
 
+void TIFFLoader::SwapTagEndianess(TIFFTag& tag) const
+{
+    SwapEndian(tag.ID);
+    SwapEndian(tag.DataType);
+    SwapEndian(tag.DataCount);
+
+    if(tag.DataType == 3)
+    {
+        tag.DataOffset = tag.DataOffset >> 16;
+        SwapEndian(reinterpret_cast<uint16_t&>(tag.DataOffset));
+    }
+    else if(tag.DataType == 4)
+    {
+        SwapEndian(tag.DataOffset);
+    }
+}
+
 void TIFFLoader::ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&)>>& varMap, ImageFormat& bitsPerPixel,
                              unsigned int size, OCImage& image, unsigned char* data)
 {
     // std::unordered_map<int, std::function<void(TIFFTag&)>> varMap;
     varMap.insert(std::make_pair(256, [&image](TIFFTag& tag) { image.SetWidth(tag.DataOffset); }));
+
     varMap.insert(std::make_pair(257, [&image](TIFFTag& tag) { image.SetHeight(tag.DataOffset); }));
+
+    varMap.insert(std::make_pair(258, [&image](TIFFTag& tag) { image.SetFormat(static_cast<ImageFormat>(tag.DataOffset)); }));
+
     varMap.insert(std::make_pair(33422, [&image](TIFFTag& tag) // Bayer pattern
                                  {
                                      image.SetType(ImageType::Bayer);
                                      switch(tag.DataOffset)
                                      {
-                                         // read right to left to get right values
-                                         // e.g. RGGB -> 02 B | 01 G | 01 G | 00 R
-                                     case 0x02010100:
-                                         image.SetBayerPattern(BayerPattern::RGGB);
-                                         break;
-                                     case 0x00010102:
-                                         image.SetBayerPattern(BayerPattern::BGGR);
-                                         break;
-                                     case 0x01000201:
-                                         image.SetBayerPattern(BayerPattern::GBRG);
-                                         break;
-                                     case 0x01020001:
-                                         image.SetBayerPattern(BayerPattern::GRBG);
-                                         break;
+                                             // read right to left to get right values
+                                             // e.g. RGGB -> 02 B | 01 G | 01 G | 00 R
+                                         case 0x02010100:
+                                             image.SetBayerPattern(BayerPattern::RGGB);
+                                             break;
+                                         case 0x00010102:
+                                             image.SetBayerPattern(BayerPattern::BGGR);
+                                             break;
+                                         case 0x01000201:
+                                             image.SetBayerPattern(BayerPattern::GBRG);
+                                             break;
+                                         case 0x01020001:
+                                             image.SetBayerPattern(BayerPattern::GRBG);
+                                             break;
                                      }
                                  }));
 
@@ -197,7 +237,7 @@ void TIFFLoader::ProcessTags(std::unordered_map<int, std::function<void(TIFFTag&
     varMap.insert(
         std::make_pair(258, [&bitsPerPixel](TIFFTag& tag) { bitsPerPixel = static_cast<ImageFormat>(tag.DataOffset); }));
 
-    varMap.insert(std::make_pair(273, [=, &image](TIFFTag& tag) mutable { _imageDataOffset = tag.DataOffset; }));
+    varMap.insert(std::make_pair(273, [=](TIFFTag& tag) mutable { _imageDataOffset = tag.DataOffset; }));
 }
 
 void TIFFLoader::PreProcess(unsigned char* data, OCImage& image) const
@@ -211,8 +251,7 @@ void TIFFLoader::PreProcess(unsigned char* data, OCImage& image) const
     image.SetGreenChannel(_allocator->Allocate(dataSize));
     image.SetBlueChannel(_allocator->Allocate(dataSize));
 
-    // TODO: Replace hardcoded image format value
-    frameProcessor->SetData(&data[_imageDataOffset], image, _bitsPerPixel);
+    frameProcessor->SetData(&data[_imageDataOffset], image, image.Format());
 
     frameProcessor->Process();
 

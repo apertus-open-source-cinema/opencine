@@ -16,7 +16,13 @@ namespace OC
         class IImageLoader
         {
         public:
+            virtual ~IImageLoader()
+            {
+            }
+
             virtual void Load(uint8_t* data, unsigned int size, OC::Image::OCImage& image, IAllocator& allocator) = 0;
+
+            virtual bool CheckFormat(uint8_t* data, std::streamsize size) = 0;
         };
     }
 }

@@ -15,15 +15,29 @@
 using namespace OC::DataProvider;
 using namespace OC::Image;
 
+IImageLoader* ImageProvider::FindSuitableLoader(uint8_t* data, std::streamsize size) const
+{
+    for(std::pair<OC::Image::FileFormat, std::shared_ptr<IImageLoader>> entry : _imageLoaders)
+    {
+        IImageLoader* imageLoader = entry.second.get();
+        if(imageLoader->CheckFormat(data, size))
+        {
+            return imageLoader;
+        }
+    }
+
+    return nullptr;
+}
+
 ImageProvider::ImageProvider()
 {
     std::shared_ptr<TIFFLoader> tiffLoader = std::make_shared<TIFFLoader>();
-    _imageProviders.insert(std::make_pair(FileFormat::TIFF, tiffLoader));
-    _imageProviders.insert(std::make_pair(FileFormat::DNG, tiffLoader));
-    _imageProviders.insert(std::make_pair(FileFormat::MLV, std::make_shared<MLVLoader>()));
+    _imageLoaders.insert(std::make_pair(FileFormat::TIFF, tiffLoader));
+    _imageLoaders.insert(std::make_pair(FileFormat::DNG, tiffLoader));
+    _imageLoaders.insert(std::make_pair(FileFormat::MLV, std::make_shared<MLVLoader>()));
 }
 
-bool ImageProvider::ReadBinaryFile(std::string fileName, int& length, uint8_t*& fileData) const
+bool ImageProvider::ReadBinaryFile(std::string fileName, std::streamsize& length, uint8_t*& fileData) const
 {
     std::ifstream is;
     is.open(fileName, std::ios::binary);
@@ -50,7 +64,7 @@ bool ImageProvider::ReadBinaryFile(std::string fileName, int& length, uint8_t*& 
 
 void ImageProvider::Load(std::string fileName, FileFormat format, OCImage& image, IAllocator& allocator) const
 {
-    int length = -1;
+    std::streamsize length = 0;
     uint8_t* fileData = nullptr;
 
     auto start = std::chrono::high_resolution_clock::now();
@@ -70,10 +84,18 @@ void ImageProvider::Load(std::string fileName, FileFormat format, OCImage& image
     start = std::chrono::high_resolution_clock::now();
     IImageLoader* imageLoader = nullptr;
 
-    auto it = _imageProviders.find(format);
-    if(it != _imageProviders.end())
+    // TODO: Add error handling to prevent crash when no suitable loader was found
+    if(format == FileFormat::Unknown)
     {
-        imageLoader = it->second.get();
+        imageLoader = FindSuitableLoader(fileData, length);
+    }
+    else
+    {
+        auto it = _imageLoaders.find(format);
+        if(it != _imageLoaders.end())
+        {
+            imageLoader = it->second.get();
+        }
     }
 
     imageLoader->Load(fileData, length, image, allocator);

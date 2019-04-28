@@ -122,7 +122,28 @@ MLVLoader::MLVLoader()
 {
 }
 
-void MLVLoader::Load(uint8_t* data, unsigned size, OCImage& image, IAllocator& allocator)
+bool MLVLoader::CheckFormat(uint8_t* data, std::streamsize size)
+{
+    bool result = false;
+
+    uint32_t magicBytes = static_cast<uint32_t>((data[3] << 24) | (data[2] << 16) | (data[1] << 8) | data[0]);
+    if(magicBytes == MLVI_MAGIC)
+    {
+        result = true;
+    }
+
+    return result;
+}
+
+void SwapEndianess16BitArray(uint8_t* array, unsigned int size)
+{
+    for(unsigned int i = 0; i < size; i += 2)
+    {
+        std::swap(array[i], array[i + 1]);
+    }
+}
+
+void MLVLoader::Load(uint8_t* data, unsigned int size, Image::OCImage& image, IAllocator& allocator)
 {
     // TODO: Add handlng of endianess
 
@@ -141,31 +162,31 @@ void MLVLoader::Load(uint8_t* data, unsigned size, OCImage& image, IAllocator& a
         mlv_hdr_t blockHeader = ReadBlockHeader(data, bufferPosition);
         switch(blockHeader.blockType)
         {
-        case BlockType_RAWI:
-        {
-            blockRAWI = ReadRAWI(data, bufferPosition, blockHeader);
-        }
-        break;
-        case BlockType_VIDF:
-        {
-            blockVIDF = ReadVIDF(data, bufferPosition, blockHeader);
-        }
-        break;
-        case BlockType_NULL:
-        {
-            // Jump over this padding block
-            bufferPosition += blockHeader.blockSize - blockHeaderSize;
-        }
-        break;
-        default:
-        {
-            std::string s(reinterpret_cast<char const*>(&blockHeader.blockType), 4);
-            std::cout << "No processing implemented for block. Type: " << s << " Size: " << blockHeader.blockSize << " bytes"
-                      << std::endl;
+            case BlockType_RAWI:
+            {
+                blockRAWI = ReadRAWI(data, bufferPosition, blockHeader);
+            }
+            break;
+            case BlockType_VIDF:
+            {
+                blockVIDF = ReadVIDF(data, bufferPosition, blockHeader);
+            }
+            break;
+            case BlockType_NULL:
+            {
+                // Jump over this padding block
+                bufferPosition += blockHeader.blockSize - blockHeaderSize;
+            }
+            break;
+            default:
+            {
+                std::string s(reinterpret_cast<char const*>(&blockHeader.blockType), 4);
+                std::cout << "No processing implemented for block. Type: " << s << " Size: " << blockHeader.blockSize << " bytes"
+                          << std::endl;
 
-            // Jump over the block
-            bufferPosition += blockHeader.blockSize - blockHeaderSize;
-        }
+                // Jump over the block
+                bufferPosition += blockHeader.blockSize - blockHeaderSize;
+            }
         }
     }
 
@@ -185,16 +206,14 @@ void MLVLoader::Load(uint8_t* data, unsigned size, OCImage& image, IAllocator& a
     ImageFormat imageFormat = ImageFormat::Integer12;
     switch(blockRAWI.rawInfo.bits_per_pixel)
     {
-    case 14:
-        imageFormat = ImageFormat::Integer14;
-        imageDataSize = dataSize * 1.75f; // 14bit / 8 bit
-        break;
+        case 14:
+            imageFormat = ImageFormat::Integer14;
+            image.SetFormat(static_cast<ImageFormat>(blockRAWI.rawInfo.bits_per_pixel));
+            imageDataSize = static_cast<unsigned int>(dataSize * 1.75f); // 14bit / 8 bit
+            break;
     }
 
-    for(int i = 0; i < imageDataSize; i += 2)
-    {
-        std::swap(_sourceData[i], _sourceData[i + 1]);
-    }
+    SwapEndianess16BitArray(_sourceData, imageDataSize);
 
     frameProcessor->SetData(_sourceData, image, imageFormat);
     // frameProcessor->SetLinearizationData(linearizationTable, linearizationLength);

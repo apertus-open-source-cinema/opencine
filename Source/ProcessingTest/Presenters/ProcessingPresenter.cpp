@@ -120,20 +120,8 @@ void ProcessingPresenter::Show()
     IAllocator* poolAllocator = new RawPoolAllocator(150 * 1024 * 1024);
 
     OC_LOG_INFO("Loading image");
-    std::string extension = _currentFilePath.substr(_currentFilePath.find_last_of(".") + 1);
-    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-
-    FileFormat fileFormat = FileFormat::Unknown;
-    if(extension == "dng")
-    {
-        fileFormat = FileFormat::DNG;
-    }
-    else if(extension == "mlv")
-    {
-        fileFormat = FileFormat::MLV;
-    }
-
-    provider->Load(_currentFilePath, fileFormat, *_image.get(), *poolAllocator);
+    // File format is set to "unknown" to let OC determine it automatically
+    provider->Load(_currentFilePath, FileFormat::Unknown, *_image.get(), *poolAllocator);
 
     OC_LOG_INFO("Loading finished");
 

@@ -67,18 +67,18 @@ void BayerFrameDownscaler::Extract(int jump) const
 }
 
 BayerFrameDownscaler::BayerFrameDownscaler() :
-    _data(nullptr),
-    _outputData(nullptr),
-    _size(0),
-    _dataUL(nullptr),
-    _dataUR(nullptr),
-    _dataLL(nullptr),
-    _dataLR(nullptr),
-    _dataRed(nullptr),
-    _dataGreen(nullptr),
-    _dataBlue(nullptr),
-    _width(0),
-    _height(0)
+        _data(nullptr),
+        _outputData(nullptr),
+        _size(0),
+        _dataUL(nullptr),
+        _dataUR(nullptr),
+        _dataLL(nullptr),
+        _dataLR(nullptr),
+        _dataRed(nullptr),
+        _dataGreen(nullptr),
+        _dataBlue(nullptr),
+        _width(0),
+        _height(0)
 {
 }
 
@@ -108,6 +108,7 @@ void BayerFrameDownscaler::SetData(uint8_t* data, OCImage& image, ImageFormat im
     _dataBlue = static_cast<uint16_t*>(image.BlueChannel());
 
     _imageFormat = imageFormat;
+    image.SetFormat(_imageFormat);
     _pattern = image.GetBayerPattern();
 
     MapPatternToData();

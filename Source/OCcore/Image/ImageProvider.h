@@ -29,12 +29,14 @@ namespace OC
         class OCCORE_EXPORT ImageProvider
         {
             // FIXME: Evaluate usage of FileFormat enum as key
-            std::unordered_map<OC::Image::FileFormat, std::shared_ptr<IImageLoader>, OC::Image::FileFormatHash> _imageProviders;
+            std::unordered_map<OC::Image::FileFormat, std::shared_ptr<IImageLoader>, OC::Image::FileFormatHash> _imageLoaders;
+
+            IImageLoader* FindSuitableLoader(uint8_t* data, std::streamsize size) const;
 
         public:
             ImageProvider();
 
-            bool ReadBinaryFile(std::string fileName, int& length, unsigned char*& fileData) const;
+            bool ReadBinaryFile(std::string fileName, std::streamsize& length, unsigned char*& fileData) const;
             void Load(std::string fileName, OC::Image::FileFormat format, OC::Image::OCImage& image, IAllocator& allocator) const;
         };
     }
