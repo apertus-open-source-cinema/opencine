@@ -125,7 +125,7 @@
   <customwidget>
    <class>PreviewPane</class>
    <extends>QOpenGLWidget</extends>
-   <header>./Controls/PlaybackSlider.h</header>
+   <header>./Controls/PreviewPane.h</header>
   </customwidget>
   <customwidget>
    <class>PlaybackSlider</class>
