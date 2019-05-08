@@ -17,30 +17,30 @@ void BayerFrameDownscaler::MapPatternToData()
 {
     switch(_pattern)
     {
-    case BayerPattern::RGGB:
-        _dataUL = _dataRed;
-        _dataUR = _dataGreen;
-        _dataLL = _dataGreen;
-        _dataLR = _dataBlue;
-        break;
-    case BayerPattern::BGGR:
-        _dataUL = _dataBlue;
-        _dataUR = _dataGreen;
-        _dataLL = _dataGreen;
-        _dataLR = _dataRed;
-        break;
-    case BayerPattern::GRBG:
-        _dataUL = _dataGreen;
-        _dataUR = _dataRed;
-        _dataLL = _dataBlue;
-        _dataLR = _dataGreen;
-        break;
-    case BayerPattern::GBRG:
-        _dataUL = _dataGreen;
-        _dataUR = _dataBlue;
-        _dataLL = _dataRed;
-        _dataLR = _dataGreen;
-        break;
+        case BayerPattern::RGGB:
+            _dataUL = _dataRed;
+            _dataUR = _dataGreen;
+            _dataLL = _dataGreen;
+            _dataLR = _dataBlue;
+            break;
+        case BayerPattern::BGGR:
+            _dataUL = _dataBlue;
+            _dataUR = _dataGreen;
+            _dataLL = _dataGreen;
+            _dataLR = _dataRed;
+            break;
+        case BayerPattern::GRBG:
+            _dataUL = _dataGreen;
+            _dataUR = _dataRed;
+            _dataLL = _dataBlue;
+            _dataLR = _dataGreen;
+            break;
+        case BayerPattern::GBRG:
+            _dataUL = _dataGreen;
+            _dataUR = _dataBlue;
+            _dataLL = _dataRed;
+            _dataLR = _dataGreen;
+            break;
     }
 }
 
@@ -107,6 +107,7 @@ void BayerFrameDownscaler::SetData(uint8_t* data, OCImage& image, ImageFormat im
     _dataGreen = static_cast<uint16_t*>(image.GreenChannel());
     _dataBlue = static_cast<uint16_t*>(image.BlueChannel());
 
+    // TODO: Rework this part, as it's not following proper loose coupling
     _imageFormat = imageFormat;
     image.SetFormat(_imageFormat);
     _pattern = image.GetBayerPattern();
@@ -142,17 +143,17 @@ void BayerFrameDownscaler::Process()
 {
     switch(_imageFormat)
     {
-    case ImageFormat::Integer12:
-        OC_LOG_INFO("12->16bit conversion");
-        OC::Image::ImageHelper::Convert12To16Bit(_data, _width, _height, _outputData);
-        break;
-    case ImageFormat::Integer14:
-        OC_LOG_INFO("14->16bit conversion");
-        OC::Image::ImageHelper::Convert14To16Bit(_data, _width, _height, _outputData);
-        break;
-    case ImageFormat::Unknown:
-    case ImageFormat::Integer16:
-        break;
+        case ImageFormat::Integer12:
+            OC_LOG_INFO("12->16bit conversion");
+            OC::Image::ImageHelper::Convert12To16Bit(_data, _width, _height, _outputData);
+            break;
+        case ImageFormat::Integer14:
+            OC_LOG_INFO("14->16bit conversion");
+            OC::Image::ImageHelper::Convert14To16Bit(_data, _width, _height, _outputData);
+            break;
+        case ImageFormat::Unknown:
+        case ImageFormat::Integer16:
+            break;
     }
 
     OC_LOG_INFO("Extracting");
