@@ -17,6 +17,10 @@ class IProcessingView : public QWidget
     Q_OBJECT
 
 public:
+    virtual ~IProcessingView()
+    {
+    }
+
     virtual void SetFrame(OC::Image::OCImage& image) = 0;
     virtual void SetThumbnail(unsigned int width, unsigned int height, unsigned char* data) = 0;
 

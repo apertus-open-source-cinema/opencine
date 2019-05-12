@@ -24,7 +24,7 @@ class ProcessingView : public IProcessingView
 
 public:
     explicit ProcessingView(QWidget* parent = nullptr);
-    ~ProcessingView();
+    ~ProcessingView() override;
 
     virtual void paintEvent(QPaintEvent*) Q_DECL_OVERRIDE;
 
@@ -39,9 +39,9 @@ private slots:
 
     void on_pushButton_4_toggled(bool checked);
 
-    virtual void EnableRendering(bool enable);
+    virtual void EnableRendering(bool enable) override;
 
-    void SetAvailableDebayerMethods(QStringList debayerMethods);
+    void SetAvailableDebayerMethods(QStringList debayerMethods) override;
 
 private:
     Ui::ProcessingView* ui;

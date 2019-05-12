@@ -17,7 +17,7 @@ class ProcessingPresenter : public IProcessingPresenter
 {
     Q_OBJECT
 
-    IProcessingView *_view;
+    IProcessingView* _view;
 
     std::shared_ptr<OC::Image::OCImage> _image = std::make_shared<OC::Image::OCImage>();
     std::unique_ptr<OC::DataProvider::ImageProvider> provider;
@@ -29,11 +29,14 @@ class ProcessingPresenter : public IProcessingPresenter
     QString _lastDir;
 
 public:
-    explicit ProcessingPresenter(IProcessingView &view);
+    explicit ProcessingPresenter(IProcessingView& view);
 
     void Test();
 
     void Show();
+
+    void CreateFileFilters(std::unordered_map<std::string, std::string> filterList, std::string& concatenatedFormats,
+                           std::string& allFormats);
 
 protected slots:
     void OpenRAWFile();
