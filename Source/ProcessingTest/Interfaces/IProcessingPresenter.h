@@ -7,10 +7,9 @@
 
 #include <QObject>
 
+// TODO: Add common (pure virtual) methods
 class IProcessingPresenter : public QObject
 {
-public:
-    virtual void Test() = 0;
 };
 
-#endif //IPROCESSINGPRESENTER_H
+#endif // IPROCESSINGPRESENTER_H

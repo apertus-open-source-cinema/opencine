@@ -31,8 +31,6 @@ class ProcessingPresenter : public IProcessingPresenter
 public:
     explicit ProcessingPresenter(IProcessingView& view);
 
-    void Test();
-
     void Show();
 
     void CreateFileFilters(std::unordered_map<std::string, std::string> filterList, std::string& concatenatedFormats,
