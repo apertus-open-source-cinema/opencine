@@ -1,3 +1,7 @@
 [submodule "3rdParty/lodepng"]
 	path = 3rdParty/lodepng
 	url = https://github.com/lvandeve/lodepng.git
+	
+[submodule "3rdParty/xxHash"]
+	path = 3rdParty/xxHash
+	url = https://github.com/Cyan4973/xxHash.git
